@@ -83,6 +83,8 @@ git --version
 
 ### Step 5 — Create `java-bootcamp` workspace
 
+**Where to run this:** Open **Terminal.app** (Applications → Utilities → Terminal), or iTerm if you use it. Do **not** use IntelliJ’s terminal yet — that comes in Step 6 after you open the folder. You can start from any directory; the commands create `~/java-bootcamp` under your home folder (for example `/Users/<you>/java-bootcamp`).
+
 ```bash
 mkdir -p ~/java-bootcamp/{labs,examples,assignments,projects,notes}
 cd ~/java-bootcamp

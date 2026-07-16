@@ -57,7 +57,9 @@ javac -version
 echo $env:JAVA_HOME
 ```
 
-**Expected:** Versions show `21.x.x` (Temurin / Eclipse Adoptium).
+**Expected:** Versions show `21.x.x` (Temurin / Eclipse Adoptium). Verified on authoring PC: Temurin `21.0.11`, `JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-21`.
+
+**If it fails — “This environment variable is too large” (2047 chars):** the Windows GUI cannot edit a Path longer than 2047 characters. Click **Cancel** (do not OK). Prefer PowerShell as Administrator to trim duplicates / user-folder entries from the **System** Path, or move rarely used tools to the **User** Path. Do not use `setx` for Path (it truncates). Confirm with `java -version` and `echo $env:JAVA_HOME` in a **new** terminal after changes.
 
 ### Step 4 — Install Maven 3.9.x and Git
 
@@ -79,6 +81,8 @@ git --version
 **Expected:** Maven **3.9.x** reporting Java **21**.
 
 ### Step 5 — Create `java-bootcamp` workspace
+
+**Where to run this:** Open a **new Windows PowerShell** window from the Start menu (or Win + X → **Windows Terminal** / **Terminal**). Do **not** use IntelliJ’s terminal yet — that comes in Step 6 after you open the folder. You can start from any directory; the commands create `%USERPROFILE%\java-bootcamp` under your user home (for example `C:\Users\<You>\java-bootcamp`).
 
 ```powershell
 $root = Join-Path $env:USERPROFILE 'java-bootcamp'
