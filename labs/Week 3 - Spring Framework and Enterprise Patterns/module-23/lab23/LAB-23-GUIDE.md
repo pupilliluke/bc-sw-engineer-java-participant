@@ -12,9 +12,17 @@
 | Windows | [LAB-23-WINDOWS.md](LAB-23-WINDOWS.md) |
 | macOS | [LAB-23-MACOS.md](LAB-23-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -74,20 +82,12 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-CrmApplication  (@SpringBootApplication)
-        |
-        +-- auto-config: DispatcherServlet, Jackson, embedded Tomcat, Actuator
-        |
-        v
-CustomerController  (/api/customers)
-        |
-        v
-CustomerService  (in-memory ConcurrentHashMap this lab)
-        |
-        +-- GET/POST JSON with X-Correlation-Id
-        +-- /actuator/health | /actuator/info
-        +-- application.yml + application-{dev,prod}.yml teaser
+```mermaid
+flowchart TB
+  App["CrmApplication"] --> Auto["auto-config<br/>DispatcherServlet / Jackson / Tomcat / Actuator"]
+  App --> Ctrl["CustomerController<br/>/api/customers"]
+  Ctrl --> Svc["CustomerService<br/>ConcurrentHashMap"]
+  Svc --> Features["JSON + X-Correlation-Id<br/>health / info / profile yml"]
 ```
 
 ### Lab flow (mermaid)
@@ -504,27 +504,43 @@ mvn -q test
 
 ### Checkpoint A — Tooling
 
-* [ ] `lab23-crm` under `~/java-bootcamp/examples/`
-* [ ] Boot parent + `web` + `actuator` + `test`
-* [ ] `CrmApplication` starts with embedded server
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab23-crm` under `~/java-bootcamp/examples/` | Pass / Fail |
+| 2 | Boot parent + `web` + `actuator` + `test` | Pass / Fail |
+| 3 | `CrmApplication` starts with embedded server | Pass / Fail |
 
 ### Checkpoint B — Core API
 
-* [ ] `application.yml` sets name, port, Actuator
-* [ ] Create/get for `CUS-1001` and `CUS-1002` with `lab-request-001`
-* [ ] Missing ID returns 404
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `application.yml` sets name, port, Actuator | Pass / Fail |
+| 2 | Create/get for `CUS-1001` and `CUS-1002` with `lab-request-001` | Pass / Fail |
+| 3 | Missing ID returns 404 | Pass / Fail |
 
 ### Checkpoint C — Ops + profiles
 
-* [ ] `/actuator/health` is `UP`
-* [ ] `dev`/`prod` profile teasers present and explained
-* [ ] Autoconfig vs ownership notes written
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `/actuator/health` is `UP` | Pass / Fail |
+| 2 | `dev`/`prod` profile teasers present and explained | Pass / Fail |
+| 3 | Autoconfig vs ownership notes written | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] Two consecutive `mvn test` identical success
-* [ ] README runbook complete
-* [ ] No secrets / `target/` committed
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Two consecutive `mvn test` identical success | Pass / Fail |
+| 2 | README runbook complete | Pass / Fail |
+| 3 | No secrets / `target/` committed | Pass / Fail |
 
 ---
 

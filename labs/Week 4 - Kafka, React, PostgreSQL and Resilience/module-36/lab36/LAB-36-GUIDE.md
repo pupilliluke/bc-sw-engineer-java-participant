@@ -12,9 +12,17 @@
 | Windows | [LAB-36-WINDOWS.md](LAB-36-WINDOWS.md) |
 | macOS | [LAB-36-MACOS.md](LAB-36-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **Node.js 22+**, **npm**, **JDK 21**, and **Maven 3.9+** (API + UI). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **Node.js 22+**, **npm**, **JDK 21**, and **Maven 3.9+** (API + UI). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -77,24 +85,17 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-Browser (untrusted)
-  |
-  +-- AuthContext: checking | anonymous | authenticated
-  +-- tokenStore (memory only) ----+
-  +-- ProtectedRoute (UX redirect) |
-  +-- LoginPage (generic errors)   |
-  |                                v
-  +-- http.request: if url.origin === apiOrigin
-  |       attach Authorization: Bearer <token>
-  |       + X-Correlation-Id: lab-request-001
-  v
-Spring Security / API authorizes every call
-  |  401 → clear token + expire session UX
-  |  403 → keep session; show forbidden
-  +-- CSRF (cookie mode) / CSP headers at server or gateway
-
-CustomerCard: JSX text only — no HTML sinks
+```mermaid
+flowchart TB
+  Browser["Browser untrusted"] --> Auth["AuthContext<br/>checking | anonymous | authenticated"]
+  Browser --> Store["tokenStore memory only"]
+  Browser --> Route["ProtectedRoute"]
+  Browser --> Login["LoginPage"]
+  Browser --> HTTP["http.request<br/>Bearer + X-Correlation-Id"]
+  HTTP --> API["Spring Security / API"]
+  API -->|401| Clear["clear token + expire UX"]
+  API -->|403| Forbid["keep session; forbidden"]
+  Card["CustomerCard: JSX text only"] -.-> Browser
 ```
 
 ### Lab flow (mermaid)
@@ -452,29 +453,45 @@ Complete [Failure Experiments](#failure-experiments). Confirm storage has no tok
 
 ### Checkpoint A — Tooling + model
 
-* [ ] `lab36-crm` copied from Lab 35
-* [ ] Threat model written; guards ≠ authorization stated
-* [ ] AuthState includes `checking`
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab36-crm` copied from Lab 35 | Pass / Fail |
+| 2 | Threat model written; guards ≠ authorization stated | Pass / Fail |
+| 3 | AuthState includes `checking` | Pass / Fail |
 
 ### Checkpoint B — Session mechanics
 
-* [ ] In-memory `tokenStore` only
-* [ ] Bearer attached only to CRM API origin
-* [ ] Login generic errors; ProtectedRoute UX
-* [ ] 401 clears session; 403 does not; logout complete
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | In-memory `tokenStore` only | Pass / Fail |
+| 2 | Bearer attached only to CRM API origin | Pass / Fail |
+| 3 | Login generic errors; ProtectedRoute UX | Pass / Fail |
+| 4 | 401 clears session; 403 does not; logout complete | Pass / Fail |
 
 ### Checkpoint C — Hardening proofs
 
-* [ ] XSS RTL proof green
-* [ ] CSRF evidence or documented N/A for bearer-only
-* [ ] CSP/security headers evidence
-* [ ] Abuse tests + build green twice
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | XSS RTL proof green | Pass / Fail |
+| 2 | CSRF evidence or documented N/A for bearer-only | Pass / Fail |
+| 3 | CSP/security headers evidence | Pass / Fail |
+| 4 | Abuse tests + build green twice | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] No tokens/passwords in Git or screenshots
-* [ ] Security decisions doc complete
-* [ ] `lab-request-001` on authenticated CRM calls
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | No tokens/passwords in Git or screenshots | Pass / Fail |
+| 2 | Security decisions doc complete | Pass / Fail |
+| 3 | `lab-request-001` on authenticated CRM calls | Pass / Fail |
 
 ---
 

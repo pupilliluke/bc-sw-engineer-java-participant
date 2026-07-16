@@ -12,9 +12,17 @@
 | Windows | [LAB-33-WINDOWS.md](LAB-33-WINDOWS.md) |
 | macOS | [LAB-33-MACOS.md](LAB-33-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **Node.js 22+** and **npm**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **Node.js 22+** and **npm**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -75,21 +83,16 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-App (fixture customers + stub callbacks)
-        |
-        +-- AppLayout / CustomerToolbar
-        |
-        +-- CustomerList
-        |       |
-        |       +-- CustomerCard  --> StatusBadge
-        |       +-- EmptyState (when [])
-        |
-        +-- CustomerForm  (presentation; parent owns values)
-        |
-        +-- LoadingState / ErrorState (shells for Lab 35)
-
-Vitest + Testing Library: query by role/name, not CSS class
+```mermaid
+flowchart TB
+  App["App<br/>fixture customers + stubs"] --> Layout["AppLayout / CustomerToolbar"]
+  App --> List["CustomerList"]
+  List --> Card["CustomerCard"]
+  Card --> Badge["StatusBadge"]
+  List --> Empty["EmptyState"]
+  App --> Form["CustomerForm<br/>parent owns values"]
+  App --> Shell["LoadingState / ErrorState"]
+  Test["Vitest + Testing Library<br/>role/name queries"] -.-> App
 ```
 
 ### Lab flow (mermaid)
@@ -460,29 +463,45 @@ Run tests twice for determinism. Confirm `git status` clean of `node_modules/` a
 
 ### Checkpoint A — Tooling
 
-* [ ] `lab33-crm/crm-ui` under `~/java-bootcamp/examples/`
-* [ ] Vite React-TS + Vitest + Testing Library installed
-* [ ] `npm run build` succeeds
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab33-crm/crm-ui` under `~/java-bootcamp/examples/` | Pass / Fail |
+| 2 | Vite React-TS + Vitest + Testing Library installed | Pass / Fail |
+| 3 | `npm run build` succeeds | Pass / Fail |
 
 ### Checkpoint B — Core components
 
-* [ ] Types: `Customer` / `CustomerStatus` / `CustomerDraft`
-* [ ] `StatusBadge`, `CustomerCard`, `CustomerList` (stable keys), empty state
-* [ ] `CustomerForm` with labels and alert errors
-* [ ] Fixtures Amina `CUS-1001` and Ravi `CUS-1002`
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Types: `Customer` / `CustomerStatus` / `CustomerDraft` | Pass / Fail |
+| 2 | `StatusBadge`, `CustomerCard`, `CustomerList` (stable keys), empty state | Pass / Fail |
+| 3 | `CustomerForm` with labels and alert errors | Pass / Fail |
+| 4 | Fixtures Amina `CUS-1001` and Ravi `CUS-1002` | Pass / Fail |
 
 ### Checkpoint C — Composition + tests
 
-* [ ] Dashboard composed with layout / toolbar / form shells
-* [ ] Loading and error presentation shells exist
-* [ ] RTL tests query by role; Edit → `CUS-1001`
-* [ ] Two consecutive `npm run test -- --run` green
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Dashboard composed with layout / toolbar / form shells | Pass / Fail |
+| 2 | Loading and error presentation shells exist | Pass / Fail |
+| 3 | RTL tests query by role; Edit → `CUS-1001` | Pass / Fail |
+| 4 | Two consecutive `npm run test -- --run` green | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] README runbook documents `dev` / `test` / `build`
-* [ ] No secrets / `node_modules` / `dist` committed
-* [ ] Component notes cover keys, a11y, Lab 34 handoff
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | README runbook documents `dev` / `test` / `build` | Pass / Fail |
+| 2 | No secrets / `node_modules` / `dist` committed | Pass / Fail |
+| 3 | Component notes cover keys, a11y, Lab 34 handoff | Pass / Fail |
 
 ---
 

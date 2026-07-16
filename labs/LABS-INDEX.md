@@ -8,10 +8,18 @@ Hands-on lab guides for the Java Software Engineer Bootcamp.
 
 Instructor curriculum twins (slide PNGs) live in [`../curriculum/`](../curriculum/) with the **same week and `module-NN` names**.
 
+## How to use these labs
+
+1. Start from **[PARTICIPANT-SETUP-README.md](PARTICIPANT-SETUP-README.md)** and **[Lab 0](Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md)**.
+2. Open the week folder → module-NN/labN/ → read **LAB-N-GUIDE.md** plus your OS how-to (LAB-N-WINDOWS.md or LAB-N-MACOS.md).
+3. Follow **How to follow this lab** at the top of each guide: Step → Expected → next step.
+4. Mark **Pass criteria** tables in your own notes (**Pass** / **Fail**). GitHub file view cannot tick checkboxes.
+5. Keep code under ~/java-bootcamp/examples/ (Windows: %USERPROFILE%\java-bootcamp\examples).
+
 **Primary IDE:** IntelliJ IDEA Community · **Optional IDE:** VS Code  
 
-Every lab lives under its module folder as `module-NN/module-NN/labN/` and includes:
-- `README.md` — full lab steps  
+Every lab lives under its module folder as `module-NN/labN/` and includes:
+- `LAB-N-GUIDE.md` — full lab steps  
 - `LAB-N-WINDOWS.md` — Windows + IntelliJ how-to  
 - `LAB-N-MACOS.md` — macOS + IntelliJ how-to  
 - Week 1 also has `module-NN/exercises/` (pre-lab practice after slides)
@@ -19,7 +27,7 @@ Every lab lives under its module folder as `module-NN/module-NN/labN/` and inclu
 | Guide | Purpose |
 | ----- | ------- |
 | [**Final Lab Environment Setup**](FINAL-SETUP-README.md) | **Authoritative final setup** — shared host Postgres 17, Kafka 4.0, k3s, GHCR |
-| [**Participant Setup README**](PARTICIPANT-SETUP-README.md) | Whole environment setup for students (laptop + shared services, accounts, checklists) |
+| [**Participant Setup README**](PARTICIPANT-SETUP-README.md) | Whole environment setup for students (laptop + shared services, accounts, pass criteria) |
 | [**Labs Setup Instructions**](SETUP-INSTRUCTIONS.md) | Tools, versions, ports, and lab-by-lab requirements matrix |
 | [Lab 0 — Environment Setup](Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md) | Hands-on laptop setup ([Windows](Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-WINDOWS.md) · [macOS](Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-MACOS.md)) |
 | [Technology Stack Guide](TECHNOLOGY-STACK-GUIDE.md) | Technologies, [acronym full forms](TECHNOLOGY-STACK-GUIDE.md#acronyms-and-full-forms), and learning rationale |

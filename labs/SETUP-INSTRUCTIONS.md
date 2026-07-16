@@ -28,33 +28,20 @@ Complete this guide **before Lab 1**. It lists every tool, account, and cloud re
 
 You develop on your **laptop** with **IntelliJ IDEA Community** (primary) and optionally **VS Code**. Shared services for this cohort run on **one AWS host** (`100.22.136.97`): **PostgreSQL 17**, **Kafka 4.0**, and **Kubernetes (k3s)** with Traefik. Source/CI: **GitHub + GitHub Actions**; images: **GHCR**. Details: [FINAL-SETUP-README.md](FINAL-SETUP-README.md).
 
-```text
-┌──────────────────────────────────────┐          ┌─────────────────────────────────────────┐
-│  YOUR LAPTOP                         │          │  SHARED AWS HOST                        │
-│  develop · compile · run locally     │          │  100.22.136.97  ·  AWS us-west-2         │
-├──────────────────────────────────────┤          ├─────────────────────────────────────────┤
-│                                      │   JDBC   │                                         │
-│  IDE                                 │ ───────► │  PostgreSQL 17                          │
-│    • IntelliJ Community (primary) │          │    port 5432  ·  database bootcamp      │
-│    • VS Code           (optional)   │          │    your schema only (studentNN)         │
-│                                      │   Kafka  │                                         │
-│  Toolchain                           │ ───────► │  Apache Kafka 4.0                       │
-│    • JDK 21  ·  Maven 3.9.x  ·  Git  │          │    port 9092  ·  shared broker          │
-│    • Node 22 ·  kubectl (Week 5+)    │          │                                         │
-│                                      │   HTTPS  │  Kubernetes (k3s)                       │
-│  Workspace                           │ ───────► │    API      :6443                       │
-│    ~/java-bootcamp                   │          │    Traefik  :80 / :443                  │
-│      examples/  labs/  projects/     │          │    your namespace only (studentNN)      │
-│                                      │          │                                         │
-└──────────────────┬───────────────────┘          └─────────────────────────────────────────┘
-                   │
-                   │  git push
-                   ▼
-         ┌─────────────────────────────┐
-         │  GitHub                     │
-         │    • Actions  (CI/CD)       │
-         │    • GHCR     (images)      │
-         └─────────────────────────────┘
+```mermaid
+flowchart LR
+  subgraph Laptop["Your laptop"]
+    IDE["IntelliJ / VS Code"]
+    JDK["JDK 21 + Maven + Git"]
+    Code["java-bootcamp workspace"]
+  end
+  subgraph Shared["Shared AWS lab host"]
+    PG["PostgreSQL 17"]
+    KF["Kafka 4.0"]
+    K3["k3s + Traefik"]
+    GHCR["GHCR images"]
+  end
+  Laptop -->|"connect out<br/>Week 4+"| Shared
 ```
 
 | Where | What runs there |
@@ -72,11 +59,15 @@ You develop on your **laptop** with **IntelliJ IDEA Community** (primary) and op
 
 Follow [lab0/LAB-0-GUIDE.md](Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md) end-to-end. When finished you should have:
 
-- [ ] IntelliJ IDEA Community (primary IDE; SDK 21)
-- [ ] Optional: VS Code + Extension Pack for Java (see Week 1 [`_IDE-CONVENTIONS.md`](Week%201%20-%20Java%20and%20JVM%20Foundations/_IDE-CONVENTIONS.md))
-- [ ] Workspace open at `~/java-bootcamp` (or Windows equivalent)
-- [ ] Java 21, Maven 3.9.x, and Git verified
-- [ ] `HelloWorld` compiled and run under `java-bootcamp/examples`
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | IntelliJ IDEA Community (primary IDE; SDK 21) | Pass / Fail |
+| 2 | Optional: VS Code + Extension Pack for Java (see Week 1 [`_IDE-CONVENTIONS.md`](Week%201%20-%20Java%20and%20JVM%20Foundations/_IDE-CONVENTIONS.md)) | Pass / Fail |
+| 3 | Workspace open at `~/java-bootcamp` (or Windows equivalent) | Pass / Fail |
+| 4 | Java 21, Maven 3.9.x, and Git verified | Pass / Fail |
+| 5 | `HelloWorld` compiled and run under `java-bootcamp/examples` | Pass / Fail |
 
 Do **not** start Lab 1 until Lab 0 verification passes.
 

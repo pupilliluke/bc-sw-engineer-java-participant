@@ -12,9 +12,17 @@
 | Windows | [LAB-10-WINDOWS.md](LAB-10-WINDOWS.md) |
 | macOS | [LAB-10-MACOS.md](LAB-10-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **GitHub Copilot** signed in. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **GitHub Copilot** signed in. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -73,19 +81,13 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-lab10-crm/  (Maven, plain Java 21, NO Spring — Week 2 stays framework-free)
-
-   Main.java (manual test harness)
-        |
-        v
-   CustomerService  (POJO, in-memory List<Customer>)
-        |
-        v
-   Customer (entity)  <-- CustomerStatus (enum: PROSPECT, ACTIVE, SUSPENDED, CLOSED)
-
-GitHub Copilot (VS Code extension) assists the DEVELOPER while authoring files.
-It is design-time only — not part of the running app, no runtime dependency.
+```mermaid
+flowchart TB
+  Main["Main.java<br/>manual harness"] --> Svc["CustomerService<br/>POJO in-memory List"]
+  Svc --> Cust["Customer entity"]
+  Status["CustomerStatus enum"] --> Cust
+  Copilot["GitHub Copilot<br/>design-time only"] -.-> Main
+  Copilot -.-> Svc
 ```
 
 ### Lab flow (mermaid)
@@ -522,11 +524,15 @@ After activation: Optional[Customer{customerId='CUS-1002', ..., status=ACTIVE}]
 
 **Do this:** Walk every accepted suggestion from Steps 4–5 through this checklist; log as `lab10-003`:
 
-* [ ] Every import resolves against `pom.xml` deps actually present (no phantom JPA/Spring imports)
-* [ ] Business rules from the prompt appear in code (blank ID rejected, duplicate ID rejected, unknown ID rejected)—not only in comments
-* [ ] `equals` / `hashCode` based on `customerId` only
-* [ ] You could explain every line to a reviewer with Copilot turned off
-* [ ] No hardcoded secrets, real customer PII, or inappropriate test data committed
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Every import resolves against `pom.xml` deps actually present (no phantom JPA/Spring imports) | Pass / Fail |
+| 2 | Business rules from the prompt appear in code (blank ID rejected, duplicate ID rejected, unknown ID rejected)—not only in comments | Pass / Fail |
+| 3 | `equals` / `hashCode` based on `customerId` only | Pass / Fail |
+| 4 | You could explain every line to a reviewer with Copilot turned off | Pass / Fail |
+| 5 | No hardcoded secrets, real customer PII, or inappropriate test data committed | Pass / Fail |
 
 If you deliberately let the JPA-annotation mistake through, document catching and removing it here as a worked example.
 
@@ -574,27 +580,43 @@ git status
 
 ### Checkpoint A — Environment + Copilot ready
 
-* [ ] `lab10-crm` copied from Lab 9 under `~/java-bootcamp/examples/`
-* [ ] Copilot + Chat signed in (`Check Status` Ready)
-* [ ] Sanity ghost-text suggestion observed in a `.java` file
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab10-crm` copied from Lab 9 under `~/java-bootcamp/examples/` | Pass / Fail |
+| 2 | Copilot + Chat signed in (`Check Status` Ready) | Pass / Fail |
+| 3 | Sanity ghost-text suggestion observed in a `.java` file | Pass / Fail |
 
 ### Checkpoint B — Domain + service compile
 
-* [ ] `CustomerStatus`, `Customer`, `CustomerService` present under correct packages
-* [ ] No JPA/Spring annotations/imports in those files
-* [ ] `mvn -q compile` succeeds
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `CustomerStatus`, `Customer`, `CustomerService` present under correct packages | Pass / Fail |
+| 2 | No JPA/Spring annotations/imports in those files | Pass / Fail |
+| 3 | `mvn -q compile` succeeds | Pass / Fail |
 
 ### Checkpoint C — Behavior + sample IDs
 
-* [ ] `Main` creates `CUS-1001` (ACTIVE) and `CUS-1002` (PROSPECT)
-* [ ] Status filter and `updateStatus` demonstrated
-* [ ] Blank/duplicate/unknown ID rules exist in service code
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `Main` creates `CUS-1001` (ACTIVE) and `CUS-1002` (PROSPECT) | Pass / Fail |
+| 2 | Status filter and `updateStatus` demonstrated | Pass / Fail |
+| 3 | Blank/duplicate/unknown ID rules exist in service code | Pass / Fail |
 
 ### Checkpoint D — Review log + risks + experiments
 
-* [ ] Entries `lab10-001`–`lab10-004` complete
-* [ ] At least one caught/corrected Copilot mistake documented
-* [ ] Failure experiments recorded; no secrets in prompts or Git
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Entries `lab10-001`–`lab10-004` complete | Pass / Fail |
+| 2 | At least one caught/corrected Copilot mistake documented | Pass / Fail |
+| 3 | Failure experiments recorded; no secrets in prompts or Git | Pass / Fail |
 
 ---
 

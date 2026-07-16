@@ -108,21 +108,19 @@ Participants never commit secrets, private keys, `.env` files, kubeconfigs, or T
 
 ## 5. Target architecture (reference)
 
-```text
-React Frontend (Vite / Node 22)
-        │  HTTPS / REST
-        ▼
-Spring Boot API  ── JWT / RBAC ── Actuator health & metrics
-        │
-        ├── Service layer (transactions, validation, DTOs)
-        ├── Spring Data JPA ──► PostgreSQL
-        └── Kafka producers/consumers ──► Event & audit topics
-
-Delivery path
-  Git commit → GitHub Actions (build, test, SAST)
-            → Immutable Docker image (digest)
-            → Kubernetes (k3s) deploy
-            → Smoke test → Monitor → Rollback if needed
+```mermaid
+flowchart TB
+  UI["React Frontend<br/>Vite / Node 22"] -->|HTTPS / REST| API["Spring Boot API<br/>JWT / RBAC / Actuator"]
+  API --> Svc["Service layer<br/>transactions, validation, DTOs"]
+  API --> JPA["Spring Data JPA"]
+  JPA --> PG["PostgreSQL"]
+  API --> Kafka["Kafka producers/consumers"]
+  Kafka --> Topics["Event & audit topics"]
+  subgraph Delivery["Delivery path"]
+    Git["Git commit"] --> GHA["GitHub Actions<br/>build, test, SAST"]
+    GHA --> Img["Immutable Docker image"]
+    Img --> K8s["k3s deploy"]
+  end
 ```
 
 ```text
@@ -263,28 +261,36 @@ Final score = Σ (score × weight) / 100 → reported **/ 4.00**.
 
 **Suggested observer timebox:** 60–90 minutes per team (demo + Q&A + brief feedback).
 
-### 9.2 Defense checklist
+### 9.2 Defense pass criteria
 
-- [ ] Demonstrate the working application  
-- [ ] Explain the architecture and major design decisions  
-- [ ] Walk through backend, messaging, frontend, and persistence flow  
-- [ ] Show automated test evidence  
-- [ ] Show security scan evidence  
-- [ ] Show CI/CD and deployment evidence  
-- [ ] Explain known risks, limitations, and mitigations  
-- [ ] Answer technical Q&A with evidence  
-- [ ] Present team retrospective findings  
-- [ ] Submit individual reflection and next steps  
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
 
-### 9.3 Week close-out checklist
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Demonstrate the working application | Pass / Fail |
+| 2 | Explain the architecture and major design decisions | Pass / Fail |
+| 3 | Walk through backend, messaging, frontend, and persistence flow | Pass / Fail |
+| 4 | Show automated test evidence | Pass / Fail |
+| 5 | Show security scan evidence | Pass / Fail |
+| 6 | Show CI/CD and deployment evidence | Pass / Fail |
+| 7 | Explain known risks, limitations, and mitigations | Pass / Fail |
+| 8 | Answer technical Q&A with evidence | Pass / Fail |
+| 9 | Present team retrospective findings | Pass / Fail |
+| 10 | Submit individual reflection and next steps | Pass / Fail |
 
-- [ ] Architecture, NFRs, backlog, ADRs, and risk register complete (Lab 48)  
-- [ ] Backend vertical slice with Kafka and tests (Lab 49)  
-- [ ] React + PostgreSQL end-to-end journey verified (Lab 50)  
-- [ ] Security, pipeline, image digest, deploy, smoke, and rollback evidenced (Lab 51)  
-- [ ] Defense packet ready: presentation, demo script, evidence index, Q&A, retrospective, self-assessment (Lab 52)  
-- [ ] No secrets or real customer data in submitted artifacts  
-- [ ] Known limitations listed with owners and next actions  
+### 9.3 Week close-out pass criteria
+
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Architecture, NFRs, backlog, ADRs, and risk register complete (Lab 48) | Pass / Fail |
+| 2 | Backend vertical slice with Kafka and tests (Lab 49) | Pass / Fail |
+| 3 | React + PostgreSQL end-to-end journey verified (Lab 50) | Pass / Fail |
+| 4 | Security, pipeline, image digest, deploy, smoke, and rollback evidenced (Lab 51) | Pass / Fail |
+| 5 | Defense packet ready: presentation, demo script, evidence index, Q&A, retrospective, self-assessment (Lab 52) | Pass / Fail |
+| 6 | No secrets or real customer data in submitted artifacts | Pass / Fail |
+| 7 | Known limitations listed with owners and next actions | Pass / Fail |
 
 ---
 

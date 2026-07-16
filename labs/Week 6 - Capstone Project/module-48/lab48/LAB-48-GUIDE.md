@@ -16,6 +16,14 @@
 
 ---
 
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
 ## Lab Overview
 
 This Module 48 lab turns the Enterprise CRM brief into an **executable architecture and delivery plan**. You produce C4 context and container views, measurable NFRs, ADRs, a prioritized vertical backlog, ownership milestones, and a scored risk register—so Labs 49–52 implement against decisions rather than improvisation.
@@ -75,23 +83,15 @@ Use these fixtures consistently:
 
 ### NOW (this lab)
 
-```text
-Product brief + Weeks 1–5 CRM knowledge
-        |
-        v
-C4 Context (users, IdP, external systems, trust boundaries)
-        |
-        v
-C4 Containers (React UI, Spring API, PostgreSQL, Kafka, workers, obs)
-        |
-        v
-Domain + contracts  →  measurable NFRs  →  vertical backlog
-        |
-        v
-ADRs (DB, messaging, auth, deploy, consistency)
-        |
-        v
-Delivery plan + risk register  →  inputs for Labs 49–52
+```mermaid
+flowchart TB
+  Brief["Product brief + Weeks 1–5 CRM"] --> C4C["C4 Context"]
+  C4C --> C4Cont["C4 Containers"]
+  C4Cont --> Domain["Domain + contracts"]
+  Domain --> NFR["measurable NFRs"]
+  NFR --> Backlog["vertical backlog"]
+  Backlog --> ADR["ADRs"]
+  ADR --> Plan["Delivery plan + risk register"]
 ```
 
 ### Lab flow (mermaid)
@@ -477,27 +477,43 @@ If a story is deferred, mark it Explicitly Deferred with owner and date in the r
 
 ### Checkpoint A — Scope and structure
 
-* [ ] Capstone docs tree under `customer-management-platform/` (or instructor-approved `lab48-crm/`)
-* [ ] Product outcome with users, journeys, exclusions, success measures
-* [ ] Fixture IDs `CUS-1001`, `CUS-1002`, `lab-request-001` named in planning docs
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Capstone docs tree under `customer-management-platform/` (or instructor-approved `lab48-crm/`) | Pass / Fail |
+| 2 | Product outcome with users, journeys, exclusions, success measures | Pass / Fail |
+| 3 | Fixture IDs `CUS-1001`, `CUS-1002`, `lab-request-001` named in planning docs | Pass / Fail |
 
 ### Checkpoint B — Architecture
 
-* [ ] C4 context with protocols and trust boundaries
-* [ ] C4 containers: React, Spring Boot, PostgreSQL, Kafka, IdP, observability
-* [ ] Domain/contract sketches with versioning policy
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | C4 context with protocols and trust boundaries | Pass / Fail |
+| 2 | C4 containers: React, Spring Boot, PostgreSQL, Kafka, IdP, observability | Pass / Fail |
+| 3 | Domain/contract sketches with versioning policy | Pass / Fail |
 
 ### Checkpoint C — Quality and decisions
 
-* [ ] Measurable NFRs (latency, security, a11y, recovery, retention)
-* [ ] Prioritized vertical backlog including interaction story
-* [ ] ≥5 ADRs with alternatives and consequences
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Measurable NFRs (latency, security, a11y, recovery, retention) | Pass / Fail |
+| 2 | Prioritized vertical backlog including interaction story | Pass / Fail |
+| 3 | ≥5 ADRs with alternatives and consequences | Pass / Fail |
 
 ### Checkpoint D — Delivery hygiene
 
-* [ ] Team plan with owners and critical path
-* [ ] Risk register scored with mitigations
-* [ ] Peer review completed; no secrets in committed docs
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Team plan with owners and critical path | Pass / Fail |
+| 2 | Risk register scored with mitigations | Pass / Fail |
+| 3 | Peer review completed; no secrets in committed docs | Pass / Fail |
 
 ---
 

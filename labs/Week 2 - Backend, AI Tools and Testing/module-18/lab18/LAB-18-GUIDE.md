@@ -12,9 +12,17 @@
 | Windows | [LAB-18-WINDOWS.md](LAB-18-WINDOWS.md) |
 | macOS | [LAB-18-MACOS.md](LAB-18-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -76,18 +84,13 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-CustomerServiceMockitoTest  (JUnit 5 + MockitoExtension)
-CustomerServiceBddMockTest  (BDDMockito given/then/should)
-        |
-        |  constructor / @BeforeEach
-        v
-DefaultCustomerService  --------uses-------> CustomerValidator (prefer real)
-        |
-        +---- @Mock CustomerRepository <---- stubbed find/save/exists
-              verify / ArgumentCaptor / never()
-
-Lab 17 CustomerServiceTests may coexist (real InMemoryCustomerRepository)
+```mermaid
+flowchart TB
+  T1["CustomerServiceMockitoTest"] --> Svc["DefaultCustomerService"]
+  T2["CustomerServiceBddMockTest"] --> Svc
+  Svc -->|prefer real| Val["CustomerValidator"]
+  Svc -->|@Mock| Repo["CustomerRepository<br/>stub find/save/exists"]
+  Verify["verify / ArgumentCaptor / never"] -.-> Repo
 ```
 
 ### Lab flow (mermaid)
@@ -503,29 +506,45 @@ Complete [Failure Experiments](#failure-experiments). Capture Surefire excerpts 
 
 ### Checkpoint A — Tooling
 
-* [ ] `lab18-crm` under `~/java-bootcamp/examples/`
-* [ ] Mockito core + junit-jupiter test-scoped; tree confirms both
-* [ ] `@ExtendWith(MockitoExtension.class)` on mock suites
-* [ ] Lab 17 JaCoCo/Surefire still present (unless intentionally deferred and noted)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab18-crm` under `~/java-bootcamp/examples/` | Pass / Fail |
+| 2 | Mockito core + junit-jupiter test-scoped; tree confirms both | Pass / Fail |
+| 3 | `@ExtendWith(MockitoExtension.class)` on mock suites | Pass / Fail |
+| 4 | Lab 17 JaCoCo/Surefire still present (unless intentionally deferred and noted) | Pass / Fail |
 
 ### Checkpoint B — Core Mockito suite
 
-* [ ] Shared mock repo wires validator + `DefaultCustomerService`
-* [ ] Activate Ravi: stub find/save + verify
-* [ ] `CUS-9999` not-found: `never().save`
-* [ ] `ArgumentCaptor` on add Amina (`CUS-1001`)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Shared mock repo wires validator + `DefaultCustomerService` | Pass / Fail |
+| 2 | Activate Ravi: stub find/save + verify | Pass / Fail |
+| 3 | `CUS-9999` not-found: `never().save` | Pass / Fail |
+| 4 | `ArgumentCaptor` on add Amina (`CUS-1001`) | Pass / Fail |
 
 ### Checkpoint C — BDD + AI discipline
 
-* [ ] `CustomerServiceBddMockTest` green with given/then/should
-* [ ] Copilot review log or manual equivalent (`lab18-001`)
-* [ ] No mocking of the class under test
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `CustomerServiceBddMockTest` green with given/then/should | Pass / Fail |
+| 2 | Copilot review log or manual equivalent (`lab18-001`) | Pass / Fail |
+| 3 | No mocking of the class under test | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] Two consecutive `mvn test` identical success
-* [ ] Isolation policy documented
-* [ ] No secrets / `target/` / debug mockingDetails left committed
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Two consecutive `mvn test` identical success | Pass / Fail |
+| 2 | Isolation policy documented | Pass / Fail |
+| 3 | No secrets / `target/` / debug mockingDetails left committed | Pass / Fail |
 
 ---
 

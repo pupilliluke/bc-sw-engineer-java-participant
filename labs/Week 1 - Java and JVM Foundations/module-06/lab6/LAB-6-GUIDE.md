@@ -18,6 +18,14 @@
 
 ---
 
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
 ## Core path first (menu options 1–9)
 
 **Complete options 1–9 before any bonuses.** That is the graded CORE path:
@@ -98,18 +106,19 @@ Instead of nested loops, **all analytics must use the Java Streams API** (and la
 
 ### Stream pipeline shape (NOW)
 
-```text
-  Main (menu loop / switch)
-       │ uses
-       ▼
-  ReportService  ←── EmployeeService  ←── List<Employee> (from EmployeeData)
-       │                    │
-       │                    ├─ lambdas / Predicate / Function / Consumer / Supplier
-       │                    ├─ filter / map / sorted / distinct / limit / skip
-       │                    ├─ reduce / count / mapToDouble
-       │                    └─ collect → List | Set | Map | DoubleSummaryStatistics
-       │
-       └─ Dashboard + salary / department / top-performer reports
+```mermaid
+flowchart TB
+  Main["Main<br/>menu loop / switch"] -->|uses| RS["ReportService"]
+  ES["EmployeeService"] --> RS
+  Data["List Employee<br/>from EmployeeData"] --> ES
+  subgraph Streams["Stream toolkit"]
+    L["lambdas / Predicate / Function / Consumer / Supplier"]
+    O["filter map sorted distinct limit skip"]
+    R["reduce count mapToDouble"]
+    C["collect → List Set Map stats"]
+  end
+  ES --- Streams
+  RS --> Dash["Dashboard + salary / dept / top-performer reports"]
 ```
 
 ### Intermediate vs terminal (ASCII)
@@ -1159,30 +1168,46 @@ Capture screenshots under `notes/screenshots/` (no secrets).
 
 ### Checkpoint A — Project + domain model
 
-* [ ] `java-bootcamp/examples/Lab6-EmployeeAnalytics/src/com/academy/analytics/` exists
-* [ ] `Employee`, `EmployeeData` present with **25** sample rows (solution seed recommended)
-* [ ] Edited via IntelliJ (or optional VS Code) on your laptop 
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `java-bootcamp/examples/Lab6-EmployeeAnalytics/src/com/academy/analytics/` exists | Pass / Fail |
+| 2 | `Employee`, `EmployeeData` present with **25** sample rows (solution seed recommended) | Pass / Fail |
+| 3 | Edited via IntelliJ (or optional VS Code) on your laptop | Pass / Fail |
 
 ### Checkpoint B — Service + reports compile
 
-* [ ] `EmployeeService`, `ReportService`, `Main` present
-* [ ] `javac -d out src/com/academy/analytics/*.java` succeeds
-* [ ] `java -cp out com.academy.analytics.Main` shows **CORE options 1–9**
-* [ ] Exit prints `Thank You` and terminates
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `EmployeeService`, `ReportService`, `Main` present | Pass / Fail |
+| 2 | `javac -d out src/com/academy/analytics/*.java` succeeds | Pass / Fail |
+| 3 | `java -cp out com.academy.analytics.Main` shows **CORE options 1–9** | Pass / Fail |
+| 4 | Exit prints `Thank You` and terminates | Pass / Fail |
 
 ### Checkpoint C — Stream features
 
-* [ ] Lambdas + at least one each of Predicate / Function / Consumer / Supplier demonstrated
-* [ ] Filters (single + chained), map, sort, distinct, limit/skip work
-* [ ] Counts, reduce/summarizing, grouping, partitioning visible
-* [ ] Optional highest-paid path works without NPE on empty conceptual case
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Lambdas + at least one each of Predicate / Function / Consumer / Supplier demonstrated | Pass / Fail |
+| 2 | Filters (single + chained), map, sort, distinct, limit/skip work | Pass / Fail |
+| 3 | Counts, reduce/summarizing, grouping, partitioning visible | Pass / Fail |
+| 4 | Optional highest-paid path works without NPE on empty conceptual case | Pass / Fail |
 
 ### Checkpoint D — Dashboard + evidence
 
-* [ ] Menu option **8** dashboard matches solution numbers (25 employees, etc.)
-* [ ] Stream-operations table filled; reflection answers drafted
-* [ ] Screenshots saved (no secrets); notes explain intermediate vs terminal ops
-* [ ] Bonuses (menu 10+) attempted only after CORE 1–9 pass
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Menu option **8** dashboard matches solution numbers (25 employees, etc.) | Pass / Fail |
+| 2 | Stream-operations table filled; reflection answers drafted | Pass / Fail |
+| 3 | Screenshots saved (no secrets); notes explain intermediate vs terminal ops | Pass / Fail |
+| 4 | Bonuses (menu 10+) attempted only after CORE 1–9 pass | Pass / Fail |
 
 ---
 

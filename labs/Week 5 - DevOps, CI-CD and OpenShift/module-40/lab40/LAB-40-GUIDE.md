@@ -12,9 +12,17 @@
 | Windows | [LAB-40-WINDOWS.md](LAB-40-WINDOWS.md) |
 | macOS | [LAB-40-MACOS.md](LAB-40-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (OWASP Dependency-Check via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (OWASP Dependency-Check via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -75,22 +83,13 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-Threat checklist + OWASP mapping (docs)
-        |
-        v
-mvn -Psecurity-scan dependency-check:check
-        |
-        +-- reports/dependency-check-report.html (+ JSON)
-        |
-        v
-Manual SAST (request → SQL/file/log/event sinks; authz)
-        |
-        v
-One confirmed finding → failing test → smallest fix → re-scan
-        |
-        v
-docs/security-assessment.md + docs/security-findings.csv
+```mermaid
+flowchart TB
+  Threat["Threat checklist + OWASP"] --> Scan["mvn -Psecurity-scan<br/>dependency-check"]
+  Scan --> Report["dependency-check-report.html"]
+  Scan --> SAST["Manual SAST<br/>SQL/file/log/authz sinks"]
+  SAST --> Fix["finding → failing test → fix → re-scan"]
+  Fix --> Docs["security-assessment.md<br/>+ findings.csv"]
 ```
 
 ### Lab flow (mermaid)
@@ -418,30 +417,46 @@ Update the residual-risk register with any peer questions that revealed undocume
 
 ### Checkpoint A — Scope and tooling
 
-* [ ] `lab40-crm` baseline `verify` known
-* [ ] Threat checklist + CSV headers
-* [ ] Dependency-Check profile + pinned version
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab40-crm` baseline `verify` known | Pass / Fail |
+| 2 | Threat checklist + CSV headers | Pass / Fail |
+| 3 | Dependency-Check profile + pinned version | Pass / Fail |
 
 ### Checkpoint B — Scan and triage
 
-* [ ] HTML/JSON reports generated
-* [ ] Top findings classified with owners/expiry where needed
-* [ ] Transitive path examined for ≥1 finding
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | HTML/JSON reports generated | Pass / Fail |
+| 2 | Top findings classified with owners/expiry where needed | Pass / Fail |
+| 3 | Transitive path examined for ≥1 finding | Pass / Fail |
 
 ### Checkpoint C — SAST and remediation
 
-* [ ] Manual SAST notes for injection/authz/secrets
-* [ ] Failing reproducer then fix
-* [ ] Re-scan + regression pass for that finding
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Manual SAST notes for injection/authz/secrets | Pass / Fail |
+| 2 | Failing reproducer then fix | Pass / Fail |
+| 3 | Re-scan + regression pass for that finding | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] `security-assessment.md` complete
-* [ ] Two consecutive test runs green for suite
-* [ ] No secrets / raw customer data in Git
-* [ ] Peer walkthrough recorded (initials + date)
-* [ ] Residual risks have owners and due dates
-* [ ] Suppressions (if any) include expiry
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `security-assessment.md` complete | Pass / Fail |
+| 2 | Two consecutive test runs green for suite | Pass / Fail |
+| 3 | No secrets / raw customer data in Git | Pass / Fail |
+| 4 | Peer walkthrough recorded (initials + date) | Pass / Fail |
+| 5 | Residual risks have owners and due dates | Pass / Fail |
+| 6 | Suppressions (if any) include expiry | Pass / Fail |
 
 ---
 

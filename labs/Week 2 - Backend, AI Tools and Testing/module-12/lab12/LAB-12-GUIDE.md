@@ -12,9 +12,17 @@
 | Windows | [LAB-12-WINDOWS.md](LAB-12-WINDOWS.md) |
 | macOS | [LAB-12-MACOS.md](LAB-12-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **GitHub Copilot** signed in. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **GitHub Copilot** signed in. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -74,20 +82,19 @@ Use these examples consistently:
 
 **LATER:** Spring Boot API, PostgreSQL, React, Kafka.
 
-```text
-NOW:
-  Main / tests
-      |
-      v
-  CustomerService  (REFACTOR TARGET)  -->  in-memory Map/List
-      |
-      +--> Customer / CustomerStatus
-      +--> validation helpers (extracted)
-
-FUTURE:
-  React CRM SPA --HTTPS/JSON--> Spring Boot API --JPA--> PostgreSQL
-                                |
-                                +--Kafka--> notification and audit consumers
+```mermaid
+flowchart TB
+  subgraph Now["NOW — refactor target"]
+    Main["Main / tests"] --> Svc["CustomerService"]
+    Svc --> Store["in-memory Map/List"]
+    Svc --> Cust["Customer / CustomerStatus"]
+    Svc --> Val["validation helpers"]
+  end
+  subgraph Future["FUTURE platform"]
+    UI["React CRM SPA"] -->|HTTPS/JSON| API["Spring Boot API"]
+    API -->|JPA| PG["PostgreSQL"]
+    API -->|Kafka| Cons["notification + audit"]
+  end
 ```
 
 ### Lab flow (mermaid)
@@ -478,12 +485,16 @@ Write `docs/before-after.md` with:
 
 **Do this:** Create `docs/CODING-STANDARDS-check.md`:
 
-- [ ] Meaningful type and method names
-- [ ] No raw types in new code
-- [ ] Validation in clear helpers
-- [ ] Exceptions instead of null for errors
-- [ ] No production secrets / no PII beyond lab sample emails
-- [ ] Service still compiles without Spring/JPA/Kafka
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Meaningful type and method names | Pass / Fail |
+| 2 | No raw types in new code | Pass / Fail |
+| 3 | Validation in clear helpers | Pass / Fail |
+| 4 | Exceptions instead of null for errors | Pass / Fail |
+| 5 | No production secrets / no PII beyond lab sample emails | Pass / Fail |
+| 6 | Service still compiles without Spring/JPA/Kafka | Pass / Fail |
 
 ```bash
 mvn -B verify
@@ -511,29 +522,45 @@ mvn -B verify
 
 ### Checkpoint A — Baseline frozen
 
-* [ ] `lab12-crm` under `~/java-bootcamp/examples/`
-* [ ] Messy `CustomerService` + `CustomerService.before.java.txt`
-* [ ] `docs/smells.md` has ≥8 smells with CRM impact
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab12-crm` under `~/java-bootcamp/examples/` | Pass / Fail |
+| 2 | Messy `CustomerService` + `CustomerService.before.java.txt` | Pass / Fail |
+| 3 | `docs/smells.md` has ≥8 smells with CRM impact | Pass / Fail |
 
 ### Checkpoint B — Refactored API
 
-* [ ] `createCustomer` / `getCustomer` / `updateStatus` present
-* [ ] No `doStuff`, no `"UPDATE"` magic branch
-* [ ] Typed store (`Map<String, Customer>` preferred)
-* [ ] `equals` used for IDs; exceptions replace null errors
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `createCustomer` / `getCustomer` / `updateStatus` present | Pass / Fail |
+| 2 | No `doStuff`, no `"UPDATE"` magic branch | Pass / Fail |
+| 3 | Typed store (`Map<String, Customer>` preferred) | Pass / Fail |
+| 4 | `equals` used for IDs; exceptions replace null errors | Pass / Fail |
 
 ### Checkpoint C — Tests + demos
 
-* [ ] `CustomerServiceTest` green for create/get, duplicate, unknown
-* [ ] Manual/`Main` demo for sample customers
-* [ ] Correlation ID appears in at least one failure/log path
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `CustomerServiceTest` green for create/get, duplicate, unknown | Pass / Fail |
+| 2 | Manual/`Main` demo for sample customers | Pass / Fail |
+| 3 | Correlation ID appears in at least one failure/log path | Pass / Fail |
 
 ### Checkpoint D — Evidence + standards
 
-* [ ] `docs/before-after.md` complete
-* [ ] AI review note or manual substitute
-* [ ] Standards checklist done; `mvn -B verify` green
-* [ ] Failure experiments recorded
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `docs/before-after.md` complete | Pass / Fail |
+| 2 | AI review note or manual substitute | Pass / Fail |
+| 3 | Standards checklist done; `mvn -B verify` green | Pass / Fail |
+| 4 | Failure experiments recorded | Pass / Fail |
 
 ---
 

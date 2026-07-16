@@ -12,9 +12,17 @@
 | Windows | [LAB-27-WINDOWS.md](LAB-27-WINDOWS.md) |
 | macOS | [LAB-27-MACOS.md](LAB-27-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -76,21 +84,15 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-curl / React --HTTPS/JSON--> TransferController  (HTTP only)
-                                    |
-                              TransferService  (@Transactional)
-                                    |
-                    +---------------+---------------+
-                    |                               |
-              AccountRepository              TransactionLogRepository
-                    |                               |
-                 JPA / H2 persistence (preferred rollback demo)
-                    |
-              Seeds: ACC-1001-MAIN, ACC-1001-LOYALTY, ACC-1002-MAIN
-              Failure probe: toAccountId == ACC-FORCE-FAIL → throw → rollback
-
-Optional Copilot draft → reject @Transactional on controller / swallowed catch
+```mermaid
+flowchart TB
+  Client["curl / React"] -->|HTTPS/JSON| TC["TransferController"]
+  TC --> TS["TransferService<br/>@Transactional"]
+  TS --> AR["AccountRepository"]
+  TS --> LR["TransactionLogRepository"]
+  AR --> JPA["JPA / H2 persistence"]
+  LR --> JPA
+  Fail["ACC-FORCE-FAIL → throw → rollback"] -.-> TS
 ```
 
 ### Lab flow (mermaid)
@@ -447,27 +449,43 @@ mvn -q test
 
 ### Checkpoint A — Tooling
 
-* [ ] `lab27-crm` under `examples/`
-* [ ] JPA + H2 (or documented simulation limit)
-* [ ] Account entity packages cleanly
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab27-crm` under `examples/` | Pass / Fail |
+| 2 | JPA + H2 (or documented simulation limit) | Pass / Fail |
+| 3 | Account entity packages cleanly | Pass / Fail |
 
 ### Checkpoint B — Transfer core
 
-* [ ] Seeds for Amina/Ravi accounts present
-* [ ] `@Transactional TransferService` + log entity
-* [ ] Happy MAIN→LOYALTY evidenced with `lab-request-001`
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Seeds for Amina/Ravi accounts present | Pass / Fail |
+| 2 | `@Transactional TransferService` + log entity | Pass / Fail |
+| 3 | Happy MAIN→LOYALTY evidenced with `lab-request-001` | Pass / Fail |
 
 ### Checkpoint C — Rollback + ACID + AI
 
-* [ ] `ACC-FORCE-FAIL` leaves balances unchanged; no success log
-* [ ] ACID table cites observations
-* [ ] Tests assert balances after failure; AI review logged
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `ACC-FORCE-FAIL` leaves balances unchanged; no success log | Pass / Fail |
+| 2 | ACID table cites observations | Pass / Fail |
+| 3 | Tests assert balances after failure; AI review logged | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] Two consecutive `mvn test` identical success
-* [ ] README runbook complete
-* [ ] No secrets / `target/` committed
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Two consecutive `mvn test` identical success | Pass / Fail |
+| 2 | README runbook complete | Pass / Fail |
+| 3 | No secrets / `target/` committed | Pass / Fail |
 
 ---
 

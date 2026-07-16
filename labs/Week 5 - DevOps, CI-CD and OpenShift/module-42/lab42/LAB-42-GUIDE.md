@@ -12,9 +12,17 @@
 | Windows | [LAB-42-WINDOWS.md](LAB-42-WINDOWS.md) |
 | macOS | [LAB-42-MACOS.md](LAB-42-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Docker**, and instructor **k3s** access (`kubectl`). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Docker**, and instructor **k3s** access (`kubectl`). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -77,21 +85,13 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-Route / Ingress  (TLS edge)
-        |
-        v
-Service  ClusterIP  (port 80 → http:8080)
-        |
-        v
-Deployment  crm-api  (replicas ≥ 1 or 2)
-   Pod: non-root, resources, startup/readiness/liveness
-        |
-        +-- envFrom ConfigMap (non-secrets)
-        +-- envFrom Secret   (DB password — not in Git)
-        |
-        v
-PostgreSQL / deps  (in-cluster or reachable training endpoints)
+```mermaid
+flowchart TB
+  Ing["Route / Ingress<br/>TLS edge"] --> Svc["Service ClusterIP<br/>80 → http"]
+  Svc --> Pod["Deployment Pod<br/>CRM container"]
+  Pod --> Ready["readiness / liveness probes"]
+  Pod --> Sec["non-root + resource limits"]
+  Cfg["ConfigMap / Secret"] --> Pod
 ```
 
 ### Lab flow (mermaid)
@@ -517,27 +517,43 @@ Optional: delete one pod and watch Service continue serving while the ReplicaSet
 
 ### Checkpoint A — Access and config
 
-* [ ] Correct context/namespace recorded
-* [ ] Image pull strategy verified
-* [ ] ConfigMap in Git; Secret only in cluster (+ example without values)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Correct context/namespace recorded | Pass / Fail |
+| 2 | Image pull strategy verified | Pass / Fail |
+| 3 | ConfigMap in Git; Secret only in cluster (+ example without values) | Pass / Fail |
 
 ### Checkpoint B — Workload manifests
 
-* [ ] Deployment labels/selectors aligned
-* [ ] Resources + non-root security context
-* [ ] Startup, readiness, liveness distinct
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Deployment labels/selectors aligned | Pass / Fail |
+| 2 | Resources + non-root security context | Pass / Fail |
+| 3 | Startup, readiness, liveness distinct | Pass / Fail |
 
 ### Checkpoint C — Exposure and proof
 
-* [ ] Service Endpoints populated
-* [ ] Ingress reachable
-* [ ] Smoke with `CUS-1001` + correlation
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Service Endpoints populated | Pass / Fail |
+| 2 | Ingress reachable | Pass / Fail |
+| 3 | Smoke with `CUS-1001` + correlation | Pass / Fail |
 
 ### Checkpoint D — Operations hygiene
 
-* [ ] Rollout undo rehearsed and verified
-* [ ] `deployment-runbook.md` complete
-* [ ] No kubeconfig/Secret data in Git
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Rollout undo rehearsed and verified | Pass / Fail |
+| 2 | `deployment-runbook.md` complete | Pass / Fail |
+| 3 | No kubeconfig/Secret data in Git | Pass / Fail |
 
 ---
 

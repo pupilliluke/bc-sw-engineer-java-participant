@@ -16,6 +16,14 @@
 
 ---
 
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
 ## Lab Overview
 
 This Module 49 lab implements or extends the CRM **Spring Boot + Kafka vertical slice** for recording customer interactions: validated REST APIs, transaction-safe persistence, versioned events, resilient consumption, and automated tests—producing `docs/backend-demo.md` evidence for the defense.
@@ -75,21 +83,14 @@ Use these fixtures consistently:
 
 ### NOW (this lab)
 
-```text
-REST Controller  (JWT-ready; full harden in Lab 51)
-        |
-        v
-Application Service  (@Transactional + business rules)
-        |
-        +---> JPA Repository ---> PostgreSQL (migration-backed)
-        |
-        +---> Event Publisher ---> Kafka topic crm.customer.interactions.v1
-                                        |
-                                        v
-                              Resilient Consumer (dedupe / retry / DLT)
-
-Tests: unit + MockMvc + @DataJpaTest + Kafka/Testcontainers (as available)
-Docs: docs/backend-demo.md
+```mermaid
+flowchart TB
+  Ctrl["REST Controller<br/>JWT-ready"] --> Svc["Application Service<br/>@Transactional"]
+  Svc --> JPA["JPA Repository"]
+  JPA --> PG["PostgreSQL migrations"]
+  Svc --> Pub["Event Publisher"]
+  Pub --> Kafka["crm.customer.interactions.v1"]
+  Kafka --> Cons["consumers / handlers"]
 ```
 
 ### Lab flow (mermaid)
@@ -424,27 +425,43 @@ curl -i -X POST "http://localhost:8080/api/customers/$CUSTOMER_ID/interactions" 
 
 ### Checkpoint A — Structure and scope
 
-* [ ] Capstone backend (or `lab49-crm`) under `examples/`
-* [ ] CAP story selected; DoD in `docs/backend-demo.md`
-* [ ] Fixtures `CUS-1001` / `CUS-1002` / `lab-request-001` planned
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Capstone backend (or `lab49-crm`) under `examples/` | Pass / Fail |
+| 2 | CAP story selected; DoD in `docs/backend-demo.md` | Pass / Fail |
+| 3 | Fixtures `CUS-1001` / `CUS-1002` / `lab-request-001` planned | Pass / Fail |
 
 ### Checkpoint B — Core slice
 
-* [ ] DTOs + validation; entities not in API
-* [ ] Migration + repository
-* [ ] Transactional service + REST 201/Problem Details
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | DTOs + validation; entities not in API | Pass / Fail |
+| 2 | Migration + repository | Pass / Fail |
+| 3 | Transactional service + REST 201/Problem Details | Pass / Fail |
 
 ### Checkpoint C — Messaging + tests
 
-* [ ] Versioned event published with correlation
-* [ ] Consumer dedupe/retry/DLT (or documented substitute)
-* [ ] `mvn clean verify` green with HTTP/DB/messaging coverage
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Versioned event published with correlation | Pass / Fail |
+| 2 | Consumer dedupe/retry/DLT (or documented substitute) | Pass / Fail |
+| 3 | `mvn clean verify` green with HTTP/DB/messaging coverage | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] Two consecutive verifies identical success
-* [ ] `docs/backend-demo.md` complete
-* [ ] No secrets / `target/` committed
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Two consecutive verifies identical success | Pass / Fail |
+| 2 | `docs/backend-demo.md` complete | Pass / Fail |
+| 3 | No secrets / `target/` committed | Pass / Fail |
 
 ---
 

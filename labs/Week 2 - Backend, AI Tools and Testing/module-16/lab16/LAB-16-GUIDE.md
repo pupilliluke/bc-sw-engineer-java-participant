@@ -12,9 +12,17 @@
 | Windows | [LAB-16-WINDOWS.md](LAB-16-WINDOWS.md) |
 | macOS | [LAB-16-MACOS.md](LAB-16-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -82,17 +90,15 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-CustomerApiFacade.create/get/changeStatus
-        |
-        +-- Bean Validation fail ----+
-        |                            |
-        +-- not found ---------------+--> GlobalExceptionHandler.toErrorResponse(...)
-        |                            |
-        +-- BusinessException -------+
-                                     |
-                                     v
-                              ErrorResponse (+ correlationId)
+```mermaid
+flowchart TB
+  Facade["CustomerApiFacade<br/>create / get / changeStatus"] --> BV["Bean Validation fail"]
+  Facade --> NF["not found"]
+  Facade --> BE["BusinessException"]
+  BV --> GEH["GlobalExceptionHandler"]
+  NF --> GEH
+  BE --> GEH
+  GEH --> Err["ErrorResponse<br/>+ correlationId"]
 ```
 
 ### Lab flow (mermaid)
@@ -478,27 +484,43 @@ git status
 
 ### Checkpoint A — Model types
 
-* [ ] `lab16-crm` under `examples/`
-* [ ] `ErrorResponse` always includes `correlationId` + `errors`
-* [ ] `BusinessException` factories for notFound/conflict
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab16-crm` under `examples/` | Pass / Fail |
+| 2 | `ErrorResponse` always includes `correlationId` + `errors` | Pass / Fail |
+| 3 | `BusinessException` factories for notFound/conflict | Pass / Fail |
 
 ### Checkpoint B — Handler + facade
 
-* [ ] `GlobalExceptionHandler` maps business/validation/unexpected
-* [ ] Facade returns `ApiResult` Ok/Fail
-* [ ] Catch order: business before generic
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `GlobalExceptionHandler` maps business/validation/unexpected | Pass / Fail |
+| 2 | Facade returns `ApiResult` Ok/Fail | Pass / Fail |
+| 3 | Catch order: business before generic | Pass / Fail |
 
 ### Checkpoint C — Demo evidence
 
-* [ ] 400 validation JSON with field errors + `lab-request-001`
-* [ ] 404 for `CUS-9999`
-* [ ] 409 illegal transition; `CUS-1001` still ACTIVE
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | 400 validation JSON with field errors + `lab-request-001` | Pass / Fail |
+| 2 | 404 for `CUS-9999` | Pass / Fail |
+| 3 | 409 illegal transition; `CUS-1001` still ACTIVE | Pass / Fail |
 
 ### Checkpoint D — Tests + hygiene
 
-* [ ] `GlobalExceptionHandlerTest` green
-* [ ] No stack traces / secrets in client payloads or Git
-* [ ] Error-model notes + status choices documented
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `GlobalExceptionHandlerTest` green | Pass / Fail |
+| 2 | No stack traces / secrets in client payloads or Git | Pass / Fail |
+| 3 | Error-model notes + status choices documented | Pass / Fail |
 
 ---
 

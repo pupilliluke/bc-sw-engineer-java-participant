@@ -19,6 +19,14 @@
 
 ---
 
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
 ## Lab Overview
 
 Build a **menu-driven Banking Management System** that applies encapsulation, inheritance, abstraction, interfaces, polymorphism, and clear service responsibilities—still plain JDK, no Spring/database.
@@ -97,20 +105,15 @@ Demo data matching the reference sample:
 
 ### Layered console design
 
-```text
-  Main (menu loop / switch)
-       │ uses
-       ▼
-  BankService  ←── Scanner (System.in)
-  (customers / accounts / transactions + ops)
-       │
-       ├──────────────┐
-       ▼              ▼
-  Customer[]     Account[]  (Savings | Current — polymorphic)
-       ▲              │
-       └──── owns ────┘
-                      ▼
-               Transaction[] → console output
+```mermaid
+flowchart TB
+  Main["Main<br/>menu loop / switch"] -->|uses| BS["BankService<br/>customers / accounts / txs"]
+  Scan["Scanner System.in"] --> BS
+  BS --> Cust["Customer[]"]
+  BS --> Acc["Account[]<br/>Savings | Current"]
+  Cust -->|owns| Acc
+  Acc --> Tx["Transaction[]"]
+  Tx --> Out["console output"]
 ```
 
 ### Inheritance and interface

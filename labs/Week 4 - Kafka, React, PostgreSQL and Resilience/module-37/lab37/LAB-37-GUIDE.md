@@ -12,9 +12,17 @@
 | Windows | [LAB-37-WINDOWS.md](LAB-37-WINDOWS.md) |
 | macOS | [LAB-37-MACOS.md](LAB-37-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **psql** or pgAdmin and instructor **shared PostgreSQL** credentials. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **psql** or pgAdmin and instructor **shared PostgreSQL** credentials. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -76,23 +84,16 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-ER design (Customer 1—0..* Account|Address|StatusHistory)
-        |
-        v
-shared (or local) PostgreSQL (crm database / assigned schema) + named volume
-        |
-        v
-User CRM_APP (CONNECT + schema USAGE/CREATE; NO superuser)
-        |
-        +-- CUSTOMER (public_id CUS-*, status check, email unique)
-        +-- ACCOUNT  (FK customer, NUMERIC(19,2) balance)
-        +-- ADDRESS  (FK customer, typed addresses)
-        +-- CUSTOMER_STATUS_HISTORY (append-only transitions)
-        |
-        +-- indexes on FKs + (customer_id, changed_at)
-        |
-        Seed Amina/Ravi → verify → negative constraint tests → drop scripts
+```mermaid
+flowchart TB
+  ER["ER design<br/>Customer 1—0..* Account|Address|StatusHistory"] --> PG["PostgreSQL crm DB<br/>+ named volume"]
+  PG --> User["User CRM_APP<br/>no superuser"]
+  User --> C["CUSTOMER"]
+  User --> A["ACCOUNT"]
+  User --> Addr["ADDRESS"]
+  User --> H["CUSTOMER_STATUS_HISTORY"]
+  Idx["indexes on FKs + changed_at"] -.-> User
+  Seed["Seed → verify → negative tests"] -.-> PG
 ```
 
 ### Lab flow (mermaid)
@@ -566,27 +567,43 @@ docker stop crm-postgres
 
 ### Checkpoint A — Design + runtime
 
-* [ ] ER cardinalities + identifier decisions documented
-* [ ] PostgreSQL container ready on crm database / assigned schema with volume
-* [ ] `CRM_APP` least-privilege user created
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | ER cardinalities + identifier decisions documented | Pass / Fail |
+| 2 | PostgreSQL container ready on crm database / assigned schema with volume | Pass / Fail |
+| 3 | `CRM_APP` least-privilege user created | Pass / Fail |
 
 ### Checkpoint B — Schema
 
-* [ ] CUSTOMER / ACCOUNT / ADDRESS / HISTORY DDL with named constraints
-* [ ] `NUMERIC(19,2)` money; TIMESTAMPTZ audit columns
-* [ ] FK indexes created
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | CUSTOMER / ACCOUNT / ADDRESS / HISTORY DDL with named constraints | Pass / Fail |
+| 2 | `NUMERIC(19,2)` money; TIMESTAMPTZ audit columns | Pass / Fail |
+| 3 | FK indexes created | Pass / Fail |
 
 ### Checkpoint C — Data + proofs
 
-* [ ] Seed Amina `CUS-1001` (account) and Ravi `CUS-1002` (no account)
-* [ ] History correlation `lab-request-001` present
-* [ ] Negative ORA tests recorded; drop/recreate works
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Seed Amina `CUS-1001` (account) and Ravi `CUS-1002` (no account) | Pass / Fail |
+| 2 | History correlation `lab-request-001` present | Pass / Fail |
+| 3 | Negative ORA tests recorded; drop/recreate works | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] Passwords only in local env / Docker—not Git
-* [ ] Design notes + screenshots
-* [ ] README documents connect + script order
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Passwords only in local env / Docker—not Git | Pass / Fail |
+| 2 | Design notes + screenshots | Pass / Fail |
+| 3 | README documents connect + script order | Pass / Fail |
 
 ---
 

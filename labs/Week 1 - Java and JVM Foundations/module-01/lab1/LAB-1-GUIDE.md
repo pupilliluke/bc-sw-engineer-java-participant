@@ -18,6 +18,14 @@
 
 ---
 
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
 ## Lab 0 baseline you must already have
 
 Before any Lab 1 step, confirm this (from [Lab 0](../../module-00/lab0/LAB-0-GUIDE.md)):
@@ -75,7 +83,7 @@ After completing this lab, you will be able to:
 
 Northstar Financial Services is onboarding you onto a greenfield **Customer Management Platform**. Before you open tickets for customer `CUS-1001` (Amina Khan) or write Spring controllers, the platform lead requires every engineer to demonstrate JVM fundamentals on **their laptop**.
 
-Today’s onboarding checklist is pedagogical, not CRM:
+Today’s onboarding pass list is pedagogical, not CRM:
 
 * Prove you can compile and run a tiny `HelloWorld` that prints `Hello, JVM!`
 * Prove you can read bytecode for a `Calculator` (stack-friendly primitives)
@@ -105,13 +113,19 @@ flowchart LR
 
 ### Stack versus heap (beginner picture)
 
-```text
-  Thread stack (per call)              Heap (shared)
- ┌─────────────────────────┐          ┌────────────────────────────┐
- │ main frame: x,y,sum     │   emp ──►│ Employee {id, name→String} │
- │ add frame: a,b,result   │          │ ArrayList + many Employees │
- └─────────────────────────┘          └────────────────────────────┘
-  Metaspace (simplified): class metadata for Employee, String, Object, ...
+```mermaid
+flowchart LR
+  subgraph Stack["Thread stack (per call)"]
+    S1["main frame: x, y, sum"]
+    S2["add frame: a, b, result"]
+  end
+  subgraph Heap["Heap (shared)"]
+    H1["Employee {id, name → String}"]
+    H2["ArrayList + many Employees"]
+  end
+  S1 -.->|emp reference| H1
+  META["Metaspace<br/>class metadata"] -.-> Stack
+  META -.-> Heap
 ```
 
 ### Tools in this lab
@@ -570,13 +584,19 @@ java Employee
 
 **Memory explanation (draw this in notes):**
 
-```text
-Stack:                         Heap:
-┌──────────────┐              ┌─────────────────────┐
-│ emp (ref) ───┼─────────────►│ Employee            │
-└──────────────┘              │  id = 101           │
-                              │  name ──► "Aman"    │
-                              └─────────────────────┘
+```mermaid
+flowchart LR
+  subgraph Stack["Thread stack (per call)"]
+    S1["main frame: x, y, sum"]
+    S2["add frame: a, b, result"]
+  end
+  subgraph Heap["Heap (shared)"]
+    H1["Employee {id, name → String}"]
+    H2["ArrayList + many Employees"]
+  end
+  S1 -.->|emp reference| H1
+  META["Metaspace<br/>class metadata"] -.-> Stack
+  META -.-> Heap
 ```
 
 Optional:
@@ -945,7 +965,7 @@ java -XX:+PrintFlagsFinal -version 2>&1 | grep -E "InitialHeapSize|MaxHeapSize|U
 ls -l *.java *.class
 ```
 
-### Evidence capture checklist
+### Evidence capture (Pass/Fail in notes)
 
 | # | What to capture | How | Pass criteria |
 | - | --------------- | --- | ------------- |
@@ -1172,14 +1192,18 @@ Complete only after core deliverables pass.
 
 You have completed Lab 1 when you can:
 
-* [ ] Work in `java-bootcamp/examples/jvm-compilation-lab/` on your laptop (VS Code and/or IntelliJ)
-* [ ] Compile and run `HelloWorld`, `Calculator`, `Employee`, and `MemoryDemo` with the exact expected outputs
-* [ ] Explain `.java` versus `.class` and demonstrate `javap -c`
-* [ ] Describe stack frames vs heap objects using Calculator and Employee
-* [ ] Show class-loading evidence and locate basic heap/GC flags
-* [ ] Clean `*.class`, recompile, and re-run successfully
-* [ ] Submit sources, screenshots, and short answers per the deliverables list
-* [ ] Articulate that this JVM flow underpins future CRM services (this lab does not build the CRM)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Work in `java-bootcamp/examples/jvm-compilation-lab/` on your laptop (VS Code and/or IntelliJ) | Pass / Fail |
+| 2 | Compile and run `HelloWorld`, `Calculator`, `Employee`, and `MemoryDemo` with the exact expected outputs | Pass / Fail |
+| 3 | Explain `.java` versus `.class` and demonstrate `javap -c` | Pass / Fail |
+| 4 | Describe stack frames vs heap objects using Calculator and Employee | Pass / Fail |
+| 5 | Show class-loading evidence and locate basic heap/GC flags | Pass / Fail |
+| 6 | Clean `*.class`, recompile, and re-run successfully | Pass / Fail |
+| 7 | Submit sources, screenshots, and short answers per the deliverables list | Pass / Fail |
+| 8 | Articulate that this JVM flow underpins future CRM services (this lab does not build the CRM) | Pass / Fail |
 
 This lab bridges Lab 0’s environment to Module 1 runtime fluency.
 
@@ -1187,20 +1211,17 @@ This lab bridges Lab 0’s environment to Module 1 runtime fluency.
 
 ## Instructor Notes
 
+**Before this lab:** run the full [Instructor Demonstration](INSTRUCTOR-DEMO.md) for the class (Demo 1–4: compile, inspect bytecode, create objects and observe memory, trigger garbage collection — ~30–40 minutes, complete runnable code and expected output included). Students then do their own version of these ideas below with `HelloWorld`, `Calculator`, `Employee`, and `MemoryDemo`.
+
 **Core story to repeat (whiteboard):**
 
-```text
-Write Java Code
-      ↓
-Compile with javac
-      ↓
-Generate Bytecode (.class)
-      ↓
-JVM Loads Class
-      ↓
-JVM Executes Bytecode
-      ↓
-Output Produced
+```mermaid
+flowchart TB
+  A["Write Java source"] --> B["Compile with javac"]
+  B --> C["Bytecode .class"]
+  C --> D["JVM loads class"]
+  D --> E["JVM executes bytecode"]
+  E --> F["Output produced"]
 ```
 
 **Key takeaway line:** Java does not directly run source code. Source is compiled to bytecode; the JVM executes bytecode.

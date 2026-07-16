@@ -12,9 +12,17 @@
 | Windows | [LAB-9-WINDOWS.md](LAB-9-WINDOWS.md) |
 | macOS | [LAB-9-MACOS.md](LAB-9-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -83,28 +91,29 @@ Use these examples consistently:
 
 **LATER:** Spring Boot API, JPA/PostgreSQL, React SPA, Kafka.
 
-```text
-NOW (Lab 9):
-  pom.xml  -->  Maven lifecycle  -->  target/*.jar (+ local .m2 on install)
-  src/... layered stubs (from Lab 8)
-
-FUTURE:
-  React CRM SPA --HTTPS/JSON--> Spring Boot API --JPA--> PostgreSQL
-                                |
-                                +--Kafka--> notification and audit consumers
+```mermaid
+flowchart TB
+  subgraph Now["NOW — Lab 9"]
+    POM["pom.xml"] --> Life["Maven lifecycle"]
+    Life --> JAR["target/*.jar<br/>+ local .m2"]
+    Src["src/… layered stubs"] -.-> Life
+  end
+  subgraph Future["FUTURE platform"]
+    UI["React CRM SPA"] -->|HTTPS/JSON| API["Spring Boot API"]
+    API -->|JPA| PG["PostgreSQL"]
+    API -->|Kafka| Cons["notification + audit"]
+  end
 ```
 
 ### Lifecycle (ASCII)
 
-```text
-  validate → compile → test → package → verify → install
-     │          │        │        │         │         │
-     │          │        │        │         │         └─ copy to ~/.m2
-     │          │        │        │         └─ extra checks after package
-     │          │        │        └─ produce JAR in target/
-     │          │        └─ Surefire runs *Test
-     │          └─ javac → target/classes
-     └─ POM/model OK
+```mermaid
+flowchart LR
+  V["validate<br/>POM/model OK"] --> C["compile<br/>javac → target/classes"]
+  C --> T["test<br/>Surefire *Test"]
+  T --> P["package<br/>JAR in target/"]
+  P --> Ver["verify<br/>extra checks"]
+  Ver --> I["install<br/>copy to ~/.m2"]
 ```
 
 ### Lab flow (mermaid)
@@ -606,31 +615,47 @@ Correlation ID (logs later): lab-request-001
 
 ### Checkpoint A — Project copy + coordinates
 
-* [ ] `~/java-bootcamp/examples/lab9-crm` exists (copied from Lab 8)
-* [ ] `pom.xml` has `com.northstar:customer-service:0.1.0-SNAPSHOT` and `packaging` jar
-* [ ] Properties set `maven.compiler.release` / JDK 21 mindset
-* [ ] Edited on VS Code laptop
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `~/java-bootcamp/examples/lab9-crm` exists (copied from Lab 8) | Pass / Fail |
+| 2 | `pom.xml` has `com.northstar:customer-service:0.1.0-SNAPSHOT` and `packaging` jar | Pass / Fail |
+| 3 | Properties set `maven.compiler.release` / JDK 21 mindset | Pass / Fail |
+| 4 | Edited on VS Code laptop | Pass / Fail |
 
 ### Checkpoint B — Dependencies, plugins, tests
 
-* [ ] Spring placeholder + JUnit `test` scope declared
-* [ ] `PlaceholderTest` passes under Surefire
-* [ ] Compiler + jar `Main-Class` configured
-* [ ] `mvn test` and `mvn package` succeed
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Spring placeholder + JUnit `test` scope declared | Pass / Fail |
+| 2 | `PlaceholderTest` passes under Surefire | Pass / Fail |
+| 3 | Compiler + jar `Main-Class` configured | Pass / Fail |
+| 4 | `mvn test` and `mvn package` succeed | Pass / Fail |
 
 ### Checkpoint C — Lifecycle + tree + profiles
 
-* [ ] `docs/lifecycle-evidence.md` covers validate → install
-* [ ] `docs/dependency-tree.txt` annotated (direct/transitive, JUnit scope)
-* [ ] Profiles `dev` / `test` / `prod` demonstrated with `help:active-profiles`
-* [ ] `application-dev.properties` has no secrets
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `docs/lifecycle-evidence.md` covers validate → install | Pass / Fail |
+| 2 | `docs/dependency-tree.txt` annotated (direct/transitive, JUnit scope) | Pass / Fail |
+| 3 | Profiles `dev` / `test` / `prod` demonstrated with `help:active-profiles` | Pass / Fail |
+| 4 | `application-dev.properties` has no secrets | Pass / Fail |
 
 ### Checkpoint D — JAR, CI, failures, security
 
-* [ ] `java -jar target/customer-service.jar` works
-* [ ] README documents `mvn -B verify`
-* [ ] At least three failure experiments recorded and restored
-* [ ] No secrets / `target/` / `.m2` dump committed
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `java -jar target/customer-service.jar` works | Pass / Fail |
+| 2 | README documents `mvn -B verify` | Pass / Fail |
+| 3 | At least three failure experiments recorded and restored | Pass / Fail |
+| 4 | No secrets / `target/` / `.m2` dump committed | Pass / Fail |
 
 ---
 

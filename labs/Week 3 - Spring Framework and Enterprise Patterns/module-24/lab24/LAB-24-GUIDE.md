@@ -12,9 +12,17 @@
 | Windows | [LAB-24-WINDOWS.md](LAB-24-WINDOWS.md) |
 | macOS | [LAB-24-MACOS.md](LAB-24-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -76,21 +84,17 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-Partner billing --SOAP/XML--> MessageDispatcherServlet (/ws/*)
-                                    |
-                              Wss4j UsernameToken interceptor
-                                    |
-                              CustomerEndpoint (@Endpoint)
-                                    |
-                              CustomerSoapMapper (JAXB <-> domain)
-                                    |
-                              CustomerService (unchanged from Lab 23)
-                                    |
-                              In-memory repository (Lab 25 hardens layering)
-
-React SPA --HTTPS/JSON--> CustomerController (REST) --------^
-                              customer.xsd --> live /ws/customer.wsdl
+```mermaid
+flowchart TB
+  Partner["Partner billing"] -->|SOAP/XML| MDS["MessageDispatcherServlet /ws/*"]
+  MDS --> WSS["Wss4j UsernameToken"]
+  WSS --> EP["CustomerEndpoint @Endpoint"]
+  EP --> Map["CustomerSoapMapper JAXB"]
+  Map --> Svc["CustomerService"]
+  Svc --> Repo["In-memory repository"]
+  UI["React SPA"] -->|HTTPS/JSON| REST["CustomerController"]
+  REST --> Svc
+  XSD["customer.xsd"] --> WSDL["/ws/customer.wsdl"]
 ```
 
 ### Lab flow (mermaid)
@@ -421,27 +425,43 @@ mvn -q test
 
 ### Checkpoint A — Tooling
 
-* [ ] `lab24-crm` copied from Lab 23 under `examples/`
-* [ ] Spring-WS + jaxb2 + security dependencies present
-* [ ] `customer.xsd` generates JAXB types
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab24-crm` copied from Lab 23 under `examples/` | Pass / Fail |
+| 2 | Spring-WS + jaxb2 + security dependencies present | Pass / Fail |
+| 3 | `customer.xsd` generates JAXB types | Pass / Fail |
 
 ### Checkpoint B — Contract + endpoint
 
-* [ ] Live `/ws/customer.wsdl` lists four operations
-* [ ] `CustomerEndpoint` delegates to `CustomerService`
-* [ ] Mapper keeps JAXB out of service/REST layers
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Live `/ws/customer.wsdl` lists four operations | Pass / Fail |
+| 2 | `CustomerEndpoint` delegates to `CustomerService` | Pass / Fail |
+| 3 | Mapper keeps JAXB out of service/REST layers | Pass / Fail |
 
 ### Checkpoint C — Faults + security
 
-* [ ] Not-found yields CLIENT fault
-* [ ] Missing UsernameToken rejected
-* [ ] Secured get of `CUS-1001` succeeds (`lab24-001` evidenced)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Not-found yields CLIENT fault | Pass / Fail |
+| 2 | Missing UsernameToken rejected | Pass / Fail |
+| 3 | Secured get of `CUS-1001` succeeds (`lab24-001` evidenced) | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] Two consecutive `mvn test` identical success
-* [ ] REST and SOAP share one service proof
-* [ ] No secrets / `target/` committed; UsernameToken marked lab-only
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Two consecutive `mvn test` identical success | Pass / Fail |
+| 2 | REST and SOAP share one service proof | Pass / Fail |
+| 3 | No secrets / `target/` committed; UsernameToken marked lab-only | Pass / Fail |
 
 ---
 

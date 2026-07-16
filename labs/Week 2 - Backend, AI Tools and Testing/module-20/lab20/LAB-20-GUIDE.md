@@ -12,9 +12,17 @@
 | Windows | [LAB-20-WINDOWS.md](LAB-20-WINDOWS.md) |
 | macOS | [LAB-20-MACOS.md](LAB-20-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -75,21 +83,12 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-Client / curl / Lab 19 UI
-        |
-        v
-CorrelationFilter  --puts--> MDC[correlationId]  (clear in finally)
-        |
-        v
-CustomerController  --WARN--> reason codes (no payload dump)
-        |
-        v
-CustomerService     --INFO/WARN/ERROR--> SLF4J
-        |                 MDC[customerId], MDC[op]
-        v
-Logback console/file pattern:
-  ... corr=%X{correlationId} cust=%X{customerId} op=%X{op} - %msg
+```mermaid
+flowchart TB
+  Client["Client / curl / Lab 19 UI"] --> CF["CorrelationFilter<br/>MDC correlationId"]
+  CF --> Ctrl["CustomerController<br/>WARN reason codes"]
+  Ctrl --> Svc["CustomerService<br/>INFO/WARN/ERROR + MDC"]
+  Svc --> Log["Logback pattern<br/>corr / cust / op"]
 ```
 
 ### Lab flow (mermaid)
@@ -448,27 +447,43 @@ Complete [Failure Experiments](#failure-experiments). Capture sanitized excerpts
 
 ### Checkpoint A — Tooling and pattern
 
-* [ ] `lab20-crm` under `~/java-bootcamp/examples/`
-* [ ] SLF4J + Logback on classpath (single binding)
-* [ ] `logback-spring.xml` includes corr/cust/op
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab20-crm` under `~/java-bootcamp/examples/` | Pass / Fail |
+| 2 | SLF4J + Logback on classpath (single binding) | Pass / Fail |
+| 3 | `logback-spring.xml` includes corr/cust/op | Pass / Fail |
 
 ### Checkpoint B — Correlation and service logs
 
-* [ ] `CorrelationFilter` sets MDC and clears in `finally`
-* [ ] Service create/get use SLF4J with ID/op MDC
-* [ ] No PII in sampled INFO lines
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `CorrelationFilter` sets MDC and clears in `finally` | Pass / Fail |
+| 2 | Service create/get use SLF4J with ID/op MDC | Pass / Fail |
+| 3 | No PII in sampled INFO lines | Pass / Fail |
 
 ### Checkpoint C — Validation + automated proof
 
-* [ ] Controller WARN reason codes without payload dump
-* [ ] Manual traces for `CUS-1001` / `CUS-1002`
-* [ ] `CustomerLoggingIT` asserts IDs present and “Amina” absent
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Controller WARN reason codes without payload dump | Pass / Fail |
+| 2 | Manual traces for `CUS-1001` / `CUS-1002` | Pass / Fail |
+| 3 | `CustomerLoggingIT` asserts IDs present and “Amina” absent | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] `docs/logging.md` contract complete
-* [ ] Two consecutive green test runs
-* [ ] No secrets / raw PII dumps committed
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `docs/logging.md` contract complete | Pass / Fail |
+| 2 | Two consecutive green test runs | Pass / Fail |
+| 3 | No secrets / raw PII dumps committed | Pass / Fail |
 
 ---
 

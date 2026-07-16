@@ -12,9 +12,17 @@
 | Windows | [LAB-41-WINDOWS.md](LAB-41-WINDOWS.md) |
 | macOS | [LAB-41-MACOS.md](LAB-41-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **Docker** (image builds). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **Docker** (image builds). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -77,19 +85,13 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-Dockerfile (multi-stage)
-  stage build: maven:…-temurin-21  → mvn verify → JAR
-  stage run:   eclipse-temurin:21-jre → USER 10001 → java -jar
-        |
-        v
-docker run --env-file .env.local --memory=512m -p 8080:8080
-        |
-        +-- HEALTHCHECK → /actuator/health/readiness
-        +-- PostgreSQL / Kafka via runtime env (not baked in)
-        |
-        v
-docs/container-runbook.md  (digest, health, shutdown, registry notes)
+```mermaid
+flowchart TB
+  DF["Dockerfile multi-stage"] --> Build["build: maven Temurin 21<br/>mvn verify → JAR"]
+  DF --> Run["run: JRE 21 USER 10001<br/>java -jar"]
+  Run --> Docker["docker run --env-file<br/>memory 512m -p 8080"]
+  Docker --> HC["HEALTHCHECK readiness"]
+  Docker --> Ext["PostgreSQL / Kafka via env"]
 ```
 
 ### Lab flow (mermaid)
@@ -419,30 +421,46 @@ Record in the runbook which hostname works on the local workstation (`host.docke
 
 ### Checkpoint A — Context and Dockerfile
 
-* [ ] `lab41-crm` verifies before image work
-* [ ] `.dockerignore` excludes secrets/`target`
-* [ ] Multi-stage Dockerfile builds JAR then JRE runtime
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab41-crm` verifies before image work | Pass / Fail |
+| 2 | `.dockerignore` excludes secrets/`target` | Pass / Fail |
+| 3 | Multi-stage Dockerfile builds JAR then JRE runtime | Pass / Fail |
 
 ### Checkpoint B — Hardening and inspect
 
-* [ ] Runs as UID `10001` (or fixed non-root)
-* [ ] No secrets in image env/layers
-* [ ] Image id/size/user recorded
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Runs as UID `10001` (or fixed non-root) | Pass / Fail |
+| 2 | No secrets in image env/layers | Pass / Fail |
+| 3 | Image id/size/user recorded | Pass / Fail |
 
 ### Checkpoint C — Run and prove
 
-* [ ] Runtime env via `.env.example` pattern
-* [ ] Readiness healthy; CRM smoke with `CUS-1001`
-* [ ] Graceful stop + bad URL experiment documented
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Runtime env via `.env.example` pattern | Pass / Fail |
+| 2 | Readiness healthy; CRM smoke with `CUS-1001` | Pass / Fail |
+| 3 | Graceful stop + bad URL experiment documented | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] `container-runbook.md` complete
-* [ ] Registry/digest notes present
-* [ ] No `.env` / tokens in Git
-* [ ] Peer build from runbook succeeded (or gaps fixed)
-* [ ] JDBC hostname for container→PostgreSQL documented
-* [ ] Actuator does not expose `env`/`beans` publicly without auth
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `container-runbook.md` complete | Pass / Fail |
+| 2 | Registry/digest notes present | Pass / Fail |
+| 3 | No `.env` / tokens in Git | Pass / Fail |
+| 4 | Peer build from runbook succeeded (or gaps fixed) | Pass / Fail |
+| 5 | JDBC hostname for container→PostgreSQL documented | Pass / Fail |
+| 6 | Actuator does not expose `env`/`beans` publicly without auth | Pass / Fail |
 
 ---
 

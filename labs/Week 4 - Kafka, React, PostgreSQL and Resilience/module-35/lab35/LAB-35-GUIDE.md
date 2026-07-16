@@ -12,9 +12,17 @@
 | Windows | [LAB-35-WINDOWS.md](LAB-35-WINDOWS.md) |
 | macOS | [LAB-35-MACOS.md](LAB-35-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **Node.js 22+**, **npm**, **JDK 21**, and **Maven 3.9+** (API + UI). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **Node.js 22+**, **npm**, **JDK 21**, and **Maven 3.9+** (API + UI). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -76,23 +84,13 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-React SPA (Vite :5173)
-    |
-    |  fetch + JSON + X-Correlation-Id
-    |  AbortSignal on loads
-    v
-http.request / customersApi / ApiError
-    |
-    v
-Spring Boot CRM API (:8080)
-    |  CORS: allow http://localhost:5173 only
-    |  (optional SOAP bridge hidden from browser)
-    v
-Service / repository  (PostgreSQL later in Lab 37+)
-
-UI states: loading | empty | data | error
-Writes: saving flag disables double submit
+```mermaid
+flowchart TB
+  SPA["React SPA<br/>Vite :5173"] -->|fetch JSON + correlation + AbortSignal| HTTP["http.request / customersApi"]
+  HTTP --> API["Spring Boot CRM API :8080<br/>CORS localhost:5173"]
+  API --> Svc["Service / repository"]
+  UI["UI states: loading | empty | data | error"] -.-> SPA
+  Save["saving flag disables double submit"] -.-> SPA
 ```
 
 ### Lab flow (mermaid)
@@ -471,28 +469,44 @@ Confirm no `Access-Control-Allow-Origin: https://evil.example`. Complete [Failur
 
 ### Checkpoint A — Tooling
 
-* [ ] `lab35-crm/crm-ui` from Lab 34
-* [ ] Spring API reachable; contract documented via curl
-* [ ] `.env.example` with `VITE_CRM_API_URL` (no secrets)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab35-crm/crm-ui` from Lab 34 | Pass / Fail |
+| 2 | Spring API reachable; contract documented via curl | Pass / Fail |
+| 3 | `.env.example` with `VITE_CRM_API_URL` (no secrets) | Pass / Fail |
 
 ### Checkpoint B — Client core
 
-* [ ] `ApiError` + `http.request` + `customersApi`
-* [ ] Abortable list load; distinct UI states
-* [ ] Create/update with correlation header
-* [ ] 400 field errors mapped; saving disables duplicate POST
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `ApiError` + `http.request` + `customersApi` | Pass / Fail |
+| 2 | Abortable list load; distinct UI states | Pass / Fail |
+| 3 | Create/update with correlation header | Pass / Fail |
+| 4 | 400 field errors mapped; saving disables duplicate POST | Pass / Fail |
 
 ### Checkpoint C — CORS + tests
 
-* [ ] Spring CORS allowlist for Vite origin
-* [ ] Evil Origin probe recorded
-* [ ] Response-class tests green twice; build green
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Spring CORS allowlist for Vite origin | Pass / Fail |
+| 2 | Evil Origin probe recorded | Pass / Fail |
+| 3 | Response-class tests green twice; build green | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] Integration notes + screenshots
-* [ ] No secrets / `node_modules` / `dist` / `.env` secrets committed
-* [ ] README runbook starts Spring + Vite
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Integration notes + screenshots | Pass / Fail |
+| 2 | No secrets / `node_modules` / `dist` / `.env` secrets committed | Pass / Fail |
+| 3 | README runbook starts Spring + Vite | Pass / Fail |
 
 ---
 

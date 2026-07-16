@@ -12,9 +12,17 @@
 | Windows | [LAB-21-WINDOWS.md](LAB-21-WINDOWS.md) |
 | macOS | [LAB-21-MACOS.md](LAB-21-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -73,20 +81,14 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-Client / curl / UI
-        |
-        v
-Spring Boot API  --Lab 20 logs--> corr/cust/op
-        |
-        +--Actuator--> /actuator/health
-        |              /actuator/health/liveness
-        |              /actuator/health/readiness  <-- CrmReadinessIndicator
-        |              /actuator/metrics
-        |
-        +--Micrometer--> crm.customer.create{result}
-                         crm.customer.get.latency
-                         (CustomerMetrics wired from service)
+```mermaid
+flowchart TB
+  Client["Client / curl / UI"] --> API["Spring Boot API<br/>Lab 20 logs"]
+  API --> Health["/actuator/health<br/>liveness / readiness"]
+  API --> Metrics["/actuator/metrics"]
+  API --> Micro["Micrometer<br/>crm.customer.*"]
+  Ready["CrmReadinessIndicator"] --> Health
+  Micro -.-> Svc["CustomerMetrics from service"]
 ```
 
 ### Lab flow (mermaid)
@@ -452,27 +454,43 @@ Complete [Failure Experiments](#failure-experiments). Capture before/after JSON.
 
 ### Checkpoint A — Actuator tooling
 
-* [ ] `lab21-crm` under `~/java-bootcamp/examples/`
-* [ ] Actuator dependency present
-* [ ] Local exposure configured with production hardening notes
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab21-crm` under `~/java-bootcamp/examples/` | Pass / Fail |
+| 2 | Actuator dependency present | Pass / Fail |
+| 3 | Local exposure configured with production hardening notes | Pass / Fail |
 
 ### Checkpoint B — Probes
 
-* [ ] Liveness and readiness curls documented
-* [ ] `CrmReadinessIndicator` can fail readiness independently
-* [ ] Written distinction: LB drain vs process restart
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Liveness and readiness curls documented | Pass / Fail |
+| 2 | `CrmReadinessIndicator` can fail readiness independently | Pass / Fail |
+| 3 | Written distinction: LB drain vs process restart | Pass / Fail |
 
 ### Checkpoint C — Metrics + IT
 
-* [ ] `CustomerMetrics` counters/timers wired
-* [ ] Before/after create/get evidence with `CUS-1001`
-* [ ] `ActuatorIT` green (health + increment)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `CustomerMetrics` counters/timers wired | Pass / Fail |
+| 2 | Before/after create/get evidence with `CUS-1001` | Pass / Fail |
+| 3 | `ActuatorIT` green (health + increment) | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] `monitoring-report.md` complete
-* [ ] No high-cardinality tags; no secrets in Actuator config
-* [ ] Lab-only readiness toggle marked non-production
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `monitoring-report.md` complete | Pass / Fail |
+| 2 | No high-cardinality tags; no secrets in Actuator config | Pass / Fail |
+| 3 | Lab-only readiness toggle marked non-production | Pass / Fail |
 
 ---
 

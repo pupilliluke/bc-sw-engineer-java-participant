@@ -12,9 +12,17 @@
 | Windows | [LAB-28-WINDOWS.md](LAB-28-WINDOWS.md) |
 | macOS | [LAB-28-MACOS.md](LAB-28-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -71,17 +79,15 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-React CRM SPA --HTTPS/JSON--> Spring Security filter chain
-                                    |
-                    +---------------+----------------+
-                    |                                |
-              /api/auth/login                  /api/customers/**
-              (issue JWT)                      (require JWT + roles)
-                    |                                |
-              JwtService + UserDetails          JwtAuthenticationFilter
-                    |                                |
-              In-memory agent1/admin1           SecurityContext + MockMvc tests
+```mermaid
+flowchart TB
+  UI["React CRM SPA"] -->|HTTPS/JSON| Sec["Spring Security filter chain"]
+  Sec --> Login["/api/auth/login<br/>issue JWT"]
+  Sec --> API["/api/customers/**<br/>JWT + roles"]
+  Login --> Jwt["JwtService + UserDetails"]
+  API --> Filt["JwtAuthenticationFilter"]
+  Jwt --> Users["agent1 / admin1 in-memory"]
+  Filt --> Ctx["SecurityContext + MockMvc tests"]
 ```
 
 ### Lab flow (mermaid)
@@ -482,27 +488,43 @@ If your Lab 25/27 copy has empty data, add a `CommandLineRunner` or `data.sql` b
 
 ### Checkpoint A — Tooling and secret hygiene
 
-* [ ] `lab28-crm` under `~/java-bootcamp/examples/`
-* [ ] Security + JWT dependencies resolve
-* [ ] `.env.example` present; real `.env` / secrets not staged
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab28-crm` under `~/java-bootcamp/examples/` | Pass / Fail |
+| 2 | Security + JWT dependencies resolve | Pass / Fail |
+| 3 | `.env.example` present; real `.env` / secrets not staged | Pass / Fail |
 
 ### Checkpoint B — Filter chain and JWT login
 
-* [ ] Stateless `SecurityFilterChain` with permitAll login/health
-* [ ] `agent1` / `admin1` with BCrypt (or equivalent)
-* [ ] Login issues JWT; parse rejects tampered tokens
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Stateless `SecurityFilterChain` with permitAll login/health | Pass / Fail |
+| 2 | `agent1` / `admin1` with BCrypt (or equivalent) | Pass / Fail |
+| 3 | Login issues JWT; parse rejects tampered tokens | Pass / Fail |
 
 ### Checkpoint C — Roles and API access
 
-* [ ] Bearer access to `CUS-1001` / `CUS-1002` as AGENT
-* [ ] Missing/invalid JWT → 401
-* [ ] AGENT on admin route → 403; ADMIN → 200
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Bearer access to `CUS-1001` / `CUS-1002` as AGENT | Pass / Fail |
+| 2 | Missing/invalid JWT → 401 | Pass / Fail |
+| 3 | AGENT on admin route → 403; ADMIN → 200 | Pass / Fail |
 
 ### Checkpoint D — Tests and hygiene
 
-* [ ] MockMvc (or WebTestClient) 401/403/200 matrix green
-* [ ] Two consecutive `mvn test` identical success
-* [ ] Production IdP / rotation notes; no tokens in logs or Git
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | MockMvc (or WebTestClient) 401/403/200 matrix green | Pass / Fail |
+| 2 | Two consecutive `mvn test` identical success | Pass / Fail |
+| 3 | Production IdP / rotation notes; no tokens in logs or Git | Pass / Fail |
 
 ---
 

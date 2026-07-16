@@ -12,9 +12,17 @@
 | Windows | [LAB-19-WINDOWS.md](LAB-19-WINDOWS.md) |
 | macOS | [LAB-19-MACOS.md](LAB-19-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **Chrome/Chromium** for Selenium. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **Chrome/Chromium** for Selenium. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -74,20 +82,12 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-Browser (Chrome/Chromium headless)
-        |
-   Selenium UI suite
-   CustomerUiIT + CustomerFormPage (Page Object)
-        |
-        v
-Static customers.html  --fetch/XHR-->  CustomerController (/api/customers)
-                                              |
-                                    CustomerService + repository
-                                              ^
-                                              |
-                              CustomerApiIT (TestRestTemplate / WebTestClient)
-                              @SpringBootTest(RANDOM_PORT)
+```mermaid
+flowchart TB
+  Browser["Browser<br/>Chrome headless"] --> UI["Selenium UI suite<br/>CustomerUiIT + Page Object"]
+  UI -->|fetch/XHR| Ctrl["CustomerController<br/>/api/customers"]
+  Ctrl --> Svc["CustomerService + repository"]
+  ApiIT["CustomerApiIT<br/>@SpringBootTest RANDOM_PORT"] -->|TestRestTemplate| Ctrl
 ```
 
 ### Lab flow (mermaid)
@@ -510,28 +510,44 @@ Document in `docs/regression-notes.md`: unit vs IT vs UI scope, headless CI stra
 
 ### Checkpoint A — Tooling and API
 
-* [ ] `lab19-crm` under `~/java-bootcamp/examples/`
-* [ ] Web + Selenium + WebDriverManager on classpath
-* [ ] Create/get API with correlation header echo
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab19-crm` under `~/java-bootcamp/examples/` | Pass / Fail |
+| 2 | Web + Selenium + WebDriverManager on classpath | Pass / Fail |
+| 3 | Create/get API with correlation header echo | Pass / Fail |
 
 ### Checkpoint B — Integration tests
 
-* [ ] `CustomerApiIT` create/get `CUS-1001`
-* [ ] Not-found 404 case
-* [ ] Deterministic fixtures (no random PII)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `CustomerApiIT` create/get `CUS-1001` | Pass / Fail |
+| 2 | Not-found 404 case | Pass / Fail |
+| 3 | Deterministic fixtures (no random PII) | Pass / Fail |
 
 ### Checkpoint C — UI suite
 
-* [ ] `customers.html` with `data-testid` hooks
-* [ ] WebDriverManager headless session + quit teardown
-* [ ] Page Object + happy-path Amina create
-* [ ] Blank-name negative UI assert
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `customers.html` with `data-testid` hooks | Pass / Fail |
+| 2 | WebDriverManager headless session + quit teardown | Pass / Fail |
+| 3 | Page Object + happy-path Amina create | Pass / Fail |
+| 4 | Blank-name negative UI assert | Pass / Fail |
 
 ### Checkpoint D — Regression hygiene
 
-* [ ] Two green runs / verify after trivial edit
-* [ ] Failure screenshot experiment restored
-* [ ] No secrets / drivers / `target/` committed
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Two green runs / verify after trivial edit | Pass / Fail |
+| 2 | Failure screenshot experiment restored | Pass / Fail |
+| 3 | No secrets / drivers / `target/` committed | Pass / Fail |
 
 ---
 

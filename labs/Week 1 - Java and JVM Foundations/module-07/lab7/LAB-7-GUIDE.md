@@ -18,6 +18,14 @@
 
 ---
 
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
 ## Lab Overview
 
 This Module 7 lab teaches **Java exception handling** by building a fault-tolerant **ATM Banking System** console application. You will wrap banking operations in `try-catch-finally`, declare and throw **custom checked exceptions**, demonstrate **exception propagation** from `Account` → `ATMService` → `Main`, read files with **try-with-resources**, and log failures to `logs/application.log`—so invalid input never crashes the process.
@@ -75,44 +83,34 @@ You build and run the app on your **laptop** with plain JDK—no Spring, no data
 
 ### Call chain and exception flow (NOW)
 
-```text
-  Main (menu loop / switch)
-       │ catches invalid menu input; never exits on business errors
-       ▼
-  ATMService  ←── Scanner
-  ┌────────────────────────────────────────────────────────────┐
-  │ login / deposit / withdraw / transfer / mini statement     │
-  │ executeTransaction(...) → try / multi-catch / finally      │
-  │ findAccount → AccountNotFoundException                     │
-  │ try-with-resources → transactions.txt (IOException)        │
-  │ LoggerUtil → logs/application.log                          │
-  └────────────────────────────────────────────────────────────┘
-       │ calls
-       ▼
-  Account.deposit / withdraw
-       │ throw InvalidAmountException
-       │ throw InsufficientFundsException
-       ▼
-  (propagates up to ATMService catch blocks)
+```mermaid
+flowchart TB
+  Main["Main<br/>menu + input validation"] -->|calls| ATM["ATMService"]
+  Scan["Scanner"] --> ATM
+  subgraph Ops["ATMService responsibilities"]
+    O1["login / deposit / withdraw / transfer"]
+    O2["try / multi-catch / finally"]
+    O3["try-with-resources → transactions.txt"]
+    O4["LoggerUtil → logs"]
+  end
+  ATM --- Ops
+  ATM --> Acc["Account.deposit / withdraw"]
+  Acc -->|InvalidAmount / InsufficientFunds| ATM
 ```
 
 ### Exception hierarchy (lab)
 
-```text
-Exception  (checked — must declare or catch)
-├── InvalidAmountException
-├── InsufficientFundsException   (+ requestedAmount, availableBalance)
-├── InvalidPinException          (+ attemptsRemaining)
-└── AccountNotFoundException
-
-RuntimeException (unchecked — demos in menu 8)
-├── NullPointerException
-├── ArithmeticException
-└── ArrayIndexOutOfBoundsException
-
-Also handled at the boundary:
-├── InputMismatchException / NumberFormatException → invalid numeric input
-└── IOException → unable to read transaction history / log issues
+```mermaid
+flowchart TB
+  Ex["Exception checked"] --> IA["InvalidAmountException"]
+  Ex --> IF["InsufficientFundsException"]
+  Ex --> IP["InvalidPinException"]
+  Ex --> AN["AccountNotFoundException"]
+  RT["RuntimeException unchecked"] --> NPE["NullPointerException"]
+  RT --> AE["ArithmeticException"]
+  RT --> AIOOB["ArrayIndexOutOfBoundsException"]
+  Bound["Boundary also handles"] --> IM["InputMismatchException"]
+  Bound --> IO["IOException"]
 ```
 
 ### Lab flow (mermaid)
@@ -1109,31 +1107,47 @@ Then complete `notes/exception-hierarchy.md` and draft Reflection answers.
 
 ### Checkpoint A — Project + exceptions + model
 
-* [ ] `java-bootcamp/examples/Lab7-ATMSystem/src/com/academy/atm/` exists
-* [ ] Four custom exceptions + `Account` + `transactions.txt` + `logs/` present
-* [ ] Seed accounts: `1001`/`1234`/$11000 and `1002`/`5678`/$5000
-* [ ] Edited via IntelliJ (or optional VS Code) on your laptop 
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `java-bootcamp/examples/Lab7-ATMSystem/src/com/academy/atm/` exists | Pass / Fail |
+| 2 | Four custom exceptions + `Account` + `transactions.txt` + `logs/` present | Pass / Fail |
+| 3 | Seed accounts: `1001`/`1234`/$11000 and `1002`/`5678`/$5000 | Pass / Fail |
+| 4 | Edited via IntelliJ (or optional VS Code) on your laptop | Pass / Fail |
 
 ### Checkpoint B — Service + Main compile
 
-* [ ] `ATMService`, `LoggerUtil`, `Transaction`, `Main` present
-* [ ] `javac -d out src/com/academy/atm/*.java` succeeds
-* [ ] `java -cp out com.academy.atm.Main` from **project root** shows menu 1–7
-* [ ] Exit prints `Thank You` and terminates
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `ATMService`, `LoggerUtil`, `Transaction`, `Main` present | Pass / Fail |
+| 2 | `javac -d out src/com/academy/atm/*.java` succeeds | Pass / Fail |
+| 3 | `java -cp out com.academy.atm.Main` from **project root** shows menu 1–7 | Pass / Fail |
+| 4 | Exit prints `Thank You` and terminates | Pass / Fail |
 
 ### Checkpoint C — Exception behavior
 
-* [ ] Withdraw more than balance (e.g. `20000` on `1001`) → Insufficient Balance; menu continues
-* [ ] Invalid amount / bad PIN / missing account produce ERROR messages (not crashes)
-* [ ] Invalid numeric input shows the Part 3 messages and continues
-* [ ] `finally` prints return-to-menu text after operations
-* [ ] try-with-resources handles missing/unreadable `transactions.txt` with the IOException message
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Withdraw more than balance (e.g. `20000` on `1001`) → Insufficient Balance; menu continues | Pass / Fail |
+| 2 | Invalid amount / bad PIN / missing account produce ERROR messages (not crashes) | Pass / Fail |
+| 3 | Invalid numeric input shows the Part 3 messages and continues | Pass / Fail |
+| 4 | `finally` prints return-to-menu text after operations | Pass / Fail |
+| 5 | try-with-resources handles missing/unreadable `transactions.txt` with the IOException message | Pass / Fail |
 
 ### Checkpoint D — Logging + evidence
 
-* [ ] `logs/application.log` contains ERROR (and ideally INFO) entries under the project root
-* [ ] Exception hierarchy notes filled; reflection drafted
-* [ ] Screenshots of success **and** failure paths saved (no secrets)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `logs/application.log` contains ERROR (and ideally INFO) entries under the project root | Pass / Fail |
+| 2 | Exception hierarchy notes filled; reflection drafted | Pass / Fail |
+| 3 | Screenshots of success **and** failure paths saved (no secrets) | Pass / Fail |
 
 ---
 

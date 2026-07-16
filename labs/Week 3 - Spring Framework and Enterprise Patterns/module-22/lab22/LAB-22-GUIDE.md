@@ -12,9 +12,17 @@
 | Windows | [LAB-22-WINDOWS.md](LAB-22-WINDOWS.md) |
 | macOS | [LAB-22-MACOS.md](LAB-22-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -73,23 +81,15 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-CrmApplication (@SpringBootApplication)
-        |
-        v
-CustomerController  (@RestController)  constructor → CustomerService
-        |
-        v
-CustomerService     (@Service)  constructor → CustomerRepository
-        |                                   → NotificationService
-        |                                   → CustomerMetrics (if Lab 21 kept)
-        |
-        +-- InMemoryCustomerRepository (@Repository)
-        +-- NotificationService        (@Service)
-
-Lifecycle: @PostConstruct init / @PreDestroy shutdown on CustomerService
-Tests: pure new CustomerService(fakes)  +  @SpringBootTest IT
-Docs: docs/dependency-graph.md
+```mermaid
+flowchart TB
+  App["CrmApplication<br/>@SpringBootApplication"] --> Ctrl["CustomerController"]
+  Ctrl --> Svc["CustomerService @Service"]
+  Svc --> Repo["InMemoryCustomerRepository"]
+  Svc --> Notif["NotificationService"]
+  Svc --> Met["CustomerMetrics optional"]
+  Life["@PostConstruct / @PreDestroy"] -.-> Svc
+  Docs["docs/dependency-graph.md"] -.-> App
 ```
 
 ### Lab flow (mermaid)
@@ -480,27 +480,43 @@ Complete [Failure Experiments](#failure-experiments). Run `mvn test` twice.
 
 ### Checkpoint A — Scaffold and domain
 
-* [ ] `lab22-crm` under `~/java-bootcamp/examples/`
-* [ ] `CrmApplication` starts successfully
-* [ ] Domain `Customer` free of unnecessary Spring annotations
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab22-crm` under `~/java-bootcamp/examples/` | Pass / Fail |
+| 2 | `CrmApplication` starts successfully | Pass / Fail |
+| 3 | Domain `Customer` free of unnecessary Spring annotations | Pass / Fail |
 
 ### Checkpoint B — Bean graph
 
-* [ ] `@Repository` / `@Service` (and controller) stereotypes present
-* [ ] `CustomerService` constructor injection with `final` fields
-* [ ] No `new` of Spring-managed collaborators inside the service
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `@Repository` / `@Service` (and controller) stereotypes present | Pass / Fail |
+| 2 | `CustomerService` constructor injection with `final` fields | Pass / Fail |
+| 3 | No `new` of Spring-managed collaborators inside the service | Pass / Fail |
 
 ### Checkpoint C — Lifecycle + tests
 
-* [ ] `@PostConstruct` / `@PreDestroy` evidence
-* [ ] Pure unit test without Spring
-* [ ] `@SpringBootTest` IT creates/gets `CUS-1001`
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `@PostConstruct` / `@PreDestroy` evidence | Pass / Fail |
+| 2 | Pure unit test without Spring | Pass / Fail |
+| 3 | `@SpringBootTest` IT creates/gets `CUS-1001` | Pass / Fail |
 
 ### Checkpoint D — Documentation hygiene
 
-* [ ] `docs/dependency-graph.md` matches reality
-* [ ] Correlation + fixture IDs documented
-* [ ] No secrets; lab-only beans endpoint (if used) not sold as prod
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `docs/dependency-graph.md` matches reality | Pass / Fail |
+| 2 | Correlation + fixture IDs documented | Pass / Fail |
+| 3 | No secrets; lab-only beans endpoint (if used) not sold as prod | Pass / Fail |
 
 ---
 

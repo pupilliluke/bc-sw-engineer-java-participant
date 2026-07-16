@@ -18,6 +18,14 @@
 
 ---
 
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
 ## Lab Overview
 
 This Module 5 lab teaches the **Java Collections Framework** by building a complete **Library Management System** console application. You will choose and use `List`, `Set`, and `Map` implementations for real domain concepts—books, members, borrow mappings, categories, and reports—then iterate, search, sort, and measure collection performance.
@@ -77,24 +85,22 @@ Instead of a database, **all data lives in Java Collections** for the life of th
 
 ### Which collection for which domain concept
 
-```text
-  Main (menu loop / switch)
-       │ uses
-       ▼
-  LibraryService  ←── Scanner (System.in)
-  ┌────────────────────────────────────────────────────────────┐
-  │ ArrayList<Book>           books          ordered catalog   │
-  │ ArrayList<Member>         members        ordered roster    │
-  │ HashSet<String>           bookIds        uniqueness guard  │
-  │ HashSet<String>           memberIds      uniqueness guard  │
-  │ HashMap<String,String>    borrowRecords  bookId → memberId │
-  │ TreeSet<String>           categories     sorted unique     │
-  │ TreeMap<String,Integer>   categoryCount  sorted tallies    │
-  │ ArrayList<BorrowRecord>   borrowHistory  chronologic log   │
-  └────────────────────────────────────────────────────────────┘
-       │ uses
-       ▼
-  ReportService  → summary stdout (+ optional file export bonus)
+```mermaid
+flowchart TB
+  Main["Main<br/>menu loop / switch"] -->|uses| LS["LibraryService"]
+  Scan["Scanner System.in"] --> LS
+  subgraph Collections["Collections inside LibraryService"]
+    B["ArrayList Book"]
+    M["ArrayList Member"]
+    BI["HashSet bookIds"]
+    MI["HashSet memberIds"]
+    BR["HashMap borrowRecords"]
+    C["TreeSet categories"]
+    CC["TreeMap categoryCount"]
+    H["ArrayList BorrowRecord history"]
+  end
+  LS --- Collections
+  LS -->|uses| RS["ReportService<br/>summary stdout"]
 ```
 
 ### Beginner decision guide (List / Set / Map)
@@ -563,28 +569,44 @@ Optionally skim [`solution/Lab5-LibraryManagement/`](solution/Lab5-LibraryManage
 
 ### Checkpoint A — Packages + models
 
-* [ ] `src/com/academy/library/` contains `Book`, `Member`, (`BorrowRecord`), service types, `Main`
-* [ ] All files declare `package com.academy.library;`
-* [ ] Edited with VS Code and/or IntelliJ per [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `src/com/academy/library/` contains `Book`, `Member`, (`BorrowRecord`), service types, `Main` | Pass / Fail |
+| 2 | All files declare `package com.academy.library;` | Pass / Fail |
+| 3 | Edited with VS Code and/or IntelliJ per [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md) | Pass / Fail |
 
 ### Checkpoint B — Collections wired
 
-* [ ] List / Set / Map / TreeSet / TreeMap fields present as designed
-* [ ] Duplicate book/member IDs rejected
-* [ ] Borrow uses `HashMap`; return clears the entry
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | List / Set / Map / TreeSet / TreeMap fields present as designed | Pass / Fail |
+| 2 | Duplicate book/member IDs rejected | Pass / Fail |
+| 3 | Borrow uses `HashMap`; return clears the entry | Pass / Fail |
 
 ### Checkpoint C — Compile / menu / sample session
 
-* [ ] `javac -d out src/com/academy/library/*.java` succeeds
-* [ ] `java -cp out com.academy.library.Main` shows the menu
-* [ ] Sample session produces Add / Register / Borrow / Reports themes
-* [ ] Exit prints `Thank You`
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `javac -d out src/com/academy/library/*.java` succeeds | Pass / Fail |
+| 2 | `java -cp out com.academy.library.Main` shows the menu | Pass / Fail |
+| 3 | Sample session produces Add / Register / Borrow / Reports themes | Pass / Fail |
+| 4 | Exit prints `Thank You` | Pass / Fail |
 
 ### Checkpoint D — Evidence
 
-* [ ] Screenshots under `notes/` (or LMS)
-* [ ] Short note explaining why List vs Set vs Map for each field
-* [ ] Optional performance table filled
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Screenshots under `notes/` (or LMS) | Pass / Fail |
+| 2 | Short note explaining why List vs Set vs Map for each field | Pass / Fail |
+| 3 | Optional performance table filled | Pass / Fail |
 
 ---
 

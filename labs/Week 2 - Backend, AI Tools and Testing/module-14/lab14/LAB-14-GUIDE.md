@@ -12,9 +12,17 @@
 | Windows | [LAB-14-WINDOWS.md](LAB-14-WINDOWS.md) |
 | macOS | [LAB-14-MACOS.md](LAB-14-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -76,20 +84,13 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-React CRM SPA (later) --JSON payload--> CustomerApiFacade
-                              |
-                              v
-                    CustomerRequestDTO  (+ Bean Validation)
-                              |
-                              v
-                    CustomerMapper / CustomerService
-                              |
-                              v
-                    Customer (entity) --in-memory--> CustomerRepository
-                              |
-                              v
-                    CustomerResponseDTO  (never return entity)
+```mermaid
+flowchart TB
+  UI["React CRM SPA later"] -->|JSON payload| Facade["CustomerApiFacade"]
+  Facade --> DTO["CustomerRequestDTO<br/>+ Bean Validation"]
+  DTO --> Map["CustomerMapper / CustomerService"]
+  Map --> Repo["CustomerRepository"]
+  Repo --> Mem["InMemoryCustomerRepository<br/>private Map — no leaks"]
 ```
 
 ### Lab flow (mermaid)
@@ -576,27 +577,43 @@ git status
 
 ### Checkpoint A — Deps + request DTO
 
-* [ ] `lab14-crm` under `examples/`
-* [ ] Validation API + Hibernate Validator (+ expressly) resolve
-* [ ] `CustomerRequestDTO` annotations compile (Jakarta)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab14-crm` under `examples/` | Pass / Fail |
+| 2 | Validation API + Hibernate Validator (+ expressly) resolve | Pass / Fail |
+| 3 | `CustomerRequestDTO` annotations compile (Jakarta) | Pass / Fail |
 
 ### Checkpoint B — Response + mapper + facade
 
-* [ ] `CustomerResponseDTO` + `CustomerMapper` present
-* [ ] Facade validates **before** service calls
-* [ ] Correlation ID appears on validation failures
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `CustomerResponseDTO` + `CustomerMapper` present | Pass / Fail |
+| 2 | Facade validates **before** service calls | Pass / Fail |
+| 3 | Correlation ID appears on validation failures | Pass / Fail |
 
 ### Checkpoint C — Proof
 
-* [ ] Validation tests green (email, blank name, accept Amina)
-* [ ] Main (or demo) creates/gets `CUS-1001` / `CUS-1002` as response DTOs
-* [ ] No facade method returns `Customer`
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Validation tests green (email, blank name, accept Amina) | Pass / Fail |
+| 2 | Main (or demo) creates/gets `CUS-1001` / `CUS-1002` as response DTOs | Pass / Fail |
+| 3 | No facade method returns `Customer` | Pass / Fail |
 
 ### Checkpoint D — Docs + experiments
 
-* [ ] README constraint table + run instructions
-* [ ] Failure experiments recorded
-* [ ] No secrets / `target/` staged
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | README constraint table + run instructions | Pass / Fail |
+| 2 | Failure experiments recorded | Pass / Fail |
+| 3 | No secrets / `target/` staged | Pass / Fail |
 
 ---
 

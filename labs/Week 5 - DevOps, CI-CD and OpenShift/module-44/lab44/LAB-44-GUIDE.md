@@ -12,9 +12,17 @@
 | Windows | [LAB-44-WINDOWS.md](LAB-44-WINDOWS.md) |
 | macOS | [LAB-44-MACOS.md](LAB-44-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and a **GitHub** repo with **Actions** enabled. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and a **GitHub** repo with **Actions** enabled. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -71,18 +79,13 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-Lab 43 CI artifact (JAR checksum / image digest)
-        |
-        v
-artifact-manifest.json  (version, commit, jarSha256, imageDigest)
-        |
-        +---> test  ----gates----> staging ----gates----> production
-        |         config maps / secrets per env (outside artifact)
-        |
-        v
-docs/release-plan.md + release-checklist.md
-docs/rollback-runbook.md  (redeploy previous known-good digest)
+```mermaid
+flowchart TB
+  CI["Lab 43 CI artifact<br/>JAR checksum / image digest"] --> Man["artifact-manifest.json"]
+  Man --> Test["test"]
+  Test -->|gates| Stg["staging"]
+  Stg -->|gates| Prod["production"]
+  Man --> Rollback["rollback notes"]
 ```
 
 ### Lab flow (mermaid)
@@ -274,12 +277,16 @@ sha256sum target/*.jar
 Example go/no-go fragment:
 
 ```markdown
-- [ ] Artifact digest verified against artifact-manifest.json
-- [ ] Automated gates passed (CI verify + scan)
-- [ ] Database migration reviewed
-- [ ] Staging smoke: CUS-1001 / CUS-1002 with lab-request-001
-- [ ] Rollback target confirmed (prior digest)
-- [ ] On-call owner acknowledged
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Artifact digest verified against artifact-manifest.json | Pass / Fail |
+| 2 | Automated gates passed (CI verify + scan) | Pass / Fail |
+| 3 | Database migration reviewed | Pass / Fail |
+| 4 | Staging smoke: CUS-1001 / CUS-1002 with lab-request-001 | Pass / Fail |
+| 5 | Rollback target confirmed (prior digest) | Pass / Fail |
+| 6 | On-call owner acknowledged | Pass / Fail |
 - Decision: GO / NO-GO
 - Approver and timestamp:
 - Evidence links:
@@ -370,12 +377,16 @@ export ROLLBACK_DIGEST="sha256:<prior-known-good>"
 **Do this:** Complete [Failure Experiments](#failure-experiments). Ensure `git status` is clean of secrets. Ask a peer to follow the rollback runbook dry-run. Add this close-out block to `docs/release-checklist.md`:
 
 ```markdown
-## Evidence pack checklist
-- [ ] artifact-manifest.json filled
-- [ ] staging digest screenshot / command output
-- [ ] smoke with CUS-1001, CUS-1002, lab-request-001
-- [ ] rollback rehearsal note (time + verifier)
-- [ ] residual risks with owners
+## Evidence pack pass criteria
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | artifact-manifest.json filled | Pass / Fail |
+| 2 | staging digest screenshot / command output | Pass / Fail |
+| 3 | smoke with CUS-1001, CUS-1002, lab-request-001 | Pass / Fail |
+| 4 | rollback rehearsal note (time + verifier) | Pass / Fail |
+| 5 | residual risks with owners | Pass / Fail |
 ```
 
 **Expected result:** ≥3 experiments; peer confirmation; sanitized evidence.
@@ -388,27 +399,43 @@ export ROLLBACK_DIGEST="sha256:<prior-known-good>"
 
 ### Checkpoint A — Tooling
 
-* [ ] `lab44-crm` under `examples/`
-* [ ] Lab 43 artifact identity available
-* [ ] Environment access / variables confirmed (or documented substitute)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab44-crm` under `examples/` | Pass / Fail |
+| 2 | Lab 43 artifact identity available | Pass / Fail |
+| 3 | Environment access / variables confirmed (or documented substitute) | Pass / Fail |
 
 ### Checkpoint B — Core CD design
 
-* [ ] Release flow mapped with owners
-* [ ] `artifact-manifest.json` with digest/checksum
-* [ ] Env config separated; secrets not in artifact
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Release flow mapped with owners | Pass / Fail |
+| 2 | `artifact-manifest.json` with digest/checksum | Pass / Fail |
+| 3 | Env config separated; secrets not in artifact | Pass / Fail |
 
 ### Checkpoint C — Gates + rehearsal
 
-* [ ] Objective checklist with measurable criteria
-* [ ] Staging promote by digest + smoke (`CUS-1001` / `CUS-1002`)
-* [ ] Rollback rehearsal to known-good digest
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Objective checklist with measurable criteria | Pass / Fail |
+| 2 | Staging promote by digest + smoke (`CUS-1001` / `CUS-1002`) | Pass / Fail |
+| 3 | Rollback rehearsal to known-good digest | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] GO/NO-GO recorded with evidence
-* [ ] `docs/rollback-runbook.md` complete
-* [ ] No secrets / kubeconfig / state files committed
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | GO/NO-GO recorded with evidence | Pass / Fail |
+| 2 | `docs/rollback-runbook.md` complete | Pass / Fail |
+| 3 | No secrets / kubeconfig / state files committed | Pass / Fail |
 
 ---
 

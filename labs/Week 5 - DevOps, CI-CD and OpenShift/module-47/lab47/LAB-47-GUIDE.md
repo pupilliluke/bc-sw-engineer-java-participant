@@ -16,6 +16,14 @@
 
 ---
 
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
 ## Lab Overview
 
 This Module 47 lab teaches you to communicate a CRM release clearly to engineers, responders, reviewers, and business stakeholders through an **incident update**, **pull-request description**, **stakeholder email**, and **peer review**. You will produce files under `communications/` plus release briefing notes that share one consistent fact base.
@@ -76,16 +84,17 @@ Use this **lab scenario** (adapt only with instructor approval—do not invent c
 
 ### NOW (this lab)
 
-```text
-Shared fact sheet (facts / assumptions / unknowns)
-        |
-        +---> Incident update (ops channel)
-        +---> Technical follow-up (engineers)
-        +---> PR description (reviewers)
-        +---> Stakeholder email (business)
-        |
-        v
-Peer review loop --> finalized communications/ packet
+```mermaid
+flowchart TB
+  Facts["Shared fact sheet<br/>facts / assumptions / unknowns"] --> Inc["Incident update"]
+  Facts --> Tech["Technical follow-up"]
+  Facts --> PR["PR description"]
+  Facts --> Stake["Stakeholder email"]
+  Inc --> Peer["Peer review loop"]
+  Tech --> Peer
+  PR --> Peer
+  Stake --> Peer
+  Peer --> Pack["finalized communications/ packet"]
 ```
 
 ### Lab flow (mermaid)
@@ -289,9 +298,13 @@ State the customer or operational problem.
 - Deployment/configuration:
 
 ## Verification
-- [ ] Unit and integration tests
-- [ ] Security checks
-- [ ] Happy and failure paths (CUS-1001 / CUS-1002)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Unit and integration tests | Pass / Fail |
+| 2 | Security checks | Pass / Fail |
+| 3 | Happy and failure paths (CUS-1001 / CUS-1002) | Pass / Fail |
 
 ## Risk and rollback
 State compatibility, observability, and exact rollback action.
@@ -372,11 +385,15 @@ git status --short
 
 ```markdown
 ## Final consistency scan
-- [ ] Same severity/status across incident + stakeholder drafts
-- [ ] Same mitigation named (e.g. rollback to 1.3.2)
-- [ ] Assumptions not presented as facts
-- [ ] No secrets (`rg` check clean)
-- [ ] Peer rewrites applied or declined with rationale
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Same severity/status across incident + stakeholder drafts | Pass / Fail |
+| 2 | Same mitigation named (e.g. rollback to 1.3.2) | Pass / Fail |
+| 3 | Assumptions not presented as facts | Pass / Fail |
+| 4 | No secrets (`rg` check clean) | Pass / Fail |
+| 5 | Peer rewrites applied or declined with rationale | Pass / Fail |
 ```
 
 **Expected result:** ≥3 experiments documented; final packet ready for rubric.
@@ -389,27 +406,43 @@ git status --short
 
 ### Checkpoint A — Tooling
 
-* [ ] `lab47-crm` with `communications/` tree
-* [ ] Shared fact sheet created
-* [ ] Prior lab evidence linked or scenario labeled
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab47-crm` with `communications/` tree | Pass / Fail |
+| 2 | Shared fact sheet created | Pass / Fail |
+| 3 | Prior lab evidence linked or scenario labeled | Pass / Fail |
 
 ### Checkpoint B — Core artifacts
 
-* [ ] Incident update with next update time
-* [ ] Technical follow-up aligned to facts
-* [ ] PR description with verification + rollback
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Incident update with next update time | Pass / Fail |
+| 2 | Technical follow-up aligned to facts | Pass / Fail |
+| 3 | PR description with verification + rollback | Pass / Fail |
 
 ### Checkpoint C — Audience + review
 
-* [ ] Stakeholder email in plain language
-* [ ] Peer review with concrete rewrites
-* [ ] Audience matrix documented
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Stakeholder email in plain language | Pass / Fail |
+| 2 | Peer review with concrete rewrites | Pass / Fail |
+| 3 | Audience matrix documented | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] Facts / assumptions / unknowns labeled
-* [ ] No secrets or real PII
-* [ ] Dates/status consistent across all docs
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Facts / assumptions / unknowns labeled | Pass / Fail |
+| 2 | No secrets or real PII | Pass / Fail |
+| 3 | Dates/status consistent across all docs | Pass / Fail |
 
 ---
 
@@ -466,9 +499,13 @@ State the customer or operational problem.
 - Deployment/configuration:
 
 ## Verification
-- [ ] Unit and integration tests
-- [ ] Security checks
-- [ ] Happy and failure paths (CUS-1001 / CUS-1002 / lab-request-001)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Unit and integration tests | Pass / Fail |
+| 2 | Security checks | Pass / Fail |
+| 3 | Happy and failure paths (CUS-1001 / CUS-1002 / lab-request-001) | Pass / Fail |
 
 ## Risk and rollback
 State compatibility, observability, and exact rollback digest/action.

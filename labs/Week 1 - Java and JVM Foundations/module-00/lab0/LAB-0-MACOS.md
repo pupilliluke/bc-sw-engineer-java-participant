@@ -149,7 +149,7 @@ Create/sign in at [github.com](https://github.com).
 
 ---
 
-## Verification checklist (macOS)
+## Pass criteria (macOS)
 
 ```bash
 java -version
@@ -160,15 +160,19 @@ echo $JAVA_HOME
 cd ~/java-bootcamp && pwd && ls
 ```
 
-- [ ] Java / javac 21 (Temurin)
-- [ ] Maven 3.9.x on Java 21
-- [ ] Git works; `user.name` / `user.email` set
-- [ ] `JAVA_HOME` points at JDK 21
-- [ ] Workspace `~/java-bootcamp` with five folders
-- [ ] HelloWorld prints from terminal
-- [ ] HelloWorld runs via IntelliJ green arrow
-- [ ] (Optional) VS Code opens the same folder
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
 
-**Do not start Lab 1 until this checklist passes.**
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Java / javac 21 (Temurin) | Pass / Fail |
+| 2 | Maven 3.9.x on Java 21 | Pass / Fail |
+| 3 | Git works; `user.name` / `user.email` set | Pass / Fail |
+| 4 | `JAVA_HOME` points at JDK 21 | Pass / Fail |
+| 5 | Workspace `~/java-bootcamp` with five folders | Pass / Fail |
+| 6 | HelloWorld prints from terminal | Pass / Fail |
+| 7 | HelloWorld runs via IntelliJ green arrow | Pass / Fail |
+| 8 | (Optional) VS Code opens the same folder | Pass / Fail |
+
+**Do not start Lab 1 until every Pass criteria row is Pass in your notes.**
 
 Next: [Lab 1 macOS guide](../../module-01/lab1/LAB-1-MACOS.md) · [Lab 1 full guide](../../module-01/lab1/LAB-1-GUIDE.md)

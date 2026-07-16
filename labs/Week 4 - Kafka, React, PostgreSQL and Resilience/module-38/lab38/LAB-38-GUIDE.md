@@ -12,9 +12,17 @@
 | Windows | [LAB-38-WINDOWS.md](LAB-38-WINDOWS.md) |
 | macOS | [LAB-38-MACOS.md](LAB-38-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **psql** or pgAdmin and instructor **shared PostgreSQL** credentials. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **psql** or pgAdmin and instructor **shared PostgreSQL** credentials. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -75,19 +83,14 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-psql / pgAdmin
-        |
-        v
-PostgreSQL  (Lab 37 schema + Lab 38 volume)
-        |
-        +-- DBMS_STATS (baseline cardinality)
-        +-- DBMS_XPLAN (actual plans)
-        +-- Indexes justified by email / status-list / join queries
-        +-- Sargable date range + OFFSET and KEYSET paging SQL
-        |
-        v
-database/performance/report.md  (plan hash, buffers, median ms, write cost)
+```mermaid
+flowchart TB
+  Tool["psql / pgAdmin"] --> PG["PostgreSQL<br/>Lab 37 schema + Lab 38 volume"]
+  PG --> Stats["DBMS_STATS baseline"]
+  PG --> Plan["DBMS_XPLAN actual plans"]
+  PG --> Idx["Indexes for email / status / joins"]
+  PG --> Page["Sargable date + OFFSET / KEYSET"]
+  PG --> Report["database/performance/report.md"]
 ```
 
 ### Lab flow (mermaid)
@@ -514,27 +517,43 @@ Capture plan excerpts under `notes/screenshots/`.
 
 ### Checkpoint A — Tooling and volume
 
-* [ ] `lab38-crm` under `~/java-bootcamp/examples/`
-* [ ] ≥50k customers with documented skew
-* [ ] `DBMS_STATS` gathered; `NUM_ROWS` / `LAST_ANALYZED` recorded
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab38-crm` under `~/java-bootcamp/examples/` | Pass / Fail |
+| 2 | ≥50k customers with documented skew | Pass / Fail |
+| 3 | `DBMS_STATS` gathered; `NUM_ROWS` / `LAST_ANALYZED` recorded | Pass / Fail |
 
 ### Checkpoint B — Plans and indexes
 
-* [ ] Baseline email plan with `ALLSTATS LAST`
-* [ ] Unique email index + improved plan evidence
-* [ ] Status/created list index + measured list query
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Baseline email plan with `ALLSTATS LAST` | Pass / Fail |
+| 2 | Unique email index + improved plan evidence | Pass / Fail |
+| 3 | Status/created list index + measured list query | Pass / Fail |
 
 ### Checkpoint C — Sargability, joins, paging
 
-* [ ] Half-open date range vs `TRUNC` comparison
-* [ ] Selective vs broad join notes
-* [ ] Deterministic OFFSET + keyset paging without dup/miss IDs
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Half-open date range vs `TRUNC` comparison | Pass / Fail |
+| 2 | Selective vs broad join notes | Pass / Fail |
+| 3 | Deterministic OFFSET + keyset paging without dup/miss IDs | Pass / Fail |
 
 ### Checkpoint D — Hygiene and report
 
-* [ ] Each retained index challenged with drop/remeasure evidence
-* [ ] `report.md` complete (plan hash, buffers, median, write cost)
-* [ ] No secrets / dumps / passwords in Git
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Each retained index challenged with drop/remeasure evidence | Pass / Fail |
+| 2 | `report.md` complete (plan hash, buffers, median, write cost) | Pass / Fail |
+| 3 | No secrets / dumps / passwords in Git | Pass / Fail |
 
 ---
 

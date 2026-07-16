@@ -12,9 +12,17 @@
 | Windows | [LAB-11-WINDOWS.md](LAB-11-WINDOWS.md) |
 | macOS | [LAB-11-MACOS.md](LAB-11-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **GitHub Copilot** signed in. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **GitHub Copilot** signed in. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -71,19 +79,13 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-lab11-crm/  (Maven, plain Java 21, still NO Spring)
-
-   CustomerServiceTest / CustomerTest        (JUnit 5 — preview of Labs 17-18)
-        |
-        v
-   CustomerService  --uses-->  CustomerNotifier (interface, extracted this lab)
-        |                             ^
-        v                             |
-   Customer / CustomerStatus    CustomerNotifierMockTest (Mockito — preview)
-
-GitHub Copilot assists at design time only.
-JUnit/Mockito are TEST-SCOPE dependencies; full methodology = Labs 17-18.
+```mermaid
+flowchart TB
+  Tests["CustomerServiceTest / CustomerTest<br/>JUnit 5"] --> Svc["CustomerService"]
+  Svc -->|uses| Notif["CustomerNotifier interface"]
+  Svc --> Cust["Customer / CustomerStatus"]
+  MockTest["CustomerNotifierMockTest<br/>Mockito preview"] -.-> Notif
+  Copilot["Copilot design-time"] -.-> Tests
 ```
 
 ### Lab flow (mermaid)
@@ -649,29 +651,45 @@ git status
 
 ### Checkpoint A — Project + test deps
 
-* [ ] `lab11-crm` copied from Lab 10 under `examples/`
-* [ ] JUnit 5 + Mockito on **test** scope; Surefire present
-* [ ] Copilot still Ready
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab11-crm` copied from Lab 10 under `examples/` | Pass / Fail |
+| 2 | JUnit 5 + Mockito on **test** scope; Surefire present | Pass / Fail |
+| 3 | Copilot still Ready | Pass / Fail |
 
 ### Checkpoint B — Core tests green
 
-* [ ] `CustomerTest` (2) and `CustomerServiceTest` (4) pass
-* [ ] Sample IDs `CUS-1001` / `CUS-1002` used in tests
-* [ ] No JUnit 4 imports
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `CustomerTest` (2) and `CustomerServiceTest` (4) pass | Pass / Fail |
+| 2 | Sample IDs `CUS-1001` / `CUS-1002` used in tests | Pass / Fail |
+| 3 | No JUnit 4 imports | Pass / Fail |
 
 ### Checkpoint C — Refactor + mock
 
-* [ ] `CustomerNotifier` extracted and called from `updateStatus`
-* [ ] No-arg `CustomerService()` still works (no-op notifier)
-* [ ] `CustomerNotifierMockTest` verifies PROSPECT → ACTIVE
-* [ ] `validateCustomerId` is the single blank-ID check
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `CustomerNotifier` extracted and called from `updateStatus` | Pass / Fail |
+| 2 | No-arg `CustomerService()` still works (no-op notifier) | Pass / Fail |
+| 3 | `CustomerNotifierMockTest` verifies PROSPECT → ACTIVE | Pass / Fail |
+| 4 | `validateCustomerId` is the single blank-ID check | Pass / Fail |
 
 ### Checkpoint D — Notes + guidelines + experiments
 
-* [ ] Entries `lab11-001`–`lab11-004` complete
-* [ ] False-confidence rejection documented
-* [ ] Coverage gaps documented; acceptance checklist present
-* [ ] Failure experiments recorded; `mvn clean test` green
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Entries `lab11-001`–`lab11-004` complete | Pass / Fail |
+| 2 | False-confidence rejection documented | Pass / Fail |
+| 3 | Coverage gaps documented; acceptance checklist present | Pass / Fail |
+| 4 | Failure experiments recorded; `mvn clean test` green | Pass / Fail |
 
 ---
 

@@ -12,9 +12,17 @@
 | Windows | [LAB-45-WINDOWS.md](LAB-45-WINDOWS.md) |
 | macOS | [LAB-45-MACOS.md](LAB-45-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **Terraform** and **Ansible** (as assigned). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **Terraform** and **Ansible** (as assigned). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -71,20 +79,13 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-Human contract (env, limits, forbidden exposure)
-        |
-        v
-AI assistant (optional) --> draft .tf / Ansible
-        |
-        v
-Human review checklist --> corrections
-        |
-        +-- Terraform: fmt, init -backend=false, validate, plan
-        +-- Ansible: syntax-check, ansible-lint, optional idempotent run
-        |
-        v
-docs/ai-iac-review.md  (prompt, excerpt, fixes, residual risk, approval)
+```mermaid
+flowchart TB
+  Contract["Human contract<br/>env, limits, forbidden"] --> AI["AI assistant optional<br/>draft .tf / Ansible"]
+  AI --> Review["Human review checklist"]
+  Review --> TF["Terraform fmt/init/validate/plan"]
+  Review --> AN["Ansible syntax-check / lint"]
+  Review --> Doc["docs/ai-iac-review.md"]
 ```
 
 ### Lab flow (mermaid)
@@ -417,27 +418,43 @@ Checklist reminder:
 
 ### Checkpoint A — Tooling
 
-* [ ] `lab45-crm` with `infra/terraform` and `infra/ansible`
-* [ ] Terraform and Ansible versions recorded
-* [ ] `.gitignore` excludes state and secret tfvars
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab45-crm` with `infra/terraform` and `infra/ansible` | Pass / Fail |
+| 2 | Terraform and Ansible versions recorded | Pass / Fail |
+| 3 | `.gitignore` excludes state and secret tfvars | Pass / Fail |
 
 ### Checkpoint B — Core IaC
 
-* [ ] Contract + forbidden exposures documented
-* [ ] Terraform structured with validated variables
-* [ ] `terraform.tfvars.example` present (no real secrets)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Contract + forbidden exposures documented | Pass / Fail |
+| 2 | Terraform structured with validated variables | Pass / Fail |
+| 3 | `terraform.tfvars.example` present (no real secrets) | Pass / Fail |
 
 ### Checkpoint C — Validation + AI discipline
 
-* [ ] `fmt` / `validate` / `plan` (or approved substitute) evidenced
-* [ ] Ansible syntax (+ lint if available)
-* [ ] `docs/ai-iac-review.md` with accept/reject notes
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `fmt` / `validate` / `plan` (or approved substitute) evidenced | Pass / Fail |
+| 2 | Ansible syntax (+ lint if available) | Pass / Fail |
+| 3 | `docs/ai-iac-review.md` with accept/reject notes | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] No `*.tfstate` / real tfvars / vault passwords committed
-* [ ] Idempotence evidence or residual risk owned
-* [ ] CRM PII fixtures not embedded in IaC
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | No `*.tfstate` / real tfvars / vault passwords committed | Pass / Fail |
+| 2 | Idempotence evidence or residual risk owned | Pass / Fail |
+| 3 | CRM PII fixtures not embedded in IaC | Pass / Fail |
 
 ---
 

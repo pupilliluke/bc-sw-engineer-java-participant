@@ -12,9 +12,17 @@
 | Windows | [LAB-39-WINDOWS.md](LAB-39-WINDOWS.md) |
 | macOS | [LAB-39-MACOS.md](LAB-39-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and instructor **shared PostgreSQL**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and instructor **shared PostgreSQL**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -75,23 +83,14 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-CustomerController  (bounded Pageable)
-        |
-        v
-CustomerService  (@Transactional, DTO mapping)
-        |
-        v
-CustomerRepository / AccountRepository  (Spring Data JPA)
-        |
-        v
-Hibernate + postgresql
-        |
-        v
-PostgreSQL crm database / assigned schema  (Flyway V1 schema; Lab 38 indexes retained)
-        |
-        +-- Optimistic @Version / unique email → 409 ProblemDetail
-        +-- IT: CustomerRepositoryIT (+ optional Testcontainers)
+```mermaid
+flowchart TB
+  Ctrl["CustomerController<br/>bounded Pageable"] --> Svc["CustomerService<br/>@Transactional DTO mapping"]
+  Svc --> Repo["CustomerRepository / AccountRepository"]
+  Repo --> Hib["Hibernate + postgresql"]
+  Hib --> PG["PostgreSQL crm schema<br/>Flyway V1 + Lab 38 indexes"]
+  PG --> Opt["@Version / unique email → 409"]
+  IT["CustomerRepositoryIT"] -.-> Repo
 ```
 
 ### Lab flow (mermaid)
@@ -571,27 +570,43 @@ Capture Surefire excerpts under `notes/screenshots/`.
 
 ### Checkpoint A — Tooling
 
-* [ ] `lab39-crm` under `examples/`
-* [ ] PostgreSQL healthy; JPA + postgresql + Flyway on classpath
-* [ ] Env-based credentials; `.env` gitignored
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab39-crm` under `examples/` | Pass / Fail |
+| 2 | PostgreSQL healthy; JPA + postgresql + Flyway on classpath | Pass / Fail |
+| 3 | Env-based credentials; `.env` gitignored | Pass / Fail |
 
 ### Checkpoint B — Schema and entities
 
-* [ ] Flyway `V1` applied; `ddl-auto=validate`
-* [ ] `CustomerEntity` + `AccountEntity` mapped; `@Version` present
-* [ ] Lazy collections excluded from equality/JSON
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Flyway `V1` applied; `ddl-auto=validate` | Pass / Fail |
+| 2 | `CustomerEntity` + `AccountEntity` mapped; `@Version` present | Pass / Fail |
+| 3 | Lazy collections excluded from equality/JSON | Pass / Fail |
 
 ### Checkpoint C — API / persistence behavior
 
-* [ ] Repositories: publicId, email exists, status paging
-* [ ] Transactional create/find; bounded deterministic paging
-* [ ] 409 for duplicate + optimistic lock without ORA text
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Repositories: publicId, email exists, status paging | Pass / Fail |
+| 2 | Transactional create/find; bounded deterministic paging | Pass / Fail |
+| 3 | 409 for duplicate + optimistic lock without ORA text | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] `CustomerRepositoryIT` + `mvn clean verify` green
-* [ ] README runbook complete
-* [ ] No secrets / `target/` committed
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `CustomerRepositoryIT` + `mvn clean verify` green | Pass / Fail |
+| 2 | README runbook complete | Pass / Fail |
+| 3 | No secrets / `target/` committed | Pass / Fail |
 
 ---
 

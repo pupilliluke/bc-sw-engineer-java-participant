@@ -68,9 +68,13 @@ Wherever that guide shows `~/java-bootcamp`, on macOS use `~/java-bootcamp`. Pre
 
 Capture IntelliJ (project tree + Run/Terminal) on macOS. Redact passwords, tokens, and kubeconfig contents.
 
-## Done when
+## Pass criteria
 
-- [ ] Project opens in IntelliJ with SDK **21**
-- [ ] Lab checklist / deliverables in [LAB-11-GUIDE.md](LAB-11-GUIDE.md) are complete
-- [ ] Commands above succeed in the IntelliJ terminal (or as the lab specifies)
-- [ ] Screenshots (if required) show macOS + IntelliJ
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Project opens in IntelliJ with SDK **21** | Pass / Fail |
+| 2 | Lab pass criteria / deliverables in [LAB-11-GUIDE.md](LAB-11-GUIDE.md) are complete | Pass / Fail |
+| 3 | Commands above succeed in the IntelliJ terminal (or as the lab specifies) | Pass / Fail |
+| 4 | Screenshots (if required) show macOS + IntelliJ | Pass / Fail |

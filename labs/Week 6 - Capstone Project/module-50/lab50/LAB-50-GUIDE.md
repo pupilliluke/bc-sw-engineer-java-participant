@@ -16,6 +16,14 @@
 
 ---
 
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
 ## Lab Overview
 
 This Module 50 lab completes a usable **React CRM journey** backed by **Spring Data JPA and PostgreSQL**, proving validation, persistence, loading/error states, accessibility, and end-to-end UI→database flow for the same fixtures Labs 48–49 planned and implemented.
@@ -75,21 +83,14 @@ Use these fixtures consistently:
 
 ### NOW (this lab)
 
-```text
-React CRM UI
-  Search → CustomerProfile → Timeline → InteractionForm
-        |
-        v
-Typed API client (base URL, auth headers, cancellation)
-        |
-        v
-Spring Boot API (Lab 49 contracts)
-        |
-        v
-Spring Data JPA  --->  PostgreSQL (versioned migrations)
-
-E2E: component tests + Selenium (or agreed) critical path
-Evidence: UI screenshots + SQL select for CUS-1001 interaction
+```mermaid
+flowchart TB
+  UI["React CRM UI<br/>Search → Profile → Timeline → Form"] --> Client["Typed API client<br/>auth + cancellation"]
+  Client --> API["Spring Boot API Lab 49"]
+  API --> JPA["Spring Data JPA"]
+  JPA --> PG["PostgreSQL"]
+  E2E["component + Selenium critical path"] -.-> UI
+  Ev["screenshots + SQL evidence"] -.-> PG
 ```
 
 ### Lab flow (mermaid)
@@ -432,27 +433,43 @@ cd ..
 
 ### Checkpoint A — Journey and schema
 
-* [ ] Journey documented (search/profile/timeline/form)
-* [ ] PostgreSQL migration with constraints/indexes
-* [ ] Fixtures `CUS-1001` / `CUS-1002` / `lab-request-001` named
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Journey documented (search/profile/timeline/form) | Pass / Fail |
+| 2 | PostgreSQL migration with constraints/indexes | Pass / Fail |
+| 3 | Fixtures `CUS-1001` / `CUS-1002` / `lab-request-001` named | Pass / Fail |
 
 ### Checkpoint B — Client and UI
 
-* [ ] Typed API client with correlation header
-* [ ] Accessible form/search/profile/timeline
-* [ ] Loading/error/unauthorized/outage states
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Typed API client with correlation header | Pass / Fail |
+| 2 | Accessible form/search/profile/timeline | Pass / Fail |
+| 3 | Loading/error/unauthorized/outage states | Pass / Fail |
 
 ### Checkpoint C — Persistence proof + tests
 
-* [ ] UI create → API read → SQL evidence
-* [ ] Restart durability confirmed
-* [ ] Component tests + critical-path E2E (or approved substitute)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | UI create → API read → SQL evidence | Pass / Fail |
+| 2 | Restart durability confirmed | Pass / Fail |
+| 3 | Component tests + critical-path E2E (or approved substitute) | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] Frontend build + backend verify green
-* [ ] Demo doc complete
-* [ ] No secrets / `node_modules` / `target` committed
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Frontend build + backend verify green | Pass / Fail |
+| 2 | Demo doc complete | Pass / Fail |
+| 3 | No secrets / `node_modules` / `target` committed | Pass / Fail |
 
 ---
 

@@ -12,9 +12,17 @@
 | Windows | [LAB-31-WINDOWS.md](LAB-31-WINDOWS.md) |
 | macOS | [LAB-31-MACOS.md](LAB-31-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and instructor **shared Kafka** bootstrap servers. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and instructor **shared Kafka** bootstrap servers. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -75,20 +83,15 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-CustomerController / CustomerService
-        |
-        +--> persist customer (existing)
-        +--> CustomerEventPublisher (KafkaTemplate)
-                    |
-                    v
-         crm.customer-events.v1  (key=customerId)
-                    |
-         CustomerEventListener (@KafkaListener)
-                    |
-         ProcessedEventStore (idempotency) --> Notification handler
-                    |
-         DefaultErrorHandler --> DLT on exhausted / non-retryable
+```mermaid
+flowchart TB
+  Ctrl["CustomerController / Service"] --> Persist["persist customer"]
+  Ctrl --> Pub["CustomerEventPublisher<br/>KafkaTemplate"]
+  Pub --> Topic["crm.customer-events.v1"]
+  Topic --> L["CustomerEventListener"]
+  L --> Store["ProcessedEventStore<br/>idempotency"]
+  Store --> Notif["Notification handler"]
+  L --> Err["DefaultErrorHandler → DLT"]
 ```
 
 ### Lab flow (mermaid)
@@ -484,27 +487,43 @@ Add to `docs/spring-kafka-notes.md`:
 
 ### Checkpoint A — Dependencies and config
 
-* [ ] `lab31-crm` under `examples/`
-* [ ] `spring-kafka` (+ test) present
-* [ ] Bootstrap, group, trusted packages, topic property externalized
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab31-crm` under `examples/` | Pass / Fail |
+| 2 | `spring-kafka` (+ test) present | Pass / Fail |
+| 3 | Bootstrap, group, trusted packages, topic property externalized | Pass / Fail |
 
 ### Checkpoint B — Publish and listen
 
-* [ ] `CustomerEvent` v1 with null/version guards
-* [ ] `KafkaTemplate` publish keyed by `CUS-1001` / `CUS-1002`
-* [ ] `@KafkaListener` validates key ↔ `customerId`
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `CustomerEvent` v1 with null/version guards | Pass / Fail |
+| 2 | `KafkaTemplate` publish keyed by `CUS-1001` / `CUS-1002` | Pass / Fail |
+| 3 | `@KafkaListener` validates key ↔ `customerId` | Pass / Fail |
 
 ### Checkpoint C — Idempotency and DLT
 
-* [ ] `ProcessedEventStore` ignores duplicate `eventId`
-* [ ] Retry backoff + non-retryable exceptions
-* [ ] Dead-letter publication observed
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `ProcessedEventStore` ignores duplicate `eventId` | Pass / Fail |
+| 2 | Retry backoff + non-retryable exceptions | Pass / Fail |
+| 3 | Dead-letter publication observed | Pass / Fail |
 
 ### Checkpoint D — Tests and hygiene
 
-* [ ] EmbeddedKafka/Testcontainers flow test green twice
-* [ ] Correlation IDs in logs/events; no PII dumps
-* [ ] Runbook + DLT naming documented
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | EmbeddedKafka/Testcontainers flow test green twice | Pass / Fail |
+| 2 | Correlation IDs in logs/events; no PII dumps | Pass / Fail |
+| 3 | Runbook + DLT naming documented | Pass / Fail |
 
 ---
 

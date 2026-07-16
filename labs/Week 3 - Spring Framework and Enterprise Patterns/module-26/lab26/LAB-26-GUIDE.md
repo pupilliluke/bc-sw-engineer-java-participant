@@ -12,9 +12,17 @@
 | Windows | [LAB-26-WINDOWS.md](LAB-26-WINDOWS.md) |
 | macOS | [LAB-26-MACOS.md](LAB-26-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -74,26 +82,15 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-Command-line args (-Dspring.profiles.active, -Dkey=value)     [highest]
-        |
-        v
-Environment variables (SPRING_PROFILES_ACTIVE, DB_PASSWORD, ...)
-        |
-        v
-application-{profile}.yml   (dev | test | prod)
-        |
-        v
-application.yml             (shared defaults)
-        |
-        v
-@ConfigurationProperties / code defaults                    [lowest]
-        |
-        v
-Spring Environment --> DataSource, Logging, Actuator, NorthstarIntegrationProperties
-        |
-        +--> CustomerService / CustomerRepository (Lab 25)
-        +--> optional CustomerEndpoint (Lab 24)
+```mermaid
+flowchart TB
+  CLI["Command-line args<br/>highest"] --> Env["Environment variables"]
+  Env --> Prof["application-{profile}.yml"]
+  Prof --> Base["application.yml"]
+  Base --> Props["@ConfigurationProperties<br/>lowest"]
+  Props --> Spring["Spring Environment"]
+  Spring --> DS["DataSource / Logging / Actuator"]
+  Spring --> Svc["CustomerService / Repository"]
 ```
 
 ### Lab flow (mermaid)
@@ -444,27 +441,43 @@ mvn -q test -Dspring.profiles.active=test
 
 ### Checkpoint A — Tooling / structure
 
-* [ ] `lab26-crm` under `examples/`
-* [ ] Inventory complete; shared `application.yml` present
-* [ ] `.gitignore` covers `.env` / secrets
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab26-crm` under `examples/` | Pass / Fail |
+| 2 | Inventory complete; shared `application.yml` present | Pass / Fail |
+| 3 | `.gitignore` covers `.env` / secrets | Pass / Fail |
 
 ### Checkpoint B — Profile files
 
-* [ ] `application-dev.yml` / `-test.yml` / `-prod.yml` exist
-* [ ] `prod` has no default secrets
-* [ ] `dev` CRM smoke for `CUS-1001` works
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `application-dev.yml` / `-test.yml` / `-prod.yml` exist | Pass / Fail |
+| 2 | `prod` has no default secrets | Pass / Fail |
+| 3 | `dev` CRM smoke for `CUS-1001` works | Pass / Fail |
 
 ### Checkpoint C — Activation + binding
 
-* [ ] Activation via `-D` and via env evidenced
-* [ ] Override-order table measured
-* [ ] `@ConfigurationProperties` + fail-fast on prod
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Activation via `-D` and via env evidenced | Pass / Fail |
+| 2 | Override-order table measured | Pass / Fail |
+| 3 | `@ConfigurationProperties` + fail-fast on prod | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] Two consecutive `mvn test` under `test` green
-* [ ] `.env.example` only; no secrets staged
-* [ ] README runbook complete
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Two consecutive `mvn test` under `test` green | Pass / Fail |
+| 2 | `.env.example` only; no secrets staged | Pass / Fail |
+| 3 | README runbook complete | Pass / Fail |
 
 ---
 

@@ -12,9 +12,17 @@
 | Windows | [LAB-46-WINDOWS.md](LAB-46-WINDOWS.md) |
 | macOS | [LAB-46-MACOS.md](LAB-46-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and instructor **shared Kafka** bootstrap servers. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and instructor **shared Kafka** bootstrap servers. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -70,24 +78,14 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-Producer (CRM API / lab tool)
-        |
-        v
-crm.customer.events  (key = customerId preferred)
-        |
-        v
-Spring @KafkaListener + DefaultErrorHandler
-        |-- retry with ExponentialBackOff (bounded)
-        |-- not-retryable -> DLT sooner
-        v
-crm.customer.events.DLT  (+ headers: exception, original topic/offset)
-        |
-        +-- Idempotent handler (eventId / business key)
-        +-- Micrometer: processed, failed, retry, DLT, lag
-        |
-        v
-docs/kafka-dashboard.md + docs/dlt-replay-runbook.md
+```mermaid
+flowchart TB
+  Prod["Producer CRM API / lab tool"] --> Topic["crm.customer.events<br/>key=customerId"]
+  Topic --> L["@KafkaListener + DefaultErrorHandler"]
+  L -->|retry ExponentialBackOff| L
+  L -->|not-retryable| DLT["crm.customer.events.DLT"]
+  DLT --> Idem["Idempotent handler"]
+  DLT --> Obs["metrics / alerts"]
 ```
 
 ### Lab flow (mermaid)
@@ -384,12 +382,16 @@ Lag > 10000 or DLT rate > 0 for 2m → critical + page runbook
 **Do this:** Complete [Failure Experiments](#failure-experiments). Run `mvn -q test` twice for determinism where tests exist. Keep Git clean of broker dumps. Append a verification block to `docs/dlt-replay-runbook.md`:
 
 ```markdown
-## Lab verification checklist
-- [ ] Poison message → DLT with headers
-- [ ] Duplicate event → no double side effect (CUS-1002)
-- [ ] Lag describe output captured
-- [ ] Prometheus snippet captured (sanitized)
-- [ ] Replay dry-run steps rehearsed / tabletoped
+## Lab Pass criteria
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Poison message → DLT with headers | Pass / Fail |
+| 2 | Duplicate event → no double side effect (CUS-1002) | Pass / Fail |
+| 3 | Lag describe output captured | Pass / Fail |
+| 4 | Prometheus snippet captured (sanitized) | Pass / Fail |
+| 5 | Replay dry-run steps rehearsed / tabletoped | Pass / Fail |
 ```
 
 **Expected result:** ≥3 experiments; DLT evidence; green tests; runbooks ready.
@@ -402,27 +404,43 @@ Lag > 10000 or DLT rate > 0 for 2m → critical + page runbook
 
 ### Checkpoint A — Tooling
 
-* [ ] `lab46-crm` under `examples/`
-* [ ] Kafka reachable; CRM app starts
-* [ ] Actuator/Prometheus or CLI lag available
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab46-crm` under `examples/` | Pass / Fail |
+| 2 | Kafka reachable; CRM app starts | Pass / Fail |
+| 3 | Actuator/Prometheus or CLI lag available | Pass / Fail |
 
 ### Checkpoint B — Core resilience
 
-* [ ] Event flow map + failure policy documented
-* [ ] `DefaultErrorHandler` + DLT recoverer configured
-* [ ] Diagnostics headers / correlation preserved
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Event flow map + failure policy documented | Pass / Fail |
+| 2 | `DefaultErrorHandler` + DLT recoverer configured | Pass / Fail |
+| 3 | Diagnostics headers / correlation preserved | Pass / Fail |
 
 ### Checkpoint C — Idempotency + observability
 
-* [ ] Idempotent handling with test evidence
-* [ ] Metrics + lag inspection evidence
-* [ ] Dashboard + alert thresholds documented
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Idempotent handling with test evidence | Pass / Fail |
+| 2 | Metrics + lag inspection evidence | Pass / Fail |
+| 3 | Dashboard + alert thresholds documented | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] `docs/dlt-replay-runbook.md` complete
-* [ ] No PII/secrets in logs or Git
-* [ ] Controlled poison → DLT → recover path evidenced
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `docs/dlt-replay-runbook.md` complete | Pass / Fail |
+| 2 | No PII/secrets in logs or Git | Pass / Fail |
+| 3 | Controlled poison → DLT → recover path evidenced | Pass / Fail |
 
 ---
 
@@ -484,9 +502,13 @@ curl -fsS http://localhost:8080/actuator/prometheus | rg -i "kafka|crm|dlt|consu
 ```markdown
 # DLT Replay Runbook — crm.customer.events
 ## Preconditions
-- [ ] Root cause fixed and deployed
-- [ ] Idempotency proven for event type
-- [ ] Dry-run selection listed (offsets / eventIds)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Root cause fixed and deployed | Pass / Fail |
+| 2 | Idempotency proven for event type | Pass / Fail |
+| 3 | Dry-run selection listed (offsets / eventIds) | Pass / Fail |
 ## Steps
 1. Export selected DLT records (sanitize PII)
 2. Rate-limit republish to main topic

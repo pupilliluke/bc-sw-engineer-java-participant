@@ -12,9 +12,17 @@
 | Windows | [LAB-8-WINDOWS.md](LAB-8-WINDOWS.md) |
 | macOS | [LAB-8-MACOS.md](LAB-8-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -83,33 +91,40 @@ Use these examples consistently:
 
 **LATER (Labs 22+ / 30+):** Spring Boot API, JPA/PostgreSQL, React SPA, Kafka consumers.
 
-```text
-NOW:
-  Main (manual harness)
-       |
-       v
-  controller  -->  service  -->  repository  -->  entity
-       \             |                 |
-        \            v                 v
-         ------>   dto            (in-memory list — later)
-                   config / exception
-
-FUTURE platform target:
-  React CRM SPA --HTTPS/JSON--> Spring Boot API --JPA--> PostgreSQL
-                                |
-                                +--Kafka--> notification and audit consumers
+```mermaid
+flowchart TB
+  subgraph Now["NOW — Lab 8"]
+    Main["Main harness"] --> Ctrl["controller"]
+    Ctrl --> Svc["service"]
+    Svc --> Repo["repository"]
+    Repo --> Ent["entity"]
+    Ctrl --> DTO["dto"]
+    Svc --> DTO
+    Repo -.-> Mem["in-memory list later"]
+    Cross["config / exception"] -.-> Svc
+  end
+  subgraph Future["FUTURE platform"]
+    UI["React CRM SPA"] -->|HTTPS/JSON| API["Spring Boot API"]
+    API -->|JPA| PG["PostgreSQL"]
+    API -->|Kafka| Cons["notification + audit"]
+  end
 ```
 
-### Layer map (ASCII)
+### Layer map
 
-```text
-  Presentation   controller   transport / API mapping (no business rules)
-  Business       service      rules, orchestration, validation decisions
-  Persistence    repository   save/find; hides storage details
-  Domain model   entity       Customer fields (no HTTP types)
-  Contracts      dto          CustomerRequest / CustomerResponse
-  Cross-cutting  config       future wiring (@Configuration later)
-                 exception    domain failures (e.g. not found)
+```mermaid
+flowchart TB
+  P["Presentation — controller<br/>transport / API mapping"]
+  B["Business — service<br/>rules, orchestration, validation"]
+  R["Persistence — repository<br/>save/find; hides storage"]
+  D["Domain — entity<br/>Customer fields"]
+  C["Contracts — dto<br/>Request / Response"]
+  X["Cross-cutting — config / exception"]
+  P --> B --> R
+  B --> D
+  P --> C
+  B --> C
+  X -.-> B
 ```
 
 ### Lab flow (mermaid)
@@ -792,29 +807,45 @@ Screenshot or paste compile success and the `find` listing into `notes/screensho
 
 ### Checkpoint A — Project root + Maven layout
 
-* [ ] `~/java-bootcamp/examples/lab8-crm/pom.xml` with `com.northstar:customer-service:0.1.0-SNAPSHOT`
-* [ ] Standard `src/main/java`, `src/main/resources`, `src/test/java` exist
-* [ ] Seven packages under `com.northstar.crm`
-* [ ] Edited via IntelliJ (or optional VS Code) 
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `~/java-bootcamp/examples/lab8-crm/pom.xml` with `com.northstar:customer-service:0.1.0-SNAPSHOT` | Pass / Fail |
+| 2 | Standard `src/main/java`, `src/main/resources`, `src/test/java` exist | Pass / Fail |
+| 3 | Seven packages under `com.northstar.crm` | Pass / Fail |
+| 4 | Edited via IntelliJ (or optional VS Code) | Pass / Fail |
 
 ### Checkpoint B — Stubs compile and Main runs
 
-* [ ] Entity, DTOs, repository, service, controller, config, exception, Main present
-* [ ] `mvn clean compile` → `BUILD SUCCESS`
-* [ ] `java -cp target/classes com.northstar.crm.Main` prints skeleton banner + example IDs
-* [ ] No Spring/JPA/Kafka imports in source
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Entity, DTOs, repository, service, controller, config, exception, Main present | Pass / Fail |
+| 2 | `mvn clean compile` → `BUILD SUCCESS` | Pass / Fail |
+| 3 | `java -cp target/classes com.northstar.crm.Main` prints skeleton banner + example IDs | Pass / Fail |
+| 4 | No Spring/JPA/Kafka imports in source | Pass / Fail |
 
 ### Checkpoint C — Documentation
 
-* [ ] `docs/layer-flow.md` narrates `CUS-1001` / `lab-request-001` through layers
-* [ ] `docs/CODING-STANDARDS.md` states hard layer rules
-* [ ] Project `LAB-8-GUIDE.md` explains compile/run
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `docs/layer-flow.md` narrates `CUS-1001` / `lab-request-001` through layers | Pass / Fail |
+| 2 | `docs/CODING-STANDARDS.md` states hard layer rules | Pass / Fail |
+| 3 | Project `LAB-8-GUIDE.md` explains compile/run | Pass / Fail |
 
 ### Checkpoint D — Failure evidence + security
 
-* [ ] At least three failure experiments recorded
-* [ ] Layer-direction violation experiment understood and reverted
-* [ ] No secrets / `target/` committed; concepts answers drafted
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | At least three failure experiments recorded | Pass / Fail |
+| 2 | Layer-direction violation experiment understood and reverted | Pass / Fail |
+| 3 | No secrets / `target/` committed; concepts answers drafted | Pass / Fail |
 
 ---
 

@@ -25,33 +25,20 @@ You develop on **your laptop** with **IntelliJ IDEA Community** (primary IDE), o
 
 ## 2. How the training environment works
 
-```text
-┌──────────────────────────────────────┐          ┌─────────────────────────────────────────┐
-│  YOUR LAPTOP                         │          │  SHARED AWS HOST                        │
-│  develop · compile · run locally     │          │  100.22.136.97  ·  AWS us-west-2         │
-├──────────────────────────────────────┤          ├─────────────────────────────────────────┤
-│                                      │   JDBC   │                                         │
-│  IDE                                 │ ───────► │  PostgreSQL 17                          │
-│    • IntelliJ Community (primary) │          │    port 5432  ·  database bootcamp      │
-│    • VS Code           (optional)   │          │    your schema only (studentNN)         │
-│                                      │   Kafka  │                                         │
-│  Toolchain                           │ ───────► │  Apache Kafka 4.0                       │
-│    • JDK 21  ·  Maven 3.9.x  ·  Git  │          │    port 9092  ·  shared broker          │
-│    • Node 22 ·  kubectl (Week 5+)    │          │                                         │
-│                                      │   HTTPS  │  Kubernetes (k3s)                       │
-│  Workspace                           │ ───────► │    API      :6443                       │
-│    ~/java-bootcamp                   │          │    Traefik  :80 / :443                  │
-│      examples/  labs/  projects/     │          │    your namespace only (studentNN)      │
-│                                      │          │                                         │
-└──────────────────┬───────────────────┘          └─────────────────────────────────────────┘
-                   │
-                   │  git push
-                   ▼
-         ┌─────────────────────────────┐
-         │  GitHub                     │
-         │    • Actions  (CI/CD)       │
-         │    • GHCR     (images)      │
-         └─────────────────────────────┘
+```mermaid
+flowchart LR
+  subgraph Laptop["Your laptop"]
+    IDE["IntelliJ / VS Code"]
+    JDK["JDK 21 + Maven + Git"]
+    Code["java-bootcamp workspace"]
+  end
+  subgraph Shared["Shared AWS lab host"]
+    PG["PostgreSQL 17"]
+    KF["Kafka 4.0"]
+    K3["k3s + Traefik"]
+    GHCR["GHCR images"]
+  end
+  Laptop -->|"connect out<br/>Week 4+"| Shared
 ```
 
 | Location | Your job there |
@@ -138,7 +125,7 @@ Complete **[Lab 0](Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/
 
 ---
 
-## 6. Accounts checklist
+## 6. Accounts pass criteria
 
 | Account | When needed | Action |
 | ------- | ----------- | ------- |
@@ -297,36 +284,52 @@ Capstone documents:
 
 ---
 
-## 14. Participant readiness checklist
+## 14. Participant readiness pass criteria
 
 ### Before Day 1
 
-- [ ] IntelliJ IDEA Community installed (primary IDE)
-- [ ] Optional: VS Code + Java extensions if you prefer it
-- [ ] Lab 0 completed; HelloWorld runs locally  
-- [ ] `java` / `javac` / `mvn` / `git` verified  
-- [ ] GitHub account ready  
-- [ ] Workspace is `~/java-bootcamp` (or Windows equivalent)  
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive pass criteria)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | IntelliJ IDEA Community installed (primary IDE) | Pass / Fail |
+| 2 | Optional: VS Code + Java extensions if you prefer it | Pass / Fail |
+| 3 | Lab 0 completed; HelloWorld runs locally | Pass / Fail |
+| 4 | `java` / `javac` / `mvn` / `git` verified | Pass / Fail |
+| 5 | GitHub account ready | Pass / Fail |
+| 6 | Workspace is `~/java-bootcamp` (or Windows equivalent) | Pass / Fail |
 
 ### Before Week 2
 
-- [ ] Maven verified  
-- [ ] GitHub Copilot signed in  
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive pass criteria)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Maven verified | Pass / Fail |
+| 2 | GitHub Copilot signed in | Pass / Fail |
 
 ### Before Week 4
 
-- [ ] Node 22 + npm  
-- [ ] Credentials sheet received; JDBC smoke-test to `bootcamp` / your schema on `100.22.136.97:5432`  
-- [ ] Kafka bootstrap `100.22.136.97:9092` smoke-tested  
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive pass criteria)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Node 22 + npm | Pass / Fail |
+| 2 | Credentials sheet received; JDBC smoke-test to `bootcamp` / your schema on `100.22.136.97:5432` | Pass / Fail |
+| 3 | Kafka bootstrap `100.22.136.97:9092` smoke-tested | Pass / Fail |
 
 ### Before Week 5 / Capstone
 
-- [ ] GitHub Actions enabled on CRM repo  
-- [ ] **kubectl** works with your `studentNN.yaml` against k3s  
-- [ ] GHCR login / push path understood  
-- [ ] Terraform / Ansible available for Lab 45 if in scope  
-- [ ] Secrets policy understood  
-- [ ] Read [FINAL-SETUP-README.md](FINAL-SETUP-README.md)  
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive pass criteria)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | GitHub Actions enabled on CRM repo | Pass / Fail |
+| 2 | **kubectl** works with your `studentNN.yaml` against k3s | Pass / Fail |
+| 3 | GHCR login / push path understood | Pass / Fail |
+| 4 | Terraform / Ansible available for Lab 45 if in scope | Pass / Fail |
+| 5 | Secrets policy understood | Pass / Fail |
+| 6 | Read [FINAL-SETUP-README.md](FINAL-SETUP-README.md) | Pass / Fail |
 
 ---
 

@@ -18,6 +18,14 @@
 
 ---
 
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
 ## Lab Overview
 
 This Module 4 lab builds **JVM memory literacy**: stack versus heap, object lifecycle, garbage collection, leak patterns, weak references, heap flags, and laptop-friendly diagnostics (`Runtime` API, GC logs, optional `jstat` / `jconsole` / VisualVM).
@@ -77,17 +85,22 @@ You need to determine:
 
 ### Stack vs Heap (mental model)
 
-```text
-  Thread stack frames                         Java Heap
- ┌─────────────────────┐                    ┌──────────────────────────┐
- │ main()              │                    │  Person@…  name, age     │
- │  mainCounter = 1    │    reference       │  Student@…               │
- │  mainPerson ────────┼───────────────────►│  Employee@…              │
- │ methodA()           │                    │  DemoObject[] / payloads │
- │  localA, personA ───┼──►                 │  ArrayList → Employees   │
- │ methodB() → methodC │                    │  WeakReference → ?       │
- └─────────────────────┘                    └──────────────────────────┘
-   GC roots: stacks, statics, …              Unreachable objects → GC
+```mermaid
+flowchart LR
+  subgraph Stack["Thread stack frames"]
+    M["main()<br/>mainCounter, mainPerson"]
+    A["methodA()<br/>localA, personA"]
+    B["methodB() → methodC()"]
+  end
+  subgraph Heap["Java Heap"]
+    P["Person / Student / Employee"]
+    L["DemoObject[] / ArrayList"]
+    W["WeakReference → ?"]
+  end
+  M -->|reference| P
+  A -->|reference| P
+  GC["GC roots: stacks, statics"] -.-> Stack
+  Unreach["Unreachable → GC"] -.-> Heap
 ```
 
 ### Lab flow
@@ -566,27 +579,43 @@ Optionally skim [`solution/Lab4-MemoryManagement/`](solution/Lab4-MemoryManageme
 
 ### Checkpoint A — Workspace + shared types
 
-* [ ] Folder `$HOME/java-bootcamp/examples/Lab4-MemoryManagement` exists
-* [ ] `Person.java` and `MemoryMonitor.java` present (default package)
-* [ ] Edited with VS Code and/or IntelliJ per [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Folder `$HOME/java-bootcamp/examples/Lab4-MemoryManagement` exists | Pass / Fail |
+| 2 | `Person.java` and `MemoryMonitor.java` present (default package) | Pass / Fail |
+| 3 | Edited with VS Code and/or IntelliJ per [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md) | Pass / Fail |
 
 ### Checkpoint B — Stack / heap / lifecycle
 
-* [ ] `StackExample`, `HeapExample`, `ObjectLifecycle` compile and run
-* [ ] Output shows nested frames, identity hashes, create/use/null narrative
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `StackExample`, `HeapExample`, `ObjectLifecycle` compile and run | Pass / Fail |
+| 2 | Output shows nested frames, identity hashes, create/use/null narrative | Pass / Fail |
 
 ### Checkpoint C — GC + leak + weak + performance
 
-* [ ] `GarbageCollectionDemo` with Before / After / After GC reports
-* [ ] `-Xlog:gc` snippet saved
-* [ ] `MemoryLeakDemo leak` and `fix` both demonstrated
-* [ ] `WeakReferenceDemo` and `PerformanceTest` run; table filled
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `GarbageCollectionDemo` with Before / After / After GC reports | Pass / Fail |
+| 2 | `-Xlog:gc` snippet saved | Pass / Fail |
+| 3 | `MemoryLeakDemo leak` and `fix` both demonstrated | Pass / Fail |
+| 4 | `WeakReferenceDemo` and `PerformanceTest` run; table filled | Pass / Fail |
 
 ### Checkpoint D — Evidence hygiene
 
-* [ ] No `.hprof` in Git
-* [ ] Screenshots show memory/GC themes, not secrets
-* [ ] Reflection answers in `notes/lab4-answers.md`
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | No `.hprof` in Git | Pass / Fail |
+| 2 | Screenshots show memory/GC themes, not secrets | Pass / Fail |
+| 3 | Reflection answers in `notes/lab4-answers.md` | Pass / Fail |
 
 ---
 

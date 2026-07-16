@@ -12,9 +12,17 @@
 | Windows | [LAB-34-WINDOWS.md](LAB-34-WINDOWS.md) |
 | macOS | [LAB-34-MACOS.md](LAB-34-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **Node.js 22+** and **npm**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **Node.js 22+** and **npm**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -76,19 +84,15 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-App  (useState: customers, query, mode, draft, errors)
-  |
-  |-- derive visible = filter(customers, query)   // during render
-  |-- useEffect → document.title = CRM (n)
-  |
-  +-- CustomerToolbar   (controlled search + Add)
-  +-- CustomerList      (visible cards; onEdit → mode edit)
-  +-- CustomerForm      (controlled draft; validate → create/update)
-  |
-  Vitest + RTL: create / edit / cancel / search flows
-
-No fetch yet — Lab 35 replaces seed + setters with API + request states
+```mermaid
+flowchart TB
+  App["App state<br/>customers, query, mode, draft, errors"] --> Vis["derive visible<br/>filter during render"]
+  App --> Title["useEffect → document.title"]
+  App --> TB["CustomerToolbar"]
+  App --> List["CustomerList"]
+  App --> Form["CustomerForm"]
+  Test["Vitest create / edit / cancel / search"] -.-> App
+  Note["No fetch yet — Lab 35"] -.-> App
 ```
 
 ### Lab flow (mermaid)
@@ -456,29 +460,45 @@ Complete [Failure Experiments](#failure-experiments). Capture evidence. Run test
 
 ### Checkpoint A — Tooling
 
-* [ ] `lab34-crm/crm-ui` copied from Lab 33 and builds
-* [ ] Lifted `customers` / `query` / `mode` / `draft` / `errors` in `App`
-* [ ] Validation module present
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab34-crm/crm-ui` copied from Lab 33 and builds | Pass / Fail |
+| 2 | Lifted `customers` / `query` / `mode` / `draft` / `errors` in `App` | Pass / Fail |
+| 3 | Validation module present | Pass / Fail |
 
 ### Checkpoint B — Core state behavior
 
-* [ ] Controlled search + derived `visible`
-* [ ] Discriminated mode union (closed / create / edit)
-* [ ] Immutable create and update; cancel preserves list
-* [ ] Field validation blocks bad saves
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Controlled search + derived `visible` | Pass / Fail |
+| 2 | Discriminated mode union (closed / create / edit) | Pass / Fail |
+| 3 | Immutable create and update; cancel preserves list | Pass / Fail |
+| 4 | Field validation blocks bad saves | Pass / Fail |
 
 ### Checkpoint C — Effects + tests
 
-* [ ] `useEffect` title sync with cleanup
-* [ ] No derived-state filter effects
-* [ ] ≥8 RTL flow tests green twice
-* [ ] `npm run build` succeeds
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `useEffect` title sync with cleanup | Pass / Fail |
+| 2 | No derived-state filter effects | Pass / Fail |
+| 3 | ≥8 RTL flow tests green twice | Pass / Fail |
+| 4 | `npm run build` succeeds | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] State notes document anti-patterns
-* [ ] Correlation logged as `lab-request-001`
-* [ ] No secrets / `node_modules` / `dist` committed
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | State notes document anti-patterns | Pass / Fail |
+| 2 | Correlation logged as `lab-request-001` | Pass / Fail |
+| 3 | No secrets / `node_modules` / `dist` committed | Pass / Fail |
 
 ---
 

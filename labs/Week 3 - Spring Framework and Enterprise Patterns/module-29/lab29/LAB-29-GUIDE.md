@@ -12,9 +12,17 @@
 | Windows | [LAB-29-WINDOWS.md](LAB-29-WINDOWS.md) |
 | macOS | [LAB-29-MACOS.md](LAB-29-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -74,16 +82,13 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-React CRM SPA --HTTPS/JSON--> CustomerController (@Valid DTOs)
-                                    |
-                              CustomerService (BusinessException subtypes)
-                                    |
-                              CustomerRepository
-                                    |
-         @RestControllerAdvice GlobalExceptionHandler --> ErrorResponse JSON
-
-Optional (notes): Spring-WS endpoint → same service → SOAP faults aligned
+```mermaid
+flowchart TB
+  UI["React CRM SPA"] -->|HTTPS/JSON| Ctrl["CustomerController<br/>@Valid DTOs"]
+  Ctrl --> Svc["CustomerService<br/>BusinessException subtypes"]
+  Svc --> Repo["CustomerRepository"]
+  Ctrl --> GEH["@RestControllerAdvice<br/>GlobalExceptionHandler"]
+  GEH --> Err["ErrorResponse JSON"]
 ```
 
 ### Lab flow (mermaid)
@@ -487,27 +492,43 @@ mvn -q test
 
 ### Checkpoint A — Tooling and envelope
 
-* [ ] `lab29-crm` under `~/java-bootcamp/examples/`
-* [ ] Validation starter present
-* [ ] `ErrorResponse` + `FieldViolation` compile
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab29-crm` under `~/java-bootcamp/examples/` | Pass / Fail |
+| 2 | Validation starter present | Pass / Fail |
+| 3 | `ErrorResponse` + `FieldViolation` compile | Pass / Fail |
 
 ### Checkpoint B — DTO and controller validation
 
-* [ ] Annotated `CustomerRequest` / `StatusUpdateRequest`
-* [ ] `@Valid` on create and status update
-* [ ] Invalid POST rejected at boundary (no HTML stack)
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Annotated `CustomerRequest` / `StatusUpdateRequest` | Pass / Fail |
+| 2 | `@Valid` on create and status update | Pass / Fail |
+| 3 | Invalid POST rejected at boundary (no HTML stack) | Pass / Fail |
 
 ### Checkpoint C — Global handler and domain mapping
 
-* [ ] Validation → 400 custom envelope with `lab-request-001`
-* [ ] Not-found 404, duplicate 409, illegal transition mapped
-* [ ] Safe 500 fallback; SOAP/Lab 14–16 notes documented
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Validation → 400 custom envelope with `lab-request-001` | Pass / Fail |
+| 2 | Not-found 404, duplicate 409, illegal transition mapped | Pass / Fail |
+| 3 | Safe 500 fallback; SOAP/Lab 14–16 notes documented | Pass / Fail |
 
 ### Checkpoint D — Tests and hygiene
 
-* [ ] MockMvc asserts status + `jsonPath` body
-* [ ] Two consecutive `mvn test` identical success
-* [ ] No secrets / stack traces / `target/` committed
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | MockMvc asserts status + `jsonPath` body | Pass / Fail |
+| 2 | Two consecutive `mvn test` identical success | Pass / Fail |
+| 3 | No secrets / stack traces / `target/` committed | Pass / Fail |
 
 ---
 

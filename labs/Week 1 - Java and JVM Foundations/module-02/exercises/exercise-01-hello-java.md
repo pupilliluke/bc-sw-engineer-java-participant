@@ -15,7 +15,11 @@ Print `Hello, Java!` from `main`.
 
 Prints `Hello, Java!`.
 
-## Done when
+## Pass criteria
 
-- [ ] Code compiles and runs (or notes complete if analysis-only)
-- [ ] You can explain the result in one sentence
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Code compiles and runs (or notes complete if analysis-only) | Pass / Fail |
+| 2 | You can explain the result in one sentence | Pass / Fail |

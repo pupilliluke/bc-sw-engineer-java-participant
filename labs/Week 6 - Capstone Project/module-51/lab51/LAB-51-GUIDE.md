@@ -16,6 +16,14 @@
 
 ---
 
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
 ## Lab Overview
 
 This Module 51 lab makes the CRM **releasable**: harden JWT authorization, protect secrets and headers, enforce gated CI/CD, publish immutable containers, deploy with health probes, run smoke tests (including unauthorized paths), and prove rollback. Treat this as the Week 6 release gate, not an optional polish pass.
@@ -75,22 +83,13 @@ Use these fixtures consistently:
 
 ### NOW (this lab)
 
-```text
-Developer PR
-    |
-    v
-CI: build → unit/IT → SAST/dep/secret/image scan → publish digest
-    |
-    v
-CD: apply manifests (Secrets via platform) → rollout → probes
-    |
-    v
-Smoke: 401 anonymous, 403 wrong role, 200 AGENT with token
-    |
-    v
-Rollback: redeploy previous digest → verify health + compatibility
-
-JWT resource server protects /api/** ; actuators limited
+```mermaid
+flowchart TB
+  PR["Developer PR"] --> CI["CI: build → tests → SAST<br/>dep/secret/image scan"]
+  CI --> Pub["publish artifact"]
+  Pub --> CD["CD: deploy staging → gates → prod"]
+  CD --> Sec["JWT/RBAC harden + secrets"]
+  CD --> Obs["health / metrics / rollback plan"]
 ```
 
 ### Lab flow (mermaid)
@@ -294,11 +293,15 @@ Document claim → role mapping (e.g. `realm_access.roles`) in `docs/security-de
 
 Checklist to tick in demo.md:
 
-* [ ] CORS allowlist matches React origin(s)
-* [ ] Actuator exposure limited to health/info (as approved)
-* [ ] Logging MDC includes correlation id, not bearer token
-* [ ] Error bodies do not dump stack traces to clients
-* [ ] Security headers configured per instructor baseline
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | CORS allowlist matches React origin(s) | Pass / Fail |
+| 2 | Actuator exposure limited to health/info (as approved) | Pass / Fail |
+| 3 | Logging MDC includes correlation id, not bearer token | Pass / Fail |
+| 4 | Error bodies do not dump stack traces to clients | Pass / Fail |
+| 5 | Security headers configured per instructor baseline | Pass / Fail |
 
 **Expected result:** Hardening notes + config diffs; actuator `env`/`beans` not public.
 
@@ -421,27 +424,43 @@ Also freeze release identity for Lab 52:
 
 ### Checkpoint A — Threat model and authz
 
-* [ ] Threat model documents CRM-specific abuse cases
-* [ ] JWT resource server deny-by-default
-* [ ] Anonymous/wrong-role/correct-role tests green
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Threat model documents CRM-specific abuse cases | Pass / Fail |
+| 2 | JWT resource server deny-by-default | Pass / Fail |
+| 3 | Anonymous/wrong-role/correct-role tests green | Pass / Fail |
 
 ### Checkpoint B — Harden and scan
 
-* [ ] CORS/actuators/logging hardened
-* [ ] Dependency/secret/image scans executed
-* [ ] Exceptions time-bounded with owners
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | CORS/actuators/logging hardened | Pass / Fail |
+| 2 | Dependency/secret/image scans executed | Pass / Fail |
+| 3 | Exceptions time-bounded with owners | Pass / Fail |
 
 ### Checkpoint C — Ship and verify
 
-* [ ] Non-root image published with digest
-* [ ] Pipeline stages pass with artifact identity
-* [ ] Deploy + auth/deny smoke evidence
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Non-root image published with digest | Pass / Fail |
+| 2 | Pipeline stages pass with artifact identity | Pass / Fail |
+| 3 | Deploy + auth/deny smoke evidence | Pass / Fail |
 
 ### Checkpoint D — Recovery hygiene
 
-* [ ] Rollback to previous digest proven
-* [ ] Demo/security docs complete
-* [ ] No secrets in Git or screenshots
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Rollback to previous digest proven | Pass / Fail |
+| 2 | Demo/security docs complete | Pass / Fail |
+| 3 | No secrets in Git or screenshots | Pass / Fail |
 
 ---
 

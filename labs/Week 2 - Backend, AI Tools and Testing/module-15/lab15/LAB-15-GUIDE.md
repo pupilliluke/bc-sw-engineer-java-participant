@@ -12,9 +12,17 @@
 | Windows | [LAB-15-WINDOWS.md](LAB-15-WINDOWS.md) |
 | macOS | [LAB-15-MACOS.md](LAB-15-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -74,19 +82,11 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-CustomerApiFacade  (Lab 14 — shape validation)
-      |
-      v
-CustomerService (interface)  ----uses----> CustomerValidator
-      |                                         |
-      |                                         +-- status transitions
-      |                                         +-- uniqueness / required IDs
-      v
-CustomerRepository (interface)
-      |
-      v
-InMemoryCustomerRepository  (private Map)   <-- no Map/List leaks to facade
+```mermaid
+flowchart TB
+  Facade["CustomerApiFacade<br/>Lab 14 shape validation"] --> Svc["CustomerService<br/>business rules"]
+  Svc --> Repo["CustomerRepository interface"]
+  Repo --> Mem["InMemoryCustomerRepository"]
 ```
 
 ### Lab flow (mermaid)
@@ -531,27 +531,43 @@ git status
 
 ### Checkpoint A — Repository boundary
 
-* [ ] `lab15-crm` under `examples/`
-* [ ] `CustomerRepository` + private-Map in-memory impl
-* [ ] No Map exposed to callers
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab15-crm` under `examples/` | Pass / Fail |
+| 2 | `CustomerRepository` + private-Map in-memory impl | Pass / Fail |
+| 3 | No Map exposed to callers | Pass / Fail |
 
 ### Checkpoint B — Service + validator
 
-* [ ] `CustomerService` interface + `DefaultCustomerService`
-* [ ] `CustomerValidator` with ALLOWED transitions
-* [ ] Shared repository instance in wiring
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `CustomerService` interface + `DefaultCustomerService` | Pass / Fail |
+| 2 | `CustomerValidator` with ALLOWED transitions | Pass / Fail |
+| 3 | Shared repository instance in wiring | Pass / Fail |
 
 ### Checkpoint C — Behavior proof
 
-* [ ] `CUS-1002` activates PROSPECT → ACTIVE
-* [ ] `CUS-1001` ACTIVE → PROSPECT rejected; status unchanged
-* [ ] Correlation ID present on failure
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `CUS-1002` activates PROSPECT → ACTIVE | Pass / Fail |
+| 2 | `CUS-1001` ACTIVE → PROSPECT rejected; status unchanged | Pass / Fail |
+| 3 | Correlation ID present on failure | Pass / Fail |
 
 ### Checkpoint D — Tests + docs
 
-* [ ] `CustomerValidatorTest` green
-* [ ] README transition table + wiring
-* [ ] Failure experiments recorded; no secrets/`target/` staged
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `CustomerValidatorTest` green | Pass / Fail |
+| 2 | README transition table + wiring | Pass / Fail |
+| 3 | Failure experiments recorded; no secrets/`target/` staged | Pass / Fail |
 
 ---
 

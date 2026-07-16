@@ -12,9 +12,17 @@
 | Windows | [LAB-43-WINDOWS.md](LAB-43-WINDOWS.md) |
 | macOS | [LAB-43-MACOS.md](LAB-43-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and a **GitHub** repo with **Actions** enabled. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and a **GitHub** repo with **Actions** enabled. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -122,23 +130,17 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-Developer PR / push
-        |
-        v
-.github/workflows/ci.yml
-  ├── PR:   verify (cache Maven, tests, reports)
-  ├── main: verify + checksum artifact (no silent rebuild)
-  └── tags v*: verify + optional manual deploy step
-        |
-        v
-Artifacts: target/*.jar + SHA256SUMS + Surefire/Failsafe (+ scan reports)
-        |
-        v
-Secured repo/deployment variables (never in Git)
-        |
-        v
-docs/ci-runbook.md  (rerun, gates, evidence retention)
+```mermaid
+flowchart TB
+  PR["Developer PR / push"] --> WF[".github/workflows/ci.yml"]
+  WF --> PRJob["PR: verify<br/>cache Maven, tests, reports"]
+  WF --> MainJob["main: verify + checksum artifact"]
+  WF --> TagJob["tags v*: verify + optional deploy"]
+  PRJob --> Art["Artifacts: JAR + SHA256SUMS<br/>Surefire/Failsafe + scans"]
+  MainJob --> Art
+  TagJob --> Art
+  Art --> Sec["Secured repo variables<br/>never in Git"]
+  Sec --> Doc["docs/ci-runbook.md"]
 ```
 
 ### Lab flow (mermaid)
@@ -479,11 +481,15 @@ git status --short
 
 ```markdown
 ## Definition of done
-- [ ] PR pipeline green on a sample branch
-- [ ] main checksum artifact present
-- [ ] secured variable names documented
-- [ ] forced failure + restore attached
-- [ ] peer can rerun verify from this runbook
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | PR pipeline green on a sample branch | Pass / Fail |
+| 2 | main checksum artifact present | Pass / Fail |
+| 3 | secured variable names documented | Pass / Fail |
+| 4 | forced failure + restore attached | Pass / Fail |
+| 5 | peer can rerun verify from this runbook | Pass / Fail |
 ```
 
 **Expected result:** ≥3 experiments recorded; evidence sanitized; `.github/workflows/ci.yml` + `docs/ci-runbook.md` ready for rubric.
@@ -496,27 +502,43 @@ git status --short
 
 ### Checkpoint A — Tooling
 
-* [ ] `lab43-crm` (or agreed path) under `examples/`
-* [ ] `.github/workflows/ci.yml` with pinned image / Wrapper policy
-* [ ] Maven cache declared; local `clean verify` green
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab43-crm` (or agreed path) under `examples/` | Pass / Fail |
+| 2 | `.github/workflows/ci.yml` with pinned image / Wrapper policy | Pass / Fail |
+| 3 | Maven cache declared; local `clean verify` green | Pass / Fail |
 
 ### Checkpoint B — Core pipeline
 
-* [ ] PR verify + main verify paths
-* [ ] Reports published (Surefire/Failsafe)
-* [ ] Package-once checksum with commit identity
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | PR verify + main verify paths | Pass / Fail |
+| 2 | Reports published (Surefire/Failsafe) | Pass / Fail |
+| 3 | Package-once checksum with commit identity | Pass / Fail |
 
 ### Checkpoint C — Gates + secrets
 
-* [ ] Quality gate / scan step with documented threshold
-* [ ] Secured, environment-scoped variables (names documented)
-* [ ] Tag/manual deploy does not rebuild the JAR
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Quality gate / scan step with documented threshold | Pass / Fail |
+| 2 | Secured, environment-scoped variables (names documented) | Pass / Fail |
+| 3 | Tag/manual deploy does not rebuild the JAR | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] Controlled failure then restore documented
-* [ ] `docs/ci-runbook.md` complete
-* [ ] No secrets / `.env` / raw credential screenshots committed
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Controlled failure then restore documented | Pass / Fail |
+| 2 | `docs/ci-runbook.md` complete | Pass / Fail |
+| 3 | No secrets / `.env` / raw credential screenshots committed | Pass / Fail |
 
 ---
 

@@ -16,6 +16,14 @@
 
 ---
 
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
 ## Lab Overview
 
 This Module 52 lab is the Week 6 **final defense**: rehearse and deliver a business-to-technology narrative, a deterministic live demo, evidence-backed technical Q&A, a blameless retrospective, and a rubric-based self-assessment—packaged for the review panel and portfolio.
@@ -75,19 +83,14 @@ Use these fixtures consistently:
 
 ### NOW (this lab)
 
-```text
-Labs 48–51 artifacts
-        |
-        v
-evidence-index.md  (claim → artifact map)
-        |
-        +---> final-presentation (story)
-        +---> demo-script.md (timed speaker/operator)
-        +---> technical-q-and-a.md (claim/evidence/trade-off/next)
-        +---> retrospective.md + self-assessment.md
-        |
-        v
-Live defense (or transparent fallback evidence)
+```mermaid
+flowchart TB
+  Art["Labs 48–51 artifacts"] --> Idx["evidence-index.md<br/>claim → artifact map"]
+  Idx --> Pres["final-presentation"]
+  Idx --> Demo["demo-script.md"]
+  Idx --> QA["technical-q-and-a.md"]
+  Idx --> Retro["retrospective + self-assessment"]
+  Idx --> Live["Live defense<br/>or fallback evidence"]
 ```
 
 ### Lab flow (mermaid)
@@ -279,12 +282,16 @@ Export `defense/final-presentation.pdf` (or approved format). Keep fixtures `CUS
 
 Pre-seed checklist before the panel enters:
 
-* [ ] Amina (`CUS-1001`) searchable
-* [ ] Ravi (`CUS-1002`) searchable
-* [ ] Demo token valid for agent role
-* [ ] Kafka console or UI lag view bookmarked
-* [ ] SQL client ready with sanitized query
-* [ ] Fallback screenshots folder open
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Amina (`CUS-1001`) searchable | Pass / Fail |
+| 2 | Ravi (`CUS-1002`) searchable | Pass / Fail |
+| 3 | Demo token valid for agent role | Pass / Fail |
+| 4 | Kafka console or UI lag view bookmarked | Pass / Fail |
+| 5 | SQL client ready with sanitized query | Pass / Fail |
+| 6 | Fallback screenshots folder open | Pass / Fail |
 
 **Expected result:** Timed script ≤ allowed demo window; failure beat included; pre-seed checklist complete.
 
@@ -401,11 +408,15 @@ Three releases with no staging contract mismatch.
 
 Scrub checklist before archive:
 
-* [ ] No JWTs or refresh tokens in screenshots
-* [ ] No connection strings or kubeconfigs
-* [ ] No real customer emails/names (use Amina/Ravi fixtures only)
-* [ ] No `.env` copies in `defense/`
-* [ ] Evidence paths resolve from repo root
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | No JWTs or refresh tokens in screenshots | Pass / Fail |
+| 2 | No connection strings or kubeconfigs | Pass / Fail |
+| 3 | No real customer emails/names (use Amina/Ravi fixtures only) | Pass / Fail |
+| 4 | No `.env` copies in `defense/` | Pass / Fail |
+| 5 | Evidence paths resolve from repo root | Pass / Fail |
 
 **Expected result:** Self-score table filled; archive scrubbed (`git status` clean of secrets).
 
@@ -429,27 +440,43 @@ Scrub checklist before archive:
 
 ### Checkpoint A — Evidence and story
 
-* [ ] `evidence-index.md` maps claims → artifacts
-* [ ] Presentation tells user→architecture→gates→outcomes
-* [ ] Limitations listed honestly
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `evidence-index.md` maps claims → artifacts | Pass / Fail |
+| 2 | Presentation tells user→architecture→gates→outcomes | Pass / Fail |
+| 3 | Limitations listed honestly | Pass / Fail |
 
 ### Checkpoint B — Demo readiness
 
-* [ ] Timed `demo-script.md` with speaker/operator
-* [ ] Fixtures `CUS-1001` / `CUS-1002` / `lab-request-001`
-* [ ] Fallback screenshots/API/rollback ready
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Timed `demo-script.md` with speaker/operator | Pass / Fail |
+| 2 | Fixtures `CUS-1001` / `CUS-1002` / `lab-request-001` | Pass / Fail |
+| 3 | Fallback screenshots/API/rollback ready | Pass / Fail |
 
 ### Checkpoint C — Defense quality
 
-* [ ] Q&A cards with claim/evidence/trade-off/next
-* [ ] Delivery + `feedback-log.md`
-* [ ] Blameless retro with owned actions
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Q&A cards with claim/evidence/trade-off/next | Pass / Fail |
+| 2 | Delivery + `feedback-log.md` | Pass / Fail |
+| 3 | Blameless retro with owned actions | Pass / Fail |
 
 ### Checkpoint D — Close-out hygiene
 
-* [ ] Self-assessment with evidence links
-* [ ] Portfolio archive scrubbed of secrets
-* [ ] Peer review of defense pack complete
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Self-assessment with evidence links | Pass / Fail |
+| 2 | Portfolio archive scrubbed of secrets | Pass / Fail |
+| 3 | Peer review of defense pack complete | Pass / Fail |
 
 ---
 

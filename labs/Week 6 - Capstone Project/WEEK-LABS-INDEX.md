@@ -82,21 +82,19 @@ A green demo alone is not enough. Another engineer must be able to reproduce the
 
 ## Target architecture
 
-```text
-React Frontend (Vite / Node 22)
-        │  HTTPS / REST
-        ▼
-Spring Boot API  ── JWT / RBAC ── Actuator health & metrics
-        │
-        ├── Service layer (transactions, validation, DTOs)
-        ├── Spring Data JPA ──► PostgreSQL
-        └── Kafka producers/consumers ──► Event & audit topics
-
-Delivery path
-  Git commit → GitHub Actions (build, test, SAST)
-            → Immutable Docker image (digest)
-            → Kubernetes (k3s) deploy
-            → Smoke test → Monitor → Rollback if needed
+```mermaid
+flowchart TB
+  UI["React Frontend<br/>Vite / Node 22"] -->|HTTPS / REST| API["Spring Boot API<br/>JWT / RBAC / Actuator"]
+  API --> Svc["Service layer<br/>transactions, validation, DTOs"]
+  API --> JPA["Spring Data JPA"]
+  JPA --> PG["PostgreSQL"]
+  API --> Kafka["Kafka producers/consumers"]
+  Kafka --> Topics["Event & audit topics"]
+  subgraph Delivery["Delivery path"]
+    Git["Git commit"] --> GHA["GitHub Actions<br/>build, test, SAST"]
+    GHA --> Img["Immutable Docker image"]
+    Img --> K8s["k3s deploy"]
+  end
 ```
 
 ### Suggested repository layout
@@ -325,39 +323,59 @@ Use this as the team close-out inventory. Each item must be sanitized (no secret
 
 ### Planning (48)
 
-- [ ] Context and container architecture docs
-- [ ] Measurable NFRs
-- [ ] Prioritized backlog with acceptance criteria
-- [ ] ADRs for major decisions
-- [ ] Risk register with owners and dates
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Context and container architecture docs | Pass / Fail |
+| 2 | Measurable NFRs | Pass / Fail |
+| 3 | Prioritized backlog with acceptance criteria | Pass / Fail |
+| 4 | ADRs for major decisions | Pass / Fail |
+| 5 | Risk register with owners and dates | Pass / Fail |
 
 ### Backend (49)
 
-- [ ] Vertical API + persistence + Kafka slice
-- [ ] Versioned event contract
-- [ ] Automated tests (happy + failure path)
-- [ ] Backend demo / reproduction notes
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Vertical API + persistence + Kafka slice | Pass / Fail |
+| 2 | Versioned event contract | Pass / Fail |
+| 3 | Automated tests (happy + failure path) | Pass / Fail |
+| 4 | Backend demo / reproduction notes | Pass / Fail |
 
 ### Frontend and data (50)
 
-- [ ] Accessible CRM UI journey
-- [ ] PostgreSQL migrations and JPA mappings
-- [ ] UI / E2E verification evidence
-- [ ] Documented end-to-end data flow
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Accessible CRM UI journey | Pass / Fail |
+| 2 | PostgreSQL migrations and JPA mappings | Pass / Fail |
+| 3 | UI / E2E verification evidence | Pass / Fail |
+| 4 | Documented end-to-end data flow | Pass / Fail |
 
 ### Delivery (51)
 
-- [ ] JWT/RBAC with negative-path tests
-- [ ] Pipeline with SAST gate
-- [ ] Image digest and deploy manifests
-- [ ] Smoke test and rollback evidence
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | JWT/RBAC with negative-path tests | Pass / Fail |
+| 2 | Pipeline with SAST gate | Pass / Fail |
+| 3 | Image digest and deploy manifests | Pass / Fail |
+| 4 | Smoke test and rollback evidence | Pass / Fail |
 
 ### Defense (52)
 
-- [ ] Presentation, demo script, evidence index
-- [ ] Technical Q&A and retrospective
-- [ ] Self-assessment against rubric
-- [ ] Peer-review notes and residual risks
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Presentation, demo script, evidence index | Pass / Fail |
+| 2 | Technical Q&A and retrospective | Pass / Fail |
+| 3 | Self-assessment against rubric | Pass / Fail |
+| 4 | Peer-review notes and residual risks | Pass / Fail |
 
 ---
 

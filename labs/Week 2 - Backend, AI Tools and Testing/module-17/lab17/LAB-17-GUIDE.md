@@ -12,9 +12,17 @@
 | Windows | [LAB-17-WINDOWS.md](LAB-17-WINDOWS.md) |
 | macOS | [LAB-17-MACOS.md](LAB-17-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`) (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 ---
+
+## How to follow this lab
+
+1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -73,18 +81,12 @@ Use these examples consistently:
 
 ### NOW (this lab)
 
-```text
-CustomerServiceTests  (JUnit 5)
-        |
-        v
-DefaultCustomerService + CustomerValidator
-        |
-        v
-InMemoryCustomerRepository   (real in-memory collaborator this lab;
-                              Lab 18 replaces with Mockito mocks)
-
-Optional: GitHub Copilot drafts tests → human review checklist → commit
-JaCoCo report: target/site/jacoco/index.html  (goal ≥80% on service package)
+```mermaid
+flowchart TB
+  Tests["CustomerServiceTests<br/>JUnit 5"] --> Svc["DefaultCustomerService<br/>+ CustomerValidator"]
+  Svc --> Repo["InMemoryCustomerRepository<br/>real collaborator"]
+  Copilot["Copilot drafts → human review"] -.-> Tests
+  Jacoco["JaCoCo ≥80% service package"] -.-> Tests
 ```
 
 ### Lab flow (mermaid)
@@ -349,27 +351,43 @@ List test classes, coverage goal, Copilot review policy, and which branch closed
 
 ### Checkpoint A — Tooling
 
-* [ ] `lab17-crm` under `examples/`
-* [ ] Surefire 3.x + JaCoCo with service `0.80` rule
-* [ ] JUnit 5 on test classpath
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `lab17-crm` under `examples/` | Pass / Fail |
+| 2 | Surefire 3.x + JaCoCo with service `0.80` rule | Pass / Fail |
+| 3 | JUnit 5 on test classpath | Pass / Fail |
 
 ### Checkpoint B — Core suite
 
-* [ ] Happy path: add/find Amina; activate Ravi
-* [ ] Negatives: duplicate, illegal transition, not-found
-* [ ] Parameterized legal/illegal transitions
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Happy path: add/find Amina; activate Ravi | Pass / Fail |
+| 2 | Negatives: duplicate, illegal transition, not-found | Pass / Fail |
+| 3 | Parameterized legal/illegal transitions | Pass / Fail |
 
 ### Checkpoint C — Gate + AI discipline
 
-* [ ] `mvn clean verify` passes ≥80% service coverage
-* [ ] Deliberate gate failure recorded then restored
-* [ ] Copilot review log or manual equivalent
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | `mvn clean verify` passes ≥80% service coverage | Pass / Fail |
+| 2 | Deliberate gate failure recorded then restored | Pass / Fail |
+| 3 | Copilot review log or manual equivalent | Pass / Fail |
 
 ### Checkpoint D — Hygiene
 
-* [ ] Two consecutive `mvn test` identical success
-* [ ] README runbook complete
-* [ ] No secrets / committed jacoco site / `target/`
+_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+
+| # | Confirm | Your notes |
+| - | ------- | ---------- |
+| 1 | Two consecutive `mvn test` identical success | Pass / Fail |
+| 2 | README runbook complete | Pass / Fail |
+| 3 | No secrets / committed jacoco site / `target/` | Pass / Fail |
 
 ---
 

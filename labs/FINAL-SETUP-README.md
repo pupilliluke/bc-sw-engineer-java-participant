@@ -16,33 +16,20 @@ Everything runs on **one shared server** in AWS (`us-west-2`, IP **`100.22.136.9
 
 Students work from **IntelliJ IDEA Community** (or optional VS Code) on their **laptops** and connect **out** to these services. Nothing for students to install server-side.
 
-```text
-┌──────────────────────────────────────┐          ┌─────────────────────────────────────────┐
-│  YOUR LAPTOP                         │          │  SHARED AWS HOST                        │
-│  develop · compile · run locally     │          │  100.22.136.97  ·  AWS us-west-2         │
-├──────────────────────────────────────┤          ├─────────────────────────────────────────┤
-│                                      │   JDBC   │                                         │
-│  IDE                                 │ ───────► │  PostgreSQL 17                          │
-│    • IntelliJ Community (primary)│          │    port 5432  ·  database bootcamp      │
-│    • VS Code           (optional)│          │    your schema only (studentNN)         │
-│                                      │   Kafka  │                                         │
-│  Toolchain                           │ ───────► │  Apache Kafka 4.0                       │
-│    • JDK 21  ·  Maven 3.9.x  ·  Git  │          │    port 9092  ·  shared broker          │
-│    • Node 22 ·  kubectl (Week 5+)    │          │                                         │
-│                                      │   HTTPS  │  Kubernetes (k3s)                       │
-│  Workspace                           │ ───────► │    API      :6443                       │
-│    ~/java-bootcamp                   │          │    Traefik  :80 / :443                  │
-│      examples/  labs/  projects/     │          │    your namespace only (studentNN)      │
-│                                      │          │                                         │
-└──────────────────┬───────────────────┘          └─────────────────────────────────────────┘
-                   │
-                   │  git push
-                   ▼
-         ┌─────────────────────────────┐
-         │  GitHub                     │
-         │    • Actions  (CI/CD)       │
-         │    • GHCR     (images)      │
-         └─────────────────────────────┘
+```mermaid
+flowchart LR
+  subgraph Laptop["Your laptop"]
+    IDE["IntelliJ / VS Code"]
+    JDK["JDK 21 + Maven + Git"]
+    Code["java-bootcamp workspace"]
+  end
+  subgraph Shared["Shared AWS lab host"]
+    PG["PostgreSQL 17"]
+    KF["Kafka 4.0"]
+    K3["k3s + Traefik"]
+    GHCR["GHCR images"]
+  end
+  Laptop -->|"connect out<br/>Week 4+"| Shared
 ```
 
 ---
