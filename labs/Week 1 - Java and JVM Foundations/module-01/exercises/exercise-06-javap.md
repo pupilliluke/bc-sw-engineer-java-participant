@@ -45,18 +45,21 @@ javap -c Hello
 - Save text or a local screenshot under `notes/screenshots/` (keep screenshots on your laptop only)
 - List three of: `ldc`, `invokevirtual`, `return`, `aload`, `istore`
 
-### Quick opcode meanings (same ideas as Exercise 1)
+### Quick opcode meanings (plain words)
 
-| Opcode | Easy meaning |
-| ------ | ------------ |
-| `ldc` | Load a constant (often a `String` or number) onto the stack |
-| `getstatic` | Read a static field (e.g. `System.out`) |
-| `invokevirtual` | Call an instance method (e.g. `println`) |
-| `aload` / `aload_0` | Load an object reference from a local variable |
-| `istore` | Store an `int` into a local variable |
-| `return` | Exit the method |
+**Picture the JVM putting items on a table, then acting on them.**
 
-Reminder: bytecode is what the JVM runs after `javac`. See [Exercise 1 Step 4](exercise-01-hello-world.md) for a full walkthrough of `Hello`.
+| Opcode | Everyday meaning |
+| ------ | ---------------- |
+| `ldc` | Put a value (text or number) on the table |
+| `getstatic` | Pick up a shared tool like the printer (`System.out`) |
+| `invokevirtual` | Do an action with what's on the table (e.g. print) |
+| `aload` / `aload_0` | Put an object you already have on the table |
+| `istore` | Save a number into a labeled box (a variable) |
+| `return` | Done — step away |
+
+You do **not** need to memorize these. The point: `javac` turns your Java into small steps, and the **JVM runs the steps**, not your `.java` file. Full walkthrough: [Exercise 1 Step 4](exercise-01-hello-world.md).
+
 
 ## Expected result
 

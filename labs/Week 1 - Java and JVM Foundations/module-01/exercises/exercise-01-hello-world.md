@@ -130,19 +130,29 @@ javap -c Hello
 
 #### Easy explanation of what you see
 
-`javap -c` shows the **bytecode** the JVM runs — not your Java source. Think of it as the JVM’s instruction list after `javac`.
+Your one line of Java...
 
-| Bytecode you saw | Plain English |
-| ---------------- | ------------- |
-| `aload_0` / `invokespecial … Object."<init>"` | Default constructor: set up this object by calling `Object`’s constructor (you did not write a constructor; Java added one). |
-| `getstatic … System.out` | Get the shared `System.out` print stream (like reaching for the console). |
-| `ldc … "Hello, JVM!"` | Load the constant string `"Hello, JVM!"` onto the stack. |
-| `invokevirtual … println` | Call `println` on that print stream (print the string). |
-| `return` | Leave the method. |
+```java
+System.out.println("Hello, JVM!");
+```
 
-**One sentence:** Your `System.out.println("Hello, JVM!");` became three JVM steps: get `System.out` → load the text → call `println`.
+...becomes several tiny steps for the JVM. **The JVM works like a person following a recipe, placing items on a table (the "stack") one at a time, then doing an action.**
 
-You do **not** need to memorize every opcode. For Module 1, know that **source → `.class` bytecode → JVM executes those instructions**.
+Read your `main` output top to bottom:
+
+| Step you saw | Think of it as... |
+| ------------ | ----------------- |
+| `getstatic … System.out` | "Pick up the **printer** (`System.out`) and put it on the table." |
+| `ldc … "Hello, JVM!"` | "Write the note **`Hello, JVM!`** and put it on the table." |
+| `invokevirtual … println` | "Hand the note to the printer → it prints the line." |
+| `return` | "Nothing left to do — finish." |
+
+The first block (`aload_0`, `invokespecial Object."<init>"`, `return`) is just the **empty constructor Java added for you** — it says "set up a basic object." You never wrote it; ignore it for now.
+
+**The one thing to remember:** `javac` turned your readable Java into these small JVM steps. The JVM runs the **steps** (bytecode), not your `.java` text.
+
+You do **not** need to memorize opcode names.
+
 
 ## Expected result
 
