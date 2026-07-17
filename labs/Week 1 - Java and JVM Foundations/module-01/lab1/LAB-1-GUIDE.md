@@ -149,6 +149,7 @@ Complete [Lab 0](../../module-00/lab0/LAB-0-GUIDE.md) and skim [SETUP-INSTRUCTIO
 * **JDK 21** with `javac`, `java`, and `javap` on `PATH`
 * **VS Code** and/or **IntelliJ IDEA Community** with `java-bootcamp` open
 * No secrets (keys, tokens, passwords) committed to Git
+* **Git identity** from Lab 0 Step 10 (`user.name` / noreply `user.email`) — you create the personal `java-bootcamp` GitHub repo in **Step 0** below
 
 ### Pre-flight
 
@@ -240,6 +241,107 @@ Before coding, write two or three sentences for each prompt. Revisit after Check
 ## Implementation Steps
 
 Complete each step in order. Prefer the **IDE integrated terminal**. Opening the folder differs slightly by IDE; compile/run commands are the same.
+
+### Step 0 — Create your personal `java-bootcamp` GitHub repo (first time)
+
+**Why:** Course handouts live in the instructor/participant clone. **Your** code under `java-bootcamp` needs its **own** private GitHub repo. Lab 0 only set Git identity; this is the first create + first commit.
+
+You keep **two** Git things separate:
+
+| Repo | What it is |
+| ---- | ---------- |
+| Course handouts (clone) | Instructor-shared labs/guides — read / follow |
+| **Your** `java-bootcamp` workspace | **Your** code — you init, commit, and push for the whole bootcamp |
+
+**Do this:**
+
+1. Confirm Lab 0 Step 10 identity is set (`git config --global --list` shows `user.name` / `user.email`).
+2. On GitHub: **New repository** → name `java-bootcamp` → **Private** → **do not** add README / `.gitignore` / license (empty repo).
+3. In the IDE terminal, from the **workspace root** (not only the lab subfolder):
+
+**Windows PowerShell:**
+
+```powershell
+cd $env:USERPROFILE\java-bootcamp
+@"
+# Build / IDE
+**/out/
+**/*.class
+.idea/
+*.iml
+.vscode/
+
+# Local evidence — keep on laptop only
+notes/screenshots/
+
+# Secrets — never commit
+.env
+**/kubeconfig*
+**/*secret*
+"@ | Set-Content -Encoding utf8 .gitignore
+
+git init
+git add .
+git status
+git commit -m "Initial java-bootcamp workspace (Lab 1 Step 0)"
+git branch -M main
+git remote add origin https://github.com/<your-github-username>/java-bootcamp.git
+git push -u origin main
+```
+
+**macOS / Linux:**
+
+```bash
+cd ~/java-bootcamp
+cat > .gitignore << 'EOF'
+# Build / IDE
+**/out/
+**/*.class
+.idea/
+*.iml
+.vscode/
+
+# Local evidence — keep on laptop only
+notes/screenshots/
+
+# Secrets — never commit
+.env
+**/kubeconfig*
+**/*secret*
+EOF
+
+git init
+git add .
+git status
+git commit -m "Initial java-bootcamp workspace (Lab 1 Step 0)"
+git branch -M main
+git remote add origin https://github.com/<your-github-username>/java-bootcamp.git
+git push -u origin main
+```
+
+Replace `<your-github-username>` with your GitHub username. Sign in with a **Personal Access Token** or `gh auth login` if prompted (not your account password).
+
+**Optional (GitHub CLI)** — after `git commit`, instead of manual remote/push:
+
+```text
+gh repo create java-bootcamp --private --source=. --remote=origin --push
+```
+
+**Expected result:**
+
+* `git status` is clean
+* GitHub shows your private `java-bootcamp` repo with `examples/` (and `.gitignore`)
+* `notes/screenshots/` is **not** listed for commit
+
+**If it fails:**
+
+* `remote origin already exists` → you already ran this; skip to `git remote -v` and continue the lab
+* GH007 private email → fix noreply email (Lab 0 Step 10) and amend or make a new commit
+* Auth failed → use PAT or `gh auth login`
+
+**Habit after this step:** when a lab or exercise finishes, from the workspace root: `git add` → `git commit` → `git push`. Do **not** commit screenshots or secrets.
+
+---
 
 ### Step 1 — Create the lab directory and open it
 
@@ -831,6 +933,38 @@ Created 100000 employees
 
 ---
 
+### Step 12 — Commit and push Lab 1 to your personal repo
+
+**Why:** Step 0 created the repo; this records Lab 1 sources (and any Module 01 pre-lab exercise files) on GitHub.
+
+**Do this** from the **workspace root**:
+
+**Windows PowerShell:**
+
+```powershell
+cd $env:USERPROFILE\java-bootcamp
+git add examples/jvm-compilation-lab examples/module-01-exercises .gitignore
+git status
+git commit -m "Lab 1: JVM compilation lab (+ Module 01 exercises if present)"
+git push
+```
+
+**macOS / Linux:**
+
+```bash
+cd ~/java-bootcamp
+git add examples/jvm-compilation-lab examples/module-01-exercises .gitignore
+git status
+git commit -m "Lab 1: JVM compilation lab (+ Module 01 exercises if present)"
+git push
+```
+
+**Expected result:** Push succeeds; GitHub shows `examples/jvm-compilation-lab/*.java` (`.class` files stay ignored). Screenshots under `notes/screenshots/` remain untracked.
+
+**If it fails:** complete Step 0 first (`git remote -v` must show `origin`). Fix noreply email (Lab 0 Step 10) on GH007.
+
+---
+
 ## Implementation Checkpoints
 
 Each answer must cite a command, screenshot, or file from **this** lab.
@@ -1144,13 +1278,18 @@ Submit according to your LMS or instructor dropbox:
 
 Optional: failure-experiment log (min. three); Security and Production Review answers; Checkpoint A–C notes.
 
+### 4. Personal GitHub repo
+
+* Private repo named `java-bootcamp` (Step 0) with Lab 1 sources pushed (Step 12)
+* `.gitignore` excludes `notes/screenshots/`, `*.class`, `out/`, secrets
+
 ---
 
 ## Evaluation Rubric (100 Marks)
 
 | Criteria | Marks | What reviewers look for |
 | -------- | ----: | ----------------------- |
-| Environment readiness (IDE, JDK 21, correct folder) | 10 | Pre-flight versions; path under `examples/jvm-compilation-lab` |
+| Environment readiness (IDE, JDK 21, correct folder, personal GitHub repo Step 0) | 10 | Pre-flight versions; path under `examples/jvm-compilation-lab`; `origin` push works |
 | HelloWorld compile / run / file inspection | 10 | Exact `Hello, JVM!`; `.java` + `.class` evidence |
 | `javap` bytecode literacy | 15 | Readable `javap -c` capture; can name key opcodes |
 | Calculator + stack explanation | 15 | `Sum = 30`; coherent stack-frame narrative / table |
@@ -1202,8 +1341,9 @@ _Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are
 | 4 | Describe stack frames vs heap objects using Calculator and Employee | Pass / Fail |
 | 5 | Show class-loading evidence and locate basic heap/GC flags | Pass / Fail |
 | 6 | Clean `*.class`, recompile, and re-run successfully | Pass / Fail |
-| 7 | Submit sources, screenshots, and short answers per the deliverables list | Pass / Fail |
-| 8 | Articulate that this JVM flow underpins future CRM services (this lab does not build the CRM) | Pass / Fail |
+| 7 | Personal GitHub repo `java-bootcamp` created (Step 0) and Lab 1 committed/pushed (Step 12) | Pass / Fail |
+| 8 | Submit sources, screenshots, and short answers per the deliverables list | Pass / Fail |
+| 9 | Articulate that this JVM flow underpins future CRM services (this lab does not build the CRM) | Pass / Fail |
 
 This lab bridges Lab 0’s environment to Module 1 runtime fluency.
 

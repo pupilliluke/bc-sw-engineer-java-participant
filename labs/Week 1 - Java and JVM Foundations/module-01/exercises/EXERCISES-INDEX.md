@@ -15,7 +15,7 @@
 | Lab 0 workspace (open in IntelliJ) | `%USERPROFILE%\java-bootcamp` | `~/java-bootcamp` |
 | Pre-lab exercises folder | `%USERPROFILE%\java-bootcamp\examples\module-01-exercises` | `~/java-bootcamp/examples/module-01-exercises` |
 | Shell | IntelliJ **Terminal** (PowerShell) | IntelliJ **Terminal** (zsh) |
-| Personal Git repo | Same folder — init in Lab 0 Step 10; commit after each exercise | Same |
+| Personal Git repo | Created in **Lab 1 Step 0** (not during these pre-lab exercises) | Same |
 
 ### Setup — create the exercises folder (do once)
 
@@ -43,11 +43,11 @@ pwd
 
 Stay in this folder for every exercise below (or `cd` back before each compile/run).
 
-### After each exercise — commit to your personal workspace repo
+### Git commits — after Lab 1 Step 0
 
-Your **`java-bootcamp`** folder is your own GitHub repo (Lab 0 Step 10). After an exercise compiles and runs:
+Pre-lab exercises run **before** Lab 1. Finish the Java work here first. After **[Lab 1 Step 0](../lab1/LAB-1-GUIDE.md)** creates your personal `java-bootcamp` GitHub repo, commit exercise sources (Lab 1 Step 12 also picks up `examples/module-01-exercises`).
 
-**Windows:**
+**Windows** (only after Lab 1 Step 0):
 
 ```powershell
 cd $env:USERPROFILE\java-bootcamp
@@ -57,7 +57,7 @@ git commit -m "Module 01: complete exercise N (short description)"
 git push
 ```
 
-**macOS:**
+**macOS** (only after Lab 1 Step 0):
 
 ```bash
 cd ~/java-bootcamp
@@ -67,7 +67,7 @@ git commit -m "Module 01: complete exercise N (short description)"
 git push
 ```
 
-Do **not** commit `notes/screenshots/` or `*.class` / `out/` (covered by the Lab 0 `.gitignore`).
+Do **not** commit `notes/screenshots/` or `*.class` / `out/` (Lab 1 Step 0 `.gitignore`).
 
 ## Exercise index
 

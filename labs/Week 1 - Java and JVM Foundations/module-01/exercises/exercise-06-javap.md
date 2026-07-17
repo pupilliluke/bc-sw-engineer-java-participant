@@ -28,7 +28,7 @@ javap -c -v Person
 - Save text or a local screenshot under `notes/screenshots/` (do **not** commit screenshots)
 - List three of: `ldc`, `invokevirtual`, `return`, `aload`, `istore`
 
-Then commit any written notes under `examples/` or `notes/` (not screenshots) per [EXERCISES-INDEX.md](EXERCISES-INDEX.md).
+Then commit any written notes under `examples/` or `notes/` (not screenshots) **after Lab 1 Step 0** (see [EXERCISES-INDEX.md](EXERCISES-INDEX.md)).
 
 ## Expected result
 

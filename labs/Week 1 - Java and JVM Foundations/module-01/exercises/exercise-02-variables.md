@@ -30,7 +30,7 @@ javac Variables.java
 java Variables
 ```
 
-Then commit/push per [EXERCISES-INDEX.md](EXERCISES-INDEX.md).
+Then commit/push **after Lab 1 Step 0** (see [EXERCISES-INDEX.md](EXERCISES-INDEX.md)).
 
 ## Expected result
 

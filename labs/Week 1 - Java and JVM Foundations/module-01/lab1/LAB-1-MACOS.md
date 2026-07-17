@@ -65,8 +65,21 @@ java -cp out ...Main
 
 ## Do the lab
 
-Complete **every step** in **[LAB-1-GUIDE.md](LAB-1-GUIDE.md)**.  
-Wherever that guide shows `~/java-bootcamp`, on macOS use `~/java-bootcamp`. Prefer IntelliJ for Java editing and runs; use VS Code only if you already prefer it.
+Complete **every step** in **[LAB-1-GUIDE.md](LAB-1-GUIDE.md)** — start with **Step 0** (create your personal `java-bootcamp` GitHub repo and first commit), then Steps 1–11, then **Step 12** (commit/push Lab 1).  
+Prefer IntelliJ for Java editing and runs; use VS Code only if you already prefer it.
+
+### Step 0 quick reference (macOS) — full detail in the GUIDE
+
+```bash
+cd ~/java-bootcamp
+# Create .gitignore (see LAB-1-GUIDE Step 0), then:
+git init
+git add .
+git commit -m "Initial java-bootcamp workspace (Lab 1 Step 0)"
+git branch -M main
+git remote add origin https://github.com/<your-github-username>/java-bootcamp.git
+git push -u origin main
+```
 
 ## Evidence / screenshots
 
@@ -79,7 +92,8 @@ _Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are
 | # | Confirm | Your notes |
 | - | ------- | ---------- |
 | 1 | Workspace `~/java-bootcamp` open in IntelliJ with SDK **21** | Pass / Fail |
-| 2 | Lab project under `examples/jvm-compilation-lab` as in [LAB-1-GUIDE.md](LAB-1-GUIDE.md) | Pass / Fail |
-| 3 | Lab pass criteria / deliverables in the GUIDE are complete | Pass / Fail |
-| 4 | Commands above succeed in the IntelliJ terminal (or as the lab specifies) | Pass / Fail |
-| 5 | Screenshots (if required) saved under `notes/screenshots/lab-1/` | Pass / Fail |
+| 2 | Personal GitHub repo `java-bootcamp` created + first push (GUIDE Step 0) | Pass / Fail |
+| 3 | Lab project under `examples/jvm-compilation-lab` as in [LAB-1-GUIDE.md](LAB-1-GUIDE.md) | Pass / Fail |
+| 4 | Lab pass criteria / deliverables in the GUIDE are complete | Pass / Fail |
+| 5 | Lab 1 committed and pushed (GUIDE Step 12) | Pass / Fail |
+| 6 | Screenshots (if required) saved under `notes/screenshots/lab-1/` | Pass / Fail |
