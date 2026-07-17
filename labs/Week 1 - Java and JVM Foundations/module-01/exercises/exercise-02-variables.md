@@ -3,6 +3,8 @@
 **Module 1** · Pre-lab practice · then open [`../../lab1/LAB-1-GUIDE.md`](../lab1/LAB-1-GUIDE.md)  
 **Folder:** `examples/module-01-exercises/` ([setup](EXERCISES-INDEX.md))
 
+![Java Variables and Data Types](../../../lab_diagrams/mod01-ex02-variables.png)
+
 ## Goal
 
 Create `Variables.java` with local variables of several primitive types and one `String`; print each.

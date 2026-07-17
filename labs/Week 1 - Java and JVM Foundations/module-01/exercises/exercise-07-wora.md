@@ -3,6 +3,8 @@
 **Module 1** · Pre-lab practice · then open [`../../lab1/LAB-1-GUIDE.md`](../lab1/LAB-1-GUIDE.md)  
 **Folder:** `examples/module-01-exercises/` ([setup](EXERCISES-INDEX.md))
 
+![Java: Compile Once, Run Anywhere](../../../lab_diagrams/mod01-ex07-wora.png)
+
 ## Goal
 
 Run an existing `.class` with `java`. Note why recompile is not required for another OS JVM.

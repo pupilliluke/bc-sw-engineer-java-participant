@@ -3,6 +3,8 @@
 **Module 1** · Pre-lab practice · then open [`../../lab1/LAB-1-GUIDE.md`](../lab1/LAB-1-GUIDE.md)  
 **Folder:** `examples/module-01-exercises/` ([setup](EXERCISES-INDEX.md))
 
+![Java Control Flow: Decisions and Loops](../../../lab_diagrams/mod01-ex04-control-flow.png)
+
 ## Goal
 
 Create `ControlFlow.java` using `if`, `for`, `while`, and `switch` with simple examples.

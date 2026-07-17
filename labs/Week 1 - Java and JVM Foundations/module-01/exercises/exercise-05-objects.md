@@ -3,6 +3,8 @@
 **Module 1** · Pre-lab practice · then open [`../../lab1/LAB-1-GUIDE.md`](../lab1/LAB-1-GUIDE.md)  
 **Folder:** `examples/module-01-exercises/` ([setup](EXERCISES-INDEX.md))
 
+![Java Classes and Objects: The Person Example](../../../lab_diagrams/mod01-ex05-objects-person.png)
+
 ## Goal
 
 Create `Person.java` with fields, a constructor, and a method; instantiate in `main`.

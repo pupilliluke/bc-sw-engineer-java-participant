@@ -3,6 +3,8 @@
 **Module 1** · Pre-lab practice · then open [`../../lab1/LAB-1-GUIDE.md`](../lab1/LAB-1-GUIDE.md)  
 **Folder:** `examples/module-01-exercises/` ([setup](EXERCISES-INDEX.md))
 
+![Java Methods: Parameters and Return Values](../../../lab_diagrams/mod01-ex03-methods.png)
+
 ## Goal
 
 Create `Methods.java` with at least two methods that take parameters and return a value; call them from `main`.
