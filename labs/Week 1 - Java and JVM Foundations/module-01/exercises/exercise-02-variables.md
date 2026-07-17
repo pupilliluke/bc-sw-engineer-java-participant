@@ -79,6 +79,17 @@ java Variables
 
 **Expected:** Six lines print (age, population, price, enrolled, grade, name) with no errors.
 
+**Verified (Windows):**
+
+```text
+21
+8000000000
+19.99
+true
+A
+Aman
+```
+
 ## Expected result
 
 All declared values print without compile/runtime errors.
