@@ -1,18 +1,21 @@
-# Exercise — Personal Profile (bonus)
+# Exercise 3 — Calculations
 
-**Module 2** · Pre-lab practice · then open [`../../lab2/LAB-2-GUIDE.md`](../lab2/LAB-2-GUIDE.md)
+**Module 2** · Pre-lab practice · then open [`../lab2/LAB-2-GUIDE.md`](../lab2/LAB-2-GUIDE.md)
+
+> **Builds on Module 1 types:** operators you already know; numbers come from **input**, not literals.
 
 ## Goal
 
-Optional: read name, age, city, hobby; print a simple table-like layout.
+Read two numbers; print sum, difference, product, and quotient.
 
 ## Do this
 
-- Aligned columns with `printf`
+- Prefer `double` for division
+- Label each result
 
 ## Expected result
 
-Table-like profile prints cleanly.
+Four results print.
 
 ## Pass criteria
 

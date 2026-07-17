@@ -1,19 +1,20 @@
-# Exercise — Area of Circle
+# Exercise 6 — Personal Profile (bonus)
 
-**Module 2** · Pre-lab practice · then open [`../../lab2/LAB-2-GUIDE.md`](../lab2/LAB-2-GUIDE.md)
+**Module 2** · Pre-lab practice · then open [`../lab2/LAB-2-GUIDE.md`](../lab2/LAB-2-GUIDE.md)
+
+> **Optional:** practice aligned columns — same idea as Lab 2 student list formatting.
 
 ## Goal
 
-Read radius (`double`); print area using `Math.PI`.
+Optional: read name, age, city, hobby; print a simple table-like layout.
 
 ## Do this
 
-- `area = Math.PI * r * r`
-- `printf` with 2 decimal places
+- Aligned columns with `printf`
 
 ## Expected result
 
-Area matches the formula.
+Table-like profile prints cleanly.
 
 ## Pass criteria
 

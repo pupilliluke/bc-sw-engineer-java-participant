@@ -1,19 +1,21 @@
-# Exercise — Product Information
+# Exercise 4 — Area of Circle
 
-**Module 2** · Pre-lab practice · then open [`../../lab2/LAB-2-GUIDE.md`](../lab2/LAB-2-GUIDE.md)
+**Module 2** · Pre-lab practice · then open [`../lab2/LAB-2-GUIDE.md`](../lab2/LAB-2-GUIDE.md)
+
+> **New for Module 2:** `Math.PI` and `printf` decimal formatting (Lab 2 uses `printf` for tables).
 
 ## Goal
 
-Read product name, quantity (`int`), price (`double`); display product details.
+Read radius (`double`); print area using `Math.PI`.
 
 ## Do this
 
-- Scanner inputs
-- Print name, qty, price
+- `area = Math.PI * r * r`
+- `printf` with 2 decimal places
 
 ## Expected result
 
-Product details print correctly.
+Area matches the formula.
 
 ## Pass criteria
 
