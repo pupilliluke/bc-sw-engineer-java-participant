@@ -13,7 +13,7 @@ Disassemble `Person` (or `Hello`) with `javap` and note three bytecode instructi
 | ----- | ------------ |
 | `javap` | Read a `.class` file and show its structure |
 | `-c` | Include bytecode for each method |
-| `-v` | Verbose: more detail (constants, flags) |
+| `-v` | Optional advanced detail; skip for this beginner exercise |
 | `Person` | Class name to inspect (must already be compiled) |
 
 ## Do this
@@ -26,24 +26,47 @@ From the exercises folder (after `javac` produced the `.class`):
 
 ```powershell
 cd $env:USERPROFILE\java-bootcamp\examples\module-01-exercises
-javap -c -v Person
+javap -c Person
 ```
 
 **macOS:**
 
 ```bash
 cd ~/java-bootcamp/examples/module-01-exercises
-javap -c -v Person
+javap -c Person
 ```
 
-If you prefer the smaller Exercise 1 example:
+Use `-c` first because it shows only the useful method instructions. Your output is split into three readable sections:
 
-```text
-javap -c Hello
-```
+| Section | What your Java did |
+| ------- | ------------------ |
+| `Person(String, int)` | Constructor saved `name` and `age` |
+| `display()` | Read the fields, joined the text, and printed it |
+| `main(String[])` | Created `new Person("Aman", 21)` and called `display()` |
+
+### Read only `main` first
+
+Your `main` bytecode tells this simple story:
+
+| Bytecode | Plain English |
+| -------- | ------------- |
+| `new Person` | Make space for a new Person |
+| `ldc "Aman"` | Use the text `Aman` |
+| `bipush 21` | Use the number `21` |
+| `invokespecial Person."<init>"` | Run the constructor |
+| `astore_1` | Save the new Person in variable `person` |
+| `aload_1` | Pick up `person` again |
+| `invokevirtual display` | Call `person.display()` |
+| `return` | Finish `main` |
+
+**One sentence:** The JVM creates a Person with `Aman` and `21`, saves it, calls `display`, and finishes.
+
+You do **not** need to understand the constant pool or descriptors yet.
+
+**Optional advanced output:** `javap -c -v Person` also shows the constant pool, version, flags, descriptors, checksums, and bootstrap methods. That is why your output was very long.
 
 - Save text or a local screenshot under `notes/screenshots/` (keep screenshots on your laptop only)
-- List three of: `ldc`, `invokevirtual`, `return`, `aload`, `istore`
+- Explain three of: `new`, `ldc`, `invokevirtual`, `aload`, `return`
 
 ### Quick opcode meanings (plain words)
 
@@ -55,7 +78,7 @@ javap -c Hello
 | `getstatic` | Pick up a shared tool like the printer (`System.out`) |
 | `invokevirtual` | Do an action with what's on the table (e.g. print) |
 | `aload` / `aload_0` | Put an object you already have on the table |
-| `istore` | Save a number into a labeled box (a variable) |
+| `new` | Create a new object |
 | `return` | Done — step away |
 
 You do **not** need to memorize these. The point: `javac` turns your Java into small steps, and the **JVM runs the steps**, not your `.java` file. Full walkthrough: [Exercise 1 Step 4](exercise-01-hello-world.md).
