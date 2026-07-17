@@ -12,7 +12,7 @@
 | Windows | [LAB-49-WINDOWS.md](LAB-49-WINDOWS.md) |
 | macOS | [LAB-49-MACOS.md](LAB-49-MACOS.md) |
 
-> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md) and Lab 48 planning. Use **IntelliJ IDEA Community** (primary; optional VS Code) with **JDK 21**, **Maven 3.9+**, and instructor **shared Kafka**. Work under the capstone tree.
+> **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md) and Lab 48 planning. Use **IntelliJ IDEA Community** (primary; optional VS Code) with **JDK 21**, **Maven 3.9+**, and instructor **shared Kafka**. Work under `~/java-bootcamp/examples/customer-management-platform` (Windows: `%USERPROFILE%\java-bootcamp\examples\customer-management-platform`).
 
 ---
 
@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-49/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -197,7 +197,7 @@ If baseline fails, save the exact command and error; agree whether pre-existing.
 └── README.md
 ```
 
-Ignore `target/`, IDE metadata, tokens, and passwords. If using `lab49-crm/` alone, mirror the same package layout under `~/java-bootcamp/examples/lab49-crm/`.
+Ignore `target/`, IDE metadata, tokens, and passwords. If using `lab49-crm/` alone, mirror the same package layout under `~/java-bootcamp/examples/customer-management-platform/`.
 
 ---
 
@@ -237,7 +237,7 @@ Complete each step in order. Commands assume capstone `backend/` unless noted. P
 
 ```bash
 cd ~/java-bootcamp/examples/customer-management-platform
-mkdir -p docs/notes/screenshots backend/src/test/java/com/northstar/crm
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-49 backend/src/test/java/com/northstar/crm
 ```
 
 **Expected result:** Written DoD; peer can state what “done” means without watching you code.
@@ -346,7 +346,7 @@ ResponseEntity<InteractionResponse> create(
 }
 ```
 
-Also add GET timeline endpoint if CAP story requires it for Lab 50. Capture MockMvc JSON snippets (sanitized) under `docs/notes/screenshots/`.
+Also add GET timeline endpoint if CAP story requires it for Lab 50. Capture MockMvc JSON snippets (sanitized) under `~/java-bootcamp/notes/screenshots/lab-49/`.
 
 **Expected result:** MockMvc: 201 for Amina; 400 invalid channel; 404 `CUS-9999`; Location header present.
 
@@ -413,7 +413,7 @@ curl -i -X POST "http://localhost:8080/api/customers/$CUSTOMER_ID/interactions" 
 
 **Why:** Capstone credibility is failure-path literacy, not curl-once luck.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Fill `docs/backend-demo.md` with exact commands, topic name, migration id, and screenshots/excerpts under `docs/notes/screenshots/`. Run verify twice for determinism.
+**Do this:** Complete [Failure Experiments](#failure-experiments). Fill `docs/backend-demo.md` with exact commands, topic name, migration id, and screenshots/excerpts under `~/java-bootcamp/notes/screenshots/lab-49/`. Run verify twice for determinism.
 
 **Expected result:** ≥3 experiments; identical consecutive verifies; peer can follow demo.md; no secrets committed.
 

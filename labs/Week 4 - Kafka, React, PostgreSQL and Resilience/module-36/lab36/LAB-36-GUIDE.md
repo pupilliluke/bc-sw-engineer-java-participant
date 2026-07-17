@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-36/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -207,7 +207,7 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab36-crm
 cd ~/java-bootcamp/examples
 cp -r lab35-crm lab36-crm
 cd lab36-crm/crm-ui
-mkdir -p docs src/auth src/pages src/security notes/screenshots
+mkdir -p docs src/auth src/pages src/security ~/java-bootcamp/notes/screenshots/lab-36
 ```
 
 In `docs/security-decisions.md` list assets (customer PII, tokens), browser inputs, trust boundaries, attacker goals (token theft, XSS, CSRF, open redirect), and mapped controls. Explicitly state: **route guards are not authorization**.
@@ -441,7 +441,7 @@ npm run build
 curl -I http://localhost:8080
 ```
 
-Complete [Failure Experiments](#failure-experiments). Confirm storage has no token. Redacted screenshots under `notes/screenshots/`.
+Complete [Failure Experiments](#failure-experiments). Confirm storage has no token. Redacted screenshots under `notes/screenshots/lab-36/`.
 
 **Expected result:** Abuse-case tests pass without secrets in output; docs complete.
 

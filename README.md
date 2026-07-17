@@ -77,7 +77,7 @@ Details: [Technology Stack Guide](labs/TECHNOLOGY-STACK-GUIDE.md).
 
 ## Training environment (final for this cohort)
 
-Everything heavy runs on **one shared AWS server** (`us-west-2`, IP **`100.22.136.97`**). Students connect **out** from desktop VS Code. Full write-up: **[labs/FINAL-SETUP-README.md](labs/FINAL-SETUP-README.md)**.
+Everything heavy runs on **one shared AWS server** (`us-west-2`, IP **`100.22.136.97`**). Students connect **out** from IntelliJ (or optional VS Code) on their laptop. Full write-up: **[labs/FINAL-SETUP-README.md](labs/FINAL-SETUP-README.md)**.
 
 ```mermaid
 flowchart LR

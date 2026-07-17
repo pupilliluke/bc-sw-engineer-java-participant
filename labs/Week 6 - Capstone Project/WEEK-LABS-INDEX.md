@@ -102,7 +102,7 @@ flowchart TB
 Adapt to the existing CRM project; do not reorganize unrelated modules:
 
 ```text
-customer-management-platform/
+~/java-bootcamp/examples/customer-management-platform/
 ├── backend/               # Spring Boot API
 ├── frontend/              # React application
 ├── k8s/                   # Kubernetes (k3s) manifests
@@ -111,6 +111,9 @@ customer-management-platform/
 ├── defense/               # Lab 52 presentation packet
 ├── reports/               # Sanitized generated evidence
 └── README.md
+
+# Evidence (Lab 0 layout — workspace root, not inside the platform tree):
+# ~/java-bootcamp/notes/screenshots/lab-48/ … lab-52/
 ```
 
 ---

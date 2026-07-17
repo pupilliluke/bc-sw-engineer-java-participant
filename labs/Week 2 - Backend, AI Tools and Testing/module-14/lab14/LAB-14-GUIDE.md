@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-14/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -209,7 +209,8 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab14-crm
 cd ~/java-bootcamp/examples
 cp -r lab12-crm lab14-crm   # or lab11-crm if that is your latest working tree
 cd lab14-crm
-mkdir -p docs notes/screenshots
+mkdir -p docs
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-14
 ```
 
 Add to `pom.xml` (merge with existing deps; keep JUnit test-scoped):
@@ -557,7 +558,7 @@ Include fixtures, `mvn test` / Main commands, and a short entity-vs-DTO note in 
 
 **Why:** Prove provider dependency, validation-before-service, and duplicate vs validation differences.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Capture Surefire + Main output under `notes/screenshots/`.
+**Do this:** Complete [Failure Experiments](#failure-experiments). Capture Surefire + Main output under `notes/screenshots/lab-14/`.
 
 ```bash
 mvn -q clean test

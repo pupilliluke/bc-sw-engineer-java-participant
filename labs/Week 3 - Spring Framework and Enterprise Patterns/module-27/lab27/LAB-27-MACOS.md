@@ -17,32 +17,34 @@
 ## Open this lab in IntelliJ (primary)
 
 1. Start **IntelliJ IDEA Community**.
-2. **File → Open…** → `~/java-bootcamp/examples/lab27-crm`  
-   If the folder does not exist yet, create it under `examples` as the lab steps describe, then open it.
+2. **File → Open…** → `~/java-bootcamp` (Lab 0 workspace root — same folder every lab).  
+   If `examples/lab27-crm` does not exist yet, create it as the lab GUIDE describes; keep the workspace open at `~/java-bootcamp`.
 3. Trust the project if prompted.
 4. **File → Project Structure → Project** → SDK = **21**, language level **21**.
-5. Maven labs: open the `pom.xml` so IntelliJ imports the project; wait for indexing.
+5. Maven labs: open the `pom.xml` under `examples/lab27-crm` so IntelliJ imports the project; wait for indexing.
 6. If there is a `src/main/java` tree, confirm it is marked as **Sources Root** (Maven usually does this).
 7. **View → Tool Windows → Terminal** → `cd ~/java-bootcamp` then `cd examples/lab27-crm` when ready.
 
 ## Optional: VS Code
 
-1. **File → Open Folder…** → the same project folder.
-2. Confirm **Extension Pack for Java** (and Maven for Java) are installed.
-3. **Terminal → New Terminal**.
+1. **File → Open Folder…** → `~/java-bootcamp` (same Lab 0 workspace).
+2. Confirm **Extension Pack for Java** (and Maven for Java when needed) are installed.
+3. **Terminal → New Terminal** → `cd examples/lab27-crm` for this lab’s commands.
 
 ## Paths (macOS)
 
 | Item | macOS |
 | ---- | ----- |
-| Workspace | `~/java-bootcamp` |
+| Workspace (open in IDE) | `~/java-bootcamp` |
 | This lab project | `~/java-bootcamp/examples/lab27-crm` |
+| Evidence / screenshots | `~/java-bootcamp/notes/screenshots/lab-27` |
 | Shell | zsh / bash inside IntelliJ |
 | Path style | Forward slashes; case-sensitive |
 
 ```bash
 cd ~/java-bootcamp
-# after creating the project:
+# Lab 0 layout: evidence at workspace root; code under examples/
+mkdir -p notes/screenshots/lab-27
 cd examples/lab27-crm
 ```
 
@@ -67,7 +69,7 @@ Wherever that guide shows `~/java-bootcamp`, on macOS use `~/java-bootcamp`. Pre
 
 ## Evidence / screenshots
 
-Capture IntelliJ (project tree + Run/Terminal) on macOS. Redact passwords, tokens, and kubeconfig contents.
+Save screenshots under `~/java-bootcamp/notes/screenshots/lab-27` (Lab 0 workspace layout). Capture IntelliJ (project tree + Run/Terminal) on macOS. Redact passwords, tokens, and kubeconfig contents.
 
 ## Pass criteria
 
@@ -75,7 +77,8 @@ _Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are
 
 | # | Confirm | Your notes |
 | - | ------- | ---------- |
-| 1 | Project opens in IntelliJ with SDK **21** | Pass / Fail |
-| 2 | Lab pass criteria / deliverables in [LAB-27-GUIDE.md](LAB-27-GUIDE.md) are complete | Pass / Fail |
-| 3 | Commands above succeed in the IntelliJ terminal (or as the lab specifies) | Pass / Fail |
-| 4 | Screenshots (if required) show macOS + IntelliJ | Pass / Fail |
+| 1 | Workspace `~/java-bootcamp` open in IntelliJ with SDK **21** | Pass / Fail |
+| 2 | Lab project under `examples/lab27-crm` as in [LAB-27-GUIDE.md](LAB-27-GUIDE.md) | Pass / Fail |
+| 3 | Lab pass criteria / deliverables in the GUIDE are complete | Pass / Fail |
+| 4 | Commands above succeed in the IntelliJ terminal (or as the lab specifies) | Pass / Fail |
+| 5 | Screenshots (if required) saved under `notes/screenshots/lab-27/` | Pass / Fail |

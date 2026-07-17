@@ -17,32 +17,34 @@
 ## Open this lab in IntelliJ (primary)
 
 1. Start **IntelliJ IDEA Community**.
-2. **File → Open…** → `%USERPROFILE%\java-bootcamp\examples\lab13-crm`  
-   If the folder does not exist yet, create it under `examples` as the lab steps describe, then open it.
+2. **File → Open…** → `%USERPROFILE%\java-bootcamp` (Lab 0 workspace root — same folder every lab).  
+   If `examples\lab13-crm` does not exist yet, create it as the lab GUIDE describes; keep the workspace open at `%USERPROFILE%\java-bootcamp`.
 3. Trust the project if prompted.
 4. **File → Project Structure → Project** → SDK = **21**, language level **21**.
-5. Maven labs: open the `pom.xml` so IntelliJ imports the project; wait for indexing.
+5. Maven labs: open the `pom.xml` under `examples/lab13-crm` so IntelliJ imports the project; wait for indexing.
 6. If there is a `src/main/java` tree, confirm it is marked as **Sources Root** (Maven usually does this).
 7. **View → Tool Windows → Terminal** (PowerShell) → `cd $env:USERPROFILE\java-bootcamp` then `cd examples\lab13-crm` when ready.
 
 ## Optional: VS Code
 
-1. **File → Open Folder…** → the same project folder.
-2. Confirm **Extension Pack for Java** (and Maven for Java) are installed.
-3. **Terminal → New Terminal** (PowerShell).
+1. **File → Open Folder…** → `%USERPROFILE%\java-bootcamp` (same Lab 0 workspace).
+2. Confirm **Extension Pack for Java** (and Maven for Java when needed) are installed.
+3. **Terminal → New Terminal** (PowerShell) → `cd examples\lab13-crm` for this lab’s commands.
 
 ## Paths (Windows)
 
 | Item | Windows |
 | ---- | ------- |
-| Workspace | `%USERPROFILE%\java-bootcamp` |
+| Workspace (open in IDE) | `%USERPROFILE%\java-bootcamp` |
 | This lab project | `%USERPROFILE%\java-bootcamp\examples\lab13-crm` |
+| Evidence / screenshots | `%USERPROFILE%\java-bootcamp\notes\screenshots\lab-13` |
 | Shell | PowerShell inside IntelliJ |
 | Path style | Backslashes; quote paths with spaces |
 
 ```powershell
 cd $env:USERPROFILE\java-bootcamp
-# after creating the project:
+# Lab 0 layout: evidence at workspace root; code under examples\
+New-Item -ItemType Directory -Force -Path notes\screenshots\lab-13 | Out-Null
 cd examples\lab13-crm
 ```
 
@@ -67,7 +69,7 @@ Wherever that guide shows `~/java-bootcamp`, on Windows use `%USERPROFILE%\java-
 
 ## Evidence / screenshots
 
-Capture IntelliJ (project tree + Run/Terminal) on Windows. Redact passwords, tokens, and kubeconfig contents.
+Save screenshots under `%USERPROFILE%\java-bootcamp\notes\screenshots\lab-13` (Lab 0 workspace layout). Capture IntelliJ (project tree + Run/Terminal) on Windows. Redact passwords, tokens, and kubeconfig contents.
 
 ## Pass criteria
 
@@ -75,7 +77,8 @@ _Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are
 
 | # | Confirm | Your notes |
 | - | ------- | ---------- |
-| 1 | Project opens in IntelliJ with SDK **21** | Pass / Fail |
-| 2 | Lab pass criteria / deliverables in [LAB-13-GUIDE.md](LAB-13-GUIDE.md) are complete | Pass / Fail |
-| 3 | Commands above succeed in the IntelliJ terminal (or as the lab specifies) | Pass / Fail |
-| 4 | Screenshots (if required) show Windows + IntelliJ | Pass / Fail |
+| 1 | Workspace `%USERPROFILE%\java-bootcamp` open in IntelliJ with SDK **21** | Pass / Fail |
+| 2 | Lab project under `examples/lab13-crm` as in [LAB-13-GUIDE.md](LAB-13-GUIDE.md) | Pass / Fail |
+| 3 | Lab pass criteria / deliverables in the GUIDE are complete | Pass / Fail |
+| 4 | Commands above succeed in the IntelliJ terminal (or as the lab specifies) | Pass / Fail |
+| 5 | Screenshots (if required) saved under `notes/screenshots/lab-13/` | Pass / Fail |

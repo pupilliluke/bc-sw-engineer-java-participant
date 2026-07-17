@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-48/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -148,7 +148,9 @@ cd ~/java-bootcamp/examples
 # Prefer shared capstone tree when it exists:
 #   customer-management-platform/
 # Otherwise create a planning slice:
-mkdir -p customer-management-platform/docs/{architecture,adrs,notes/screenshots}
+mkdir -p customer-management-platform/docs/architecture \
+  customer-management-platform/docs/adrs \
+  ~/java-bootcamp/notes/screenshots/lab-48
 cd customer-management-platform
 git switch -c lab/48-crm 2>/dev/null || git checkout -b lab/48-crm
 git status --short
@@ -544,7 +546,8 @@ Fixtures: CUS-1001 (Amina), correlation lab-request-001.
 
 ```bash
 cd ~/java-bootcamp/examples/customer-management-platform
-mkdir -p docs/{architecture,adrs,notes/screenshots} reports
+mkdir -p docs/architecture docs/adrs reports
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-48
 ls docs/architecture docs/adrs
 git status --short
 # optional baseline if code exists:

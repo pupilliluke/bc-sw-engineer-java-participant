@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-38/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -206,7 +206,7 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab38-crm
 cd ~/java-bootcamp/examples
 cp -r lab37-crm lab38-crm
 cd lab38-crm
-mkdir -p database/performance docs notes/screenshots
+mkdir -p database/performance docs ~/java-bootcamp/notes/screenshots/lab-38
 ```
 
 Create empty script stubs `01_generate_data.sql` … `05_cleanup_indexes.sql` and `report.md` headings (Baseline / After indexes / Joins / Paging / Retained indexes).
@@ -493,7 +493,7 @@ Retained indexes: ux_customer_email_norm, ix_customer_status_created, ix_account
 Dropped / not retained: ...
 ```
 
-Capture plan excerpts under `notes/screenshots/`.
+Capture plan excerpts under `notes/screenshots/lab-38/`.
 
 **Expected result:** Each retained index has measured evidence; report includes plan hash, buffers, median time, write cost; peer can re-run from scripts.
 

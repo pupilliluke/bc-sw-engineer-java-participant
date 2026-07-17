@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-46/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -173,7 +173,7 @@ Primary training layout:
 Platform secondary paths:
 
 ```text
-customer-management-platform/
+~/java-bootcamp/examples/customer-management-platform/
 ├── backend/src/.../messaging/
 ├── docs/kafka-dashboard.md
 ├── docs/dlt-replay-runbook.md
@@ -217,7 +217,8 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab46-crm
 cd ~/java-bootcamp/examples
 cp -r lab31-crm lab46-crm 2>/dev/null || cp -r lab30-crm lab46-crm 2>/dev/null || mkdir -p lab46-crm
 cd lab46-crm
-mkdir -p docs notes/screenshots
+mkdir -p docs
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-46
 git switch -c lab/46-crm 2>/dev/null || true
 ```
 
@@ -290,7 +291,7 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 \
   --property print.headers=true --max-messages 10
 ```
 
-Save sanitized evidence under `notes/screenshots/`.
+Save sanitized evidence under `notes/screenshots/lab-46/`.
 
 **Expected result:** DLT records show diagnostic headers; correlation present; no secrets/PII dumps.
 

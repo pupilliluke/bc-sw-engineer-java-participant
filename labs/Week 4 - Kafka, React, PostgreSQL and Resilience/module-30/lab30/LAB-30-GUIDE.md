@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-30/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -198,7 +198,7 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab30-crm
 **Do this:**
 
 ```bash
-mkdir -p ~/java-bootcamp/examples/lab30-crm/{events,docs,notes/screenshots,src/main/java/com/northstar/crm/event}
+mkdir -p ~/java-bootcamp/examples/lab30-crm/events ~/java-bootcamp/examples/lab30-crm/docs ~/java-bootcamp/notes/screenshots/lab-30
 cd ~/java-bootcamp/examples/lab30-crm
 ```
 
@@ -439,9 +439,9 @@ List the exact `docker compose up -d`, topic create, produce, consume, and lag d
 
 **Why:** Wrong keys, wrong topics, and silent auto-create habits become production incidents.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Save `docker compose ps`, topic describe, consume metadata, and lag describe excerpts under `notes/screenshots/`. Confirm sample JSON stays fictional PII only.
+**Do this:** Complete [Failure Experiments](#failure-experiments). Save `docker compose ps`, topic describe, consume metadata, and lag describe excerpts under `notes/screenshots/lab-30/`. Confirm sample JSON stays fictional PII only.
 
-**Expected result:** ≥3 experiments; runbook listed; broker still healthy or cleaned up intentionally; evidence under `notes/screenshots/`.
+**Expected result:** ≥3 experiments; runbook listed; broker still healthy or cleaned up intentionally; evidence under `notes/screenshots/lab-30/`.
 
 **If it fails:** See Troubleshooting.
 

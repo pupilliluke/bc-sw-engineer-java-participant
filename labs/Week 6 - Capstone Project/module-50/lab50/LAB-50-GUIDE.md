@@ -12,7 +12,7 @@
 | Windows | [LAB-50-WINDOWS.md](LAB-50-WINDOWS.md) |
 | macOS | [LAB-50-MACOS.md](LAB-50-MACOS.md) |
 
-> **Environment reminder:** Finish Labs 0 and 49. Use **IntelliJ IDEA Community** (primary; optional VS Code) with **JDK 21**, **Maven 3.9+**, **Node.js 22+**, and instructor **shared PostgreSQL**. Work under the capstone tree.
+> **Environment reminder:** Finish Labs 0 and 49. Use **IntelliJ IDEA Community** (primary; optional VS Code) with **JDK 21**, **Maven 3.9+**, **Node.js 22+**, and instructor **shared PostgreSQL**. Work under `~/java-bootcamp/examples/customer-management-platform` (Windows: `%USERPROFILE%\java-bootcamp\examples\customer-management-platform`).
 
 ---
 
@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-50/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -385,7 +385,7 @@ State matrix (copy into demo.md):
 4. Restart API (and UI if needed); confirm durability
 5. Submit invalid request; confirm rollback (no row)
 
-Record SQL excerpt (sanitized) and screenshot in `docs/notes/screenshots/`.
+Record SQL excerpt (sanitized) and screenshot in `~/java-bootcamp/notes/screenshots/lab-50/`.
 
 **Expected result:** UI↔API↔DB consistent for `CUS-1001`; invalid path leaves DB unchanged.
 

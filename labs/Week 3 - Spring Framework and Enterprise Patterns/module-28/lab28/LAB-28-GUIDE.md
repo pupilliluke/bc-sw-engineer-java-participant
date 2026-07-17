@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-28/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -215,7 +215,8 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab28-crm
 cd ~/java-bootcamp/examples
 cp -r lab27-crm lab28-crm   # or lab25-crm / latest CRM API copy
 cd lab28-crm
-mkdir -p docs notes/screenshots
+mkdir -p docs
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-28
 ```
 
 Add `spring-boot-starter-security`, test support, and your JWT library. Define configuration placeholders — never hard-code a production key.
@@ -462,7 +463,7 @@ Include: demo users (`agent1`/`admin1`), matcher table (login permitAll, custome
 
 **Why:** Misconfigured secrets, role mistakes, and token logging are the failure modes of this lab’s culture.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Capture redacted curl and Surefire excerpts under `notes/screenshots/`. Confirm `git status` is clean of secrets and `target/`. Run `mvn -q test` twice for determinism.
+**Do this:** Complete [Failure Experiments](#failure-experiments). Capture redacted curl and Surefire excerpts under `notes/screenshots/lab-28/`. Confirm `git status` is clean of secrets and `target/`. Run `mvn -q test` twice for determinism.
 
 **Expected result:** ≥3 experiments documented; identical consecutive test runs; evidence saved; no JWT/password in Git.
 
@@ -652,7 +653,7 @@ mvn -q clean
 git status
 ```
 
-Do not commit `.env`, tokens, or `target/`. Keep redacted screenshots under `notes/screenshots/`.
+Do not commit `.env`, tokens, or `target/`. Keep redacted screenshots under `notes/screenshots/lab-28/`.
 
 **Keep `lab28-crm`**—Lab 29 layers Bean Validation and `ErrorResponse` on this secured API.
 

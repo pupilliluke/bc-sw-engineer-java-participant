@@ -24,7 +24,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-6/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Core path first (menu options 1–9)
 
@@ -56,7 +56,7 @@ This Module 6 lab teaches the **Java Streams API** and **lambda expressions** by
 
 **What success looks like.** Under `java-bootcamp/examples/Lab6-EmployeeAnalytics/` you compile with `javac -d out ...`, run `java -cp out com.academy.analytics.Main`, exercise **CORE menu options 1–9** (especially Dashboard option **8**), fill stream-operation notes, and submit evidence graders can recompile.
 
-**Depends on Lab 0 + Lab 5 skills.** If your IDE, `java`, or `javac` fail, stop and fix [Lab 0](../../module-00/lab0/LAB-0-GUIDE.md) / [SETUP-INSTRUCTIONS.md](../../../SETUP-INSTRUCTIONS.md). Comfort with `List`, packages, and a service layer (Lab 5) will make this lab much faster. IDE paths: [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md).
+**Depends on Lab 0 + Lab 5 skills.** If your IDE, `java`, or `javac` fail, stop and fix [Lab 0](../../module-00/lab0/LAB-0-GUIDE.md) / [SETUP-INSTRUCTIONS.md](../../../SETUP-INSTRUCTIONS.md). Comfort with `List`, packages, and a service layer (Lab 5) will make this lab much faster. IDE paths: [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md).
 
 **CRM connection (future only).** From Lab 8 onward the **Customer Management Platform** will filter, map, and group customer collections the same way—active customers, department→agents maps, top-N lists. This lab does **not** build CRM APIs, Spring beans, or a database. Treat employee analytics as a **skill bridge**: today’s stream pipelines reappear when you report on CRM customers at scale.
 
@@ -166,7 +166,7 @@ flowchart TD
 Complete the [Labs Setup Instructions](../../../SETUP-INSTRUCTIONS.md) and [Lab 0](../../module-00/lab0/LAB-0-GUIDE.md) before this lab. Confirm:
 
 * **JDK 21** with `javac` and `java` on `PATH` (Lab 0)
-* **Laptop IDE:** **IntelliJ IDEA Community** (primary) or **VS Code** (optional) — see [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md)
+* **Laptop IDE:** **IntelliJ IDEA Community** (primary) or **VS Code** (optional) — see [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md)
 * Workspace open at `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`)
 * Working integrated terminal in your IDE
 * **Lab 5 Collections recommended:** `List`, generics, packages under `src/com/academy/...`, menu → service layering
@@ -213,15 +213,12 @@ java-bootcamp/examples/Lab6-EmployeeAnalytics/
 │               └── ReportService.java
 ├── out/                         # created by javac -d out
 │   └── com/academy/analytics/*.class
-└── notes/
-    ├── lab6-answers.md
-    ├── stream-operations-table.md
-    └── screenshots/             # menu + dashboard; no secrets
+└── (answers/tables → ~/java-bootcamp/notes/; screenshots → notes/screenshots/lab-6/)
 ```
 
 Ignore build artifacts if committed later: `out/`, `*.class`, `*.log`.
 
-**IDE tip:** In VS Code use **File → Open Folder…** on the project (or `java-bootcamp`). In IntelliJ use **File → Open…**, set Project SDK to **21**, then run `Main` or use the terminal — details in [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md).
+**IDE tip:** In VS Code use **File → Open Folder…** on the project (or `java-bootcamp`). In IntelliJ use **File → Open…**, set Project SDK to **21**, then run `Main` or use the terminal — details in [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md).
 
 **Instructor reference:** Complete solution (including bonuses) in [`solution/`](solution/) → `Lab6-EmployeeAnalytics/` (`com.academy.analytics`).
 
@@ -229,7 +226,7 @@ Ignore build artifacts if committed later: `out/`, `*.class`, `*.log`.
 
 ## Concepts to Discuss
 
-Write 2–3 sentences each in `notes/lab6-answers.md` before or during the steps; revisit after Checkpoint C.
+Write 2–3 sentences each in `../../notes/lab6-answers.md` (from project; or `~/java-bootcamp/notes/lab6-answers.md`) before or during the steps; revisit after Checkpoint C.
 
 1. Why do stream pipelines postpone work until a **terminal** operation runs?
 2. When is a lambda clearer than a named method—and when should you extract a method instead?
@@ -244,7 +241,7 @@ Write 2–3 sentences each in `notes/lab6-answers.md` before or during the steps
 
 ## Implementation Steps
 
-Complete each step in order. Commands assume `java-bootcamp/examples/Lab6-EmployeeAnalytics` on your laptop. Use the integrated terminal in **VS Code** or **IntelliJ** ([`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md)).
+Complete each step in order. Commands assume `java-bootcamp/examples/Lab6-EmployeeAnalytics` on your laptop. Use the integrated terminal in **VS Code** or **IntelliJ** ([`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md)).
 
 Parts 1–20 from the Module 6 exercise map into the steps below (models → lambdas → filters → maps → collectors → dashboard → menu). **Ship CORE menu 1–9 first; bonuses later.**
 
@@ -259,7 +256,7 @@ Parts 1–20 from the Module 6 exercise map into the steps below (models → lam
 ```bash
 # macOS / Linux (Git Bash on Windows also works)
 mkdir -p ~/java-bootcamp/examples/Lab6-EmployeeAnalytics/src/com/academy/analytics
-mkdir -p ~/java-bootcamp/examples/Lab6-EmployeeAnalytics/notes/screenshots
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-6
 cd ~/java-bootcamp/examples/Lab6-EmployeeAnalytics
 pwd
 ```
@@ -267,7 +264,7 @@ pwd
 ```powershell
 # Windows PowerShell alternative
 New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\java-bootcamp\examples\Lab6-EmployeeAnalytics\src\com\academy\analytics" | Out-Null
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\java-bootcamp\examples\Lab6-EmployeeAnalytics\notes\screenshots" | Out-Null
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\java-bootcamp\notes\screenshots\lab-6" | Out-Null
 cd "$env:USERPROFILE\java-bootcamp\examples\Lab6-EmployeeAnalytics"
 pwd
 ```
@@ -278,7 +275,7 @@ Open that folder in VS Code (**File → Open Folder…**) or IntelliJ (**File �
 
 **Expected result:** `java-bootcamp/examples/Lab6-EmployeeAnalytics` exists; `src/com/academy/analytics/` is ready; `notes/` is ready for answers and screenshots.
 
-**If it fails:** Confirm you are in the IDE terminal (not a random unrelated folder). Recreate directories with `mkdir -p` or `New-Item`. See [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md).
+**If it fails:** Confirm you are in the IDE terminal (not a random unrelated folder). Recreate directories with `mkdir -p` or `New-Item`. See [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md).
 
 ---
 
@@ -1107,7 +1104,7 @@ javac -d out src/com/academy/analytics/*.java
 java -cp out com.academy.analytics.Main
 ```
 
-Or in IntelliJ: open the project, set SDK 21, run `com.academy.analytics.Main` (see [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md)).
+Or in IntelliJ: open the project, set SDK 21, run `com.academy.analytics.Main` (see [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md)).
 
 **CORE walkthrough (do these first):**
 
@@ -1140,7 +1137,7 @@ Active Employees : 23
 Inactive Employees : 2
 ```
 
-Capture screenshots under `notes/screenshots/` (no secrets).
+Capture screenshots under `notes/screenshots/lab-6/` (no secrets).
 
 **Expected result:** Clean compile; CORE menu 1–9 works; dashboard matches the numbers above when you use the solution seed.
 
@@ -1279,7 +1276,7 @@ Maven is **not** required for this lab.
 9. Choice `8` dashboard matches sample shape (employees, salaries, top 5, active/inactive).
 10. Choice `9` prints `Thank You`; recompile after edits to avoid stale `.class` files.
 
-Record pass/fail briefly in `notes/lab6-answers.md`.
+Record pass/fail briefly in `../../notes/lab6-answers.md` (from project; or `~/java-bootcamp/notes/lab6-answers.md`).
 
 ---
 
@@ -1302,7 +1299,7 @@ Perform deliberately, then restore working code (copy files or use git).
 | Symptom | Likely cause | Fix |
 | ------- | ------------ | --- |
 | `javac: command not found` | JDK not on PATH | [Lab 0](../../module-00/lab0/LAB-0-GUIDE.md) / [SETUP](../../../SETUP-INSTRUCTIONS.md) |
-| Files missing / wrong project | Wrong folder open | Open `java-bootcamp` or the lab project; see [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md) |
+| Files missing / wrong project | Wrong folder open | Open `java-bootcamp` or the lab project; see [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md) |
 | Public class / filename error | Name mismatch | `EmployeeService.java` ↔ class name |
 | `package does not exist` | Folder ≠ package | Recreate `src/com/academy/analytics` |
 | Cannot load main class | Wrong `-cp` / package | `java -cp out com.academy.analytics.Main` |
@@ -1356,7 +1353,7 @@ Students should submit:
   * How to compile and run (`javac -d out ...` / `java -cp out com.academy.analytics.Main`)
   * Sample dashboard output
   * Observations and learnings
-* Answers to reflection questions in `notes/lab6-answers.md`
+* Answers to reflection questions in `../../notes/lab6-answers.md` (from project; or `~/java-bootcamp/notes/lab6-answers.md`)
 * Optional: labeled bonuses
 * Git repository (optional)
 
@@ -1384,7 +1381,7 @@ Do not submit secrets or a verbatim instructor [`solution/`](solution/) as your 
 
 ## Reflection Questions
 
-Write short answers (3–6 sentences) in `notes/lab6-answers.md`:
+Write short answers (3–6 sentences) in `../../notes/lab6-answers.md` (from project; or `~/java-bootcamp/notes/lab6-answers.md`):
 
 1. What are the advantages of Streams over loops?
 2. When should Streams be preferred?
@@ -1485,7 +1482,7 @@ By the end of this lab, you should be able to:
 * **Reference solution:** Full implementation including demo menu options 10–20 and bonus option 21 is in [`solution/`](solution/) under `Lab6-EmployeeAnalytics/` (`com.academy.analytics`). Guide learners to finish **CORE menu 1–9 + dashboard** before revealing bonus collectors. Dashboard expected: 25 employees, avg 99720, max 165000, min 48000, 5 departments, John Smith top performer, IT highest-paid dept, 23 active / 2 inactive.
 * **API fidelity:** Align teaching with solution signatures—`EmployeeService(List<Employee>)` defensive copy; `ReportService(EmployeeService)`; `EmployeeData.createSampleEmployees()` with 25 rows; messages and dashboard field names as above; `isActive()` boolean getter for method references.
 * **Common pitfalls:** Reusing a Stream instance; calling `.get()` on empty Optional; confusing `filter` vs `map`; sorting without `.reversed()` for “top” lists; putting all pipelines in `Main`; forgetting `-d out`/`-cp out`; inconsistent department string casing in seeds.
-* **Classpath / IDE:** Demo wrong compile without `-d out` so Step 19 sticks. Dual IDE on laptop: IntelliJ Community primary, VS Code optional — [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md). Keep streams pedagogy; CRM endpoints start Lab 8+. Score screenshots + operations table + intermediate-vs-terminal explanation. Core path fits 3–4 hours; bonuses are stretch.
+* **Classpath / IDE:** Demo wrong compile without `-d out` so Step 19 sticks. Dual IDE on laptop: IntelliJ Community primary, VS Code optional — [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md). Keep streams pedagogy; CRM endpoints start Lab 8+. Score screenshots + operations table + intermediate-vs-terminal explanation. Core path fits 3–4 hours; bonuses are stretch.
 * **Teaching emphasis:** Declarative *what* over imperative *how*. Failure experiments (reuse stream; empty Optional) make laziness and null-safety stick. Mention that production systems often stream from DB result sets or reactive APIs—Lab 6 stays in-memory on purpose.
 
 ---

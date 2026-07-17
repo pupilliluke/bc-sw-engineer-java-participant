@@ -14,24 +14,24 @@ Cohort shared services (PostgreSQL, Kafka, k3s) are documented in [`../FINAL-SET
 | Windows | `%USERPROFILE%\java-bootcamp` (example: `C:\Users\<you>\java-bootcamp`) |
 | macOS | `~/java-bootcamp` |
 
-Hands-on projects live under: `java-bootcamp/examples/` (Lab 0 `HelloJava`, then `lab1-answers`, `labN-crm`, …).  
-Lab 0 evidence: `java-bootcamp/notes/screenshots/` (later labs often also use `examples/<lab>/notes/screenshots/`).
+Hands-on projects live under: `java-bootcamp/examples/` (Lab 0 `HelloJava`, then `jvm-compilation-lab`, `Lab2-JavaSyntax`, …, `labN-crm`, then `customer-management-platform`).  
+Evidence for every lab: `java-bootcamp/notes/screenshots/lab-N/` (Lab 0 uses `notes/screenshots/` at the workspace root). Do **not** create a top-level `labs/` folder inside `java-bootcamp`.
 
 OS-specific Lab 0 setup:
 
-- Windows → [`lab0/LAB-0-WINDOWS.md`](lab0/LAB-0-WINDOWS.md)
-- macOS → [`lab0/LAB-0-MACOS.md`](lab0/LAB-0-MACOS.md)
+- Windows → [`module-00/lab0/LAB-0-WINDOWS.md`](module-00/lab0/LAB-0-WINDOWS.md)
+- macOS → [`module-00/lab0/LAB-0-MACOS.md`](module-00/lab0/LAB-0-MACOS.md)
 
 ## Choose an IDE
 
 ### IntelliJ IDEA Community (primary)
 
-1. **File → Open…** → select the project folder (the folder that contains `src` or the `.java` files), or open `java-bootcamp`.
+1. **File → Open…** → open `java-bootcamp` (Lab 0 workspace root — same folder every lab). Work inside `examples/<project>`.
 2. Trust the project if prompted.
 3. **File → Project Structure → Project** → SDK = **21** (Temurin / OpenJDK 21); Language level = **21**.
 4. Mark `src` as **Sources Root** when the lab uses a `src/` tree (right-click `src` → **Mark Directory as → Sources Root**).
-5. Right-click a class with `main` → **Run ‘ClassName.main()’**, or use the green gutter arrow next to `main`.
-6. Use the IntelliJ terminal (**View → Tool Windows → Terminal**) for `javac` / `java` / `mvn` when a lab asks for CLI proof.
+5. Right-click a class with `main` → **Run ‘ClassName.main()’**, or use the green gutter arrow next to `main`. Set **Working directory** to `examples/<project>` when the lab reads relative files.
+6. Use the IntelliJ terminal (**View → Tool Windows → Terminal**) for `javac` / `java` / `mvn` when a lab asks for CLI proof (`cd` into `examples/<project>` first).
 
 ### VS Code (optional)
 

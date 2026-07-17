@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-37/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -253,7 +253,7 @@ psql "host=$CRM_DB_HOST port=5432 dbname=crm user=crm_app" -c 'select version();
 
 ```bash
 cd ~/java-bootcamp/examples/lab37-crm
-mkdir -p database docs notes/screenshots
+mkdir -p database docs ~/java-bootcamp/notes/screenshots/lab-37
 
 docker run -d --name crm-postgres \
   -p 5432:5432 \

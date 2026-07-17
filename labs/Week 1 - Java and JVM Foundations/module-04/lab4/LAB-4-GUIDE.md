@@ -24,7 +24,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-4/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -136,7 +136,7 @@ flowchart LR
 Complete [Labs Setup Instructions](../../../SETUP-INSTRUCTIONS.md) and [Lab 0](../../module-00/lab0/LAB-0-GUIDE.md). Confirm:
 
 * **JDK 21** with `javac` and `java` on `PATH`
-* **VS Code** and/or **IntelliJ IDEA** on the laptop — see [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md)
+* **VS Code** and/or **IntelliJ IDEA** on the laptop — see [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md)
 * Workspace root open: `%USERPROFILE%\java-bootcamp` or `$HOME/java-bootcamp`
 * Comfort with Lab 1–style `javac` / `java` on flat `.java` files
 * No secrets committed to Git
@@ -172,7 +172,7 @@ javac -version
 
 ```bash
 mkdir -p "$HOME/java-bootcamp/examples/Lab4-MemoryManagement"
-mkdir -p "$HOME/java-bootcamp/notes/screenshots"
+mkdir -p "$HOME/java-bootcamp/notes/screenshots/lab-4"
 cd "$HOME/java-bootcamp/examples/Lab4-MemoryManagement"
 ```
 
@@ -180,13 +180,13 @@ Windows cmd equivalent:
 
 ```text
 mkdir %USERPROFILE%\java-bootcamp\examples\Lab4-MemoryManagement
-mkdir %USERPROFILE%\java-bootcamp\notes\screenshots
+mkdir %USERPROFILE%\java-bootcamp\notes\screenshots\lab-4
 cd /d %USERPROFILE%\java-bootcamp\examples\Lab4-MemoryManagement
 ```
 
 **Expected result:** Current directory is `.../examples/Lab4-MemoryManagement` (empty at first).
 
-**If it fails:** Wrong home → print `$HOME` / `%USERPROFILE%` and recreate under that path. Confusing editor windows → open the folder again per [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md).
+**If it fails:** Wrong home → print `$HOME` / `%USERPROFILE%` and recreate under that path. Confusing editor windows → open the folder again per [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md).
 
 ---
 
@@ -375,7 +375,7 @@ java -Xlog:gc GarbageCollectionDemo
 java -Xlog:gc GarbageCollectionDemo
 ```
 
-Save a short snippet into `notes/lab4-gc-snippet.txt` (a few lines are enough).
+Save a short snippet into `../../notes/lab4-gc-snippet.txt` (from project; or `~/java-bootcamp/notes/lab4-gc-snippet.txt`) (a few lines are enough).
 
 **Expected result (pattern themes — exact text varies by JDK):**
 
@@ -488,7 +488,7 @@ Observation:
 java -Xms128m -Xmx512m PerformanceTest
 ```
 
-Copy results into `notes/lab4-answers.md`:
+Copy results into `../../notes/lab4-answers.md` (from project; or `~/java-bootcamp/notes/lab4-answers.md`):
 
 | Objects | Used Memory (approx) | Execution Time |
 | ------- | -------------------- | -------------- |
@@ -561,7 +561,7 @@ Delete dumps after a quick look. Never zip them into LMS submissions.
 
 **Why:** Graders score explanations (reachability, leak cause) as much as runnable demos.
 
-**Do this:** In `notes/lab4-answers.md`, answer the [Reflection Questions](#reflection-questions) briefly and attach:
+**Do this:** In `../../notes/lab4-answers.md` (from project; or `~/java-bootcamp/notes/lab4-answers.md`), answer the [Reflection Questions](#reflection-questions) briefly and attach:
 
 * Screenshot(s) of memory reports
 * Short GC log snippet
@@ -586,7 +586,7 @@ _Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are
 | - | ------- | ---------- |
 | 1 | Folder `$HOME/java-bootcamp/examples/Lab4-MemoryManagement` exists | Pass / Fail |
 | 2 | `Person.java` and `MemoryMonitor.java` present (default package) | Pass / Fail |
-| 3 | Edited with VS Code and/or IntelliJ per [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md) | Pass / Fail |
+| 3 | Edited with VS Code and/or IntelliJ per [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md) | Pass / Fail |
 
 ### Checkpoint B — Stack / heap / lifecycle
 
@@ -616,7 +616,7 @@ _Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are
 | - | ------- | ---------- |
 | 1 | No `.hprof` in Git | Pass / Fail |
 | 2 | Screenshots show memory/GC themes, not secrets | Pass / Fail |
-| 3 | Reflection answers in `notes/lab4-answers.md` | Pass / Fail |
+| 3 | Reflection answers in `../../notes/lab4-answers.md` (from project; or `~/java-bootcamp/notes/lab4-answers.md`) | Pass / Fail |
 
 ---
 
@@ -676,7 +676,7 @@ Maven is **not** required for this lab.
 6. `MemoryLeakDemo leak` rises; `fix` recovers after clear + GC theme.
 7. `PerformanceTest` table has five object-count rows.
 
-Record pass/fail briefly in `notes/lab4-answers.md`.
+Record pass/fail briefly in `../../notes/lab4-answers.md` (from project; or `~/java-bootcamp/notes/lab4-answers.md`).
 
 ---
 
@@ -720,7 +720,7 @@ rm -f /tmp/lab4-heap.hprof
 
 Keep `.java` sources and notes. Leave [`solution/`](solution/) intact.
 
-**Deliverables:** core demos; memory/GC screenshots; `-Xlog:gc` snippet; performance table; `notes/lab4-answers.md`; LMS overview (tools + leak cause/fix). No dumps, secrets, or verbatim solution copies.
+**Deliverables:** core demos; memory/GC screenshots; `-Xlog:gc` snippet; performance table; `../../notes/lab4-answers.md` (from project; or `~/java-bootcamp/notes/lab4-answers.md`); LMS overview (tools + leak cause/fix). No dumps, secrets, or verbatim solution copies.
 
 ---
 
@@ -741,7 +741,7 @@ Keep `.java` sources and notes. Leave [`solution/`](solution/) intact.
 
 ## Reflection Questions
 
-Write short answers in `notes/lab4-answers.md`:
+Write short answers in `../../notes/lab4-answers.md` (from project; or `~/java-bootcamp/notes/lab4-answers.md`):
 
 1. Stack vs Heap?
 2. Why locals on the Stack?

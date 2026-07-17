@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-12/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -214,7 +214,8 @@ cd ~/java-bootcamp/examples
 # Preferred: copy Lab 11 (entities + JUnit already present)
 cp -r lab11-crm lab12-crm
 cd lab12-crm
-mkdir -p docs notes/screenshots
+mkdir -p docs
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-12
 ```
 
 If Lab 11 is unavailable, create a fresh Maven JDK 21 project with Lab 10-shaped `Customer` / `CustomerStatus` and JUnit test scope.
@@ -510,7 +511,7 @@ mvn -B verify
 
 **Why:** Prove validation and duplicate/unknown paths intentionally.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Capture screenshots/logs under `notes/screenshots/`. Finalize README run instructions.
+**Do this:** Complete [Failure Experiments](#failure-experiments). Capture screenshots/logs under `notes/screenshots/lab-12/`. Finalize README run instructions.
 
 **Expected result:** ≥3 experiments documented; evidence pack complete; `git status` clean of secrets/`target/`.
 

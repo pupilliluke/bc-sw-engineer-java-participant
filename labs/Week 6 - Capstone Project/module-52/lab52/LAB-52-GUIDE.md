@@ -12,7 +12,7 @@
 | Windows | [LAB-52-WINDOWS.md](LAB-52-WINDOWS.md) |
 | macOS | [LAB-52-MACOS.md](LAB-52-MACOS.md) |
 
-> **Environment reminder:** Finish Labs 48–51 evidence first. Demo lab: **desktop IntelliJ IDEA Community (primary; optional VS Code)** on your laptop plus your team's running CRM demo path (API/UI/DB/events as built). Work under the capstone tree.
+> **Environment reminder:** Finish Labs 48–51 evidence first. Demo lab: **desktop IntelliJ IDEA Community (primary; optional VS Code)** on your laptop plus your team's running CRM demo path (API/UI/DB/events as built). Work under `~/java-bootcamp/examples/customer-management-platform` (Windows: `%USERPROFILE%\java-bootcamp\examples\customer-management-platform`).
 
 ---
 
@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-52/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -146,7 +146,8 @@ Confirm prior lab evidence hubs are present:
 
 ```bash
 ls docs/architecture/context.md docs/backend-demo.md docs/security-deploy-demo.md 2>/dev/null || true
-ls defense 2>/dev/null || mkdir -p defense/notes/screenshots
+ls defense 2>/dev/null || mkdir -p defense
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-52
 ```
 
 Inventory digest identity from Lab 51 before writing slides:
@@ -160,7 +161,8 @@ Branch and baseline:
 ```bash
 cd ~/java-bootcamp/examples/customer-management-platform
 git switch -c lab/52-crm 2>/dev/null || git checkout -b lab/52-crm
-mkdir -p defense/notes/screenshots
+mkdir -p defense
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-52
 ./mvnw -B clean verify 2>/dev/null || mvn -B clean verify
 git status --short
 ```
@@ -515,7 +517,7 @@ git status --short
 ```markdown
 | ID | Claim | Lab source | Artifact path | What it proves | What it does not prove |
 |----|-------|------------|---------------|----------------|------------------------|
-| E-12 | Interaction persists in PostgreSQL | 50 | docs/notes/screenshots/amina-sql.png | UI write durable for CUS-1001 | Multi-region durability |
+| E-12 | Interaction persists in PostgreSQL | 50 | ~/java-bootcamp/notes/screenshots/lab-52/amina-sql.png | UI write durable for CUS-1001 | Multi-region durability |
 ```
 
 ### Self-assessment scorecard stub

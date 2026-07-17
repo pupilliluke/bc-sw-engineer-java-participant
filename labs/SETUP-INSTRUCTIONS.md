@@ -65,9 +65,11 @@ _Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are
 | - | ------- | ---------- |
 | 1 | IntelliJ IDEA Community (primary IDE; SDK 21) | Pass / Fail |
 | 2 | Optional: VS Code + Extension Pack for Java (see Week 1 [`_IDE-CONVENTIONS.md`](Week%201%20-%20Java%20and%20JVM%20Foundations/_IDE-CONVENTIONS.md)) | Pass / Fail |
-| 3 | Workspace open at `~/java-bootcamp` (or Windows equivalent) | Pass / Fail |
+| 3 | Workspace open at `~/java-bootcamp` (or Windows `%USERPROFILE%\java-bootcamp`) with `examples/` and `notes/screenshots/` | Pass / Fail |
 | 4 | Java 21, Maven 3.9.x, and Git verified | Pass / Fail |
 | 5 | `HelloWorld` compiled and run under `java-bootcamp/examples` | Pass / Fail |
+
+**Learner workspace (Lab 0):** code under `examples/`; evidence under `notes/screenshots/` (later labs: `notes/screenshots/lab-N/`). Do not create a top-level `labs/` folder inside `java-bootcamp`.
 
 Do **not** start Lab 1 until Lab 0 verification passes.
 

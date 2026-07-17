@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-17/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -196,7 +196,8 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab17-crm
 cd ~/java-bootcamp/examples
 cp -r lab16-crm lab17-crm
 cd lab17-crm
-mkdir -p copilot-notes docs notes/screenshots
+mkdir -p copilot-notes docs
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-17
 ```
 
 Add Surefire + JaCoCo with **package** rule for `com.northstar.crm.service` and `minimum` `0.80` (as in the module guide). Ensure `junit-jupiter` is test-scoped.
@@ -339,7 +340,7 @@ List test classes, coverage goal, Copilot review policy, and which branch closed
 
 **Why:** Flaky patterns and false confidence are the failure modes of this lab’s culture.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Capture Surefire + JaCoCo excerpts under `notes/screenshots/`. Run `mvn -q test` twice for determinism.
+**Do this:** Complete [Failure Experiments](#failure-experiments). Capture Surefire + JaCoCo excerpts under `notes/screenshots/lab-17/`. Run `mvn -q test` twice for determinism.
 
 **Expected result:** ≥3 experiments; identical consecutive runs; evidence saved; `git status` clean of `target/`.
 

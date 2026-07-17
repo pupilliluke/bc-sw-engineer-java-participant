@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-40/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -211,7 +211,7 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab40-crm
 
 ```bash
 cd ~/java-bootcamp/examples/lab40-crm
-mkdir -p docs reports notes/screenshots src/test/java/com/northstar/crm/security
+mkdir -p docs reports ~/java-bootcamp/notes/screenshots/lab-40 src/test/java/com/northstar/crm/security
 ```
 
 In `docs/threat-checklist.md`, record components (API, PostgreSQL, config), data classes (customer PII fields), users (agent/admin), trust boundaries, and authorized scan targets (this repo/module only). Map at least: broken access control, injection, auth failures, security misconfig, logging failures to concrete endpoints.

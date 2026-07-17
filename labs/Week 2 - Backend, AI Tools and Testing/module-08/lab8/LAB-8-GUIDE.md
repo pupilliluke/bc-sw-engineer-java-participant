@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-8/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -351,7 +351,8 @@ cd ~/java-bootcamp/examples/lab8-crm
 mkdir -p src/main/java/com/northstar/crm/{controller,service,repository,entity,dto,config,exception}
 mkdir -p src/main/resources
 mkdir -p src/test/java/com/northstar/crm
-mkdir -p docs notes/screenshots
+mkdir -p docs
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-8
 touch src/main/resources/application.properties
 touch src/test/java/com/northstar/crm/.gitkeep
 ```
@@ -783,7 +784,7 @@ Confirm:
 * Still **no** Spring/JPA/Kafka imports (`rg -n 'springframework|jakarta.persistence|kafka' src || true`)
 * `target/` is ignored by Git
 
-Screenshot or paste compile success and the `find` listing into `notes/screenshots/` / `notes/lab8-answers.md`.
+Screenshot or paste compile success and the `find` listing into `notes/screenshots/lab-8/` / `notes/lab8-answers.md`.
 
 **Expected result:** `BUILD SUCCESS`; seven packages + `Main.java`; docs present; clean `git status` regarding secrets.
 
@@ -886,7 +887,7 @@ find src/main/java -name '*.java' | sort
 
 ```bash
 mkdir -p src/main/java/com/northstar/crm/{controller,service,repository,entity,dto,config,exception}
-mkdir -p src/main/resources src/test/java/com/northstar/crm docs notes/screenshots
+mkdir -p src/main/resources src/test/java/com/northstar/crm docs ~/java-bootcamp/notes/screenshots/lab-8
 ```
 
 ### Package dependency rule

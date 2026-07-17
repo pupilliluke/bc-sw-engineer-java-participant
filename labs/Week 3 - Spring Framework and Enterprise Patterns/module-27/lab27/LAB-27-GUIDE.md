@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-27/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -217,7 +217,8 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab27-crm
 cd ~/java-bootcamp/examples
 cp -r lab26-crm lab27-crm   # or lab25-crm
 cd lab27-crm
-mkdir -p copilot-notes docs notes/screenshots
+mkdir -p copilot-notes docs
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-27
 ```
 
 Add `spring-boot-starter-data-jpa` + H2. Configure datasource (Lab 26 `dev` profile OK):
@@ -437,7 +438,7 @@ mvn -q test
 
 **Why:** Ledger support needs insufficient-funds and double-submit stories, not only the force flag.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Capture before/after balances and Surefire under `notes/screenshots/`. Ensure `git status` clean of `target/` and secrets.
+**Do this:** Complete [Failure Experiments](#failure-experiments). Capture before/after balances and Surefire under `notes/screenshots/lab-27/`. Ensure `git status` clean of `target/` and secrets.
 
 **Expected result:** ≥3 experiments; dual green tests; ACID + rollback evidence packaged.
 

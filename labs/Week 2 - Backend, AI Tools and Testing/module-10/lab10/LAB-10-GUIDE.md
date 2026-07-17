@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-10/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -220,7 +220,7 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab10-crm
 cd ~/java-bootcamp/examples
 cp -r lab9-crm lab10-crm
 cd lab10-crm
-mkdir -p copilot-notes notes/screenshots
+mkdir -p copilot-notes ~/java-bootcamp/notes/screenshots/lab-10
 code .   # or: open folder in already-connected VS Code window
 ```
 
@@ -562,7 +562,7 @@ If you deliberately let the JPA-annotation mistake through, document catching an
 
 **Why:** Graders want proof you can recover when Copilot is wrong or unavailable.
 
-**Do this:** Complete the experiments in [Failure Experiments](#failure-experiments). Capture compile/`Main` output and review-log screenshots under `notes/screenshots/` (no secrets). Re-run:
+**Do this:** Complete the experiments in [Failure Experiments](#failure-experiments). Capture compile/`Main` output and review-log screenshots under `notes/screenshots/lab-10/` (no secrets). Re-run:
 
 ```bash
 mvn -q clean compile

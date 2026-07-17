@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-20/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -199,7 +199,8 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab20-crm
 cd ~/java-bootcamp/examples
 cp -r lab19-crm lab20-crm
 cd lab20-crm
-mkdir -p docs notes/screenshots \
+mkdir -p docs
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-20 \
   src/main/java/com/northstar/crm/logging \
   src/test/java/com/northstar/crm/logging
 ```

@@ -25,7 +25,7 @@
 | **Windows 10 / 11** | **[LAB-0-WINDOWS.md](LAB-0-WINDOWS.md)** |
 | **macOS** | **[LAB-0-MACOS.md](LAB-0-MACOS.md)** |
 
-Shared IDE habits after setup: [`../_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md)  
+Shared IDE habits after setup: [`../_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md)  
 Shared services (Week 4+): [`../../../FINAL-SETUP-README.md`](../../../FINAL-SETUP-README.md)
 
 ---

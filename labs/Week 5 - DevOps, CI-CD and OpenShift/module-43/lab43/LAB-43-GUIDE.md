@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-43/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -216,7 +216,7 @@ Primary training layout (prefer this):
 Platform / monorepo secondary paths (adapt if your cohort uses the larger CRM layout):
 
 ```text
-customer-management-platform/
+~/java-bootcamp/examples/customer-management-platform/
 ├── backend/
 ├── .github/workflows/ci.yml
 ├── docs/ci-runbook.md
@@ -263,7 +263,8 @@ cd ~/java-bootcamp/examples
 # Prefer branching from your latest green CRM tree (e.g. lab42-crm)
 cp -r lab42-crm lab43-crm 2>/dev/null || cp -r lab41-crm lab43-crm
 cd lab43-crm
-mkdir -p docs notes/screenshots scripts
+mkdir -p docs
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-43 scripts
 git switch -c lab/43-crm 2>/dev/null || true
 ```
 
@@ -477,7 +478,7 @@ git status --short
 
 **Why:** Flaky cache myths and secret leakage are the cultural failure modes of this lab.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Capture sanitized pipeline screenshots under `notes/screenshots/`. Confirm `git status` has no secrets or huge binary dumps. Paste a short “definition of done” into `docs/ci-runbook.md`:
+**Do this:** Complete [Failure Experiments](#failure-experiments). Capture sanitized pipeline screenshots under `notes/screenshots/lab-43/`. Confirm `git status` has no secrets or huge binary dumps. Paste a short “definition of done” into `docs/ci-runbook.md`:
 
 ```markdown
 ## Definition of done
@@ -648,7 +649,7 @@ echo "Would deploy artifact for tag=${TAG} commit=${GITHUB_SHA:-local}"
 | Scan report | Security gate evidence |
 | `docs/ci-runbook.md` | Peer reproduction + rerun policy |
 | `scripts/deploy.sh` | Manual deploy stub (env secrets only) |
-| `notes/screenshots/` | Sanitized pipeline evidence |
+| `notes/screenshots/lab-43/` | Sanitized pipeline evidence |
 
 ---
 

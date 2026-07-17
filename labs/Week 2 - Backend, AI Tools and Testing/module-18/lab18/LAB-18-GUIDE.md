@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-18/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -202,7 +202,8 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab18-crm
 cd ~/java-bootcamp/examples
 cp -r lab17-crm lab18-crm
 cd lab18-crm
-mkdir -p copilot-notes docs notes/screenshots
+mkdir -p copilot-notes docs
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-18
 ```
 
 Add to `pom.xml` (test scope):
@@ -494,7 +495,7 @@ Document in README / `docs/isolation-policy.md`:
 * Correlation ID expectations on exception paths
 * Why both styles can coexist
 
-Complete [Failure Experiments](#failure-experiments). Capture Surefire excerpts under `notes/screenshots/`. Run `mvn -q test` twice for determinism.
+Complete [Failure Experiments](#failure-experiments). Capture Surefire excerpts under `notes/screenshots/lab-18/`. Run `mvn -q test` twice for determinism.
 
 **Expected result:** All Lab 17 + Lab 18 tests green twice; README states isolation policy; evidence saved; `git status` clean of `target/`.
 

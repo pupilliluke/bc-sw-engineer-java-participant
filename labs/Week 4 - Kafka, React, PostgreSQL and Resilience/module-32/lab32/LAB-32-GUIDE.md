@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-32/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -205,7 +205,8 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab32-crm
 cd ~/java-bootcamp/examples
 cp -r lab31-crm lab32-crm   # or lab29-crm if Kafka skipped
 cd lab32-crm
-mkdir -p docs notes/screenshots
+mkdir -p docs
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-32
 ```
 
 ```xml
@@ -444,7 +445,7 @@ Warn boldly: lab CB windows and 10s open-wait are for classroom visibility — p
 
 **Why:** Unsafe write retries and silent “success” fallbacks are the ethical failure modes of this lab.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Capture Actuator events, WireMock journals, and Surefire under `notes/screenshots/`. Run resilience tests twice for determinism.
+**Do this:** Complete [Failure Experiments](#failure-experiments). Capture Actuator events, WireMock journals, and Surefire under `notes/screenshots/lab-32/`. Run resilience tests twice for determinism.
 
 **Expected result:** ≥3 experiments; truthful fallback documented; consecutive green tests; no secrets in Git.
 

@@ -1,10 +1,9 @@
 # Lab 0: Development Environment Setup — macOS
 
+**Standalone share copy** — self-contained; no course repository links required.  
 **OS:** macOS (Apple Silicon or Intel)  
 **Primary IDE:** IntelliJ IDEA Community Edition  
-**Optional IDE:** VS Code (if you already prefer it)  
-**Lab folder:** `labs/Week 1 - Java and JVM Foundations/module-00/lab0/`  
-**Also see:** [LAB-0-GUIDE.md](LAB-0-GUIDE.md) (overview) · [Windows guide](LAB-0-WINDOWS.md) · [IDE conventions](../../_IDE-CONVENTIONS.md)
+**Optional IDE:** VS Code (if you already prefer it)
 
 > Install tools on **your Mac**. Shared cloud services are not needed until Week 4+.
 
@@ -18,7 +17,7 @@
 | VS Code (optional) | Latest stable + Extension Pack for Java |
 | Temurin OpenJDK | **21** LTS |
 | Maven | **3.9.x** |
-| Git | 2.x (often preinstalled / Xcode CLT) |
+| Git | **2.x** (often preinstalled / Xcode CLT) |
 
 ---
 
@@ -26,7 +25,7 @@
 
 ### Step 1 — Install IntelliJ IDEA Community (primary)
 
-1. Download **Community Edition** (macOS): [jetbrains.com/idea/download](https://www.jetbrains.com/idea/download/).
+1. Download **Community Edition** for macOS: https://www.jetbrains.com/idea/download/
 2. Open the `.dmg` and drag IntelliJ to Applications.
 3. Launch once and finish the first-run wizard.
 
@@ -36,7 +35,7 @@
 
 Only if you already prefer VS Code:
 
-1. Install from [code.visualstudio.com](https://code.visualstudio.com/).
+1. Install from https://code.visualstudio.com/
 2. Extensions: **Extension Pack for Java**.
 
 ### Step 3 — Install Temurin JDK 21 and set `JAVA_HOME`
@@ -85,7 +84,7 @@ git --version
 
 **Where to run this:** Open **Terminal.app** (Applications → Utilities → Terminal), or iTerm if you use it. Do **not** use IntelliJ’s terminal yet — that comes in Step 6 after you open the folder. You can start from any directory; the commands create `~/java-bootcamp` under your home folder (for example `/Users/<you>/java-bootcamp`).
 
-This layout matches what you use in every later lab: hands-on code under `examples/`, Lab 0 evidence under `notes/screenshots/`. (Do **not** create a top-level `labs/` here — course lab guides live in the bootcamp GitHub clone, not in this workspace.)
+This layout matches what you use in every later lab: hands-on code under `examples/`, Lab 0 evidence under `notes/screenshots/`. Course lab handouts are provided separately by your instructor — you do **not** need a top-level `labs/` folder in this workspace.
 
 ```bash
 mkdir -p ~/java-bootcamp/examples ~/java-bootcamp/notes/screenshots
@@ -149,9 +148,9 @@ Hello Java Bootcamp!
 2. Right-click `src` → **Mark Directory as → Sources Root** if needed.
 3. Green ▶ beside `main` → **Run ‘HelloJava.main()’**.
 
-### Step 10 — GitHub + git identity
+### Step 10 — Git + identity (for later labs)
 
-1. Create or sign in at [github.com](https://github.com).
+1. Create or sign in to a **GitHub** account (website: github.com).
 2. Set Git to your **display name** and your GitHub **noreply email** (recommended — avoids push errors if your personal email is private on GitHub).
 
 **Find your noreply email:** GitHub → **Settings** → **Emails** → enable **Keep my email addresses private** → copy the address shown, e.g. `{id}+{username}@users.noreply.github.com`.
@@ -167,7 +166,7 @@ git --version
 
 **If push fails with GH007 (“private email address”):** your commit used a personal email address. Re-run Step 10 with the **noreply** email from GitHub Settings → Emails, or adjust email privacy on that same page.
 
-**Do not commit** personal verification screenshots — keep those local only.
+Keep personal verification screenshots under `~/java-bootcamp/notes/screenshots/` only — do not publish them.
 
 ---
 
@@ -182,7 +181,7 @@ echo $JAVA_HOME
 cd ~/java-bootcamp && pwd && ls
 ```
 
-_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+_Mark each row **Pass** or **Fail** in your own notes._
 
 | # | Confirm | Your notes |
 | - | ------- | ---------- |
@@ -197,4 +196,4 @@ _Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are
 
 **Do not start Lab 1 until every Pass criteria row is Pass in your notes.**
 
-Next: [Lab 1 macOS guide](../../module-01/lab1/LAB-1-MACOS.md) · [Lab 1 full guide](../../module-01/lab1/LAB-1-GUIDE.md)
+When complete, continue to **Lab 1** in your course materials.

@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-25/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -209,7 +209,8 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab25-crm
 cd ~/java-bootcamp/examples
 cp -r lab24-crm lab25-crm   # or lab23-crm if you skipped SOAP
 cd lab25-crm
-mkdir -p copilot-notes docs notes/screenshots
+mkdir -p copilot-notes docs
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-25
 ```
 
 Ensure `Customer` / `CustomerStatus` (`PROSPECT`, `ACTIVE`, `SUSPENDED`, `CLOSED`) compile under `com.northstar.crm`.
@@ -460,7 +461,7 @@ mvn -q test -Dtest=CustomerServiceTest
 
 **Why:** Layering failures must be distinguishable (not-found vs duplicate vs illegal transition).
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Capture curls + Surefire under `notes/screenshots/`. Run `mvn -q test` twice. Confirm `git status` clean of `target/`.
+**Do this:** Complete [Failure Experiments](#failure-experiments). Capture curls + Surefire under `notes/screenshots/lab-25/`. Run `mvn -q test` twice. Confirm `git status` clean of `target/`.
 
 **Expected result:** ≥3 experiments; dual green verify/test; layering diagram/notes present.
 

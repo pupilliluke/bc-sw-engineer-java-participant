@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-23/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -201,8 +201,12 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab23-crm
 
 ```bash
 cd ~/java-bootcamp/examples
-mkdir -p lab23-crm docs notes/screenshots
+mkdir -p lab23-crm
 cd lab23-crm
+mkdir -p docs
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-23
+# stay in lab23-crm for Initializr / next steps — if the next command already cds, remove the extra cd below
+cd ~/java-bootcamp/examples/lab23-crm
 ```
 
 Generate (UI/CLI) or hand-author:
@@ -492,7 +496,7 @@ mvn -q test
 
 **Why:** Auto-config literacy includes knowing how Boot fails and how 404/validation appear.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Capture startup, health, and curl excerpts under `notes/screenshots/`. Finish `docs/autoconfig-notes.md` (three auto-config items, three ownership items). Ensure `git status` clean of `target/`.
+**Do this:** Complete [Failure Experiments](#failure-experiments). Capture startup, health, and curl excerpts under `notes/screenshots/lab-23/`. Finish `docs/autoconfig-notes.md` (three auto-config items, three ownership items). Ensure `git status` clean of `target/`.
 
 **Expected result:** ≥3 experiments recorded; dual green `mvn test`; evidence saved; no secrets staged.
 

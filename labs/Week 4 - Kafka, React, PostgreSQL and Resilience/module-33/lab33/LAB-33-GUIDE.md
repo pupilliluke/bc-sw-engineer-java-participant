@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-33/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -75,7 +75,7 @@ Use these examples consistently:
 | `lab-request-001` | — | correlation on edit/add console callbacks |
 | fictional emails | `amina@example.com`, `ravi@example.com` | never real PII |
 
-**Security note for evidence.** Use fictional emails only. Never commit `.env` secrets, `node_modules/`, or `dist/`. Screenshots of the dashboard and test output go under `notes/screenshots/`.
+**Security note for evidence.** Use fictional emails only. Never commit `.env` secrets, `node_modules/`, or `dist/`. Screenshots of the dashboard and test output go under `notes/screenshots/lab-33/`.
 
 ---
 
@@ -219,7 +219,8 @@ cd crm-ui
 npm install
 npm install -D vitest jsdom @testing-library/react \
   @testing-library/jest-dom @testing-library/user-event
-mkdir -p docs notes/screenshots src/types src/components src/data
+mkdir -p docs
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-33 src/types src/components src/data
 ```
 
 Wire Vitest in `vite.config.ts` (`test: { environment: 'jsdom', globals: true }`) and add `"test": "vitest"` to `package.json` scripts. Replace the default Vite title with **Customer Management Platform**.
@@ -443,7 +444,7 @@ npm run test -- --run
 
 **Why:** Peers and instructors must reproduce green test/build without archaeology.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Capture screenshots under `notes/screenshots/`. Document in README / `docs/component-notes.md`:
+**Do this:** Complete [Failure Experiments](#failure-experiments). Capture screenshots under `notes/screenshots/lab-33/`. Document in README / `docs/component-notes.md`:
 
 ```bash
 npm run dev

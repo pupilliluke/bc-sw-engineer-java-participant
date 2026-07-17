@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-44/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -166,7 +166,7 @@ Primary training layout:
 Platform secondary paths:
 
 ```text
-customer-management-platform/
+~/java-bootcamp/examples/customer-management-platform/
 ├── docs/release-plan.md
 ├── docs/release-checklist.md
 ├── docs/rollback-runbook.md
@@ -216,7 +216,8 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab44-crm
 cd ~/java-bootcamp/examples
 cp -r lab43-crm lab44-crm
 cd lab44-crm
-mkdir -p docs notes/screenshots scripts
+mkdir -p docs
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-44 scripts
 git switch -c lab/44-crm 2>/dev/null || true
 ```
 
@@ -332,7 +333,7 @@ curl -fsS -H "X-Correlation-Id: lab-request-001" \
   "${CRM_BASE_URL}/api/customers/CUS-1001"
 ```
 
-Capture staging evidence under `notes/screenshots/`.
+Capture staging evidence under `notes/screenshots/lab-44/`.
 
 **Expected result:** Staging running the manifest digest; smoke green for fixtures; evidence saved.
 
@@ -571,7 +572,7 @@ git status --short
 | `docs/rollback-runbook.md` | Triggers + restore known-good |
 | `artifact-manifest.json` | Immutable identity |
 | `scripts/promote.sh` / `smoke-crm.sh` | Repeatable promote + smoke |
-| `notes/screenshots/` | Staging + rollback evidence |
+| `notes/screenshots/lab-44/` | Staging + rollback evidence |
 
 ---
 

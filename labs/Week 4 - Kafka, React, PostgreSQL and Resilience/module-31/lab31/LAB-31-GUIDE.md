@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-31/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -215,7 +215,8 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab31-crm
 cd ~/java-bootcamp/examples
 cp -r lab29-crm lab31-crm   # or lab28-crm / latest; bring Lab 30 compose if needed
 cd lab31-crm
-mkdir -p docs notes/screenshots
+mkdir -p docs
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-31
 ```
 
 ```xml
@@ -465,7 +466,7 @@ State explicitly whether dead letters use Spring’s `.DLT` suffix or Lab 30’s
 
 **Why:** DLT without headers and listeners without idempotency are incomplete.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Capture publish logs, duplicate ignore, and DLT evidence under `notes/screenshots/`. Run the integration suite twice.
+**Do this:** Complete [Failure Experiments](#failure-experiments). Capture publish logs, duplicate ignore, and DLT evidence under `notes/screenshots/lab-31/`. Run the integration suite twice.
 
 **Expected result:** ≥3 experiments; green tests twice; documented DLT topic naming; no PII dumps in Git.
 

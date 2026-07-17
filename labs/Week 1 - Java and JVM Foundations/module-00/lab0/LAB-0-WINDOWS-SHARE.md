@@ -1,10 +1,9 @@
 # Lab 0: Development Environment Setup — Windows
 
+**Standalone share copy** — self-contained; no course repository links required.  
 **OS:** Windows 10 / 11  
 **Primary IDE:** IntelliJ IDEA Community Edition  
-**Optional IDE:** VS Code (if you already prefer it)  
-**Lab folder:** `labs/Week 1 - Java and JVM Foundations/module-00/lab0/`  
-**Also see:** [LAB-0-GUIDE.md](LAB-0-GUIDE.md) (overview) · [macOS guide](LAB-0-MACOS.md) · [IDE conventions](../../_IDE-CONVENTIONS.md)
+**Optional IDE:** VS Code (if you already prefer it)
 
 > Install tools on **your Windows laptop**. Shared cloud services are not needed until Week 4+.
 
@@ -18,7 +17,7 @@
 | VS Code (optional) | Latest stable + Extension Pack for Java |
 | Temurin OpenJDK | **21** LTS |
 | Maven | **3.9.x** |
-| Git | 2.x |
+| Git | **2.x** |
 
 **Verified reference layout:** Temurin 21 at `C:\Program Files\Eclipse Adoptium\jdk-21`; Maven at `C:\Program Files\Apache\maven\current`; workspace `%USERPROFILE%\java-bootcamp`.
 
@@ -28,7 +27,7 @@
 
 ### Step 1 — Install IntelliJ IDEA Community (primary)
 
-1. Download **Community Edition**: [jetbrains.com/idea/download](https://www.jetbrains.com/idea/download/) (Windows).
+1. Download **Community Edition** for Windows: https://www.jetbrains.com/idea/download/
 2. Run the installer. Prefer options that add a desktop/Start menu shortcut.
 3. Launch IntelliJ once and finish the first-run wizard.
 
@@ -38,12 +37,12 @@
 
 Only if you already prefer VS Code:
 
-1. Install from [code.visualstudio.com](https://code.visualstudio.com/).
+1. Install from https://code.visualstudio.com/
 2. Extensions: **Extension Pack for Java** (`vscjava.vscode-java-pack`).
 
 ### Step 3 — Install Temurin JDK 21 and set `JAVA_HOME`
 
-1. Download Temurin 21 **JDK** Windows x64 **MSI**: [Adoptium Temurin 21](https://adoptium.net/temurin/releases/?version=21&os=windows&arch=x64&package=jdk).
+1. Download Temurin 21 **JDK** Windows x64 **MSI**: https://adoptium.net/temurin/releases/?version=21&os=windows&arch=x64&package=jdk
 2. Run the MSI as Administrator. Typical path: `C:\Program Files\Eclipse Adoptium\jdk-21`.
 3. Set **system** environment variables (Win + R → `sysdm.cpl` → Advanced → Environment Variables):
    - `JAVA_HOME` = that JDK folder
@@ -63,11 +62,11 @@ echo $env:JAVA_HOME
 
 ### Step 4 — Install Maven 3.9.x and Git
 
-**Git:** install from [git-scm.com](https://git-scm.com/) if `git --version` fails.
+**Git:** install from https://git-scm.com/ if `git --version` fails.
 
 **Maven:**
 
-1. Download `apache-maven-3.9.x-bin.zip` from [Maven download](https://maven.apache.org/download.cgi) or [archive.apache.org](https://archive.apache.org/dist/maven/maven-3/).
+1. Download `apache-maven-3.9.x-bin.zip` from https://maven.apache.org/download.cgi or https://archive.apache.org/dist/maven/maven-3/
 2. Extract to `C:\Program Files\Apache\maven\apache-maven-3.9.x`.
 3. Create junction `C:\Program Files\Apache\maven\current` → that folder (optional but recommended).
 4. System env: `MAVEN_HOME` = `C:\Program Files\Apache\maven\current`; add `%MAVEN_HOME%\bin` to Path.
@@ -84,7 +83,7 @@ git --version
 
 **Where to run this:** Open a **new Windows PowerShell** window from the Start menu (or Win + X → **Windows Terminal** / **Terminal**). Do **not** use IntelliJ’s terminal yet — that comes in Step 6 after you open the folder. You can start from any directory; the commands create `%USERPROFILE%\java-bootcamp` under your user home (for example `C:\Users\<You>\java-bootcamp`).
 
-This layout matches what you use in every later lab: hands-on code under `examples\`, Lab 0 evidence under `notes\screenshots\`. (Do **not** create a top-level `labs\` here — course lab guides live in the bootcamp GitHub clone, not in this workspace.)
+This layout matches what you use in every later lab: hands-on code under `examples\`, Lab 0 evidence under `notes\screenshots\`. Course lab handouts are provided separately by your instructor — you do **not** need a top-level `labs\` folder in this workspace.
 
 ```powershell
 $root = Join-Path $env:USERPROFILE 'java-bootcamp'
@@ -152,9 +151,9 @@ Hello Java Bootcamp!
 2. Right-click `src` → **Mark Directory as → Sources Root** if needed.
 3. Green ▶ beside `main` → **Run ‘HelloJava.main()’**.
 
-### Step 10 — GitHub + git identity
+### Step 10 — Git + identity (for later labs)
 
-1. Create or sign in at [github.com](https://github.com).
+1. Create or sign in to a **GitHub** account (website: github.com).
 2. Set Git to your **display name** and your GitHub **noreply email** (recommended — avoids push errors if your personal email is private on GitHub).
 
 **Find your noreply email:** GitHub → **Settings** → **Emails** → enable **Keep my email addresses private** → copy the address shown, e.g. `{id}+{username}@users.noreply.github.com`.
@@ -170,7 +169,7 @@ git --version
 
 **If push fails with GH007 (“private email address”):** your commit used a personal `@gmail.com` (or similar) address. Re-run Step 10 with the **noreply** email from GitHub Settings → Emails, or disable “Block command line pushes that expose my email” on that same page.
 
-**Do not commit** personal verification screenshots from `notes/screenshots/` — keep those local only.
+Keep personal verification screenshots under `%USERPROFILE%\java-bootcamp\notes\screenshots\` only — do not publish them.
 
 ---
 
@@ -186,7 +185,7 @@ cd $env:USERPROFILE\java-bootcamp
 Get-Location
 ```
 
-_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+_Mark each row **Pass** or **Fail** in your own notes._
 
 | # | Confirm | Your notes |
 | - | ------- | ---------- |
@@ -201,4 +200,4 @@ _Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are
 
 **Do not start Lab 1 until every Pass criteria row is Pass in your notes.**
 
-Next: [Lab 1 Windows guide](../../module-01/lab1/LAB-1-WINDOWS.md) · [Lab 1 full guide](../../module-01/lab1/LAB-1-GUIDE.md)
+When complete, continue to **Lab 1** in your course materials.

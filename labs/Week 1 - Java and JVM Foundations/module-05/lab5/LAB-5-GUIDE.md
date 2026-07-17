@@ -24,7 +24,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-5/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -145,7 +145,7 @@ flowchart TD
 Complete [Labs Setup Instructions](../../../SETUP-INSTRUCTIONS.md) and [Lab 0](../../module-00/lab0/LAB-0-GUIDE.md). Confirm:
 
 * **JDK 21** with `javac` and `java` on `PATH`
-* **VS Code** and/or **IntelliJ IDEA** — see [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md)
+* **VS Code** and/or **IntelliJ IDEA** — see [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md)
 * Workspace: `%USERPROFILE%\java-bootcamp` or `$HOME/java-bootcamp`
 * **Lab 2–3 recommended:** packages under `src/com/academy/...`, `Scanner` + `nextLine()`, thin `Main` + service layer
 * Maven is optional—plain `javac`/`java` is the primary path
@@ -179,7 +179,7 @@ javac -version
 
 ```bash
 mkdir -p "$HOME/java-bootcamp/examples/Lab5-LibraryManagement/src/com/academy/library"
-mkdir -p "$HOME/java-bootcamp/notes/screenshots"
+mkdir -p "$HOME/java-bootcamp/notes/screenshots/lab-5"
 cd "$HOME/java-bootcamp/examples/Lab5-LibraryManagement"
 ```
 
@@ -187,7 +187,7 @@ Windows cmd:
 
 ```text
 mkdir %USERPROFILE%\java-bootcamp\examples\Lab5-LibraryManagement\src\com\academy\library
-mkdir %USERPROFILE%\java-bootcamp\notes\screenshots
+mkdir %USERPROFILE%\java-bootcamp\notes\screenshots\lab-5
 cd /d %USERPROFILE%\java-bootcamp\examples\Lab5-LibraryManagement
 ```
 
@@ -538,7 +538,7 @@ Screenshot this path for evidence.
 
 **Why:** Feeling `ArrayList` vs `LinkedList` once beats memorizing Big-O posters.
 
-**Do this:** Implement `runPerformanceComparison()` (menu 14): insert many integers into `ArrayList` and `LinkedList`, time with `System.nanoTime()`, print ms. Record results in `notes/lab5-answers.md`.
+**Do this:** Implement `runPerformanceComparison()` (menu 14): insert many integers into `ArrayList` and `LinkedList`, time with `System.nanoTime()`, print ms. Record results in `../../notes/lab5-answers.md` (from project; or `~/java-bootcamp/notes/lab5-answers.md`).
 
 **Expected result:** ArrayList often wins for indexed / end-oriented insert patterns you code; LinkedList shows overhead—document **your** numbers.
 
@@ -576,7 +576,7 @@ _Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are
 | - | ------- | ---------- |
 | 1 | `src/com/academy/library/` contains `Book`, `Member`, (`BorrowRecord`), service types, `Main` | Pass / Fail |
 | 2 | All files declare `package com.academy.library;` | Pass / Fail |
-| 3 | Edited with VS Code and/or IntelliJ per [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md) | Pass / Fail |
+| 3 | Edited with VS Code and/or IntelliJ per [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md) | Pass / Fail |
 
 ### Checkpoint B — Collections wired
 
@@ -666,7 +666,7 @@ Maven is **not** required for this lab.
 6. Category insights list `Programming` after the sample add.
 7. Exit `11` → `Thank You` and process ends.
 
-Record pass/fail in `notes/lab5-answers.md`.
+Record pass/fail in `../../notes/lab5-answers.md` (from project; or `~/java-bootcamp/notes/lab5-answers.md`).
 
 ---
 
@@ -730,7 +730,7 @@ Keep sources and evidence. Leave [`solution/`](solution/) intact.
 
 ## Reflection Questions
 
-Write short answers in `notes/lab5-answers.md`:
+Write short answers in `../../notes/lab5-answers.md` (from project; or `~/java-bootcamp/notes/lab5-answers.md`):
 
 1. When choose `List` over `Set`?
 2. Why `HashSet` before inserting a book ID?

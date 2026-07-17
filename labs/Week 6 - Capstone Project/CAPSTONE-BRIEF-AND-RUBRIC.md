@@ -124,7 +124,7 @@ flowchart TB
 ```
 
 ```text
-customer-management-platform/
+~/java-bootcamp/examples/customer-management-platform/
 ├── backend/      # Spring Boot API
 ├── frontend/     # React application
 ├── k8s/          # Kubernetes (k3s) manifests
@@ -133,6 +133,8 @@ customer-management-platform/
 ├── defense/      # Final presentation packet
 ├── reports/      # Sanitized scan and pipeline evidence
 └── README.md
+
+# Evidence (Lab 0 layout): ~/java-bootcamp/notes/screenshots/lab-48/ … lab-52/
 ```
 
 ---

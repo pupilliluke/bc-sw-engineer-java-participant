@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-24/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -220,7 +220,8 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab24-crm
 cd ~/java-bootcamp/examples
 cp -r lab23-crm lab24-crm
 cd lab24-crm
-mkdir -p requests docs notes/screenshots
+mkdir -p requests docs
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-24
 ```
 
 Add `spring-boot-starter-web-services`, `wsdl4j`, `spring-ws-security`, `spring-ws-test` (test), and `jaxb2-maven-plugin` sourcing `customer.xsd` into package `com.northstar.crm.endpoint.jaxb`.
@@ -413,7 +414,7 @@ mvn -q test
 
 **Why:** Integration teams learn more from fault taxonomy than from green paths alone.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Capture WSDL snippet, secured response, not-found fault, missing-token fault under `notes/screenshots/`. `git status` clean of `target/` and real secrets.
+**Do this:** Complete [Failure Experiments](#failure-experiments). Capture WSDL snippet, secured response, not-found fault, missing-token fault under `notes/screenshots/lab-24/`. `git status` clean of `target/` and real secrets.
 
 **Expected result:** ≥3 experiments; evidence pack complete; no plaintext prod secrets in Git.
 

@@ -24,7 +24,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-7/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -36,7 +36,7 @@ This Module 7 lab teaches **Java exception handling** by building a fault-tolera
 
 **What success looks like.** Under `java-bootcamp/examples/Lab7-ATMSystem/` you compile with `javac -d out ...`, run `java -cp out com.academy.atm.Main` **from the project root**, walk success and failure paths (including withdraw-too-much → insufficient balance), inspect `logs/application.log`, and submit evidence graders can recompile.
 
-**Depends on Lab 0 + prior Week 1 skills.** If your IDE, `java`, or `javac` fail, stop and fix [Lab 0](../../module-00/lab0/LAB-0-GUIDE.md) / [SETUP-INSTRUCTIONS.md](../../../SETUP-INSTRUCTIONS.md). Comfort with packages, service layering (Lab 5), and menu + Scanner loops (Labs 5–6) speeds this lab. IDE paths: [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md).
+**Depends on Lab 0 + prior Week 1 skills.** If your IDE, `java`, or `javac` fail, stop and fix [Lab 0](../../module-00/lab0/LAB-0-GUIDE.md) / [SETUP-INSTRUCTIONS.md](../../../SETUP-INSTRUCTIONS.md). Comfort with packages, service layering (Lab 5), and menu + Scanner loops (Labs 5–6) speeds this lab. IDE paths: [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md).
 
 **CRM connection (future only).** From Lab 8 onward the **Customer Management Platform** will throw domain exceptions (not found, validation failed), map them to API error responses, and log diagnostics. This lab does **not** build CRM APIs, Spring `@ControllerAdvice`, or a database. Treat the ATM as a **skill bridge**: today’s custom exceptions and recovery loops reappear when CRM services reject bad requests without taking down the JVM.
 
@@ -145,7 +145,7 @@ flowchart TD
 Complete the [Labs Setup Instructions](../../../SETUP-INSTRUCTIONS.md) and [Lab 0](../../module-00/lab0/LAB-0-GUIDE.md) before this lab. Confirm:
 
 * **JDK 21** with `javac` and `java` on `PATH` (Lab 0)
-* **Laptop IDE:** **IntelliJ IDEA Community** (primary) or **VS Code** (optional) — see [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md)
+* **Laptop IDE:** **IntelliJ IDEA Community** (primary) or **VS Code** (optional) — see [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md)
 * Workspace open at `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`)
 * Working integrated terminal in your IDE
 * **Prior Week 1 recommended:** packages, service layer, menu + `Scanner` (`nextLine`), basic collections (`HashMap` for accounts)
@@ -199,17 +199,14 @@ java-bootcamp/examples/Lab7-ATMSystem/
 ├── transactions.txt             # historical file for try-with-resources
 ├── logs/
 │   └── application.log          # created at runtime by LoggerUtil
-└── notes/
-    ├── lab7-answers.md
-    ├── exception-hierarchy.md
-    └── screenshots/             # success + failure paths; no secrets
+└── (answers → ~/java-bootcamp/notes/; screenshots → notes/screenshots/lab-7/)
 ```
 
 **Important:** Always `cd` to `java-bootcamp/examples/Lab7-ATMSystem` (the folder that contains `transactions.txt` and `logs/`) before `java -cp out com.academy.atm.Main`. Relative paths break if you start the JVM from a parent directory.
 
 Ignore build artifacts if committed later: `out/`, `*.class`. You **may** submit a sanitized snippet of `logs/application.log` showing ERROR lines (no secrets).
 
-**IDE tip:** In VS Code use **File → Open Folder…** on the project. In IntelliJ use **File → Open…**, set Project SDK to **21**, and set the run configuration’s working directory to the project root — details in [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md).
+**IDE tip:** In VS Code use **File → Open Folder…** on the project. In IntelliJ use **File → Open…**, set Project SDK to **21**, and set the run configuration’s working directory to the project root — details in [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md).
 
 **Instructor reference:** Complete solution (including bonuses) in [`solution/`](solution/) → `Lab7-ATMSystem/` (`com.academy.atm`).
 
@@ -224,7 +221,7 @@ Ignore build artifacts if committed later: `out/`, `*.class`. You **may** submit
 
 ## Concepts to Discuss
 
-Write 2–3 sentences each in `notes/lab7-answers.md` before or during the steps; revisit after Checkpoint C.
+Write 2–3 sentences each in `../../notes/lab7-answers.md` (from project; or `~/java-bootcamp/notes/lab7-answers.md`) before or during the steps; revisit after Checkpoint C.
 
 1. Why are `InvalidAmountException` and friends **checked** in this lab, while `NullPointerException` is unchecked?
 2. What does `throws` on `Account.withdraw(...)` force callers to do?
@@ -239,7 +236,7 @@ Write 2–3 sentences each in `notes/lab7-answers.md` before or during the steps
 
 ## Implementation Steps
 
-Complete each step in order. Commands assume `java-bootcamp/examples/Lab7-ATMSystem` on your laptop. Use the integrated terminal in **VS Code** or **IntelliJ** ([`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md)).
+Complete each step in order. Commands assume `java-bootcamp/examples/Lab7-ATMSystem` on your laptop. Use the integrated terminal in **VS Code** or **IntelliJ** ([`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md)).
 
 Parts 1–20 from the Module 7 exercise map into the steps below (model → exceptions → ATMService → logging → menu → failure walkthrough).
 
@@ -255,7 +252,7 @@ Parts 1–20 from the Module 7 exercise map into the steps below (model → exce
 # macOS / Linux (Git Bash on Windows also works)
 mkdir -p ~/java-bootcamp/examples/Lab7-ATMSystem/src/com/academy/atm
 mkdir -p ~/java-bootcamp/examples/Lab7-ATMSystem/logs
-mkdir -p ~/java-bootcamp/examples/Lab7-ATMSystem/notes/screenshots
+mkdir -p ~/java-bootcamp/notes/screenshots/lab-7
 cd ~/java-bootcamp/examples/Lab7-ATMSystem
 pwd
 ```
@@ -1026,7 +1023,7 @@ javac -d out src/com/academy/atm/*.java
 java -cp out com.academy.atm.Main
 ```
 
-Or in IntelliJ: open the project, set SDK 21, set Run working directory to the project root, run `com.academy.atm.Main` (see [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md)).
+Or in IntelliJ: open the project, set SDK 21, set Run working directory to the project root, run `com.academy.atm.Main` (see [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md)).
 
 Suggested walkthrough:
 
@@ -1072,7 +1069,7 @@ Choice : 7
 Thank You
 ```
 
-Capture screenshots under `notes/screenshots/` (no secrets). Also open:
+Capture screenshots under `notes/screenshots/lab-7/` (no secrets). Also open:
 
 ```bash
 ls -la logs          # Windows: dir logs
@@ -1217,7 +1214,7 @@ Maven is **not** required for this lab.
 9. Unchecked demo (menu 8 if added) prints three handled messages.
 10. `logs/application.log` has ERROR entries; Exit `7` → `Thank You`.
 
-Record pass/fail in `notes/lab7-answers.md`.
+Record pass/fail in `../../notes/lab7-answers.md` (from project; or `~/java-bootcamp/notes/lab7-answers.md`).
 
 ---
 
@@ -1257,7 +1254,7 @@ Perform deliberately, then restore working code / files.
 | Symptom | Likely cause | Fix |
 | ------- | ------------ | --- |
 | `javac: command not found` | JDK not on PATH | [Lab 0](../../module-00/lab0/LAB-0-GUIDE.md) / [SETUP](../../../SETUP-INSTRUCTIONS.md) |
-| Files missing / wrong project | Wrong folder open | Open `Lab7-ATMSystem` in VS Code or IntelliJ; see [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md) |
+| Files missing / wrong project | Wrong folder open | Open `Lab7-ATMSystem` in VS Code or IntelliJ; see [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md) |
 | `package does not exist` | Folder ≠ package | Recreate `src/com/academy/atm` |
 | Cannot load main class | Wrong `-cp` / package | `java -cp out com.academy.atm.Main` |
 | `Unable to read transaction history` always | Wrong cwd | Run from `Lab7-ATMSystem` root (folder with `transactions.txt`) |
@@ -1312,7 +1309,7 @@ Students should submit:
   * How to compile and run (from project root)
   * Sample output
   * Lessons learned
-* Answers to reflection questions in `notes/lab7-answers.md`
+* Answers to reflection questions in `../../notes/lab7-answers.md` (from project; or `~/java-bootcamp/notes/lab7-answers.md`)
 * Optional: labeled bonuses (rollback, daily error report, timing, summary)
 * Git repository (optional)
 
@@ -1340,7 +1337,7 @@ Do not submit secrets or a verbatim instructor [`solution/`](solution/) as your 
 
 ## Reflection Questions
 
-Write short answers (3–6 sentences) in `notes/lab7-answers.md`:
+Write short answers (3–6 sentences) in `../../notes/lab7-answers.md` (from project; or `~/java-bootcamp/notes/lab7-answers.md`):
 
 1. What is the difference between checked and unchecked exceptions?
 2. Why should custom exceptions be used?
@@ -1402,7 +1399,7 @@ By the end of this lab, you should be able to:
 * **Reference solution:** Full implementation including menu options 8–10 and transfer rollback is in [`solution/`](solution/) under `Lab7-ATMSystem/` (`com.academy.atm`). Seed accounts: **`1001`/`1234`/$11000** and **`1002`/`5678`/$5000**. Guide learners to finish core menu 1–7 + logging before revealing bonuses. Emphasize withdraw `$20000` → Insufficient Balance as the signature failure demo.
 * **API fidelity:** Align with solution signatures—`Account.deposit/withdraw` checked throws; `InsufficientFundsException(message, requested, available)`; `InvalidPinException(message, attemptsRemaining)`; `ATMService(Scanner)`; `LoggerUtil` path `logs/application.log`; `TRANSACTION_FILE = "transactions.txt"`; user messages for invalid numeric input and insufficient balance as specified.
 * **Common pitfalls:** Running from the wrong directory; putting catches only in `Main` while leaving `Account` undeclared; catching `Exception` first; forgetting `finally`; logging PINs; crashing on `NumberFormatException` instead of translating to a friendly message.
-* **Classpath / cwd / IDE:** Demo failure when starting Java outside the project root so try-with-resources + logging paths “click.” Dual IDE on laptop: IntelliJ Community primary, VS Code optional — [`_IDE-CONVENTIONS.md`](../_IDE-CONVENTIONS.md). In IntelliJ, set working directory to project root. Score screenshots of **failure** paths + log evidence, not only happy-path deposits.
+* **Classpath / cwd / IDE:** Demo failure when starting Java outside the project root so try-with-resources + logging paths “click.” Dual IDE on laptop: IntelliJ Community primary, VS Code optional — [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md). In IntelliJ, set working directory to project root. Score screenshots of **failure** paths + log evidence, not only happy-path deposits.
 * **Teaching emphasis:** Boundaries catch; domain throws; users get short messages; logs get detail. CRM/Spring exception handlers (Week 2+) reuse this mental model—Lab 7 stays console + file I/O on purpose.
 * **Timing:** Core path fits 3–4 hours; bonuses are stretch. After Lab 7, optionally point students to the Week 1 integrated mini-project below as a portfolio bridge into Week 2.
 

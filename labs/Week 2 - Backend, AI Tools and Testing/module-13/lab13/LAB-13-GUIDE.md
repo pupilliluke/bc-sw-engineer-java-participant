@@ -22,7 +22,7 @@
 2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
 3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/` (redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+5. Capture evidence under `notes/screenshots/lab-13/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Lab Overview
 
@@ -213,7 +213,10 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab13-crm
 **Do this:**
 
 ```bash
-mkdir -p ~/java-bootcamp/examples/lab13-crm/{contracts,samples,docs,notes/screenshots}
+mkdir -p ~/java-bootcamp/examples/lab13-crm/contracts \
+  ~/java-bootcamp/examples/lab13-crm/samples \
+  ~/java-bootcamp/examples/lab13-crm/docs \
+  ~/java-bootcamp/notes/screenshots/lab-13
 cd ~/java-bootcamp/examples/lab13-crm
 ```
 
@@ -582,7 +585,7 @@ ls -R contracts samples docs
 
 **Why:** Contract authors must know import breakage and idempotency implications before Lab 24.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Finish `docs/soap-design-notes.md` (retry semantics, Lab 24 forward link, security deferrals). Capture evidence under `notes/screenshots/`.
+**Do this:** Complete [Failure Experiments](#failure-experiments). Finish `docs/soap-design-notes.md` (retry semantics, Lab 24 forward link, security deferrals). Capture evidence under `notes/screenshots/lab-13/`.
 
 **Expected result:** ≥3 experiments recorded; pack ready for partner handoff.
 
