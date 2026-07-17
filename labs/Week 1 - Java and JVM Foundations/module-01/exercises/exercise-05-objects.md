@@ -75,6 +75,12 @@ java Person
 
 **Expected:** Something like `Aman is 21 years old`.
 
+**Verified (Windows):**
+
+```text
+Aman is 21 years old
+```
+
 ## Expected result
 
 Object prints; fields live on the heap and the reference on the stack.
