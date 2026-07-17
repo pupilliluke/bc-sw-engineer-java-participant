@@ -100,6 +100,22 @@ javap -c Hello
 
 **Verified (Windows):** `javap -c Hello` shows `main`, with bytecode including `getstatic`, `ldc` (`"Hello, JVM!"`), `invokevirtual` (`println`), and `return`.
 
+#### Easy explanation of what you see
+
+`javap -c` shows the **bytecode** the JVM runs — not your Java source. Think of it as the JVM’s instruction list after `javac`.
+
+| Bytecode you saw | Plain English |
+| ---------------- | ------------- |
+| `aload_0` / `invokespecial … Object."<init>"` | Default constructor: set up this object by calling `Object`’s constructor (you did not write a constructor; Java added one). |
+| `getstatic … System.out` | Get the shared `System.out` print stream (like reaching for the console). |
+| `ldc … "Hello, JVM!"` | Load the constant string `"Hello, JVM!"` onto the stack. |
+| `invokevirtual … println` | Call `println` on that print stream (print the string). |
+| `return` | Leave the method. |
+
+**One sentence:** Your `System.out.println("Hello, JVM!");` became three JVM steps: get `System.out` → load the text → call `println`.
+
+You do **not** need to memorize every opcode. For Module 1, know that **source → `.class` bytecode → JVM executes those instructions**.
+
 ## Expected result
 
 Console prints `Hello, JVM!`; `Hello.class` exists.

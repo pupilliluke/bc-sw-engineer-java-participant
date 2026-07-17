@@ -28,6 +28,19 @@ javap -c -v Person
 - Save text or a local screenshot under `notes/screenshots/` (keep screenshots on your laptop only)
 - List three of: `ldc`, `invokevirtual`, `return`, `aload`, `istore`
 
+### Quick opcode meanings (same ideas as Exercise 1)
+
+| Opcode | Easy meaning |
+| ------ | ------------ |
+| `ldc` | Load a constant (often a `String` or number) onto the stack |
+| `getstatic` | Read a static field (e.g. `System.out`) |
+| `invokevirtual` | Call an instance method (e.g. `println`) |
+| `aload` / `aload_0` | Load an object reference from a local variable |
+| `istore` | Store an `int` into a local variable |
+| `return` | Exit the method |
+
+Reminder: bytecode is what the JVM runs after `javac`. See [Exercise 1 Step 4](exercise-01-hello-world.md) for a full walkthrough of `Hello`.
+
 ## Expected result
 
 You can name what three instructions do from your listing.
