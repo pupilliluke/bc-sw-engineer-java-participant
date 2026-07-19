@@ -90,14 +90,14 @@ flowchart TB
   Facade --> DTO["CustomerRequestDTO<br/>+ Bean Validation"]
   DTO --> Map["CustomerMapper / CustomerService"]
   Map --> Repo["CustomerRepository"]
-  Repo --> Mem["InMemoryCustomerRepository<br/>private Map — no leaks"]
+  Repo --> Mem["InMemoryCustomerRepository<br/>private Map - no leaks"]
 ```
 
 ### Lab flow (mermaid)
 
 ```mermaid
 flowchart TD
-    A["Copy lab*-crm<br/>→ lab14-crm"] --> B["Add Validation<br/>deps"]
+    A["Copy lab*-crm<br/>-> lab14-crm"] --> B["Add Validation<br/>deps"]
     B --> C["CustomerRequestDTO<br/>+ annotations"]
     C --> D["CustomerResponseDTO"]
     D --> E["CustomerMapper"]

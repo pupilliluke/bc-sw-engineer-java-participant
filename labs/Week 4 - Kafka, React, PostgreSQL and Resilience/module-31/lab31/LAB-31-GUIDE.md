@@ -91,7 +91,7 @@ flowchart TB
   Topic --> L["CustomerEventListener"]
   L --> Store["ProcessedEventStore<br/>idempotency"]
   Store --> Notif["Notification handler"]
-  L --> Err["DefaultErrorHandler → DLT"]
+  L --> Err["DefaultErrorHandler -> DLT"]
 ```
 
 ### Lab flow (mermaid)

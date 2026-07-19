@@ -90,17 +90,17 @@ flowchart LR
   subgraph Stack["Thread stack frames"]
     M["main()<br/>mainCounter, mainPerson"]
     A["methodA()<br/>localA, personA"]
-    B["methodB() → methodC()"]
+    B["methodB() -> methodC()"]
   end
   subgraph Heap["Java Heap"]
     P["Person / Student / Employee"]
     L["DemoObject[] / ArrayList"]
-    W["WeakReference → ?"]
+    W["WeakReference -> ?"]
   end
   M -->|reference| P
   A -->|reference| P
   GC["GC roots: stacks, statics"] -.-> Stack
-  Unreach["Unreachable → GC"] -.-> Heap
+  Unreach["Unreachable -> GC"] -.-> Heap
 ```
 
 ### Lab flow

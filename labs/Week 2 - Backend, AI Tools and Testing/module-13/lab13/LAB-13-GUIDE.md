@@ -88,7 +88,7 @@ Use these examples consistently:
 
 ```mermaid
 flowchart TB
-  subgraph Now["NOW — Lab 13 contracts"]
+  subgraph Now["NOW - Lab 13 contracts"]
     XSD["customer.xsd"] <-->|referenced| WSDL["CustomerService.wsdl"]
     Samples["samples/*.xml<br/>Create / Update / Get + faults"] -.-> WSDL
   end

@@ -97,7 +97,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy lab37 → lab38<br/>+ performance scripts"] --> B["Generate ≥50k<br/>skewed customers"]
+    A["Copy lab37 -> lab38<br/>+ performance scripts"] --> B["Generate ≥50k<br/>skewed customers"]
     B --> C["DBMS_STATS<br/>+ distribution"]
     C --> D["Baseline plan<br/>DBMS_XPLAN ALLSTATS"]
     D --> E["Email unique index<br/>+ status list index"]

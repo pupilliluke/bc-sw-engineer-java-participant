@@ -110,7 +110,7 @@ flowchart TB
   Main["Main<br/>menu loop / switch"] -->|uses| BS["BankService<br/>customers / accounts / txs"]
   Scan["Scanner System.in"] --> BS
   BS --> Cust["Customer[]"]
-  BS --> Acc["Account[]<br/>Savings | Current"]
+  BS --> Acc["Account[]<br/>Savings / Current"]
   Cust -->|owns| Acc
   Acc --> Tx["Transaction[]"]
   Tx --> Out["console output"]

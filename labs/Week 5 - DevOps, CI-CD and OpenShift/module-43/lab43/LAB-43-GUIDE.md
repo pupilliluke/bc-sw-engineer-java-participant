@@ -153,7 +153,7 @@ flowchart TD
     D --> E["Package once<br/>JAR + SHA-256 + commit"]
     E --> F["Branch workflows<br/>PR vs main vs tag"]
     F --> G["Secured variables<br/>no echo"]
-    G --> H["Force fail → fix<br/>+ ci-runbook.md"]
+    G --> H["Force fail -> fix<br/>+ ci-runbook.md"]
 ```
 
 ### Architecture NOW vs LATER

@@ -90,19 +90,19 @@ flowchart TB
   Svc --> APS["AccountProfileService<br/>@CircuitBreaker / @Retry / @TimeLimiter"]
   APS --> Client["Account HTTP client"]
   Client --> Remote["WireMock / remote account API"]
-  APS --> FB["fallback → AccountSummary.unavailable"]
+  APS --> FB["fallback -> AccountSummary.unavailable"]
 ```
 
 ### Lab flow (mermaid)
 
 ```mermaid
 flowchart TD
-    A["Copy lab31 → lab32<br/>+ Resilience4j + AOP"] --> B["WireMock stubs<br/>503 / slow / OK"]
+    A["Copy lab31 -> lab32<br/>+ Resilience4j + AOP"] --> B["WireMock stubs<br/>503 / slow / OK"]
     B --> C["Retry config<br/>bounded backoff"]
     C --> D["CircuitBreaker<br/>COUNT_BASED window"]
     D --> E["TimeLimiter<br/>1500ms budget"]
     E --> F["Annotate find()<br/>CompletableFuture"]
-    F --> G["fallback → unavailable<br/>honest banner"]
+    F --> G["fallback -> unavailable<br/>honest banner"]
     G --> H["Actuator + tests<br/>OPEN / recover CLOSED"]
 ```
 

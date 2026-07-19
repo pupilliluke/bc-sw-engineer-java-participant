@@ -93,7 +93,7 @@ Use these examples consistently:
 
 ```mermaid
 flowchart TB
-  subgraph Now["NOW — Lab 9"]
+  subgraph Now["NOW - Lab 9"]
     POM["pom.xml"] --> Life["Maven lifecycle"]
     Life --> JAR["target/*.jar<br/>+ local .m2"]
     Src["src/… layered stubs"] -.-> Life
@@ -109,7 +109,7 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-  V["validate<br/>POM/model OK"] --> C["compile<br/>javac → target/classes"]
+  V["validate<br/>POM/model OK"] --> C["compile<br/>javac -> target/classes"]
   C --> T["test<br/>Surefire *Test"]
   T --> P["package<br/>JAR in target/"]
   P --> Ver["verify<br/>extra checks"]
@@ -123,7 +123,7 @@ flowchart TD
     A["Copy lab8-crm<br/>to lab9-crm"] --> B["Expand pom.xml<br/>coords + properties"]
     B --> C["Dependencies<br/>scopes + PlaceholderTest"]
     C --> D["Plugins<br/>compiler / surefire / jar"]
-    D --> E["Lifecycle walk<br/>validate → install"]
+    D --> E["Lifecycle walk<br/>validate -> install"]
     E --> F["dependency:tree<br/>+ profiles"]
     F --> G["package JAR<br/>+ CI note mvn -B verify"]
     G --> H["Failure experiments<br/>+ evidence submit"]

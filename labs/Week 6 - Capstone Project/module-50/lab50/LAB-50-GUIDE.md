@@ -85,7 +85,7 @@ Use these fixtures consistently:
 
 ```mermaid
 flowchart TB
-  UI["React CRM UI<br/>Search → Profile → Timeline → Form"] --> Client["Typed API client<br/>auth + cancellation"]
+  UI["React CRM UI<br/>Search -> Profile -> Timeline -> Form"] --> Client["Typed API client<br/>auth + cancellation"]
   Client --> API["Spring Boot API Lab 49"]
   API --> JPA["Spring Data JPA"]
   JPA --> PG["PostgreSQL"]
@@ -102,7 +102,7 @@ flowchart TD
     C --> D["Typed API client<br/>errors + cancel"]
     D --> E["Accessible UI<br/>labels / focus / alerts"]
     E --> F["Server state UX<br/>loading / errors / disable submit"]
-    F --> G["UI→DB proof<br/>restart durability"]
+    F --> G["UI->DB proof<br/>restart durability"]
     G --> H["Component + E2E<br/>automation"]
     H --> I["Evidence pack<br/>for Lab 52"]
 ```

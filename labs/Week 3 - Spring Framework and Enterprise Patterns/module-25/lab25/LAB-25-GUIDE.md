@@ -97,7 +97,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy Boot CRM → lab25"] --> B["CustomerRepository<br/>Spring Data–style API"]
+    A["Copy Boot CRM -> lab25"] --> B["CustomerRepository<br/>Spring Data-style API"]
     B --> C["InMemoryCustomerRepository<br/>seed Amina/Ravi"]
     C --> D["CustomerService<br/>rules only"]
     D --> E["Thin CustomerController<br/>no repo imports"]

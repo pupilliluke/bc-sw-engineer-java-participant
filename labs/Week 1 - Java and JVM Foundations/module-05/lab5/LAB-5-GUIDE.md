@@ -108,14 +108,14 @@ flowchart TB
 ```mermaid
 flowchart TD
     Q1{"Need ordered items<br/>and duplicates OK?"}
-    Q1 -->|Yes| L["List → ArrayList"]
-    Q1 -->|No| Q2{"Need unique values<br/>only — no duplicates?"}
+    Q1 -->|Yes| L["List -> ArrayList"]
+    Q1 -->|No| Q2{"Need unique values<br/>only - no duplicates?"}
     Q2 -->|Yes| Q3{"Need sorted order?"}
-    Q3 -->|No| S["Set → HashSet"]
-    Q3 -->|Yes| TS["Set → TreeSet"]
-    Q2 -->|No — need key→value| Q4{"Need sorted keys?"}
-    Q4 -->|No| M["Map → HashMap"]
-    Q4 -->|Yes| TM["Map → TreeMap"]
+    Q3 -->|No| S["Set -> HashSet"]
+    Q3 -->|Yes| TS["Set -> TreeSet"]
+    Q2 -->|"No - need key/value"| Q4{"Need sorted keys?"}
+    Q4 -->|No| M["Map -> HashMap"]
+    Q4 -->|Yes| TM["Map -> TreeMap"]
 ```
 
 **Beginner meaning in one sentence each:**

@@ -96,8 +96,8 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy lab21 → lab22<br/>Boot scaffold"] --> B["Plain Customer<br/>domain types"]
-    B --> C["@Repository + @Service<br/>notifier beans"]
+    A["Copy lab21 -> lab22<br/>Boot scaffold"] --> B["Plain Customer<br/>domain types"]
+    B --> C["at Repository + @Service<br/>notifier beans"]
     C --> D["CustomerService<br/>constructor DI"]
     D --> E["Controller wiring<br/>correlation header"]
     E --> F["@PostConstruct<br/>@PreDestroy logs"]

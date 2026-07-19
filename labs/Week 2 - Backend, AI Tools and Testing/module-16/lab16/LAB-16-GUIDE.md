@@ -105,7 +105,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy lab15 → lab16"] --> B["ErrorResponse<br/>JSON shape"]
+    A["Copy lab15 -> lab16"] --> B["ErrorResponse<br/>JSON shape"]
     B --> C["BusinessException<br/>factories"]
     C --> D["GlobalExceptionHandler<br/>400/404/409/500"]
     D --> E["Facade ApiResult<br/>Ok / Fail"]

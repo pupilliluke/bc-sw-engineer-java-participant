@@ -87,7 +87,7 @@ Use these examples consistently:
 
 ```mermaid
 flowchart TB
-  Browser["Browser untrusted"] --> Auth["AuthContext<br/>checking | anonymous | authenticated"]
+  Browser["Browser untrusted"] --> Auth["AuthContext<br/>checking / anonymous / authenticated"]
   Browser --> Store["tokenStore memory only"]
   Browser --> Route["ProtectedRoute"]
   Browser --> Login["LoginPage"]
@@ -102,7 +102,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy lab35 → lab36<br/>+ threat model doc"] --> B["AuthState + memory tokenStore"]
+    A["Copy lab35 -> lab36<br/>+ threat model doc"] --> B["AuthState + memory tokenStore"]
     B --> C["Origin-scoped Bearer<br/>on http.request"]
     C --> D["Login UX + ProtectedRoute"]
     D --> E["401 logout vs 403 keep"]

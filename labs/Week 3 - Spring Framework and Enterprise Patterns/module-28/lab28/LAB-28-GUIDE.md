@@ -94,7 +94,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy prior CRM → lab28-crm<br/>+ security + JWT deps"] --> B["SecurityFilterChain<br/>stateless + matchers"]
+    A["Copy prior CRM -> lab28-crm<br/>+ security + JWT deps"] --> B["SecurityFilterChain<br/>stateless + matchers"]
     B --> C["UserDetails + BCrypt<br/>agent1 / admin1"]
     C --> D["JwtService<br/>issue + parse"]
     D --> E["POST /api/auth/login"]

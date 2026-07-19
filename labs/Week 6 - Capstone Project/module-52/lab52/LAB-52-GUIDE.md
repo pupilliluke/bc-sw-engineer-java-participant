@@ -85,7 +85,7 @@ Use these fixtures consistently:
 
 ```mermaid
 flowchart TB
-  Art["Labs 48–51 artifacts"] --> Idx["evidence-index.md<br/>claim → artifact map"]
+  Art["Labs 48-51 artifacts"] --> Idx["evidence-index.md<br/>claim -> artifact map"]
   Idx --> Pres["final-presentation"]
   Idx --> Demo["demo-script.md"]
   Idx --> QA["technical-q-and-a.md"]
@@ -97,10 +97,10 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Inventory evidence<br/>from Labs 48–51"] --> B["Design presentation<br/>story arc"]
+    A["Inventory evidence<br/>from Labs 48-51"] --> B["Design presentation<br/>story arc"]
     B --> C["Write demo script<br/>fixtures + timing"]
     C --> D["Prepare recovery<br/>screenshots / curl / rollback"]
-    D --> E["Rehearse Q&A<br/>claim→evidence"]
+    D --> E["Rehearse Q&A<br/>claim->evidence"]
     E --> F["Deliver defense<br/>capture feedback"]
     F --> G["Blameless retro<br/>owned actions"]
     G --> H["Self-assessment<br/>archive portfolio pack"]

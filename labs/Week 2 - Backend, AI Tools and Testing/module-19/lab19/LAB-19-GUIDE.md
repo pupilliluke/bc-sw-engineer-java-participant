@@ -94,7 +94,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy lab18 → lab19<br/>+ Web/Selenium deps"] --> B["Create/get API<br/>+ correlation header"]
+    A["Copy lab18 -> lab19<br/>+ Web/Selenium deps"] --> B["Create/get API<br/>+ correlation header"]
     B --> C["CustomerApiIT<br/>HTTP integration"]
     C --> D["customers.html<br/>data-testid form"]
     D --> E["WebDriverManager<br/>headless Chrome"]

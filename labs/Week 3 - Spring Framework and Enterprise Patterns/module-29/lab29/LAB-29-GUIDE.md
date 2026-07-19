@@ -95,7 +95,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy lab28 → lab29<br/>+ validation starter"] --> B["ErrorResponse<br/>+ FieldViolation"]
+    A["Copy lab28 -> lab29<br/>+ validation starter"] --> B["ErrorResponse<br/>+ FieldViolation"]
     B --> C["Annotate DTOs<br/>CustomerRequest / Status"]
     C --> D["@Valid on controllers"]
     D --> E["curl invalid POST<br/>observe default then custom"]

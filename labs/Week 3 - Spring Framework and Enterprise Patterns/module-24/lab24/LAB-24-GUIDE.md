@@ -101,11 +101,11 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy lab23 → lab24<br/>+ Spring-WS deps"] --> B["customer.xsd<br/>+ jaxb2 generate"]
+    A["Copy lab23 -> lab24<br/>+ Spring-WS deps"] --> B["customer.xsd<br/>+ jaxb2 generate"]
     B --> C["WebServiceConfig<br/>servlet + WSDL"]
     C --> D["CustomerSoapMapper"]
-    D --> E["CustomerEndpoint<br/>four @PayloadRoot"]
-    E --> F["BusinessException<br/>→ SOAP faults"]
+    D --> E["CustomerEndpoint<br/>four at PayloadRoot"]
+    E --> F["BusinessException<br/>-> SOAP faults"]
     F --> G["UsernameToken<br/>interceptor"]
     G --> H["curl + MockWebServiceClient<br/>evidence pack"]
 ```

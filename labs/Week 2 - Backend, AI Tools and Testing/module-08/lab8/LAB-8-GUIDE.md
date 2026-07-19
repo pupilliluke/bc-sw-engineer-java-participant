@@ -95,7 +95,7 @@ Use these examples consistently:
 
 ```mermaid
 flowchart TB
-  subgraph Now["NOW — Lab 8"]
+  subgraph Now["NOW - Lab 8"]
     Main["Main harness"] --> Ctrl["controller"]
     Ctrl --> Svc["service"]
     Svc --> Repo["repository"]
@@ -116,12 +116,12 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-  P["Presentation — controller<br/>transport / API mapping"]
-  B["Business — service<br/>rules, orchestration, validation"]
-  R["Persistence — repository<br/>save/find; hides storage"]
-  D["Domain — entity<br/>Customer fields"]
-  C["Contracts — dto<br/>Request / Response"]
-  X["Cross-cutting — config / exception"]
+  P["Presentation - controller<br/>transport / API mapping"]
+  B["Business - service<br/>rules, orchestration, validation"]
+  R["Persistence - repository<br/>save/find; hides storage"]
+  D["Domain - entity<br/>Customer fields"]
+  C["Contracts - dto<br/>Request / Response"]
+  X["Cross-cutting - config / exception"]
   P --> B --> R
   B --> D
   P --> C

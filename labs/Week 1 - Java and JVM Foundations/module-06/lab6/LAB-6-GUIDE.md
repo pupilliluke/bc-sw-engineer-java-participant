@@ -115,7 +115,7 @@ flowchart TB
     L["lambdas / Predicate / Function / Consumer / Supplier"]
     O["filter map sorted distinct limit skip"]
     R["reduce count mapToDouble"]
-    C["collect → List Set Map stats"]
+    C["collect -> List Set Map stats"]
   end
   ES --- Streams
   RS --> Dash["Dashboard + salary / dept / top-performer reports"]

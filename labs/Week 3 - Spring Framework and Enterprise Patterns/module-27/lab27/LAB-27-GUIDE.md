@@ -92,17 +92,17 @@ flowchart TB
   TS --> LR["TransactionLogRepository"]
   AR --> JPA["JPA / H2 persistence"]
   LR --> JPA
-  Fail["ACC-FORCE-FAIL → throw → rollback"] -.-> TS
+  Fail["ACC-FORCE-FAIL -> throw -> rollback"] -.-> TS
 ```
 
 ### Lab flow (mermaid)
 
 ```mermaid
 flowchart TD
-    A["Copy lab25/26 → lab27<br/>+ JPA/H2"] --> B["Seed accounts<br/>Amina/Ravi"]
+    A["Copy lab25/26 -> lab27<br/>+ JPA/H2"] --> B["Seed accounts<br/>Amina/Ravi"]
     B --> C["Repos + TransactionLog"]
     C --> D["TransferService<br/>@Transactional"]
-    D --> E["POST /api/transfers<br/>happy MAIN→LOYALTY"]
+    D --> E["POST /api/transfers<br/>happy MAIN->LOYALTY"]
     E --> F["ACC-FORCE-FAIL<br/>rollback proof"]
     F --> G["ACID table in README"]
     G --> H["TransferServiceTest<br/>+ AI review + mvn test ×2"]

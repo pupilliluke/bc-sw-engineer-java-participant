@@ -85,9 +85,9 @@ Use these fixtures consistently:
 
 ```mermaid
 flowchart TB
-  PR["Developer PR"] --> CI["CI: build → tests → SAST<br/>dep/secret/image scan"]
+  PR["Developer PR"] --> CI["CI: build -> tests -> SAST<br/>dep/secret/image scan"]
   CI --> Pub["publish artifact"]
-  Pub --> CD["CD: deploy staging → gates → prod"]
+  Pub --> CD["CD: deploy staging -> gates -> prod"]
   CD --> Sec["JWT/RBAC harden + secrets"]
   CD --> Obs["health / metrics / rollback plan"]
 ```

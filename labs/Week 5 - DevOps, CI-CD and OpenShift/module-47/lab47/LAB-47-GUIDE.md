@@ -101,7 +101,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Collect shared facts<br/>from Labs 43–46"] --> B["Audience + purpose<br/>channel + ask"]
+    A["Collect shared facts<br/>from Labs 43-46"] --> B["Audience + purpose<br/>channel + ask"]
     B --> C["Incident update<br/>SEV + next update"]
     C --> D["Technical follow-up<br/>timeline + signals"]
     D --> E["PR description<br/>why/risk/rollback"]

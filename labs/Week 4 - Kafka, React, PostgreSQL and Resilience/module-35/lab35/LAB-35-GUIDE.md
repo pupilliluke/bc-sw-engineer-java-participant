@@ -89,7 +89,7 @@ flowchart TB
   SPA["React SPA<br/>Vite :5173"] -->|fetch JSON + correlation + AbortSignal| HTTP["http.request / customersApi"]
   HTTP --> API["Spring Boot CRM API :8080<br/>CORS localhost:5173"]
   API --> Svc["Service / repository"]
-  UI["UI states: loading | empty | data | error"] -.-> SPA
+  UI["UI states: loading / empty / data / error"] -.-> SPA
   Save["saving flag disables double submit"] -.-> SPA
 ```
 
@@ -97,7 +97,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy lab34 → lab35<br/>+ curl contract"] --> B["VITE_CRM_API_URL<br/>+ .env.example"]
+    A["Copy lab34 -> lab35<br/>+ curl contract"] --> B["VITE_CRM_API_URL<br/>+ .env.example"]
     B --> C["ApiError + http.request<br/>+ customersApi"]
     C --> D["Abortable load effect<br/>+ request states UI"]
     D --> E["Create/update<br/>+ 400 field map"]

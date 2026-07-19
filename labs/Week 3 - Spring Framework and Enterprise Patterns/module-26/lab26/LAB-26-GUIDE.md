@@ -85,7 +85,7 @@ Use these examples consistently:
 ```mermaid
 flowchart TB
   CLI["Command-line args<br/>highest"] --> Env["Environment variables"]
-  Env --> Prof["application-{profile}.yml"]
+  Env --> Prof["application-(profile).yml"]
   Prof --> Base["application.yml"]
   Base --> Props["@ConfigurationProperties<br/>lowest"]
   Props --> Spring["Spring Environment"]
@@ -97,7 +97,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy lab25 → lab26<br/>inventory properties"] --> B["application.yml<br/>shared defaults"]
+    A["Copy lab25 -> lab26<br/>inventory properties"] --> B["application.yml<br/>shared defaults"]
     B --> C["application-dev.yml"]
     C --> D["application-test.yml"]
     D --> E["application-prod.yml<br/>env placeholders"]

@@ -86,14 +86,14 @@ Use these examples consistently:
 
 ```mermaid
 flowchart TB
-  ER["ER design<br/>Customer 1—0..* Account|Address|StatusHistory"] --> PG["PostgreSQL crm DB<br/>+ named volume"]
+  ER["ER design<br/>Customer 1-0..* Account / Address / StatusHistory"] --> PG["PostgreSQL crm DB<br/>+ named volume"]
   PG --> User["User CRM_APP<br/>no superuser"]
   User --> C["CUSTOMER"]
   User --> A["ACCOUNT"]
   User --> Addr["ADDRESS"]
   User --> H["CUSTOMER_STATUS_HISTORY"]
   Idx["indexes on FKs + changed_at"] -.-> User
-  Seed["Seed → verify → negative tests"] -.-> PG
+  Seed["Seed -> verify -> negative tests"] -.-> PG
 ```
 
 ### Lab flow (mermaid)

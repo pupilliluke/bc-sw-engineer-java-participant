@@ -89,7 +89,7 @@ flowchart TB
   Svc --> Repo["CustomerRepository / AccountRepository"]
   Repo --> Hib["Hibernate + postgresql"]
   Hib --> PG["PostgreSQL crm schema<br/>Flyway V1 + Lab 38 indexes"]
-  PG --> Opt["@Version / unique email → 409"]
+  PG --> Opt["@Version / unique email -> 409"]
   IT["CustomerRepositoryIT"] -.-> Repo
 ```
 

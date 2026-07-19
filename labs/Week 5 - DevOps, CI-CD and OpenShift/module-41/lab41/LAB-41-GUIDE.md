@@ -87,7 +87,7 @@ Use these examples consistently:
 
 ```mermaid
 flowchart TB
-  DF["Dockerfile multi-stage"] --> Build["build: maven Temurin 21<br/>mvn verify → JAR"]
+  DF["Dockerfile multi-stage"] --> Build["build: maven Temurin 21<br/>mvn verify -> JAR"]
   DF --> Run["run: JRE 21 USER 10001<br/>java -jar"]
   Run --> Docker["docker run --env-file<br/>memory 512m -p 8080"]
   Docker --> HC["HEALTHCHECK readiness"]
@@ -98,7 +98,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy lab40 → lab41<br/>baseline verify"] --> B[".dockerignore<br/>+ context review"]
+    A["Copy lab40 -> lab41<br/>baseline verify"] --> B[".dockerignore<br/>+ context review"]
     B --> C["Multi-stage<br/>Dockerfile"]
     C --> D["Harden runtime<br/>non-root UID"]
     D --> E["docker build<br/>inspect digest"]

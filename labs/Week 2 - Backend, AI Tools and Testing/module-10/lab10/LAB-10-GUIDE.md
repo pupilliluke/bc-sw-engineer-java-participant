@@ -94,8 +94,8 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Sign in Copilot<br/>+ copy lab9 → lab10"] --> B["Sanity inline<br/>suggestion"]
-    B --> C["Weak vs strong<br/>prompts → lab10-001/002"]
+    A["Sign in Copilot<br/>+ copy lab9 -> lab10"] --> B["Sanity inline<br/>suggestion"]
+    B --> C["Weak vs strong<br/>prompts -> lab10-001/002"]
     C --> D["Scaffold enum<br/>+ Customer entity"]
     D --> E["Copilot Chat<br/>CustomerService"]
     E --> F["Main harness<br/>CUS-1001 / CUS-1002"]

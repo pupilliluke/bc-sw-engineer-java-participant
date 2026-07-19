@@ -84,7 +84,7 @@ Use these examples consistently:
 
 ```mermaid
 flowchart TB
-  subgraph Now["NOW — refactor target"]
+  subgraph Now["NOW - refactor target"]
     Main["Main / tests"] --> Svc["CustomerService"]
     Svc --> Store["in-memory Map/List"]
     Svc --> Cust["Customer / CustomerStatus"]

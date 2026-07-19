@@ -92,7 +92,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy lab10 → lab11<br/>+ test-scope deps"] --> B["CustomerTest<br/>via Copilot"]
+    A["Copy lab10 -> lab11<br/>+ test-scope deps"] --> B["CustomerTest<br/>via Copilot"]
     B --> C["CustomerServiceTest<br/>via Copilot"]
     C --> D["Reject false-confidence<br/>lab11-001"]
     D --> E["Extract CustomerNotifier<br/>+ Mockito verify"]

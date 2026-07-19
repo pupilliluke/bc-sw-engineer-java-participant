@@ -93,12 +93,12 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy lab14 → lab15"] --> B["CustomerRepository<br/>+ in-memory impl"]
+    A["Copy lab14 -> lab15"] --> B["CustomerRepository<br/>+ in-memory impl"]
     B --> C["CustomerService<br/>interface"]
     C --> D["CustomerValidator<br/>transitions"]
     D --> E["DefaultCustomerService<br/>constructor DI"]
-    E --> F["Activate CUS-1002<br/>PROSPECT → ACTIVE"]
-    F --> G["Reject ACTIVE → PROSPECT<br/>+ tests"]
+    E --> F["Activate CUS-1002<br/>PROSPECT -> ACTIVE"]
+    F --> G["Reject ACTIVE -> PROSPECT<br/>+ tests"]
     G --> H["No persistence leak<br/>+ README table"]
 ```
 

@@ -48,7 +48,7 @@ flowchart LR
         P["printPerson frame<br/>person reference<br/>nameLength = 4"]
     end
     subgraph Heap["Shared heap"]
-        O["Person object<br/>name → String 'Aman'"]
+        O["Person object<br/>name -> String 'Aman'"]
     end
     M --> O
     P --> O

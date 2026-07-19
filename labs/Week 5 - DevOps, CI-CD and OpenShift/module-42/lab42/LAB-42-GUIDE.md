@@ -87,7 +87,7 @@ Use these examples consistently:
 
 ```mermaid
 flowchart TB
-  Ing["Route / Ingress<br/>TLS edge"] --> Svc["Service ClusterIP<br/>80 → http"]
+  Ing["Route / Ingress<br/>TLS edge"] --> Svc["Service ClusterIP<br/>80 -> http"]
   Svc --> Pod["Deployment Pod<br/>CRM container"]
   Pod --> Ready["readiness / liveness probes"]
   Pod --> Sec["non-root + resource limits"]

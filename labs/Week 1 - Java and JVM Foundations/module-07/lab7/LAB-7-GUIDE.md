@@ -90,8 +90,8 @@ flowchart TB
   subgraph Ops["ATMService responsibilities"]
     O1["login / deposit / withdraw / transfer"]
     O2["try / multi-catch / finally"]
-    O3["try-with-resources → transactions.txt"]
-    O4["LoggerUtil → logs"]
+    O3["try-with-resources -> transactions.txt"]
+    O4["LoggerUtil -> logs"]
   end
   ATM --- Ops
   ATM --> Acc["Account.deposit / withdraw"]
@@ -121,7 +121,7 @@ flowchart TD
     B --> C["ATMService<br/>login + throw/throws"]
     C --> D["try / multi-catch<br/>finally on operations"]
     D --> E["try-with-resources<br/>+ LoggerUtil"]
-    E --> F["Main menu<br/>1–7 core path"]
+    E --> F["Main menu<br/>1-7 core path"]
     F --> G["javac -d out<br/>java -cp out"]
     G --> H["Failure scenarios<br/>+ application.log + submit"]
 ```

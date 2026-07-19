@@ -87,19 +87,19 @@ Use these examples consistently:
 ```mermaid
 flowchart TB
   App["App state<br/>customers, query, mode, draft, errors"] --> Vis["derive visible<br/>filter during render"]
-  App --> Title["useEffect → document.title"]
+  App --> Title["useEffect -> document.title"]
   App --> TB["CustomerToolbar"]
   App --> List["CustomerList"]
   App --> Form["CustomerForm"]
   Test["Vitest create / edit / cancel / search"] -.-> App
-  Note["No fetch yet — Lab 35"] -.-> App
+  Note["No fetch yet - Lab 35"] -.-> App
 ```
 
 ### Lab flow (mermaid)
 
 ```mermaid
 flowchart TD
-    A["Copy lab33 → lab34"] --> B["Lift customers<br/>query / mode / draft"]
+    A["Copy lab33 -> lab34"] --> B["Lift customers<br/>query / mode / draft"]
     B --> C["Controlled search<br/>+ derived visible"]
     C --> D["Mode union<br/>closed/create/edit"]
     D --> E["Controlled form<br/>+ validation"]

@@ -95,7 +95,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy lab19 → lab20<br/>confirm Logback"] --> B["logback-spring.xml<br/>structured pattern"]
+    A["Copy lab19 -> lab20<br/>confirm Logback"] --> B["logback-spring.xml<br/>structured pattern"]
     B --> C["CorrelationFilter<br/>MDC + finally clear"]
     C --> D["Instrument service<br/>create/get IDs only"]
     D --> E["Controller WARN<br/>reason codes"]

@@ -122,7 +122,7 @@ flowchart LR
     S2["add frame: a, b, result"]
   end
   subgraph Heap["Heap (shared)"]
-    H1["Employee {id, name → String}"]
+    H1["Employee (id, name -> String)"]
     H2["ArrayList + many Employees"]
   end
   S1 -.->|emp reference| H1
@@ -632,7 +632,7 @@ sequenceDiagram
   participant Main as main frame
   participant Add as add frame
   Main->>Add: push frame (x=10, y=20)
-  Add->>Add: iadd → result=30
+  Add->>Add: iadd -> result=30
   Add-->>Main: return 30 (pop add frame)
   Main->>Main: println Sum = 30
 ```
@@ -703,7 +703,7 @@ flowchart LR
     S2["add frame: a, b, result"]
   end
   subgraph Heap["Heap (shared)"]
-    H1["Employee {id, name → String}"]
+    H1["Employee (id, name -> String)"]
     H2["ArrayList + many Employees"]
   end
   S1 -.->|emp reference| H1

@@ -44,7 +44,7 @@ public class ObjectLifecycleDemo {
 
 ```mermaid
 flowchart LR
-    A["first ─┐<br/>alias ─┴→ Person"] --> B["first = null<br/>alias → Person"]
+    A["first and alias both point to Person"] --> B["first = null<br/>alias still points to Person"]
     B --> C["alias = null<br/>Person unreachable"]
     C --> D["GC-eligible<br/>collection time unknown"]
 ```

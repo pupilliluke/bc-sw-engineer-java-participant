@@ -85,7 +85,7 @@ Use these examples consistently:
 flowchart TB
   Tests["CustomerServiceTests<br/>JUnit 5"] --> Svc["DefaultCustomerService<br/>+ CustomerValidator"]
   Svc --> Repo["InMemoryCustomerRepository<br/>real collaborator"]
-  Copilot["Copilot drafts → human review"] -.-> Tests
+  Copilot["Copilot drafts -> human review"] -.-> Tests
   Jacoco["JaCoCo ≥80% service package"] -.-> Tests
 ```
 
@@ -93,7 +93,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy lab16 → lab17<br/>+ Surefire/JaCoCo"] --> B["Happy-path<br/>CustomerServiceTests"]
+    A["Copy lab16 -> lab17<br/>+ Surefire/JaCoCo"] --> B["Happy-path<br/>CustomerServiceTests"]
     B --> C["Negatives<br/>dup / illegal / 404"]
     C --> D["Parameterized<br/>transitions"]
     D --> E["Optional Copilot<br/>+ review log"]

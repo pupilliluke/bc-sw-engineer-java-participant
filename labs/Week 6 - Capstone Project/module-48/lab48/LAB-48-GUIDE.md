@@ -85,7 +85,7 @@ Use these fixtures consistently:
 
 ```mermaid
 flowchart TB
-  Brief["Product brief + Weeks 1–5 CRM"] --> C4C["C4 Context"]
+  Brief["Product brief + Weeks 1-5 CRM"] --> C4C["C4 Context"]
   C4C --> C4Cont["C4 Containers"]
   C4Cont --> Domain["Domain + contracts"]
   Domain --> NFR["measurable NFRs"]
@@ -252,18 +252,13 @@ Include fixture table rows for `CUS-1001`, `CUS-1002`, and correlation `lab-requ
 * Keep implementation detail out (no class names, no Kafka topic internals yet)
 
 ```mermaid
-C4Context
-    title Northstar CRM — System Context (sketch)
-    Person(agent, "Service Agent")
-    Person(mgr, "Manager")
-    System(crm, "Customer Management Platform")
-    System_Ext(idp, "Identity Provider")
-    Rel(agent, crm, "HTTPS")
-    Rel(mgr, crm, "HTTPS")
-    Rel(crm, idp, "OIDC / JWT validation")
+flowchart TB
+  Agent["Service Agent"] -->|HTTPS| CRM["Customer Management Platform"]
+  Mgr["Manager"] -->|HTTPS| CRM
+  CRM -->|"OIDC / JWT validation"| IdP["Identity Provider"]
 ```
 
-If Mermaid C4 plugins are unavailable, use an equivalent flowchart and note the tooling constraint.
+GitHub Markdown renders this as a flowchart (C4 Mermaid syntax is experimental and not reliable on GitHub).
 
 **Expected result:** Context diagram committed; protocols and trust boundaries labeled; no container internals polluting the view.
 

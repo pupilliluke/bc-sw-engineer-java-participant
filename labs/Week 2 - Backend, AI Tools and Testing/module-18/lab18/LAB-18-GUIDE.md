@@ -97,7 +97,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy lab17 → lab18<br/>+ Mockito deps"] --> B["MockitoTest skeleton<br/>shared mock repo"]
+    A["Copy lab17 -> lab18<br/>+ Mockito deps"] --> B["MockitoTest skeleton<br/>shared mock repo"]
     B --> C["Stub activate Ravi<br/>verify find+save"]
     C --> D["Not-found CUS-9999<br/>never save"]
     D --> E["ArgumentCaptor<br/>add Amina"]

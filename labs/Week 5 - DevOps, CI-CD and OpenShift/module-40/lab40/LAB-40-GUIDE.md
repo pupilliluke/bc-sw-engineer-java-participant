@@ -88,7 +88,7 @@ flowchart TB
   Threat["Threat checklist + OWASP"] --> Scan["mvn -Psecurity-scan<br/>dependency-check"]
   Scan --> Report["dependency-check-report.html"]
   Scan --> SAST["Manual SAST<br/>SQL/file/log/authz sinks"]
-  SAST --> Fix["finding → failing test → fix → re-scan"]
+  SAST --> Fix["finding -> failing test -> fix -> re-scan"]
   Fix --> Docs["security-assessment.md<br/>+ findings.csv"]
 ```
 
@@ -96,7 +96,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Branch lab39 → lab40<br/>baseline verify"] --> B["Scope + OWASP<br/>threat checklist"]
+    A["Branch lab39 -> lab40<br/>baseline verify"] --> B["Scope + OWASP<br/>threat checklist"]
     B --> C["Dependency-Check<br/>Maven profile"]
     C --> D["Triage CVE<br/>CSV classifications"]
     D --> E["Focused SAST<br/>data-flow review"]

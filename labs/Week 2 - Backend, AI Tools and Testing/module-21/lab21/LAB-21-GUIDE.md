@@ -95,7 +95,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    A["Copy lab20 → lab21<br/>+ Actuator dep"] --> B["Expose health/metrics<br/>local YAML"]
+    A["Copy lab20 -> lab21<br/>+ Actuator dep"] --> B["Expose health/metrics<br/>local YAML"]
     B --> C["curl liveness<br/>vs readiness"]
     C --> D["CrmReadinessIndicator<br/>lab toggle"]
     D --> E["CustomerMetrics<br/>counters/timers"]
