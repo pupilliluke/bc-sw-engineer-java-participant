@@ -28,3 +28,11 @@ Exercise guides: [`module-02/exercises/`](../Week%201%20-%20Java%20and%20JVM%20F
 | [`mod02-ex07-circle-area.png`](mod02-ex07-circle-area.png) | Exercise 7 — Area of Circle |
 | [`mod02-ex08-bill-summary.png`](mod02-ex08-bill-summary.png) | Exercise 8 — Bill Summary |
 | [`mod02-ex09-profile-bonus.png`](mod02-ex09-profile-bonus.png) | Exercise 9 — Personal Profile |
+
+## Module 3 — OOP Fundamentals
+
+Exercise guides: [`module-03/exercises/`](../Week%201%20-%20Java%20and%20JVM%20Foundations/module-03/exercises/)
+
+| File | Exercise |
+| ---- | -------- |
+| [`mod03-ex08-uml-mini.png`](mod03-ex08-uml-mini.png) | Exercise 8 — Mini UML |

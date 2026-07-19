@@ -3,6 +3,8 @@
 **Module 3** · Pre-lab practice · then open [`../lab3/LAB-3-GUIDE.md`](../lab3/LAB-3-GUIDE.md)  
 **Folder:** `examples/module-03-exercises/` ([setup](EXERCISES-INDEX.md))
 
+![Mini UML Class Diagram for Banking Types](../../../lab_diagrams/mod03-ex08-uml-mini.png)
+
 > **No new Java code:** Convert the design from Exercises 1–5 into a visual model before Lab 3 grows to eight types.
 
 ## Goal
