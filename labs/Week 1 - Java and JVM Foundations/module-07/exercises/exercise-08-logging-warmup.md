@@ -3,6 +3,8 @@
 **Module 7** · Pre-lab practice · finish all 8 Pass, then OS how-to → [`../lab7/LAB-7-GUIDE.md`](../lab7/LAB-7-GUIDE.md)
 **Folder:** `examples/module-07-exercises/` ([setup](EXERCISES-INDEX.md))
 
+![Log Details, Show Users a Safe Message](../../../lab_diagrams/mod07-ex08-logging-warmup.png)
+
 > This exercise uses JDK `java.util.logging` so no dependency is required.
 > Later modules introduce SLF4J and structured production logging.
 

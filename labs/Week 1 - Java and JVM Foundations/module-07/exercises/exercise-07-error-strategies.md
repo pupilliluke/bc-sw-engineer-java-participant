@@ -3,6 +3,8 @@
 **Module 7** · Pre-lab practice · finish all 8 Pass, then OS how-to → [`../lab7/LAB-7-GUIDE.md`](../lab7/LAB-7-GUIDE.md)
 **Folder:** `examples/module-07-exercises/` ([setup](EXERCISES-INDEX.md))
 
+![Exception Strategy: Retry, Then Fallback](../../../lab_diagrams/mod07-ex07-error-strategies.png)
+
 > **Independent of Exercise 6:** a different flaky failure this time — the focus
 > is choosing a strategy after you catch, not only where you catch.
 

@@ -3,6 +3,8 @@
 **Module 7** · Pre-lab practice · finish all 8 Pass, then OS how-to → [`../lab7/LAB-7-GUIDE.md`](../lab7/LAB-7-GUIDE.md)
 **Folder:** `examples/module-07-exercises/` ([setup](EXERCISES-INDEX.md))
 
+![Try-with-Resources Closes Files Automatically](../../../lab_diagrams/mod07-ex03-try-with-resources.png)
+
 ## Goal
 
 Create and read a small `transactions.txt` file using `BufferedReader` in

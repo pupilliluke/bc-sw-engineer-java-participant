@@ -3,6 +3,8 @@
 **Module 6** · Pre-lab practice · finish Exercises 1–7 Pass, then OS how-to → [`../lab6/LAB-6-GUIDE.md`](../lab6/LAB-6-GUIDE.md)
 **Folder:** `examples/module-06-exercises/` ([setup](EXERCISES-INDEX.md))
 
+![Java Streams: Grouping and Counting by Department](../../../lab_diagrams/mod06-ex06-group-count.png)
+
 ## Goal
 
 Create `DepartmentCountDemo.java`. Group employees by department, count each

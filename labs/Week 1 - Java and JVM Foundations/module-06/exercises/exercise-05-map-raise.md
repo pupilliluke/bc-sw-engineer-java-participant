@@ -3,6 +3,8 @@
 **Module 6** · Pre-lab practice · finish Exercises 1–7 Pass, then OS how-to → [`../lab6/LAB-6-GUIDE.md`](../lab6/LAB-6-GUIDE.md)
 **Folder:** `examples/module-06-exercises/` ([setup](EXERCISES-INDEX.md))
 
+![Java Streams: Calculating Proposed Salary Raises](../../../lab_diagrams/mod06-ex05-map-raise.png)
+
 ## Goal
 
 Create `RaiseDemo.java`. Transform every salary into a proposed value that is

@@ -3,6 +3,8 @@
 **Module 6** · Pre-lab practice · finish Exercises 1–7 Pass, then OS how-to → [`../lab6/LAB-6-GUIDE.md`](../lab6/LAB-6-GUIDE.md)
 **Folder:** `examples/module-06-exercises/` ([setup](EXERCISES-INDEX.md))
 
+![Java Streams: Finding Minimum and Maximum Salary](../../../lab_diagrams/mod06-ex04-minmax.png)
+
 ## Goal
 
 Create `SalaryExtremesDemo.java`. Use one salary comparator with `max` and

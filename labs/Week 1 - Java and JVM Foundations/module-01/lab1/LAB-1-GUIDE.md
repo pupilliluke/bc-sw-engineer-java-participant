@@ -24,10 +24,45 @@
 
 1. Confirm Lab 0 + Module 1 Exercises 1–8 are done (checklists below).
 2. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this course `labs/` clone unless a step says otherwise).
 4. For each **Step N**: read **Why** / **Builds on** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
 5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
 6. Capture evidence under `notes/screenshots/lab-1/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
+### Smooth path — how Lab 1 is performed in class
+
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21):**
+
+| Window / folder | Role |
+| --------------- | ---- |
+| IntelliJ → `%USERPROFILE%\java-bootcamp` | Your code: `examples\module-01-exercises\` then `examples\jvm-compilation-lab\` |
+| Browser or second folder → this participant repo | Read [`../README.md`](../README.md) → exercises → OS how-to → this GUIDE |
+
+**Do not** create graded sources under the course clone’s `labs/` tree. Guides are read-only; code is always under `java-bootcamp/examples/`.
+
+**Before Step 0 — exercise smoke check** (IntelliJ Terminal, from the exercises folder):
+
+```powershell
+cd $env:USERPROFILE\java-bootcamp\examples\module-01-exercises
+java Hello          # Hello, JVM!
+java Variables      # numbers / String output
+java Methods        # 30 then Hello, Aman!
+java Person         # Aman is … years old
+java ControlFlow    # even / loops / switch theme
+java -verbose:class Hello 2>&1 | Select-String Hello
+javap -c Person | Select-Object -First 12
+```
+
+If any of those fail, finish that exercise first — do not start Lab Steps 2+.
+
+**During the graded lab — one Terminal habit:**
+
+```powershell
+cd $env:USERPROFILE\java-bootcamp\examples\jvm-compilation-lab
+# then javac / java / javap for HelloWorld, Calculator, Employee, MemoryDemo
+```
+
+**IntelliJ file creation (flat lab folder):** right-click `jvm-compilation-lab` → **New → File** → type `HelloWorld.java` (include `.java`). Ignore the yellow *outside of the module source root* banner. Do **not** mark `jvm-compilation-lab` as Sources Root.
 
 ## Lab 0 baseline you must already have
 
@@ -229,7 +264,17 @@ git version 2....
 ... Hello.java  (and other exercise sources from 1–8)
 ```
 
+**Verified Windows reference (participant laptop):** Temurin OpenJDK **21.0.11**, `javac` / `javap` **21.0.11**, Git **2.50.x**, workspace `C:\Users\<you>\java-bootcamp`.
+
 Fix environment failures before writing Lab 1 application code. If `module-01-exercises` is missing or empty, return to [`../exercises/EXERCISES-INDEX.md`](../exercises/EXERCISES-INDEX.md).
+
+**Quick exercise inventory (PowerShell):**
+
+```powershell
+Get-ChildItem $env:USERPROFILE\java-bootcamp\examples\module-01-exercises\*.java
+# Expect at least: Hello.java, Variables.java, Methods.java, Person.java, ControlFlow.java
+# (plus any files Exercises 2 / 4 / 8 asked you to keep — notes may live under notes\)
+```
 
 ---
 
@@ -416,8 +461,8 @@ ls
 
 | IDE | How |
 | --- | --- |
-| **VS Code** | **File → Open Folder…** → select `jvm-compilation-lab` (or keep `java-bootcamp` open and navigate in Explorer). Open **Terminal → New Terminal** and `cd` into the lab folder. |
-| **IntelliJ** | **File → Open…** → select `jvm-compilation-lab`. Trust the project. Set **Project SDK = 21**. Open **View → Tool Windows → Terminal**. |
+| **IntelliJ (primary)** | Keep **`java-bootcamp`** open as the project root (Lab 0). Do **not** re-open only `jvm-compilation-lab` as a separate project — navigate to `examples\jvm-compilation-lab` in the Project pane. Set **Project SDK = 21**. Open **View → Tool Windows → Terminal** and `cd` into the lab folder. |
+| **VS Code (optional)** | **File → Open Folder…** → select `java-bootcamp` (or `jvm-compilation-lab`). Open **Terminal → New Terminal** and `cd` into the lab folder. |
 
 **Expected result:**
 
@@ -431,6 +476,8 @@ ls
 
 * `No such file or directory` / path not found for `java-bootcamp` → finish [Lab 0](../../module-00/lab0/LAB-0-GUIDE.md) workspace creation.
 * IntelliJ has no SDK → add Temurin 21 under **Project Structure → Project**.
+* Terminal shows a path other than `jvm-compilation-lab` → `cd` again before `javac` (wrong cwd is the most common Lab 1 failure).
+* Yellow *outside of the module source root* on new files → **expected** for flat folders; ignore; do not mark Sources Root.
 
 ---
 
@@ -1252,13 +1299,17 @@ You may see `java.lang.OutOfMemoryError: Java heap space`. Restore normal `Memor
 | ------- | ------------ | --- |
 | `javac` / `java` / `javap: command not found` | JDK missing or not on PATH (or JRE-only missing `javap`) | Revisit Lab 0; confirm full JDK 21 and `JAVA_HOME`; new IDE terminal |
 | `class ... should be declared in a file named` | Public class / filename mismatch | Rename file or class so they match exactly |
-| `Could not find or load main class` | Wrong dir, wrong name, missing `.class`, or used `.java` suffix | `cd` to lab folder; list files; `javac`; `java ClassName` |
+| `Could not find or load main class` | Wrong dir, wrong name, missing `.class`, or used `.java` suffix | `cd` to lab folder; `Get-ChildItem` / `ls`; `javac`; `java ClassName` (no `.java`) |
+| Prompt shows `java-bootcamp>` but `javac HelloWorld` fails | Still at workspace root, not in `jvm-compilation-lab` | `cd examples\jvm-compilation-lab` (Windows) or `cd examples/jvm-compilation-lab` (macOS) |
 | Changes not reflected when running | Forgot recompile | `javac` again; see Failure Experiment 3 |
 | `cannot find symbol: class Employee` | `MemoryDemo` compiled alone | `javac Employee.java MemoryDemo.java` |
 | `OutOfMemoryError` | Heap too small for allocation | Raise `-Xmx` or reduce loop |
 | `PrintFlagsFinal` floods terminal | Normal volume | Filter with `Select-String` / `grep` or file |
 | IntelliJ “SDK not defined” | Project SDK unset | **Project Structure → Project → SDK 21** |
-| PowerShell `javac *.java` oddities | Globbing differences | Name files explicitly |
+| Yellow *outside of the module source root* | Flat exercises/lab folder (expected) | Ignore banner; do **not** Mark as Sources Root; use Terminal `javac` |
+| *Missing package statement… invalid package name* | `examples` marked Sources Root | Right-click `examples` → **Unmark as Sources Root** |
+| PowerShell `javac *.java` oddities | Globbing differences | Name files explicitly: `javac HelloWorld.java Calculator.java …` |
+| No lab guide visible inside IntelliJ | Guides live in the **participant course clone**, not under `examples/` | Open [`../README.md`](../README.md) from the course clone (browser or second window) |
 
 ---
 
@@ -1426,6 +1477,14 @@ This lab bridges **Module 1 exercises** (after Lab 0) to graded JVM evidence and
 3. Students open the OS how-to, then this guide — `HelloWorld`, `Calculator`, `Employee`, `MemoryDemo` under `jvm-compilation-lab/`
 
 **Before students open this guide:** confirm exercise checkpoint Pass (Hello compile/run, class-loading ID, stack vs heap sketch, three `javap` opcodes). Lab 1 pacing assumes those skills already exist.
+
+**Smooth-path coaching (from verified participant run):**
+
+* Keep **two windows**: IntelliJ on `java-bootcamp` (code) + browser/clone for guides. Students often search for GUIDE steps inside `examples/` and get lost.
+* Enforce Terminal `cd` into the active folder before every command — wrong cwd is the top failure.
+* Flat folders: **New → File** only; never mark `module-01-exercises` or `jvm-compilation-lab` as Sources Root.
+* Participant clone has **no** `solution/` — point stuck students to checkpoints, not solution paste.
+* Signature demos to score: `Hello, JVM!` · `Sum = 30` · `101 - Aman` · `Created 100000 employees` · `javap -c` shows `iadd` / `invokestatic` · `-verbose:class` shows `Employee`.
 
 **Core story to repeat (whiteboard):**
 

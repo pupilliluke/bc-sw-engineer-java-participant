@@ -12,6 +12,25 @@
 
 - Pre-lab exercises (required before this lab): [`../exercises/EXERCISES-INDEX.md`](../exercises/EXERCISES-INDEX.md) — workspace: `~/java-bootcamp/examples/module-01-exercises`
 
+## How Lab 1 is performed on macOS (smooth path)
+
+**Verified pattern:** IntelliJ Terminal (zsh) + JDK 21 on a Lab 0 `java-bootcamp` workspace (same flow as Windows; paths differ).
+
+| What | Where |
+| ---- | ----- |
+| Guides (this file, exercises, GUIDE) | Participant course clone — open in browser **or** second window |
+| Your code | `~/java-bootcamp` open in **IntelliJ** |
+| Exercises | `examples/module-01-exercises/` |
+| Graded lab | `examples/jvm-compilation-lab/` (flat `.java` files) |
+| Screenshots | `notes/screenshots/lab-1/` |
+
+**Day-of rhythm:**
+
+1. IntelliJ Project pane: expand `examples` → confirm `module-01-exercises` has your exercise `.java` files.
+2. Terminal may start at `~/java-bootcamp` — **`cd` before every compile**.
+3. Finish Exercises 1–8 Pass → then create/use `jvm-compilation-lab` for GUIDE Steps.
+4. Capture Terminal output screenshots for LMS; write Pass/Fail in notes.
+
 ## Prerequisites (macOS)
 
 - [Lab 0 (macOS)](../../module-00/lab0/LAB-0-MACOS.md) complete (JDK 21, Maven when needed, Git)
@@ -19,15 +38,30 @@
 - IntelliJ IDEA Community with **Project SDK 21**
 - Optional: VS Code + Extension Pack for Java
 
+### Exercise smoke check (run before GUIDE Step 0)
+
+```bash
+cd ~/java-bootcamp/examples/module-01-exercises
+java Hello
+java Variables
+java Methods
+java Person
+java ControlFlow
+java -verbose:class Hello 2>&1 | grep Hello
+javap -c Person | head -12
+```
+
+**Expected themes:** `Hello, JVM!` · numeric / String prints · `30` / `Hello, Aman!` · `Aman is …` · control-flow lines · a `Hello` class-load line · `javap` constructor bytecode. If one fails, fix that exercise first.
+
 ## Open this lab in IntelliJ (primary)
 
 1. Start **IntelliJ IDEA Community**.
 2. **File → Open…** → `~/java-bootcamp` (Lab 0 workspace root — same folder every lab).  
-   If `examples/jvm-compilation-lab` does not exist yet, create it as the lab GUIDE describes; keep the workspace open at `~/java-bootcamp`.
+   Keep this root open for the whole bootcamp; do **not** open only `jvm-compilation-lab` as a separate project.
 3. Trust the project if prompted.
 4. **File → Project Structure → Project** → SDK = **21**, language level **21**.
-5. **Do not** mark `jvm-compilation-lab` as Sources Root for this lab — sources are **flat** `.java` files next to each other (same pattern as the exercises folder). Keep only Lab 0 `HelloJava/src` (and later labs that use `src/`) as Sources Root.
-6. **View → Tool Windows → Terminal** → `cd ~/java-bootcamp` then `cd examples/jvm-compilation-lab` when ready.
+5. **Do not** mark `jvm-compilation-lab` or `module-01-exercises` as Sources Root — sources are **flat** `.java` files. Keep only Lab 0 `HelloJava/src` (and later labs that use `src/`) as Sources Root.
+6. **View → Tool Windows → Terminal** → confirm prompt, then `cd` as below when ready.
 
 ## Optional: VS Code
 
@@ -49,38 +83,50 @@
 ```bash
 cd ~/java-bootcamp
 # Confirm exercises exist before the graded lab folder
-ls examples/module-01-exercises
+ls examples/module-01-exercises/*.java
 # Lab 0 layout: evidence at workspace root; code under examples/
 mkdir -p notes/screenshots/lab-1
 mkdir -p examples/jvm-compilation-lab
 cd examples/jvm-compilation-lab
+pwd   # must end with .../jvm-compilation-lab
 ```
 
 ### Commands this lab typically uses
 
-Flat files in `jvm-compilation-lab` (no `src/` / `out/` tree):
+Flat files in `jvm-compilation-lab` (no `src/` / `out/` tree). **Always** `cd` into that folder first.
 
-```text
+```bash
 javac HelloWorld.java
 java HelloWorld
+# Expected: Hello, JVM!
 javap -c HelloWorld
 
 javac Calculator.java
 java Calculator
-javap -c Calculator
+# Expected: Sum = 30
+javap -c Calculator   # look for iadd, invokestatic, iload, istore
+
+javac Employee.java
+java Employee
+# Expected: 101 - Aman
+java -verbose:class Employee 2>&1 | grep Employee
 
 javac Employee.java MemoryDemo.java
-java Employee
-java -verbose:class Employee
 java MemoryDemo
+# Expected: Created 100000 employees
+
+# Clean rebuild (GUIDE Step 11)
+rm -f *.class
+javac HelloWorld.java Calculator.java Employee.java MemoryDemo.java
+java HelloWorld; java Calculator; java Employee; java MemoryDemo
 ```
 
 ## Run configurations (IntelliJ)
 
 1. Open the class with `public static void main`.
-2. Green ▶ → **Run**.
-3. **Run → Edit Configurations…** → set **Working directory** to `examples/jvm-compilation-lab` when the lab reads relative files.
-4. Use the IntelliJ terminal for `javac` / `java` / `javap` proof when the GUIDE asks for CLI output.
+2. Green ▶ → **Run** (optional convenience).
+3. **Run → Edit Configurations…** → set **Working directory** to `examples/jvm-compilation-lab` when needed.
+4. **Graders want Terminal proof:** still run `javac` / `java` / `javap` in the IntelliJ Terminal for screenshots.
 
 ## Do the lab
 
@@ -103,6 +149,17 @@ git push -u origin main
 ## Evidence / screenshots
 
 Save screenshots under `~/java-bootcamp/notes/screenshots/lab-1` (Lab 0 workspace layout). Capture IntelliJ (project tree + Run/Terminal) on macOS. Redact passwords, tokens, and kubeconfig contents.
+
+**Minimum Terminal captures:** `java HelloWorld`, `java Calculator`, `javap -c Calculator`, `java Employee`, one `-verbose:class` snippet, `java MemoryDemo`.
+
+## If it fails (macOS)
+
+| Symptom | Fix |
+| ------- | --- |
+| `Could not find or load main class HelloWorld` | `pwd` must end with `jvm-compilation-lab`; run `javac` first; use `java HelloWorld` not `java HelloWorld.java` |
+| Banner *outside of the module source root* | Expected — ignore; use **New → File** + Terminal |
+| `examples` Sources Root / invalid package name | Unmark `examples` as Sources Root |
+| Guide not in Project pane | Guides are in the **course clone** — open README/GUIDE there or in browser |
 
 ## Pass criteria
 

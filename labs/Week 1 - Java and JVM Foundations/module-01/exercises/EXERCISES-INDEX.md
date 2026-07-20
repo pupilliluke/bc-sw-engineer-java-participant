@@ -89,4 +89,6 @@ Numbered to match the order these topics appear in the Module 1 slides — work 
 
 Work in order.
 
-When all eight Pass criteria are **Pass**, open your OS how-to and then [`../lab1/LAB-1-GUIDE.md`](../lab1/LAB-1-GUIDE.md). Do not start Lab 1 mid-exercise list.
+When all eight Pass criteria are **Pass**, run the smoke checks in [`../lab1/LAB-1-WINDOWS.md`](../lab1/LAB-1-WINDOWS.md) or [`../lab1/LAB-1-MACOS.md`](../lab1/LAB-1-MACOS.md), then open [`../lab1/LAB-1-GUIDE.md`](../lab1/LAB-1-GUIDE.md). Do not start Lab 1 mid-exercise list.
+
+**Remember:** exercise code stays in `examples/module-01-exercises/`; the graded lab uses a **separate** folder `examples/jvm-compilation-lab/`. Keep IntelliJ on `java-bootcamp` and read these guide files from the participant course clone.

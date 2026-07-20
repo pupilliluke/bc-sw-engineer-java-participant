@@ -21,6 +21,34 @@ Full course rule: [Which file do I open?](../../_PARTICIPANT-FILE-GUIDE.md)
 
 ---
 
+## How Lab 1 is performed (smooth path)
+
+You use **two places** — do not mix them:
+
+| Place | What lives there | What you do |
+| ----- | ---------------- | ----------- |
+| **This course clone** (`bc-sw-engineer-java-participant`) | Guides: this README, exercises, `LAB-1-*.md` | **Read** steps; never write graded code here |
+| **Your workspace** `%USERPROFILE%\java-bootcamp` (Windows) / `~/java-bootcamp` (macOS) | Your code under `examples/` | **Write / compile / run** in IntelliJ Terminal |
+
+**Day-of workflow (verified on Windows + IntelliJ PowerShell):**
+
+1. Keep **IntelliJ** open on `java-bootcamp` (Project pane shows `examples`, `notes`, maybe `HelloJava`).
+2. Keep **guides** open beside it: browser tab on GitHub **or** a second window on this participant clone (or optional copy under `java-bootcamp/labs/` if your instructor set that up).
+3. Exercises → code in `examples/module-01-exercises/` until all eight Pass.
+4. Then OS how-to → GUIDE → code in `examples/jvm-compilation-lab/` (flat `.java` files — **not** inside `labs/`).
+
+**IntelliJ Terminal rule:** Before every `javac` / `java` / `javap`, `cd` into the folder that holds the `.java` file. Wrong directory is the #1 failure.
+
+```powershell
+# Exercises
+cd $env:USERPROFILE\java-bootcamp\examples\module-01-exercises
+
+# Graded Lab 1
+cd $env:USERPROFILE\java-bootcamp\examples\jvm-compilation-lab
+```
+
+---
+
 ## Files in this module — ignore unless told
 
 | File / folder | For you? |
@@ -29,16 +57,19 @@ Full course rule: [Which file do I open?](../../_PARTICIPANT-FILE-GUIDE.md)
 | `exercises/EXERCISES-INDEX.md` + `exercise-0N-*.md` | **Yes** — practice before the lab |
 | `lab1/LAB-1-WINDOWS.md` or `LAB-1-MACOS.md` | **Yes** — pick your OS |
 | `lab1/LAB-1-GUIDE.md` | **Yes** — main steps |
-| `lab1/INSTRUCTOR-DEMO.md` | **No** — instructor live demo |
-| `lab1/solution/` | **No** until you have tried (may be absent in participant clone) |
+| `lab1/INSTRUCTOR-DEMO.md` | **No** — instructor live demo (may be absent in participant clone) |
+| `lab1/solution/` | **No** — absent in participant clone; try first |
 
 ---
 
 ## Workspace reminder
 
-Code goes in **your** laptop folder, not inside this `labs/` clone:
+Code goes in **your** laptop folder:
 
-- Exercises → `java-bootcamp/examples/module-01-exercises/`
-- Lab 1 → `java-bootcamp/examples/jvm-compilation-lab/`
+| Work | Folder |
+| ---- | ------ |
+| Exercises | `java-bootcamp/examples/module-01-exercises/` |
+| Graded Lab 1 | `java-bootcamp/examples/jvm-compilation-lab/` |
+| Screenshots | `java-bootcamp/notes/screenshots/lab-1/` |
 
-**IntelliJ tip for exercises:** create sources with **New → File** → `ClassName.java`. Do **not** use **New → Java Class** or mark `module-01-exercises` as Sources Root (those options often fail with this folder name). Details: [`exercises/EXERCISES-INDEX.md`](exercises/EXERCISES-INDEX.md).
+**IntelliJ tip:** create sources with **New → File** → `ClassName.java`. Do **not** use **New → Java Class** or mark `module-01-exercises` / `jvm-compilation-lab` as Sources Root. Details: [`exercises/EXERCISES-INDEX.md`](exercises/EXERCISES-INDEX.md).

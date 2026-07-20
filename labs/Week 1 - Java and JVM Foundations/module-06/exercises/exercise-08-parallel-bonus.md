@@ -3,6 +3,8 @@
 **Module 6** · Optional parallel bonus · finish Exercises 1–7 Pass first, then OS how-to → [`../lab6/LAB-6-GUIDE.md`](../lab6/LAB-6-GUIDE.md)
 **Folder:** `examples/module-06-exercises/` ([setup](EXERCISES-INDEX.md))
 
+![Sequential vs Parallel Streams](../../../lab_diagrams/mod06-ex08-parallel-bonus.png)
+
 > **Correctness first:** Parallel streams are not automatically faster. The
 > five-row dataset is intentionally too small for a meaningful performance
 > conclusion.

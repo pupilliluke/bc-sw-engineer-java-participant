@@ -1,6 +1,6 @@
 # Lab diagrams — pre-lab exercises
 
-Visual aids for the Week 1 pre-lab exercise guides.
+Visual aids for the Week 1 pre-lab exercise guides. Naming: `modNN-exNN-topic.ext`.
 
 ## Module 1 — JVM Architecture and Runtime Model
 
@@ -57,6 +57,7 @@ Exercise guides: [`module-04/exercises/`](../Week%201%20-%20Java%20and%20JVM%20F
 | [`mod04-ex01-stack-vs-heap.png`](mod04-ex01-stack-vs-heap.png) | Exercise 1 — Stack vs Heap Basics |
 | [`mod04-ex02-object-lifecycle.png`](mod04-ex02-object-lifecycle.png) | Exercise 2 — Object Lifecycle |
 | [`mod04-ex03-gc-observe.png`](mod04-ex03-gc-observe.png) | Exercise 3 — Garbage Collection in Action |
+| — | Exercise 4 — G1 Flag *(no dedicated diagram yet; reuse Exercise 3 / GC notes)* |
 | [`mod04-ex05-zgc.png`](mod04-ex05-zgc.png) | Exercise 5 — ZGC Flag |
 | [`mod04-ex06-retained-references.png`](mod04-ex06-retained-references.png) | Exercise 6 — Retention Sketch |
 | [`mod04-ex07-string-vs-builder.png`](mod04-ex07-string-vs-builder.png) | Exercise 7 — String vs StringBuilder |
@@ -72,12 +73,35 @@ Exercise guides: [`module-05/exercises/`](../Week%201%20-%20Java%20and%20JVM%20F
 | [`mod05-ex03-hashmap.png`](mod05-ex03-hashmap.png) | Exercise 3 — Working with `HashMap` |
 | [`mod05-ex04-sorted-collections.png`](mod05-ex04-sorted-collections.png) | Exercise 4 — Sorted Collections: `TreeMap` |
 | [`mod05-ex05-iteration.png`](mod05-ex05-iteration.png) | Exercise 5 — Safe Removal During Iteration |
+| — | Exercise 6 — Choose the Right Collection *(analysis-only; no diagram yet)* |
 | [`mod05-ex07-library-warmup.png`](mod05-ex07-library-warmup.png) | Exercise 7 — Library Collections Warm-up |
 
-## Module 6 — Streams and Lambda Expressions
+## Module 6 — Streams and Functional Programming
 
 Exercise guides: [`module-06/exercises/`](../Week%201%20-%20Java%20and%20JVM%20Foundations/module-06/exercises/)
 
 | File | Exercise |
 | ---- | -------- |
 | [`mod06-ex01-lambda-functional-interface.png`](mod06-ex01-lambda-functional-interface.png) | Exercise 1 — Lambda and a Custom Functional Interface |
+| [`mod06-ex02-filter-salary.png`](mod06-ex02-filter-salary.png) | Exercise 2 — Filter by Salary |
+| [`mod06-ex03-list-names.png`](mod06-ex03-list-names.png) | Exercise 3 — List All Names |
+| [`mod06-ex04-minmax.png`](mod06-ex04-minmax.png) | Exercise 4 — Highest and Lowest Salary |
+| [`mod06-ex05-map-raise.png`](mod06-ex05-map-raise.png) | Exercise 5 — Map a 10% Raise |
+| [`mod06-ex06-group-count.png`](mod06-ex06-group-count.png) | Exercise 6 — Count by Department |
+| [`mod06-ex07-hr-names.png`](mod06-ex07-hr-names.png) | Exercise 7 — HR Department Names |
+| [`mod06-ex08-parallel-bonus.png`](mod06-ex08-parallel-bonus.png) | Exercise 8 — `parallelStream` Bonus |
+
+## Module 7 — Exception Handling and Error Management
+
+Exercise guides: [`module-07/exercises/`](../Week%201%20-%20Java%20and%20JVM%20Foundations/module-07/exercises/)
+
+| File | Exercise |
+| ---- | -------- |
+| [`mod07-ex01-common-exceptions.png`](mod07-ex01-common-exceptions.png) | Exercise 1 — Trigger Common Exceptions |
+| [`mod07-ex02-try-catch-finally.png`](mod07-ex02-try-catch-finally.png) | Exercise 2 — `try-catch-finally` |
+| [`mod07-ex03-try-with-resources.png`](mod07-ex03-try-with-resources.png) | Exercise 3 — Try-with-resources |
+| [`mod07-ex04-throw-throws.png`](mod07-ex04-throw-throws.png) | Exercise 4 — `throw` and `throws` |
+| [`mod07-ex05-custom-exception.png`](mod07-ex05-custom-exception.png) | Exercise 5 — Custom Exception |
+| [`mod07-ex06-propagation.png`](mod07-ex06-propagation.png) | Exercise 6 — Exception Propagation |
+| [`mod07-ex07-error-strategies.png`](mod07-ex07-error-strategies.png) | Exercise 7 — Error Handling Strategies |
+| [`mod07-ex08-logging-warmup.png`](mod07-ex08-logging-warmup.png) | Exercise 8 — Logging Warm-up |

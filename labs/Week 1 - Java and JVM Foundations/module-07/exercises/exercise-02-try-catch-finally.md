@@ -3,6 +3,8 @@
 **Module 7** · Pre-lab practice · finish all 8 Pass, then OS how-to → [`../lab7/LAB-7-GUIDE.md`](../lab7/LAB-7-GUIDE.md)
 **Folder:** `examples/module-07-exercises/` ([setup](EXERCISES-INDEX.md))
 
+![finally Runs on Both Paths](../../../lab_diagrams/mod07-ex02-try-catch-finally.png)
+
 ## Goal
 
 Create `FinallyDemo.java` and compare successful and failed transfer paths.
