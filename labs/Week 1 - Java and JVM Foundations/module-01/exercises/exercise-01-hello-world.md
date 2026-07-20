@@ -23,7 +23,7 @@ public class Hello {
 ```
 
 | Line idea | Why it matters |
-| --------- | -------------- |
+| --------- | --------------**** |
 | `public class Hello` | Defines a class the JVM can load; file must be `Hello.java` |
 | `main(String[] args)` | Special method the `java` launcher looks for |
 | `System.out.println(...)` | Sends text to the terminal |

@@ -1,4 +1,4 @@
-# Lab 1: JVM and Compilation — Windows
+************************# Lab 1: JVM and Compilation — Windows
 
 > **Participants:** Start at [`../README.md`](../README.md). Complete [Exercises 1–8](../exercises/EXERCISES-INDEX.md) first. This file = Windows paths/shell only. Do the Steps in [`LAB-1-GUIDE.md`](LAB-1-GUIDE.md). [Which file when?](../../../_PARTICIPANT-FILE-GUIDE.md)
 
