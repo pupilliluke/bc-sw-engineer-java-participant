@@ -1,0 +1,54 @@
+Before Lab steps, revisit your exercise notes and write two or three sentences for each prompt. Revisit again after Checkpoint C.
+
+1.) Why bytecode? Why does Java compile to platform-neutral bytecode instead of a native .exe on each OS? (Exercise 2 WORA)
+    A: Platform independence, write once, run anywhere
+
+2.) Class name vs file path. Why does java HelloWorld omit .class, and what goes wrong if you type java HelloWorld.java or java helloworld? (Exercises 1–2)
+    A: 'java' is taking in a class name param. Not a file name. This is handled internally. javac creates the class file beforehand. ... ClassnotFound exception occurs
+
+3.) Stack frames. What is created when main calls Calculator.add, and what happens to that frame on return? (Exercise 6 → Lab Steps 5–6)
+    A: The JVM pushes a new stack frame containing 'add''s parameters, local vars, and operand stack, and return address. On return , frame is popped off the stack. Stack memory is reclaimed immediately on pop, no gc needed unlike heap objects
+
+4.) Heap identity. In Employee emp = new Employee(101, "Aman"), what lives on the stack versus the heap? (Exercise 7 → Lab Step 7)
+    A: Reference to var location for 'emp' on stack. On heap: Employee Object (created by new) with fields. Also String object
+
+5.) Class loading cost. Why does java -verbose:class Employee print dozens of JDK classes before your Employee line? (Exercise 4 → Lab Step 8)
+    A: The JDK is loaded first in Bootstrap class loader. Before it can execute anything. Then Employee Object/classes are loaded by lazy loading.
+
+6.) -Xmx / source of truth. What does -Xmx constrain, and if .java and .class disagree after an edit without javac, which file does java execute? (Lab-only depth + Exercise 2)
+    A: Maximum heap size. It will execute the .class file (last compiled version) if running class name (java Hello) , but will re-compile and run .java when included (java Hello.java).
+
+7.) Forward look. How will Maven (mvn compile) change tooling but not the javac → bytecode → JVM story for the future CRM?
+    A: Maven will include javac under the hood. Not change the compile pipeline. Along with dependency management
+
+
+
+
+
+ -What is difference between helloworld.java and helloworld.class
+    A: human written/read java, computer written/read bytecode
+
+
+    Using Calculator.java, fill this table in your notes (from reading the code + bytecode, not guessing):
+
+    Code element	                                    Memory area
+    Locals x, y, sum in main	                    Stack slots 1-3
+    (istore_1/2/3)
+
+    Parameters a, b and local result in add	        Stack -add's frame. param slots 0-1
+       (iload_0/1) result slot 2(istore_2)
+
+    Method call add(x, y)	                New stack frame pushed, then popped on return
+    Class metadata for Calculator	                    Metaspace
+    Temporary String for "Sum = " + sum	      Heap (String / builder intermediates)
+
+
+STEP 10
+
+PS C:\Users\lukel\java-bootcamp\bc-sw-engineer-java-participant\bc-sw-engineer-java-participant\examples\jvm-compilation-lab> java -XX:+PrintFlagsFinal -version 2>&1 |
+>>   Select-String -Pattern 'InitialHeapSize|MaxHeapSize|UseG1GC'
+
+   size_t InitialHeapSize                          = 264241152                                 {product} {ergonomic}
+   size_t MaxHeapSize                              = 4213178368                                {product} {ergonomic}
+   size_t SoftMaxHeapSize                          = 4213178368                             {manageable} {ergonomic}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
