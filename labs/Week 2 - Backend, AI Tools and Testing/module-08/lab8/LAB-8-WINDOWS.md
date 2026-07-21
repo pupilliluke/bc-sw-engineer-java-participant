@@ -8,6 +8,8 @@
 **Full lab steps:** [LAB-8-GUIDE.md](LAB-8-GUIDE.md)  
 **Other OS:** [macOS guide](LAB-8-MACOS.md) · [IDE conventions](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/_IDE-CONVENTIONS.md)
 
+**Verified:** IntelliJ Terminal (PowerShell) + Temurin OpenJDK **21.0.11** + Apache Maven **3.9.9** on Lab 0 workspace `%USERPROFILE%\java-bootcamp`. Participant path: `examples\lab8-crm` with seven `com.northstar.crm.*` packages, stub classes, `docs/`, and minimal `pom.xml`. `mvn -q validate` and `mvn -q clean compile` → **BUILD SUCCESS**; `java -cp target\classes com.northstar.crm.Main` prints the Lab 8 skeleton banner with `CUS-1001` / `CUS-1002`.
+
 ## Prerequisites (Windows)
 
 - [Lab 0 (Windows)](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-WINDOWS.md) complete (JDK 21, Maven when needed, Git)
@@ -43,15 +45,29 @@
 
 ```powershell
 cd $env:USERPROFILE\java-bootcamp
-# Lab 0 layout: evidence at workspace root; code under examples\
 New-Item -ItemType Directory -Force -Path notes\screenshots\lab-8 | Out-Null
+New-Item -ItemType Directory -Force -Path `
+  examples\lab8-crm\src\main\java\com\northstar\crm\controller,
+  examples\lab8-crm\src\main\java\com\northstar\crm\service,
+  examples\lab8-crm\src\main\java\com\northstar\crm\repository,
+  examples\lab8-crm\src\main\java\com\northstar\crm\entity,
+  examples\lab8-crm\src\main\java\com\northstar\crm\dto,
+  examples\lab8-crm\src\main\java\com\northstar\crm\config,
+  examples\lab8-crm\src\main\java\com\northstar\crm\exception,
+  examples\lab8-crm\src\main\resources,
+  examples\lab8-crm\src\test\java\com\northstar\crm,
+  examples\lab8-crm\docs | Out-Null
 cd examples\lab8-crm
 ```
 
 ### Commands this lab typically uses
 
-```text
-mvn clean compile
+From `examples\lab8-crm` in the IntelliJ Terminal (PowerShell):
+
+```powershell
+mvn -q validate
+mvn -q clean compile
+java -cp target\classes com.northstar.crm.Main
 ```
 
 ## Run configurations (IntelliJ)
@@ -81,3 +97,8 @@ _Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are
 | 3 | Lab pass criteria / deliverables in the GUIDE are complete | Pass / Fail |
 | 4 | Commands above succeed in the IntelliJ terminal (or as the lab specifies) | Pass / Fail |
 | 5 | Screenshots (if required) saved under `notes/screenshots/lab-8/` | Pass / Fail |
+
+### Verified smoke commands (participant laptop)
+
+**Verified result (Temurin 21.0.11 / Maven 3.9.9):** `BUILD SUCCESS`; nine stub `.class` files under `target\classes\com\northstar\crm\…`; Main banner lists all seven packages and example customers. Open `pom.xml` in IntelliJ so Maven imports the module; keep working directory at `examples\lab8-crm`.
+

@@ -14,6 +14,20 @@
 
 > **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11; Maven 3.9.9):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| Prerequisite | `examples\lab15-crm\` (service + validator transitions) |
+| This lab project | `examples\lab16-crm\` (`Copy-Item -Recurse lab15-crm lab16-crm`) |
+| Error model | `ErrorResponse` · `BusinessException` · `GlobalExceptionHandler` · `ApiResult` |
+| Full suite | `mvn -B clean test` → **Tests run: 21**, Failures: 0 · **BUILD SUCCESS** |
+| Main demos | **400** invalid email · **404** `CUS-9999` · **409** `ACTIVE → PROSPECT` (Amina stays ACTIVE) |
+| Correlation | `lab-request-001` on every failure JSON |
+
+**If it fails (Windows PowerShell):** Catch `BusinessException` **before** bare `Exception` or conflicts become 500. Refactor Lab 15 `IllegalStateException` / `IllegalArgumentException` on transitions/not-found to `BusinessException.conflict` / `notFound`. Main needs Maven runtime classpath (validation jars). Prefer **409** for illegal transitions (document if you choose 422).
+
 ---
 
 ## How to follow this lab

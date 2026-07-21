@@ -14,6 +14,21 @@
 
 > **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **GitHub Copilot** signed in. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11; Maven 3.9.9):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| Prerequisite | `examples\lab10-crm\` with Lab 10 domain/service compiling |
+| This lab project | `examples\lab11-crm\` (`Copy-Item -Recurse lab10-crm lab11-crm`) |
+| Test deps | JUnit Jupiter **5.11.4** + Mockito **5.11.0** (`test` scope); Surefire **3.5.2** |
+| Tests | `CustomerTest` (2) · `CustomerServiceTest` (5) · `CustomerNotifierMockTest` (1) |
+| Notes | `copilot-notes\ai-test-refactor-notes.md` (`lab11-001`–`lab11-004`) |
+| Full suite | `mvn -q clean test` → **Tests run: 8**, Failures: 0 · **BUILD SUCCESS** |
+| Main harness | Still prints `CUS-1001` / `CUS-1002` activation flow after refactor |
+
+**If it fails (Windows PowerShell):** Keep a single `junit-jupiter` entry (Lab 9 already had one — add Mockito beside it; do not duplicate JUnit). First Mockito run may print Byte Buddy / dynamic-agent warnings on JDK 21 — harmless if tests are green. Remove Lab 9 `PlaceholderTest` (`assertTrue(true)`) so Surefire counts real CRM tests. After extracting `CustomerNotifier`, keep the no-arg `CustomerService()` constructor with a no-op notifier so existing tests/`Main` keep compiling.
+
 ---
 
 ## How to follow this lab
@@ -624,6 +639,8 @@ mvn -q clean test
 ```
 
 **Expected result:** About **7** tests total (`CustomerTest` 2 + `CustomerServiceTest` 4 + mock 1, unless you added a real extra test in Step 4); `BUILD SUCCESS`; checklist in notes.
+
+**Verified (Windows):** Replacing the weak `serviceIsNotNull` test with `findByStatusReturnsOnlyMatchingCustomers` yields **Tests run: 8** (2 + 5 + 1) — document that count in notes. Lab 9 `PlaceholderTest` removed so it does not inflate/pollute the suite.
 
 **If it fails:** Count mismatches if you replaced the weak test with an extra real one—document actual count. Stale classes → always `clean test`.
 

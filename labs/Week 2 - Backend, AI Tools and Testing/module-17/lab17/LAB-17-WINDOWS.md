@@ -8,6 +8,8 @@
 **Full lab steps:** [LAB-17-GUIDE.md](LAB-17-GUIDE.md)  
 **Other OS:** [macOS guide](LAB-17-MACOS.md) · [IDE conventions](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/_IDE-CONVENTIONS.md)
 
+**Verified:** IntelliJ Terminal (PowerShell) + Temurin OpenJDK **21.0.11** + Apache Maven **3.9.9**. Copied `examples\lab16-crm` → `examples\lab17-crm`; added JaCoCo **0.8.12** check on `com.northstar.crm.service` (≥0.80 LINE); wrote `CustomerServiceTests` + `CustomerValidatorParameterizedTest`. Two consecutive `mvn -q test` green; `mvn -B clean verify` → **Tests run: 41**, Failures: 0 · **BUILD SUCCESS** (service coverage ≈ **0.97**). Deliberate `minimum=0.99` failed with `lines covered ratio is 0.97, but expected minimum is 0.99`; restored **0.80**.
+
 ## Prerequisites (Windows)
 
 - [Lab 0 (Windows)](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-WINDOWS.md) complete (JDK 21, Maven when needed, Git)
@@ -50,10 +52,17 @@ cd examples\lab17-crm
 
 ### Commands this lab typically uses
 
-```text
-mvn clean compile
-mvn -q -DskipTests package   # when the lab says so
+```powershell
+cd $env:USERPROFILE\java-bootcamp\examples
+Copy-Item -Recurse lab16-crm lab17-crm   # once
+cd lab17-crm
+mvn -q test "-Dtest=CustomerServiceTests"
+mvn -q test "-Dtest=CustomerValidatorParameterizedTest"
+mvn -q test
+mvn -B clean verify
 ```
+
+Verified: **Tests run: 41**, Failures: 0 · **BUILD SUCCESS**; service LINE coverage ≈ **0.97** (≥ 0.80).
 
 ## Run configurations (IntelliJ)
 

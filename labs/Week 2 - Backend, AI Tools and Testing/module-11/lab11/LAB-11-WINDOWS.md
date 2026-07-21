@@ -8,6 +8,8 @@
 **Full lab steps:** [LAB-11-GUIDE.md](LAB-11-GUIDE.md)  
 **Other OS:** [macOS guide](LAB-11-MACOS.md) · [IDE conventions](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/_IDE-CONVENTIONS.md)
 
+**Verified:** IntelliJ Terminal (PowerShell) + Temurin OpenJDK **21.0.11** + Apache Maven **3.9.9**. Copied `examples\lab10-crm` → `examples\lab11-crm`; added Mockito (`mockito-core` + `mockito-junit-jupiter` **5.11.0**, test scope); extracted `CustomerNotifier` + `validateCustomerId`; tests `CustomerTest` / `CustomerServiceTest` / `CustomerNotifierMockTest`; notes `copilot-notes\ai-test-refactor-notes.md`. `mvn -q clean test` → **Tests run: 8**, Failures: 0 · **BUILD SUCCESS** (twice, deterministic). `Main` still shows `CUS-1001` ACTIVE + `CUS-1002` PROSPECT → ACTIVE. JDK 21 may log Byte Buddy dynamic-agent warnings during Mockito — ignore if Surefire is green.
+
 ## Prerequisites (Windows)
 
 - [Lab 0 (Windows)](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-WINDOWS.md) complete (JDK 21, Maven when needed, Git)
@@ -50,8 +52,14 @@ cd examples\lab11-crm
 
 ### Commands this lab typically uses
 
-```text
-mvn clean test
+```powershell
+cd $env:USERPROFILE\java-bootcamp\examples
+Copy-Item -Recurse lab10-crm lab11-crm   # once
+cd lab11-crm
+mvn -q clean test
+# Expected: Tests run: 8, Failures: 0 (2 entity + 5 service + 1 Mockito) — BUILD SUCCESS
+mvn -q -DskipTests compile
+java -cp target\classes com.northstar.crm.Main
 ```
 
 ## Run configurations (IntelliJ)

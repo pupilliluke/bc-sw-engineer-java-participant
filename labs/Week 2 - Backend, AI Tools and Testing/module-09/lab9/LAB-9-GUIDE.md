@@ -14,6 +14,19 @@
 
 > **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11; Maven 3.9.9):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| Prerequisite | `examples\lab8-crm\` must already compile |
+| This lab project | `examples\lab9-crm\` (copy of Lab 8 + expanded `pom.xml`) |
+| Compile / test / package | `mvn -q test` · `mvn -q clean package` · `java -jar target\customer-service.jar` |
+| CI preview | `mvn -B verify` |
+| Smoke-test output | JAR Main banner + Surefire `Tests run: 1` + default profile `dev` |
+
+**If it fails (Windows PowerShell):** Copy with `Copy-Item -Recurse lab8-crm lab9-crm` from `examples\`. Open `lab9-crm\pom.xml` in IntelliJ for Maven import. First dependency download can be slow — wait for Central.
+
 ---
 
 ## How to follow this lab
@@ -247,8 +260,10 @@ mvn -q clean compile
 On Windows PowerShell (local mode):
 
 ```powershell
+cd $env:USERPROFILE\java-bootcamp\examples
 Copy-Item -Recurse lab8-crm lab9-crm
 cd lab9-crm
+New-Item -ItemType Directory -Force -Path ..\..\notes\screenshots\lab-9 | Out-Null
 mvn -q clean compile
 ```
 

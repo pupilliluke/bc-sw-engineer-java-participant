@@ -14,6 +14,21 @@
 
 > **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11; Maven 3.9.9 available but unused):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` |
+| This lab project | `examples\lab13-crm\` (contracts + samples + docs — **no Java server**) |
+| XSD / WSDL | `contracts\customer.xsd` · `contracts\CustomerService.wsdl` |
+| Samples | Create/Update/Get success + `fault-customerNotFound` + `fault-validation` |
+| Namespace | `http://northstar.com/crm/customer` |
+| Placeholder | `http://localhost:8080/ws` (**not live**; port 8080 closed during verify) |
+| Well-formedness | PowerShell `[xml]` / `XmlDocument` — **10/10** files OK (xmllint optional) |
+| Docs | `docs\operation-matrix.md` · `docs\soap-design-notes.md` · README handoff checklist |
+
+**If it fails (Windows PowerShell):** Keep XSD beside WSDL (`schemaLocation="customer.xsd"`). Validate with `[xml](Get-Content -Raw file)` when `xmllint` is missing. Do **not** start Spring Boot/Tomcat to “fix” the placeholder URL — Lab 24 hosts `/ws`.
+
 ---
 
 ## How to follow this lab

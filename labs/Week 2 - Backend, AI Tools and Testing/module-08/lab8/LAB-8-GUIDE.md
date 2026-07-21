@@ -16,6 +16,17 @@
 
 > **Pre-lab exercises:** Complete [`../exercises/EXERCISES-INDEX.md`](../exercises/EXERCISES-INDEX.md) before starting the full CRM skeleton.
 
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11; Maven 3.9.9):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| This lab project | `examples\lab8-crm\` (`pom.xml` + `src/main/java/com/northstar/crm/…`) |
+| Compile / run | `mvn -q clean compile` → `java -cp target\classes com.northstar.crm.Main` |
+| Smoke-test output | `Northstar CRM skeleton — Lab 8` + seven packages + `CUS-1001` / `CUS-1002` |
+
+**If it fails (Windows PowerShell):** Confirm `cd` is `examples\lab8-crm` before Maven. Open the `pom.xml` so IntelliJ imports Maven. Do not add Spring/JPA imports in Lab 8 stubs.
+
 ---
 
 ## How to follow this lab
@@ -677,6 +688,14 @@ Compile and run:
 cd ~/java-bootcamp/examples/lab8-crm
 mvn -q clean compile
 java -cp target/classes com.northstar.crm.Main
+```
+
+**Windows PowerShell (verified):**
+
+```powershell
+cd $env:USERPROFILE\java-bootcamp\examples\lab8-crm
+mvn -q clean compile
+java -cp target\classes com.northstar.crm.Main
 ```
 
 **Expected result:**

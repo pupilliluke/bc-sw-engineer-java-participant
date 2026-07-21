@@ -14,6 +14,20 @@
 
 > **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **GitHub Copilot** signed in. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11; Maven 3.9.9):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| Prerequisite | `examples\lab9-crm\` must already compile / package |
+| This lab project | `examples\lab10-crm\` (`Copy-Item -Recurse lab9-crm lab10-crm`) |
+| Domain / service | `CustomerStatus`, fleshed-out `Customer`, in-memory `CustomerService` |
+| Review log | `copilot-notes\ai-review-notes.md` (`lab10-001`–`lab10-004`) |
+| Compile / run | `mvn -q clean compile` · `java -cp target\classes com.northstar.crm.Main` |
+| Smoke-test output | `CUS-1001` ACTIVE + `CUS-1002` PROSPECT → after activation `CUS-1002` ACTIVE |
+
+**If it fails (Windows PowerShell):** Copy from `examples\` only. Replacing Lab 9’s repository-backed `CustomerService` stub breaks `CustomerController` (`create` / `getById`). Keep thin `UnsupportedOperationException` stubs for those DTO methods so the controller still compiles, or temporarily comment the controller calls — do **not** add JPA/Spring to “fix” Copilot. Reject `@Entity` / `@Id` / `@Column` on `Customer`. Prefer `java -cp target\classes` over the fat JAR for this lab’s harness.
+
 ---
 
 ## How to follow this lab
@@ -459,7 +473,7 @@ mvn -q compile
 
 **Expected result:** `BUILD SUCCESS`; service depends only on entity classes (and JDK), no Spring stereotypes.
 
-**If it fails:** Reject `@Service` / `@Component` / repository injections. Ensure `Optional` and streams match Java 21. Fix missing imports from Chat paste carefully.
+**If it fails:** Reject `@Service` / `@Component` / repository injections. Ensure `Optional` and streams match Java 21. Fix missing imports from Chat paste carefully. If compile fails because `CustomerController` still calls Lab 8/9 `create`/`getById`, keep those two methods as `UnsupportedOperationException` stubs on `CustomerService` (controller stays untouched for later labs).
 
 ---
 

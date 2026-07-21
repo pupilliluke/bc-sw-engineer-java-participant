@@ -14,6 +14,21 @@
 
 > **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11; Maven 3.9.9):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| Prerequisite | `examples\lab16-crm\` (service + BusinessException) |
+| This lab project | `examples\lab17-crm\` (`Copy-Item -Recurse lab16-crm lab17-crm`) |
+| Gate | JaCoCo **0.8.12** package rule `com.northstar.crm.service` LINE ≥ **0.80** |
+| Formal suites | `CustomerServiceTests` · `CustomerValidatorParameterizedTest` |
+| Full suite | `mvn -B clean verify` → **Tests run: 41**, Failures: 0 · **BUILD SUCCESS** |
+| Service coverage | LINE ratio ≈ **0.97** (36 covered / 1 missed) |
+| Gate proof | `minimum` 0.99 → rule violated (0.97 &lt; 0.99); restored 0.80 → green |
+
+**If it fails (Windows PowerShell):** Always `mvn clean verify` so the JaCoCo agent applies. Package include must be exactly `com.northstar.crm.service`. Prefer `assertThrows(BusinessException.class, …)` over bare `Exception`. Do not commit `target\site\jacoco`.
+
 ---
 
 ## How to follow this lab

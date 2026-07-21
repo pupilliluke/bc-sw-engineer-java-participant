@@ -14,6 +14,20 @@
 
 > **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11; Maven 3.9.9):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| Prerequisite | Prefer `examples\lab12-crm\` (clean `createCustomer` / `getCustomer` API) |
+| This lab project | `examples\lab14-crm\` (`Copy-Item -Recurse lab12-crm lab14-crm`) |
+| Validation deps | `jakarta.validation-api` **3.1.0** · Hibernate Validator **8.0.2.Final** · Expressly **5.0.0** |
+| API edge | `CustomerApiFacade` + `CustomerRequestDTO` / `CustomerResponseDTO` + `CustomerMapper` |
+| Full suite | `mvn -B clean test` → **Tests run: 13**, Failures: 0 · **BUILD SUCCESS** |
+| Main | Response DTOs for `CUS-1001`/`CUS-1002`; invalid email + unknown id include `lab-request-001` |
+
+**If it fails (Windows PowerShell):** Use **Jakarta** validation packages (not `javax`). Missing EL → add `expressly`. Lab 12 service uses `createCustomer` / `getCustomer` — adapt the guide’s `addCustomer` / `findByCustomerId` examples. `java -cp target\classes` alone fails with `NoClassDefFoundError: jakarta/validation/Validation` — build a runtime classpath via `dependency:build-classpath` (see README) or run from IntelliJ.
+
 ---
 
 ## How to follow this lab
@@ -429,7 +443,7 @@ Wire `Main` to create Amina via a valid DTO with correlation ID `lab-request-001
 
 **Expected result:** Console shows create ok for `CUS-1001` / Amina / ACTIVE with correlation echoed in logs/notes.
 
-**If it fails:** `NoProviderFoundException` → Step 1 deps. Calling service before validate → reorder. Service method names differ → adapt, keep “validate first” rule.
+**If it fails:** `NoProviderFoundException` → Step 1 deps. Calling service before validate → reorder. Service method names differ → adapt, keep “validate first” rule. On Windows, if `java -cp target/classes` fails with `NoClassDefFoundError: jakarta/validation/Validation`, include Maven runtime jars (`dependency:build-classpath`) or run `Main` from IntelliJ.
 
 ---
 

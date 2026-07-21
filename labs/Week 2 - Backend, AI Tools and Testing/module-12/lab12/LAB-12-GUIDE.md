@@ -14,6 +14,22 @@
 
 > **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **GitHub Copilot** signed in. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11; Maven 3.9.9):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| Prerequisite | Prefer `examples\lab11-crm\` (entities + JUnit/Mockito already present) |
+| This lab project | `examples\lab12-crm\` (`Copy-Item -Recurse lab11-crm lab12-crm`) |
+| Frozen mess | `CustomerService.before.java.txt` (~62 lines) |
+| Refactored service | `createCustomer` / `getCustomer` / `updateStatus` + validation helpers (~103 lines) |
+| Evidence docs | `docs\smells.md`, `before-after.md`, `ai-review-notes.md`, `CODING-STANDARDS-check.md` |
+| Tests | `CustomerTest` (2) + `CustomerServiceTest` (6) — Lab 11 notifier mock removed for new API |
+| Full suite | `mvn -B clean test` / `mvn -B verify` → **Tests run: 8**, Failures: 0 · **BUILD SUCCESS** |
+| Main demo | create/get/update + duplicate/unknown with `correlationId=lab-request-001` |
+
+**If it fails (Windows PowerShell):** Freeze baseline with a `.txt` suffix so Maven does not compile two `CustomerService` classes. After switching to the target API, update or remove Lab 11 tests that call `addCustomer` / `CustomerNotifier`. Prefer `Map` keyed by ID so `getCustomer(new String("CUS-1001"))` works (old `==` did not).
+
 ---
 
 ## How to follow this lab

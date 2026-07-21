@@ -8,6 +8,8 @@
 **Full lab steps:** [LAB-14-GUIDE.md](LAB-14-GUIDE.md)  
 **Other OS:** [macOS guide](LAB-14-MACOS.md) · [IDE conventions](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/_IDE-CONVENTIONS.md)
 
+**Verified:** IntelliJ Terminal (PowerShell) + Temurin OpenJDK **21.0.11** + Apache Maven **3.9.9**. Copied `examples\lab12-crm` → `examples\lab14-crm`; added Jakarta Validation **3.1.0**, Hibernate Validator **8.0.2.Final**, Expressly **5.0.0**; implemented `CustomerRequestDTO` / `CustomerResponseDTO`, `CustomerMapper`, `CustomerApiFacade` (wired to Lab 12 `createCustomer`/`getCustomer`). `mvn -B clean test` → **Tests run: 13**, Failures: 0 · **BUILD SUCCESS**. Main (with Maven runtime classpath) prints response DTOs for Amina/Ravi and rejects invalid email / unknown id with `lab-request-001`.
+
 ## Prerequisites (Windows)
 
 - [Lab 0 (Windows)](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-WINDOWS.md) complete (JDK 21, Maven when needed, Git)
@@ -50,10 +52,18 @@ cd examples\lab14-crm
 
 ### Commands this lab typically uses
 
-```text
-mvn clean compile
-mvn -q -DskipTests package   # when the lab says so
+```powershell
+cd $env:USERPROFILE\java-bootcamp\examples
+Copy-Item -Recurse lab12-crm lab14-crm   # once
+cd lab14-crm
+mvn -q test "-Dtest=CustomerRequestDTOValidationTest"
+mvn -B clean test
+# Main needs validation jars — not target\classes alone:
+mvn -q -DincludeScope=runtime dependency:build-classpath "-Dmdep.outputFile=target\cp.txt"
+java -cp "target\classes;$(Get-Content target\cp.txt -Raw)" com.northstar.crm.Main
 ```
+
+Verified: **Tests run: 13**, Failures: 0 · **BUILD SUCCESS**.
 
 ## Run configurations (IntelliJ)
 

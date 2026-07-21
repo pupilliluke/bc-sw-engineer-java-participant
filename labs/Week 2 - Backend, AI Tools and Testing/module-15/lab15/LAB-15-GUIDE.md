@@ -14,6 +14,20 @@
 
 > **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11; Maven 3.9.9):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| Prerequisite | `examples\lab14-crm\` (DTOs + Bean Validation) |
+| This lab project | `examples\lab15-crm\` (`Copy-Item -Recurse lab14-crm lab15-crm`) |
+| Layers | `CustomerRepository` / `InMemoryCustomerRepository` · `CustomerValidator` · `CustomerService` + `DefaultCustomerService` |
+| Full suite | `mvn -B clean test` → **Tests run: 15**, Failures: 0 · **BUILD SUCCESS** |
+| Main | `activated CUS-1002 status=ACTIVE`; illegal `ACTIVE -> PROSPECT [lab-request-001]`; Amina stays ACTIVE |
+| Anti-leak | No `HashMap` / JDBC / `EntityManager` in `service` package |
+
+**If it fails (Windows PowerShell):** Rename the old concrete `CustomerService` class to make room for the interface + `DefaultCustomerService`. Wire validator and service with the **same** `InMemoryCustomerRepository` instance. Keep Map private inside the repository only.
+
 ---
 
 ## How to follow this lab

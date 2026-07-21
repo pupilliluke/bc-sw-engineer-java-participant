@@ -8,6 +8,8 @@
 **Full lab steps:** [LAB-13-GUIDE.md](LAB-13-GUIDE.md)  
 **Other OS:** [macOS guide](LAB-13-MACOS.md) · [IDE conventions](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/_IDE-CONVENTIONS.md)
 
+**Verified:** IntelliJ Terminal (PowerShell) + Temurin OpenJDK **21.0.11**. Created `examples\lab13-crm` with `contracts\customer.xsd`, `contracts\CustomerService.wsdl` (document/literal; ops Create/Update/Get; placeholder `http://localhost:8080/ws`), eight sample envelopes (CUS-1001 / CUS-1002 / `lab-request-001` + two faults), and docs. PowerShell `[xml]` load → **10/10 well-formed**. Port **8080** was **not** listening (expected — design-only; Lab 24 hosts Spring-WS). No Maven build required for this lab.
+
 ## Prerequisites (Windows)
 
 - [Lab 0 (Windows)](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-WINDOWS.md) complete (JDK 21, Maven when needed, Git)
@@ -21,9 +23,8 @@
    If `examples\lab13-crm` does not exist yet, create it as the lab GUIDE describes; keep the workspace open at `%USERPROFILE%\java-bootcamp`.
 3. Trust the project if prompted.
 4. **File → Project Structure → Project** → SDK = **21**, language level **21**.
-5. Maven labs: open the `pom.xml` under `examples/lab13-crm` so IntelliJ imports the project; wait for indexing.
-6. If there is a `src/main/java` tree, confirm it is marked as **Sources Root** (Maven usually does this).
-7. **View → Tool Windows → Terminal** (PowerShell) → `cd $env:USERPROFILE\java-bootcamp` then `cd examples\lab13-crm` when ready.
+5. This lab is **contract design only** — there is usually **no** `pom.xml` / `src/main/java` to import. Open the workspace root and edit files under `examples\lab13-crm\`.
+6. **View → Tool Windows → Terminal** (PowerShell) → `cd $env:USERPROFILE\java-bootcamp\examples\lab13-crm` when ready.
 
 ## Optional: VS Code
 
@@ -50,10 +51,19 @@ cd examples\lab13-crm
 
 ### Commands this lab typically uses
 
-```text
-mvn clean compile
-mvn -q -DskipTests package   # when the lab says so
+```powershell
+cd $env:USERPROFILE\java-bootcamp
+New-Item -ItemType Directory -Force -Path examples\lab13-crm\contracts, examples\lab13-crm\samples, examples\lab13-crm\docs, notes\screenshots\lab-13 | Out-Null
+cd examples\lab13-crm
+
+# Well-formedness check (xmllint optional — use .NET XmlDocument on Windows)
+Get-ChildItem contracts, samples -Recurse -Include *.xsd,*.wsdl,*.xml | ForEach-Object {
+  $null = [xml](Get-Content -Raw $_.FullName)
+  "OK $($_.Name)"
+}
 ```
+
+Verified: all contracts + samples well-formed; README documents placeholder endpoint (not live).
 
 ## Run configurations (IntelliJ)
 
