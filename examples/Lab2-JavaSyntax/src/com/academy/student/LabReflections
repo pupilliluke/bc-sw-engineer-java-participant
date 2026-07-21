@@ -1,0 +1,21 @@
+All classes live in com.academy.student, which allows the files/classes to references without imports.
+A single Scanner object is created in main, passed to StudentManager's constructor to ensure proper use of 1 singular scanner at a time.
+I also read whole lines and parse with Integer.parseInt instead of using nextInt() to avoid leftover newline bugs.
+Every loop runs until studentCount, which was related to the an issue I encountered when in development, I had to double check my bounds didn't include the last (out of bounds) digit.
+
+
+REFLECTION QUESTIONS
+
+Why must the package folder tree match package com.academy.student?
+Why prefer nextLine() + parse over nextInt() in a menu app?
+Why keep a studentCount instead of relying on students.length alone?
+What belongs in Main versus StudentManager?
+How does this console CRUD prepare you for later Spring/customer labs without implementing them here?
+
+
+1. Classloader and compiler need to identify the correct location of the code.
+2. nextInt() leaves newline space in the buffer, this requires the user to press enter a second time when they do not know. Also good input validation.
+3. Student.length() does not represent the amount of students the array holds. Only tells the total capacity, it would be inefficient.
+4. Main is for running the high level program, keeping business logic separate. StudentManager is the business logic, all custom operations held personally by this class.
+5. Shows a lot of behind the scenes validation, mechanisms that sometimes get abstracted away. Shows framework of architecture/logic behind adding and displaying objects.
+    Shows simplified purpose behind different logic layers such as dto, api, service, db.
