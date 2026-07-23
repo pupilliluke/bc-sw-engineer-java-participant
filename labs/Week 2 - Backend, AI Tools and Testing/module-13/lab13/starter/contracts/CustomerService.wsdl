@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://northstar.com/crm/customer"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             targetNamespace="http://northstar.com/crm/customer"
+             name="CustomerService">
+
+  <!-- TODO: types/xsd:import or include schemaLocation="customer.xsd" -->
+  <!-- TODO: messages for Create/Update/Get request and response -->
+  <!-- TODO: portType CustomerServicePortType with three operations -->
+  <!-- TODO: soap:binding document/literal -->
+  <!-- TODO: service with soap:address location="http://localhost:8080/ws" (placeholder — not live) -->
+
+</definitions>

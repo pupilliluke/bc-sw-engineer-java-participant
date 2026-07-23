@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    # TODO: H2 URL for tests
+    url:
+northstar:
+  integration:
+    connect-timeout-ms: 100

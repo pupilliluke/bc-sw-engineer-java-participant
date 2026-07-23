@@ -8,6 +8,8 @@
 
 **Cluster for this cohort:** Shared **k3s** on `100.22.136.97:6443` with Traefik Ingress and per-student namespaces — use **`kubectl`** and your kubeconfig. See [FINAL-SETUP-README.md](../FINAL-SETUP-README.md).
 
+**In class (~45 min):** open each lab’s `starter/README.md` → copy templates → fill TODOs → smoke test. Full GUIDE steps = homework. See [`_STARTER-PATH.md`](../_STARTER-PATH.md).
+
 Parent index: [labs/LABS-INDEX.md](../LABS-INDEX.md) · Setup: [SETUP-INSTRUCTIONS.md](../SETUP-INSTRUCTIONS.md)
 
 | Lab | Guide |

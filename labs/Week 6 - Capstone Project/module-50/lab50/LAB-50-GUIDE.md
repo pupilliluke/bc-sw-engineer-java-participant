@@ -3,7 +3,7 @@
 **Module:** 50 — Capstone Frontend and Persistence  
 **Lab folder:** `labs/Week 6 - Capstone Project/module-50/lab50/`  
 **Difficulty:** Advanced Capstone  
-**Duration:** 6–8 Hours
+**Duration:** ~45 minutes (timed path / session block with starter) · Full path: 6–8 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
 
@@ -16,13 +16,33 @@
 
 ---
 
+## 45-minute timed path (session block — use starter)
+
+In class, use the starter data/API + Flyway stubs so the **session block** fits **~45 minutes**. React UI, a11y, E2E, and restart durability remain **multi-day** on the full path.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/` into `java-bootcamp/examples/customer-management-platform/` (see starter README).
+3. Fill the data/API checklist and SQL/Flyway TODOs — align with Lab 49 contracts.
+4. Run the starter smoke check; evidence under `notes/screenshots/lab-50/`.
+5. Mark timed-path Pass criteria in the starter README. Continue remaining GUIDE steps as homework / multi-day work.
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed / session block** | ~45 min | Starter TODOs + smoke check |
+| **Full (multi-day)** | 6–8 Hours | Every Step in this GUIDE |
+
+Policy: [`labs/_STARTER-PATH.md`](../../../_STARTER-PATH.md)
+
+---
+
 ## How to follow this lab
 
-1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/lab-50/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class (session block):** prefer [`starter/README.md`](starter/README.md) — copy starter → platform tree, fill checklist/SQL TODOs (~45 min).
+2. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+4. For each **Step N** (full path / multi-day): read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+6. Capture evidence under `notes/screenshots/lab-50/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## What you'll submit (read this first)
 

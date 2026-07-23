@@ -1,0 +1,53 @@
+# Lab 44 starter — timed path (~45 minutes)
+
+**Theme:** CD pipeline sketch — promote immutable artifact, gates, rollback
+
+## Copy into your workspace
+
+Do **not** grade work only inside the course `labs/` clone. Copy this `starter/` into your bootcamp examples tree as `lab44-crm`.
+
+**Windows (PowerShell)** — from this lab folder:
+
+```powershell
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\java-bootcamp\examples\lab44-crm" | Out-Null
+Copy-Item -Recurse -Force ".\starter\*" "$env:USERPROFILE\java-bootcamp\examples\lab44-crm\"
+cd $env:USERPROFILE\java-bootcamp\examples\lab44-crm
+```
+
+**macOS / Linux:**
+
+```bash
+mkdir -p ~/java-bootcamp/examples/lab44-crm
+cp -R starter/. ~/java-bootcamp/examples/lab44-crm/
+cd ~/java-bootcamp/examples/lab44-crm
+```
+
+## 45-minute checklist
+
+- [ ] Fill `artifact-manifest.json` with commit + SHA-256 / image digest (no secrets)
+- [ ] Complete `docs/release-plan.md` (test → staging → prod gates)
+- [ ] Draft `docs/release-checklist.md` go/no-go items
+- [ ] Write `docs/rollback-runbook.md` naming known-good digest
+- [ ] Sketch CD workflow TODOs in `.github/workflows/cd.yml`
+
+## Smoke test
+
+```bash
+# Validate JSON shape:
+# python -c "import json; json.load(open('artifact-manifest.json'))"
+# Or PowerShell:
+# Get-Content artifact-manifest.json | ConvertFrom-Json | Out-Null
+```
+
+Evidence under `~/java-bootcamp/notes/screenshots/lab-44/` (redact secrets).
+
+## Timed-path Pass criteria
+
+| Criterion | Pass / Fail |
+| --------- | ----------- |
+| Manifest has immutable identity fields | Pass / Fail |
+| Release plan separates env config from artifact | Pass / Fail |
+| Rollback names known-good digest | Pass / Fail |
+| CD workflow has no plaintext deploy secrets | Pass / Fail |
+
+Continue remaining GUIDE steps as homework / full path if needed.

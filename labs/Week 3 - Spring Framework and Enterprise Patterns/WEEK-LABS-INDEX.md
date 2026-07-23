@@ -6,6 +6,8 @@
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code  
 **OS guides:** each `module-NN/labN/` has `LAB-N-WINDOWS.md` and `LAB-N-MACOS.md`.
 
+**In class (~45 min):** open each lab’s `starter/README.md` → copy templates → fill TODOs → smoke test. Full GUIDE steps = homework. See [`_STARTER-PATH.md`](../_STARTER-PATH.md).
+
 Parent index: [labs/LABS-INDEX.md](../LABS-INDEX.md) · Setup: [SETUP-INSTRUCTIONS.md](../SETUP-INSTRUCTIONS.md)
 
 | Lab | Guide |

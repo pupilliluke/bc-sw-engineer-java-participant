@@ -1,8 +1,10 @@
 # Which file do I open? (participants)
 
-**Lab 0 is unchanged** — keep using [Lab 0 Windows](Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-WINDOWS.md) or [Lab 0 macOS](Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-MACOS.md) exactly as written.
+**Lab 0** — [Windows](Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-WINDOWS.md) or [macOS](Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-MACOS.md). In class, start from the **45-minute checklist**: [`lab0/starter/README.md`](Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/starter/README.md).
 
 For **every module after Lab 0**, open only the files in the sequence below. Ignore everything else unless your instructor says so.
+
+**Timed path (default in class):** copy `labN/starter/` → your `java-bootcamp/examples/…` folder, fill TODOs, run the starter smoke test (~45 min). Full multi-hour / multi-day Steps stay in the GUIDE for homework. See **[_STARTER-PATH.md](_STARTER-PATH.md)**.
 
 ## One sequence per module (Modules 1–52)
 
@@ -10,8 +12,9 @@ For **every module after Lab 0**, open only the files in the sequence below. Ign
 1. Class slides (instructor)
 2. Pre-lab exercises (Week 1 only)  →  module-NN/exercises/EXERCISES-INDEX.md
 3. Your OS how-to (paths / shell)   →  labN/LAB-N-WINDOWS.md  OR  labN/LAB-N-MACOS.md
-4. Full lab steps                  →  labN/LAB-N-GUIDE.md   (do every Step)
-5. Stop. Mark Pass/Fail in your notes.
+4. Timed path (in class)            →  labN/starter/README.md  (~45 min)
+5. Full lab steps (homework/depth)  →  labN/LAB-N-GUIDE.md
+6. Stop. Mark Pass/Fail in your notes.
 ```
 
 Open the module’s **`README.md`** first when it exists (Week 1 Modules 1–7) — it lists that sequence with links.
@@ -24,9 +27,11 @@ Open the module’s **`README.md`** first when it exists (Week 1 Modules 1–7) 
 | **`exercises/EXERCISES-INDEX.md`** | You (Week 1) | List of short practice exercises before the lab |
 | **`exercises/exercise-0N-….md`** | You | One practice task at a time |
 | **`LAB-N-WINDOWS.md`** / **`LAB-N-MACOS.md`** | You — pick **one** OS | Paths, IntelliJ open steps, shell tips for your laptop |
-| **`LAB-N-GUIDE.md`** | You — **main lab** | Every Step, Expected result, pass criteria |
+| **`starter/README.md`** | You — **in-class timed path** | 45-min checklist + smoke; Capstone 48–52 = session block |
+| **`LAB-N-GUIDE.md`** | You — **main lab** | Every Step, Expected result, pass criteria (full path) |
 | **`INSTRUCTOR-DEMO.md`** | Instructor only | Live demo before students start — **skip** |
 | **`solution/`** | Instructor / after you try | Answers — **do not open first**; participant clone may omit this |
+| **[_STARTER-PATH.md](_STARTER-PATH.md)** | You | How timed path vs full path works for Labs 0–52 |
 
 ## Lab 0 vs later labs
 
@@ -34,6 +39,7 @@ Open the module’s **`README.md`** first when it exists (Week 1 Modules 1–7) 
 | - | ----- | --------- |
 | Goal | Install tools + create `java-bootcamp` folder | Write/run lab code under `examples/` |
 | Your OS file | `LAB-0-WINDOWS.md` or `LAB-0-MACOS.md` | `LAB-N-WINDOWS.md` or `LAB-N-MACOS.md` |
+| Timed path | [`starter/README.md`](Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/starter/README.md) essential checklist (~45 min) | `labN/starter/` TODOs + smoke (~45 min); Capstone = session block |
 | Steps live in | The **OS file** (primary) + short GUIDE overview | **`LAB-N-GUIDE.md`** (primary) + OS how-to beside it |
 | Personal GitHub repo | Identity only (Step 10) | First create/commit in **Lab 1 Step 0** |
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://northstar.com/crm/customer"
+           targetNamespace="http://northstar.com/crm/customer"
+           elementFormDefault="qualified">
+
+  <!-- TODO: CustomerStatus simpleType with PROSPECT, ACTIVE, SUSPENDED, CLOSED -->
+  <!-- TODO: CustomerType complexType (customerId, fullName, email, phone?, status, createdAt) -->
+
+  <!-- TODO: createCustomerRequest / createCustomerResponse elements -->
+  <!-- TODO: updateCustomerRequest / updateCustomerResponse elements -->
+  <!-- TODO: getCustomerRequest / getCustomerResponse elements -->
+  <!-- Optional: correlationId on requests -->
+
+</xs:schema>

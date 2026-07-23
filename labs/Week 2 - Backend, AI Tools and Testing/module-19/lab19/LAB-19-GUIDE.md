@@ -3,7 +3,7 @@
 **Module:** 19 — Integration and UI Testing with Selenium  
 **Lab folder:** `labs/Week 2 - Backend, AI Tools and Testing/module-19/lab19/`  
 **Difficulty:** Intermediate  
-**Duration:** 4–5 Hours
+**Duration:** ~45 minutes (timed path with starter) · Full path: 4–5 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
 
@@ -16,13 +16,31 @@
 
 ---
 
+## 45-minute timed path (use starter)
+
+In class, use the starter templates so the **core** objectives fit **~45 minutes**. The full Steps below remain for homework / extended depth.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/` into your `java-bootcamp/examples/lab19-crm/` target (see starter README).
+3. Fill every `// TODO` — do **not** wait on a perfect prior lab; the starter includes a baseline.
+4. Run the starter smoke test; evidence under `notes/screenshots/lab-19/`.
+5. Mark timed-path Pass criteria in the starter README. Continue remaining GUIDE steps as homework if needed.
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed (default)** | ~45 min | Starter TODOs + smoke test |
+| **Full (extended)** | see Duration | Every Step in this GUIDE |
+
+
 ## How to follow this lab
 
-1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/lab-19/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class (timed path):** prefer [`starter/README.md`](starter/README.md) — copy starter → `java-bootcamp/examples/lab19-crm`, fill `// TODO`, run smoke test (~45 min).
+2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
+3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+4. For each **Step N** (full path / homework): read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+6. Capture evidence under `notes/screenshots/lab-19/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
 
 ## What you'll submit (read this first)
 
@@ -777,7 +795,7 @@ You are finished when:
 * **Assess:** Separation of IT vs UI, Page Object quality, explicit waits, negative coverage, regression discipline.
 * **Continuity:** Prefer `examples/lab19-crm`. Keep fixture IDs for Lab 20 logging traces.
 * **Common pitfalls:** Committed ChromeDriver; implicit wait 10s + explicit wait stacking; testing against a different app than IT boots; XPath full of indexes; skipping API IT because “UI is enough.”
-* **Timing:** 4–5 hours. Browser environment often burns 45–60 minutes—verify Chrome before deep Page Object work.
+* **Timing:** Timed path ~45 minutes with starter; full path remains 4–5 hours. Keep starter TODOs as the in-class core; remaining GUIDE steps are homework/extended depth. Browser environment often burns 45–60 minutes—verify Chrome before deep Page Object work.
 * **Equivalents:** Playwright or preinstalled ChromeDriver OK only when outcomes preserved and differences documented.
 
 ---

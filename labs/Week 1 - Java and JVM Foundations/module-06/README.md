@@ -13,7 +13,7 @@ Full course rule: [Which file do I open?](../../_PARTICIPANT-FILE-GUIDE.md)
 | A | After Lab 5 / prior labs | Stay in IntelliJ with `java-bootcamp` open |
 | B | After Module 6 **slides** (Day 4 intro + Day 5) | [`exercises/EXERCISES-INDEX.md`](exercises/EXERCISES-INDEX.md) → exercises **1–7 in order** (Exercise 1 often starts Day 4) |
 | C | After Exercises 1–7 Pass | **One** OS how-to: [`lab6/LAB-6-WINDOWS.md`](lab6/LAB-6-WINDOWS.md) **or** [`lab6/LAB-6-MACOS.md`](lab6/LAB-6-MACOS.md) |
-| D | Graded lab (post-exercise consolidation) | [`lab6/LAB-6-GUIDE.md`](lab6/LAB-6-GUIDE.md) — follow every Step |
+| D | Graded lab (post-exercise consolidation) | [`lab6/LAB-6-GUIDE.md`](lab6/LAB-6-GUIDE.md) — in class use [`lab6/starter/`](lab6/starter/README.md) (~45 min); full path = every Step |
 | E | Done | Mark Pass/Fail in your notes |
 
 **Do not skip from slides straight to Lab 6.** Lab 6 assumes Exercises 1–7 are already Pass. Exercise 8 (`parallelStream` bonus) is recommended stretch work.
