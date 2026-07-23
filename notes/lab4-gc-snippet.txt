@@ -1,0 +1,41 @@
+===== Garbage Collection Demonstration =====
+
+===== JVM Memory Report: Before Allocation =====
+Total Memory : 16 MB
+Free Memory  : 14 MB
+Used Memory  : 1 MB
+Max Memory   : 64 MB
+-----------------------------
+Creating Objects...
+[0.132s][info][gc] GC(0) Pause Young (Normal) (G1 Evacuation Pause) 8M->6M(16M) 7.469ms
+[0.139s][info][gc] GC(1) Pause Young (Normal) (G1 Evacuation Pause) 8M->9M(16M) 3.222ms
+[0.154s][info][gc] GC(2) Pause Young (Concurrent Start) (G1 Evacuation Pause) 10M->10M(16M) 13.913ms
+[0.155s][info][gc] GC(3) Concurrent Mark Cycle
+[0.157s][info][gc] GC(4) Pause Young (Normal) (G1 Evacuation Pause) 11M->12M(16M) 1.431ms
+[0.162s][info][gc] GC(5) Pause Young (Normal) (G1 Evacuation Pause) 13M->12M(36M) 2.047ms
+[0.166s][info][gc] GC(3) Pause Remark 15M->15M(36M) 0.690ms
+[0.170s][info][gc] GC(3) Pause Cleanup 17M->17M(36M) 0.090ms
+[0.170s][info][gc] GC(3) Concurrent Mark Cycle 15.835ms
+[0.176s][info][gc] GC(6) Pause Young (Prepare Mixed) (G1 Evacuation Pause) 18M->19M(36M) 4.151ms
+[0.183s][info][gc] GC(7) Pause Young (Mixed) (G1 Evacuation Pause) 23M->23M(36M) 4.590ms
+Objects Created : 100000
+
+===== JVM Memory Report: After Allocation =====
+Total Memory : 36 MB
+Free Memory  : 11 MB
+Used Memory  : 24 MB
+Max Memory   : 64 MB
+-----------------------------
+
+Removing strong references...
+Triggering Garbage Collection...
+[0.199s][info][gc] GC(8) Pause Full (System.gc()) 24M->1M(16M) 10.464ms
+Garbage Collection Completed
+
+===== JVM Memory Report: After GC =====
+Total Memory : 16 MB
+Free Memory  : 14 MB
+Used Memory  : 1 MB
+Max Memory   : 64 MB
+-----------------------------
+Execution Time : 350 ms
