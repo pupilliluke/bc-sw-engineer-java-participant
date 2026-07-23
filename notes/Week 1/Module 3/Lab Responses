@@ -1,0 +1,43 @@
+1) Why should Account be abstract rather than a concrete empty type?
+RESPONSE: Account models a concept, not a specific thing. It just models the state and behavior. So we can't use it to create an object but we can force the subclasses to follow its "contract".
+
+2) Where does dynamic dispatch show up when you call displayAccount() on Account[]?
+RESPONSE: Each instance in the loop could be a different subclass of account. Because some have different method implementations (override), dynamic dispatch is required to ensure flexibility for each instances
+    respective method at runtime.
+
+3) How does Printable differ from extending a base class?
+RESPONSE: The interface allows other classes to implement its contract as an ability. Classes an implement many abilities, but only one superclass. This is how it differs from base
+    class Account. Account becomes the higher identity of CurrentAccount, but CurrentAccount can have many abilities, like printable for one.
+
+4) What would break if Main owned all arrays instead of BankService?
+RESPONSE:    The encapsulation breaks. Each array is paired with a counter (accounts/accountCount) that defines which slots are valid, and passing that counter into a method fails, int
+               is passed by value, so accountCount++ inside BankService would never be seen by Main.
+
+5) How do today’s Customer/Account patterns prepare you for later CRM entity design without building Spring here?
+RESPONSE: I think it shows the principle of dependency injection that is introduced with Spring beans and autowiring. Also JPA getters/setters being written manually is good practice.
+    Lastly repository lookups that get abstracted in Spring are nice to practice manually.
+
+
+
+
+
+
+Success Criteria
+
+ 0	Module 3 Exercises 1–8 Pass criteria are complete before Lab Steps 3+	Pass / Fail
+ 1	Package folders match com.academy.bank under examples/Lab3-BankingSystem/src/	Pass / Fail
+ 2	Abstract Account hierarchy + Printable compile; cannot new Account(...)	Pass / Fail
+ 3	Create customer C101 + savings; deposit/withdraw work	Pass / Fail
+ 4	Polymorphic display via Account[] (no unnecessary casts)	Pass / Fail
+ 5	Thin Main + BankService orchestration; SOLID checklist explained	Pass / Fail
+ 6	UML matches files (includes service/Main growth from Exercise 8)	Pass / Fail
+ 7	javac -d out and java -cp out com.academy.bank.Main succeed	Pass / Fail
+
+ PASS
+ PASS
+ PASS
+ PASS
+ PASS
+ PASS
+ PASS
+ PASS
