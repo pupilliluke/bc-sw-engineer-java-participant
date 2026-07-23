@@ -8,6 +8,8 @@
 **Full lab steps:** [LAB-12-GUIDE.md](LAB-12-GUIDE.md)  
 **Other OS:** [macOS guide](LAB-12-MACOS.md) · [IDE conventions](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/_IDE-CONVENTIONS.md)
 
+**Verified:** IntelliJ Terminal (PowerShell) + Temurin OpenJDK **21.0.11** + Apache Maven **3.9.9**. Copied `examples\lab11-crm` → `examples\lab12-crm`; froze messy `doStuff` baseline as `CustomerService.before.java.txt`; refactored to `createCustomer` / `getCustomer` / `updateStatus` with `Map<String,Customer>`, exception + `lab-request-001` correlation messages, and validation helpers. Evidence under `docs\` (smells, before-after, AI review, standards checklist). `mvn -B clean test` and `mvn -B verify` → **Tests run: 8**, Failures: 0 · **BUILD SUCCESS**. `Main` demo prints create/get/update plus duplicate/unknown failures with correlation ID.
+
 ## Prerequisites (Windows)
 
 - [Lab 0 (Windows)](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-WINDOWS.md) complete (JDK 21, Maven when needed, Git)
@@ -50,10 +52,17 @@ cd examples\lab12-crm
 
 ### Commands this lab typically uses
 
-```text
-mvn clean compile
-mvn -q -DskipTests package   # when the lab says so
+```powershell
+cd $env:USERPROFILE\java-bootcamp\examples
+Copy-Item -Recurse lab11-crm lab12-crm   # once
+cd lab12-crm
+# After refactor:
+mvn -B clean test
+mvn -B verify
+java -cp target\classes com.northstar.crm.Main
 ```
+
+Verified: **Tests run: 8**, Failures: 0 · **BUILD SUCCESS**. Main shows `CUS-1001` / `CUS-1002` plus `correlationId=lab-request-001` on duplicate/unknown errors.
 
 ## Run configurations (IntelliJ)
 

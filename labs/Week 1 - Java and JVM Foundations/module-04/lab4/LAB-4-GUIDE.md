@@ -1,11 +1,11 @@
 # Lab 4: Memory Management and Garbage Collection
 
-> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 4 [pre-lab exercises 1–7](../exercises/EXERCISES-INDEX.md) (Pass in your notes). Exercises run on Day 3; this graded lab is Day 4. Day 3 “Lab 4 briefing” is folder/notes prep only — not GUIDE Steps. Then open **one** OS how-to ([Windows](LAB-4-WINDOWS.md) · [macOS](LAB-4-MACOS.md)) and do **every Step below**. Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
+> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 4 [pre-lab exercises 1–7](../exercises/EXERCISES-INDEX.md) (Pass in your notes). Exercises run on Day 3; this graded lab is Day 4. Day 3 “Lab 4 briefing” is folder/notes prep only — not GUIDE Steps. Then open **one** OS how-to ([Windows](LAB-4-WINDOWS.md) · [macOS](LAB-4-MACOS.md)). In class, prefer the **45-minute timed path** with [`starter/`](starter/README.md); the **full path** is every Step below (homework / extended). Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
 
 **Module:** 4 — Memory Management and Performance  
 **Lab folder:** `labs/Week 1 - Java and JVM Foundations/module-04/lab4/`  
 **Difficulty:** Intermediate (Beginner-Friendly)  
-**Duration:** 60–240 minutes (Day 4 core checkpoint ~60 min; finish remaining demos/tools as extended work)
+**Duration:** ~45 minutes (timed path with starter) · Full path: 60–240 minutes (Day 4 core checkpoint ~60 min; finish remaining demos/tools as extended work)
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
 
@@ -18,16 +18,59 @@
 
 > **Hard gate — pre-lab exercises:** Complete **all seven** Module 4 exercises under [`../exercises/`](../exercises/EXERCISES-INDEX.md) and mark their Pass criteria **Pass** **before** Step 1 of this lab. Lab 4 is graded consolidation in a **separate** flat folder (`examples/Lab4-MemoryManagement/`), not a replacement for the exercises folder (`examples/module-04-exercises/`).
 
+## 45-minute timed path (use starter)
+
+In class, use the starter templates so the **core** objectives fit **~45 minutes**. The full Steps below remain for homework / extended depth.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/Lab4-MemoryManagement/` into your `java-bootcamp/examples/Lab4-MemoryManagement/` target folder (commands in the starter README).
+3. Fill every `// TODO` / `_____` — do **not** open `solution/` first.
+4. Run the starter smoke test; capture evidence under `notes/screenshots/lab-4/`.
+5. Mark the **timed-path Pass criteria** in the starter README. Continue remaining GUIDE steps only if time allows (or as homework).
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed (default)** | ~45 min | Starter TODOs + smoke test |
+| **Full (extended)** | see Duration | Every Step in this GUIDE |
+
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| Pre-lab exercises | `examples\module-04-exercises\` (flat files — must exist before graded work) |
+| This lab folder | `examples\Lab4-MemoryManagement\` (flat `.java` — **no** Sources Root / packages) |
+| Compile | Named `javac` of the nine core demos in that folder |
+| Useful VM flags | `-Xms16m -Xmx64m -Xlog:gc` for `GarbageCollectionDemo`; `-Xms128m -Xmx512m` for `PerformanceTest` |
+| Smoke-test themes | Nested stack frames; heap identity hashes; GC reclaim after null; G1 log lines; leak rise / fix drop; weak `get()` → `null` |
+
+**If it fails (Windows PowerShell):** Name each `.java` file in the `javac` line (see [LAB-4-WINDOWS.md](LAB-4-WINDOWS.md)). Do **not** mark this folder as Sources Root (unlike Labs 2–3). If `OutOfMemoryError` on GC demo, raise `-Xmx` temporarily or close heavy apps.
+
 ---
 
 ## How to follow this lab
 
-1. Confirm Lab 0 + Module 4 Exercises 1–7 are done (checklists below). Bring your Exercise 4–5 G1/ZGC notes for the Day 4 compare checkpoint.
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-4. For each **Step N**: read **Why** / **Builds on** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-6. Capture evidence under `notes/screenshots/lab-4/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class:** prefer the [45-minute timed path](#45-minute-timed-path-use-starter) with [`starter/`](starter/README.md).
+2. Confirm Lab 0 + Module 4 Exercises 1–7 are done (checklists below). Bring your Exercise 4–5 G1/ZGC notes for the Day 4 compare checkpoint.
+3. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+4. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+5. For each **Step N**: read **Why** / **Builds on** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+6. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+7. Capture evidence under `notes/screenshots/lab-4/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
+## What you'll submit (read this first)
+
+Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+
+| # | Deliverable | Where / what |
+| - | ----------- | ------------ |
+| 1 | Core demos (source) | `examples/Lab4-MemoryManagement/` — stack/heap, lifecycle, GC, leak, performance demos |
+| 2 | Screenshots | `notes/screenshots/lab-4/` — memory/GC runs; `-Xlog:gc` snippet; performance table |
+| 3 | Short answers | `notes/lab4-answers.md` (reflection questions) |
+| 4 | LMS overview | Tools used + leak cause/fix in your own words |
+
+Do **not** submit heap dumps (`.hprof`), secrets, or a verbatim instructor `solution/`.
+
 
 ## Module 4 exercises you must already have completed
 
@@ -452,6 +495,12 @@ java -Xlog:gc GarbageCollectionDemo
 java -Xlog:gc GarbageCollectionDemo
 ```
 
+**Windows PowerShell tip (verified clearer GC lines with a small heap):**
+
+```powershell
+java -Xms16m -Xmx64m -Xlog:gc GarbageCollectionDemo
+```
+
 Save a short snippet into `../../notes/lab4-gc-snippet.txt` (from project; or `~/java-bootcamp/notes/lab4-gc-snippet.txt`) (a few lines are enough).
 
 **Expected result (pattern themes — exact text varies by JDK):**
@@ -787,7 +836,7 @@ Record pass/fail briefly in `../../notes/lab4-answers.md` (from project; or `~/j
 
 ---
 
-## Security, Cleanup, and Deliverables
+## Security and Cleanup
 
 **Security:** Never commit `.hprof` or paste dump contents (PII risk). Keep OOM runs short with tiny `-Xmx`. Prefer fixing retention over sprinkling `System.gc()` in production-style code.
 
@@ -803,7 +852,21 @@ rm -f /tmp/lab4-heap.hprof
 
 Keep `.java` sources and notes. Leave [`solution/`](solution/) intact.
 
-**Deliverables:** core demos; memory/GC screenshots; `-Xlog:gc` snippet; performance table; `../../notes/lab4-answers.md` (from project; or `~/java-bootcamp/notes/lab4-answers.md`); LMS overview (tools + leak cause/fix). No dumps, secrets, or verbatim solution copies.
+See [Expected Deliverables](#expected-deliverables) below for the submit list.
+
+
+---
+
+## Expected Deliverables
+
+Submit according to your LMS or instructor dropbox. Same checklist as [What you'll submit](#what-youll-submit-read-this-first) above.
+
+* **Sources** under `java-bootcamp/examples/Lab4-MemoryManagement/` (core demos)
+* **Screenshots** under `notes/screenshots/lab-4/`: memory/GC runs, `-Xlog:gc` snippet, performance table
+* **Answers** in `notes/lab4-answers.md` (reflection questions)
+* **LMS overview:** tools used + leak cause/fix (your own words)
+
+Do not submit heap dumps (`.hprof`), secrets, or a verbatim instructor [`solution/`](solution/).
 
 ---
 

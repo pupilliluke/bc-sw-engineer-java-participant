@@ -3,7 +3,7 @@
 **Module:** 20 — Structured Logging  
 **Lab folder:** `labs/Week 2 - Backend, AI Tools and Testing/module-20/lab20/`  
 **Difficulty:** Intermediate  
-**Duration:** 3–4 Hours
+**Duration:** ~45 minutes (timed path with starter) · Full path: 3–4 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
 
@@ -16,13 +16,47 @@
 
 ---
 
+## 45-minute timed path (use starter)
+
+In class, use the starter templates so the **core** objectives fit **~45 minutes**. The full Steps below remain for homework / extended depth.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/` into your `java-bootcamp/examples/lab20-crm/` target (see starter README).
+3. Fill every `// TODO` — do **not** wait on a perfect prior lab; the starter includes a baseline.
+4. Run the starter smoke test; evidence under `notes/screenshots/lab-20/`.
+5. Mark timed-path Pass criteria in the starter README. Continue remaining GUIDE steps as homework if needed.
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed (default)** | ~45 min | Starter TODOs + smoke test |
+| **Full (extended)** | see Duration | Every Step in this GUIDE |
+
+
 ## How to follow this lab
 
-1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/lab-20/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class (timed path):** prefer [`starter/README.md`](starter/README.md) — copy starter → `java-bootcamp/examples/lab20-crm`, fill `// TODO`, run smoke test (~45 min).
+2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
+3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+4. For each **Step N** (full path / homework): read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+6. Capture evidence under `notes/screenshots/lab-20/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
+
+## What you'll submit (read this first)
+
+Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+
+| # | Deliverable |
+| - | ----------- |
+| 1 | `logback-spring.xml` (or equivalent) structured pattern |
+| 2 | `CorrelationFilter` with MDC lifecycle |
+| 3 | CustomerService/controller logging without PII |
+| 4 | Automated `CustomerLoggingIT` output |
+| 5 | Successful-path evidence (`CUS-1001` / `CUS-1002` / `lab-request-001`) |
+| 6 | Controlled-failure evidence (WARN/ERROR samples) |
+| 7 | `docs/logging.md` contract |
+| 8 | Run and cleanup instructions |
+
 
 ## Lab Overview
 
@@ -639,6 +673,8 @@ Preserve Lab 19 IT/UI suites when practical; logging changes should not require 
 
 ## Expected Deliverables
 
+Same checklist as [What you'll submit](#what-youll-submit-read-this-first) above.
+
 * `logback-spring.xml` (or equivalent) structured pattern
 * `CorrelationFilter` with MDC lifecycle
 * CustomerService/controller logging without PII
@@ -714,7 +750,7 @@ You are finished when:
 * **Assess:** Filter finally clear, pattern keys, service instrumentation quality, IT asserts, contract honesty.
 * **Continuity:** Prefer `examples/lab20-crm`. Keep fixture IDs for Lab 21 metric demos.
 * **Common pitfalls:** Logging `customer.toString()`; MDC leak; competing logback files; OutputCapture empty because logging to file; DEBUG dumping bodies “just for the lab.”
-* **Timing:** 3–4 hours. PII audit of existing println leftovers often burns 30 minutes—search early.
+* **Timing:** Timed path ~45 minutes with starter; full path remains 3–4 hours. Keep starter TODOs as the in-class core; remaining GUIDE steps are homework/extended depth. PII audit of existing println leftovers often burns 30 minutes—search early.
 * **Equivalents:** Log4j2 acceptable only when structured MDC + no-PII outcomes preserved and documented.
 * **Exit interview:** Ask the student to paste one create log line and one WARN line, then explain how support would search Splunk/ELK using only `lab-request-001` and `CUS-1001`.
 

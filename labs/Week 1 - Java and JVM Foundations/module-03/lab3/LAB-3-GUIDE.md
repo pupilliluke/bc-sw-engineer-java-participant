@@ -1,11 +1,11 @@
 # Lab 3: Object-Oriented Design — Banking Management System
 
-> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 3 [pre-lab exercises 1–8](../exercises/EXERCISES-INDEX.md) (Pass in your notes). Exercises 1–2 were started on Day 2; finish 3–8 before this lab. Then open **one** OS how-to ([Windows](LAB-3-WINDOWS.md) · [macOS](LAB-3-MACOS.md)) and do **every Step below**. Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
+> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 3 [pre-lab exercises 1–8](../exercises/EXERCISES-INDEX.md) (Pass in your notes). Exercises 1–2 were started on Day 2; finish 3–8 before this lab. Then open **one** OS how-to ([Windows](LAB-3-WINDOWS.md) · [macOS](LAB-3-MACOS.md)). In class, prefer the **45-minute timed path** with [`starter/`](starter/README.md); the **full path** is every Step below (homework / extended). Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
 
 **Module:** 3 — Object-Oriented Programming in Java  
 **Lab folder:** `labs/Week 1 - Java and JVM Foundations/module-03/lab3/`  
 **Difficulty:** Intermediate (beginner-friendly)  
-**Duration:** 90–240 minutes (Day 3 core checkpoint ~90 min; finish remaining menu paths as extended work)  
+**Duration:** ~45 minutes (timed path with starter) · Full path: 90–240 minutes (Day 3 core checkpoint ~90 min; finish remaining menu paths as extended work)  
 **IDE conventions:** See [`../_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md)
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
@@ -19,16 +19,57 @@
 
 > **Hard gate — pre-lab exercises:** Complete **all eight** Module 3 exercises under [`../exercises/`](../exercises/EXERCISES-INDEX.md) and mark their Pass criteria **Pass** **before** Step 1 of this lab. Lab 3 is graded consolidation in a **separate** packaged project (`examples/Lab3-BankingSystem/`), not a replacement for the flat exercises folder (`examples/module-03-exercises/`).
 
+## 45-minute timed path (use starter)
+
+In class, use the starter templates so the **core** objectives fit **~45 minutes**. The full Steps below remain for homework / extended depth.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/Lab3-BankingSystem/` into your `java-bootcamp/examples/Lab3-BankingSystem/` target folder (commands in the starter README).
+3. Fill every `// TODO` / `_____` — do **not** open `solution/` first.
+4. Run the starter smoke test; capture evidence under `notes/screenshots/lab-3/`.
+5. Mark the **timed-path Pass criteria** in the starter README. Continue remaining GUIDE steps only if time allows (or as homework).
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed (default)** | ~45 min | Starter TODOs + smoke test |
+| **Full (extended)** | see Duration | Every Step in this GUIDE |
+
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| Pre-lab exercises | `examples\module-03-exercises\` (flat files — must exist before graded work) |
+| This lab project | `examples\Lab3-BankingSystem\` with `src\com\academy\bank\` |
+| Compile / run (from `Lab3-BankingSystem`) | Named `javac -d out` on the eight sources → `java -cp out com.academy.bank.Main` |
+| Smoke-test output | Menu → `C101` → savings `10001` → deposit `2000` → withdraw `3000` → display `9000` / interest `450` → `Thank You` |
+
+**If it fails (Windows PowerShell):** Prefer naming each `.java` file in the `javac` line (as in [LAB-3-WINDOWS.md](LAB-3-WINDOWS.md)); do not rely on `*.java` globs. Mark `examples\Lab3-BankingSystem\src` as Sources Root — not `module-03-exercises`.
+
 ---
 
 ## How to follow this lab
 
-1. Confirm Lab 0 + Lab 2 package habits + Module 3 Exercises 1–8 are done (checklists below).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-4. For each **Step N**: read **Why** / **Builds on** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-6. Capture evidence under `notes/screenshots/lab-3/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class:** prefer the [45-minute timed path](#45-minute-timed-path-use-starter) with [`starter/`](starter/README.md).
+2. Confirm Lab 0 + Lab 2 package habits + Module 3 Exercises 1–8 are done (checklists below).
+3. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+4. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+5. For each **Step N**: read **Why** / **Builds on** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+6. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+7. Capture evidence under `notes/screenshots/lab-3/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
+## What you'll submit (read this first)
+
+Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+
+| # | Deliverable | Where / what |
+| - | ----------- | ------------ |
+| 1 | Full source | `examples/Lab3-BankingSystem/src/com/academy/bank/` |
+| 2 | Screenshots | `notes/screenshots/lab-3/` — customer create, savings create, deposit, withdraw, polymorphic display, exit |
+| 3 | UML class diagram | Mermaid or image covering your types + `BankService` / `Main` |
+| 4 | Short design note | SOLID + inheritance/polymorphism in your own words |
+| 5 | Compile/run commands | Documented `javac -d out` / `java -cp out com.academy.bank.Main` |
+
 
 ## Module 3 exercises you must already have completed
 
@@ -691,20 +732,23 @@ Print the menu headers exactly (or very close) to the sample so screenshots matc
 
 **Do this:** From `Lab3-BankingSystem`:
 
-```bash
-javac -d out src/com/academy/bank/*.java
-java -cp out com.academy.bank.Main
-```
-
-**Windows PowerShell clean rebuild:**
+**Windows PowerShell** (name each source file — do not rely on `*.java` globs):
 
 ```powershell
 Remove-Item -Recurse -Force out -ErrorAction SilentlyContinue
-javac -d out src/com/academy/bank/*.java
+javac -d out `
+  src\com\academy\bank\Printable.java `
+  src\com\academy\bank\Customer.java `
+  src\com\academy\bank\Account.java `
+  src\com\academy\bank\SavingsAccount.java `
+  src\com\academy\bank\CurrentAccount.java `
+  src\com\academy\bank\Transaction.java `
+  src\com\academy\bank\BankService.java `
+  src\com\academy\bank\Main.java
 java -cp out com.academy.bank.Main
 ```
 
-**macOS / Linux clean rebuild:**
+**macOS / Linux:**
 
 ```bash
 rm -rf out
@@ -735,8 +779,8 @@ Choice :
 
 | Symptom | Fix |
 | ------- | --- |
-| file not found | `cd` to project root containing `src` |
-| cannot find symbol across classes | compile `*.java` together (wildcard), not one file alone |
+| file not found / empty glob | On Windows PowerShell, name each `.java` file (see [LAB-3-WINDOWS.md](LAB-3-WINDOWS.md)); `cd` to project root containing `src` |
+| cannot find symbol across classes | compile all eight sources together, not one file alone |
 | main class not found | `java -cp out com.academy.bank.Main` |
 | IntelliJ red packages | Mark `src` as Sources Root |
 
@@ -878,6 +922,8 @@ Delete `out/` anytime; keep sources under `examples/Lab3-BankingSystem/` for evi
 ---
 
 ## Expected Deliverables
+
+Same checklist as [What you'll submit](#what-youll-submit-read-this-first) above.
 
 * Full source under `java-bootcamp/examples/Lab3-BankingSystem/src/com/academy/bank/`
 * Screenshots: customer create, savings create, deposit, withdraw, polymorphic display, exit

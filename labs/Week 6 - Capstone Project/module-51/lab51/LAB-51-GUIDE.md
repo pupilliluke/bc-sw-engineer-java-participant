@@ -3,7 +3,7 @@
 **Module:** 51 — Capstone Security, CI/CD, and Deployment  
 **Lab folder:** `labs/Week 6 - Capstone Project/module-51/lab51/`  
 **Difficulty:** Advanced Capstone  
-**Duration:** 6–8 Hours
+**Duration:** ~45 minutes (timed path / session block with starter) · Full path: 6–8 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
 
@@ -16,13 +16,49 @@
 
 ---
 
+## 45-minute timed path (session block — use starter)
+
+In class, use the starter security/deploy checklist plus Dockerfile/k8s stubs so the **session block** fits **~45 minutes**. JWT hardening, pipeline, live k3s rollout, and rollback rehearsal remain **multi-day** on the full path.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/` into `java-bootcamp/examples/customer-management-platform/` (see starter README).
+3. Fill checklist + Dockerfile/k8s TODOs — do **not** wait on a perfect cluster; dry-run is enough for the block.
+4. Run the starter smoke check; evidence under `notes/screenshots/lab-51/`.
+5. Mark timed-path Pass criteria in the starter README. Continue remaining GUIDE steps as homework / multi-day work.
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed / session block** | ~45 min | Starter TODOs + smoke check |
+| **Full (multi-day)** | 6–8 Hours | Every Step in this GUIDE |
+
+Policy: [`labs/_STARTER-PATH.md`](../../../_STARTER-PATH.md)
+
+---
+
 ## How to follow this lab
 
-1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/lab-51/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class (session block):** prefer [`starter/README.md`](starter/README.md) — copy starter → platform tree, fill security/deploy stubs (~45 min).
+2. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+4. For each **Step N** (full path / multi-day): read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+6. Capture evidence under `notes/screenshots/lab-51/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
+## What you'll submit (read this first)
+
+Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+
+| # | Deliverable |
+| - | ----------- |
+| 1 | Spring Security changes and authorization tests |
+| 2 | Pipeline definition |
+| 3 | Dockerfile and image digest record |
+| 4 | Deployment manifests (k3s) |
+| 5 | Security and deployment evidence (scans, smoke, rollback) |
+| 6 | Baseline and final validation results |
+| 7 | One controlled failure-path result (401/403 or failed rollout→rollback) |
+| 8 | Concise setup and reproduction guide |
+
 
 ## Lab Overview
 
@@ -612,6 +648,8 @@ Keep sanitized reports; remove plaintext secrets.
 ---
 
 ## Expected Deliverables
+
+Same checklist as [What you'll submit](#what-youll-submit-read-this-first) above.
 
 * Spring Security changes and authorization tests
 * Pipeline definition

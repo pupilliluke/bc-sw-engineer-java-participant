@@ -1,0 +1,23 @@
+import type { Customer } from '../types/customer'
+import { CustomerCard } from './CustomerCard'
+import { EmptyState } from './EmptyState'
+
+export function CustomerList({
+  customers,
+  onEdit,
+}: {
+  customers: Customer[]
+  onEdit: (customerId: string) => void
+}) {
+  if (customers.length === 0) return <EmptyState />
+  return (
+    <ul>
+      {customers.map((c) => (
+        // TODO: key must be c.customerId (never array index)
+        <li key={c.customerId}>
+          <CustomerCard customer={c} onEdit={onEdit} />
+        </li>
+      ))}
+    </ul>
+  )
+}

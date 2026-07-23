@@ -1,11 +1,11 @@
 # Lab 7: Exception Handling and Error Management — ATM Banking System
 
-> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 7 [pre-lab exercises 1–8](../exercises/EXERCISES-INDEX.md) (Pass in your notes). Then open **one** OS how-to ([Windows](LAB-7-WINDOWS.md) · [macOS](LAB-7-MACOS.md)) and do **every Step below**. Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
+> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 7 [pre-lab exercises 1–8](../exercises/EXERCISES-INDEX.md) (Pass in your notes). Then open **one** OS how-to ([Windows](LAB-7-WINDOWS.md) · [macOS](LAB-7-MACOS.md)). In class, prefer the **45-minute timed path** with [`starter/`](starter/README.md); the **full path** is every Step below (homework / extended). Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
 
 **Module:** 7 — Exception Handling and Error Management  
 **Lab folder:** `labs/Week 1 - Java and JVM Foundations/module-07/lab7/`  
 **Difficulty:** Intermediate  
-**Duration:** 65–240 minutes (Day 5 core checkpoint ~65 min; finish remaining ATM paths as extended work)
+**Duration:** ~45 minutes (timed path with starter) · Full path: 65–240 minutes (Day 5 core checkpoint ~65 min; finish remaining ATM paths as extended work)
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
 
@@ -18,16 +18,60 @@
 
 > **Hard gate — pre-lab exercises:** Complete **all eight** Module 7 exercises under [`../exercises/`](../exercises/EXERCISES-INDEX.md) and mark their Pass criteria **Pass** **before** Step 1 of this lab. Lab 7 is graded consolidation in a **separate** packaged project (`examples/Lab7-ATMSystem/`), not a replacement for the flat exercises folder (`examples/module-07-exercises/`).
 
+## 45-minute timed path (use starter)
+
+In class, use the starter templates so the **core** objectives fit **~45 minutes**. The full Steps below remain for homework / extended depth.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/Lab7-ATMSystem/` into your `java-bootcamp/examples/Lab7-ATMSystem/` target folder (commands in the starter README).
+3. Fill every `// TODO` / `_____` — do **not** open `solution/` first.
+4. Run the starter smoke test; capture evidence under `notes/screenshots/lab-7/`.
+5. Mark the **timed-path Pass criteria** in the starter README. Continue remaining GUIDE steps only if time allows (or as homework).
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed (default)** | ~45 min | Starter TODOs + smoke test |
+| **Full (extended)** | see Duration | Every Step in this GUIDE |
+
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| Pre-lab exercises | `examples\module-07-exercises\` (flat files — must exist before graded work) |
+| This lab project | `examples\Lab7-ATMSystem\` with `src\com\academy\atm\`, `transactions.txt`, `logs\` |
+| Compile / run | Named `javac -d out` on the nine sources → `java -cp out com.academy.atm.Main` **from project root** |
+| Smoke-test output | Login `1001`/`1234` → withdraw `20000` Insufficient Balance → deposit `1000` → balance `12000` → mini statement → `Thank You` |
+
+**If it fails (Windows PowerShell):** Prefer naming each `.java` file in the `javac` line (as in [LAB-7-WINDOWS.md](LAB-7-WINDOWS.md)). Missing `logs\application.log` or `transactions.txt` → you ran `java` from the wrong folder; `cd` to `Lab7-ATMSystem` first. Mark `src` as Sources Root; set Run working directory to the project root.
+
 ---
 
 ## How to follow this lab
 
-1. Confirm Lab 0 + prior Week 1 menus/packages + Module 7 Exercises 1–8 are done (checklists below).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-4. For each **Step N**: read **Why** / **Builds on** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-6. Capture evidence under `notes/screenshots/lab-7/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class:** prefer the [45-minute timed path](#45-minute-timed-path-use-starter) with [`starter/`](starter/README.md).
+2. Confirm Lab 0 + prior Week 1 menus/packages + Module 7 Exercises 1–8 are done (checklists below).
+3. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+4. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+5. For each **Step N**: read **Why** / **Builds on** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+6. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+7. Capture evidence under `notes/screenshots/lab-7/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
+## What you'll submit (read this first)
+
+Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+
+| # | Deliverable | Where / what |
+| - | ----------- | ------------ |
+| 1 | Full source | `examples/…/src/com/academy/atm/` — `Account`, `Transaction`, `ATMService`, `LoggerUtil`, `Main`, four custom exceptions |
+| 2 | Input file | `transactions.txt` (or equivalent) |
+| 3 | Log evidence | Snippet/screenshot of `logs/application.log` ERROR lines |
+| 4 | Screenshots | Successful **and** failed transactions (menu still alive) |
+| 5 | LMS / README notes | Overview, exception hierarchy, logging, compile/run, sample output, lessons |
+| 6 | Reflection answers | `notes/lab7-answers.md` |
+
+Optional: labeled bonuses. Do not submit secrets or a verbatim instructor `solution/`.
+
 
 ## Module 7 exercises you must already have completed
 
@@ -1067,10 +1111,33 @@ You may add options 8–10 as in [`solution/`](solution/).
 
 **Do this:**
 
+**Windows PowerShell** (name each source file — do not rely on `*.java` globs):
+
+```powershell
+cd $env:USERPROFILE\java-bootcamp\examples\Lab7-ATMSystem
+Remove-Item -Recurse -Force out -ErrorAction SilentlyContinue
+javac -d out `
+  src\com\academy\atm\InvalidAmountException.java `
+  src\com\academy\atm\InsufficientFundsException.java `
+  src\com\academy\atm\InvalidPinException.java `
+  src\com\academy\atm\AccountNotFoundException.java `
+  src\com\academy\atm\Transaction.java `
+  src\com\academy\atm\Account.java `
+  src\com\academy\atm\LoggerUtil.java `
+  src\com\academy\atm\ATMService.java `
+  src\com\academy\atm\Main.java
+java -cp out com.academy.atm.Main
+Get-Content logs\application.log -Tail 40
+```
+
+**macOS / Linux:**
+
 ```bash
-cd ~/java-bootcamp/examples/Lab7-ATMSystem   # or %USERPROFILE%\java-bootcamp\examples\Lab7-ATMSystem
+cd ~/java-bootcamp/examples/Lab7-ATMSystem
+rm -rf out
 javac -d out src/com/academy/atm/*.java
 java -cp out com.academy.atm.Main
+tail -n 40 logs/application.log
 ```
 
 Or in IntelliJ: open the project, set SDK 21, set Run working directory to the project root, run `com.academy.atm.Main` (see [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md)).
@@ -1344,24 +1411,15 @@ Keep `.java` sources, `transactions.txt`, notes, and evidence screenshots. Do no
 
 ## Expected Deliverables
 
-Students should submit:
+Submit according to your LMS or instructor dropbox. Same checklist as [What you'll submit](#what-youll-submit-read-this-first) above.
 
-* Complete Java project with all source files under `src/com/academy/atm/`
-* Source code for: `Account`, `Transaction`, `ATMService`, `LoggerUtil`, `Main`, and all four custom exceptions
-* `transactions.txt` (or equivalent historical input file)
-* Evidence of `logs/application.log` (snippet or screenshot of ERROR lines)
-* Screenshots of successful **and** failed transactions (menu still alive)
-* README / LMS notes containing:
-  * Project overview
-  * Exception hierarchy
-  * Custom exceptions implemented
-  * Logging strategy
-  * How to compile and run (from project root)
-  * Sample output
-  * Lessons learned
-* Answers to reflection questions in `../../notes/lab7-answers.md` (from project; or `~/java-bootcamp/notes/lab7-answers.md`)
-* Optional: labeled bonuses (rollback, daily error report, timing, summary)
-* Git repository (optional)
+* **Sources** under `src/com/academy/atm/`: `Account`, `Transaction`, `ATMService`, `LoggerUtil`, `Main`, and all four custom exceptions
+* **`transactions.txt`** (or equivalent historical input file)
+* **Log evidence:** snippet or screenshot of `logs/application.log` ERROR lines
+* **Screenshots:** successful **and** failed transactions (menu still alive)
+* **LMS / README notes:** overview; exception hierarchy; custom exceptions; logging strategy; compile/run from project root; sample output; lessons learned
+* **Answers** in `notes/lab7-answers.md`
+* Optional: labeled bonuses; git repository
 
 Do not submit secrets or a verbatim instructor [`solution/`](solution/) as your own work.
 

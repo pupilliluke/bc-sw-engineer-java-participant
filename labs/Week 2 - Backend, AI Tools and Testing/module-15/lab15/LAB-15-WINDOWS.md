@@ -8,6 +8,8 @@
 **Full lab steps:** [LAB-15-GUIDE.md](LAB-15-GUIDE.md)  
 **Other OS:** [macOS guide](LAB-15-MACOS.md) · [IDE conventions](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/_IDE-CONVENTIONS.md)
 
+**Verified:** IntelliJ Terminal (PowerShell) + Temurin OpenJDK **21.0.11** + Apache Maven **3.9.9**. Copied `examples\lab14-crm` → `examples\lab15-crm`; introduced `CustomerRepository` + `InMemoryCustomerRepository`, `CustomerValidator` transition table, `CustomerService` interface + `DefaultCustomerService` (constructor DI). `mvn -B clean test` → **Tests run: 15**, Failures: 0 · **BUILD SUCCESS**. Main prints Ravi activation + illegal transition with `lab-request-001` while Amina remains ACTIVE. No `HashMap` in the service package.
+
 ## Prerequisites (Windows)
 
 - [Lab 0 (Windows)](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-WINDOWS.md) complete (JDK 21, Maven when needed, Git)
@@ -50,10 +52,25 @@ cd examples\lab15-crm
 
 ### Commands this lab typically uses
 
-```text
-mvn clean compile
-mvn -q -DskipTests package   # when the lab says so
+```powershell
+cd $env:USERPROFILE\java-bootcamp\examples
+Copy-Item -Recurse lab14-crm lab15-crm   # once
+cd lab15-crm
+mvn -q test "-Dtest=CustomerValidatorTest"
+mvn -B clean test
+mvn -q -DskipTests compile
+java -cp target\classes com.northstar.crm.Main
 ```
+
+Verified Main theme:
+
+```text
+activated CUS-1002 status=ACTIVE
+expected failure: illegal status transition ACTIVE -> PROSPECT [lab-request-001]
+CUS-1001 still: ACTIVE
+```
+
+Verified suite: **Tests run: 15**, Failures: 0 · **BUILD SUCCESS**.
 
 ## Run configurations (IntelliJ)
 

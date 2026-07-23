@@ -3,7 +3,7 @@
 **Module:** 17 — JUnit Testing Fundamentals  
 **Lab folder:** `labs/Week 2 - Backend, AI Tools and Testing/module-17/lab17/`  
 **Difficulty:** Intermediate  
-**Duration:** 3–4 Hours
+**Duration:** ~45 minutes (timed path with starter) · Full path: 3–4 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
 
@@ -14,15 +14,64 @@
 
 > **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11; Maven 3.9.9):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| Prerequisite | `examples\lab16-crm\` (service + BusinessException) |
+| This lab project | `examples\lab17-crm\` (`Copy-Item -Recurse lab16-crm lab17-crm`) |
+| Gate | JaCoCo **0.8.12** package rule `com.northstar.crm.service` LINE ≥ **0.80** |
+| Formal suites | `CustomerServiceTests` · `CustomerValidatorParameterizedTest` |
+| Full suite | `mvn -B clean verify` → **Tests run: 41**, Failures: 0 · **BUILD SUCCESS** |
+| Service coverage | LINE ratio ≈ **0.97** (36 covered / 1 missed) |
+| Gate proof | `minimum` 0.99 → rule violated (0.97 &lt; 0.99); restored 0.80 → green |
+
+**If it fails (Windows PowerShell):** Always `mvn clean verify` so the JaCoCo agent applies. Package include must be exactly `com.northstar.crm.service`. Prefer `assertThrows(BusinessException.class, …)` over bare `Exception`. Do not commit `target\site\jacoco`.
+
 ---
+
+## 45-minute timed path (use starter)
+
+In class, use the starter templates so the **core** objectives fit **~45 minutes**. The full Steps below remain for homework / extended depth.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/` into your `java-bootcamp/examples/lab17-crm/` target (see starter README).
+3. Fill every `// TODO` — do **not** wait on a perfect prior lab; the starter includes a baseline.
+4. Run the starter smoke test; evidence under `notes/screenshots/lab-17/`.
+5. Mark timed-path Pass criteria in the starter README. Continue remaining GUIDE steps as homework if needed.
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed (default)** | ~45 min | Starter TODOs + smoke test |
+| **Full (extended)** | see Duration | Every Step in this GUIDE |
+
 
 ## How to follow this lab
 
-1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/lab-17/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class (timed path):** prefer [`starter/README.md`](starter/README.md) — copy starter → `java-bootcamp/examples/lab17-crm`, fill `// TODO`, run smoke test (~45 min).
+2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
+3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+4. For each **Step N** (full path / homework): read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+6. Capture evidence under `notes/screenshots/lab-17/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
+
+## What you'll submit (read this first)
+
+Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+
+| # | Deliverable |
+| - | ----------- |
+| 1 | `CustomerServiceTests` with happy and negative paths |
+| 2 | Parameterized transition tests |
+| 3 | JaCoCo configuration + evidence of ≥80% on service package |
+| 4 | Copilot review notes with human acceptance **or** manual equivalent |
+| 5 | Deliberate gate-fail evidence + restore |
+| 6 | `mvn clean verify` success log |
+| 7 | README runbook + coverage notes |
+| 8 | No secrets or generated build directories committed |
+
 
 ## Lab Overview
 
@@ -501,6 +550,8 @@ Do not commit `target/site/jacoco` unless your course policy explicitly allows i
 
 ## Expected Deliverables
 
+Same checklist as [What you'll submit](#what-youll-submit-read-this-first) above.
+
 * `CustomerServiceTests` with happy and negative paths
 * Parameterized transition tests
 * JaCoCo configuration + evidence of ≥80% on service package
@@ -575,7 +626,7 @@ You are finished when:
 * **Assess:** Meaningful negatives, parameterized matrix aligned with Lab 15, honest 80% gate (no cheats), deterministic suite.
 * **Continuity:** Prefer `examples/lab17-crm`. Keep fixture IDs. Lab 18 should not require rewriting fixtures—only collaborator substitution.
 * **Common pitfalls:** Shared static service; `assertThrows(Exception.class)` only; sleeping tests; JaCoCo without `clean`; package include typos; committing huge jacoco sites.
-* **Timing:** 3–4 hours. Coverage last-mile often burns 45 minutes—steer students to uncovered CLOSED/email branches early.
+* **Timing:** Timed path ~45 minutes with starter; full path remains 3–4 hours. Keep starter TODOs as the in-class core; remaining GUIDE steps are homework/extended depth. Coverage last-mile often burns 45 minutes—steer students to uncovered CLOSED/email branches early.
 
 ---
 

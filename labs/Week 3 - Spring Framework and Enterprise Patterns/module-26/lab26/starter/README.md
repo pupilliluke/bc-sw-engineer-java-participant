@@ -1,0 +1,51 @@
+# Lab 26 starter — timed path (~45 minutes)
+
+**Theme:** Profiles (dev/test/prod yml)
+
+## Copy into your workspace
+
+Do **not** grade work only inside the course `labs/` clone. Copy this `starter/` into your bootcamp examples tree as `lab26-crm`.
+
+**Windows (PowerShell)** — from this lab folder:
+
+```powershell
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\java-bootcamp\examples\lab26-crm" | Out-Null
+Copy-Item -Recurse -Force ".\starter\*" "$env:USERPROFILE\java-bootcamp\examples\lab26-crm\"
+cd $env:USERPROFILE\java-bootcamp\examples\lab26-crm
+```
+
+**macOS / Linux:**
+
+```bash
+mkdir -p ~/java-bootcamp/examples/lab26-crm
+cp -R starter/. ~/java-bootcamp/examples/lab26-crm/
+cd ~/java-bootcamp/examples/lab26-crm
+```
+
+## 45-minute checklist
+
+- [ ] Complete base `application.yml` and three profile files
+- [ ] Fill `NorthstarIntegrationProperties` + `@ConfigurationProperties` binding
+- [ ] Prove activation via `-Dspring.profiles.active` / env (notes)
+- [ ] Ensure `.env.example` only — no real secrets committed
+- [ ] Smoke under `dev`: GET CUS-1001 still works
+
+## Smoke test
+
+```bash
+mvn -B test -Dspring.profiles.active=test
+mvn -B spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+Evidence under `~/java-bootcamp/notes/screenshots/lab-26/` (redact secrets).
+
+## Timed-path Pass criteria
+
+| Criterion | Pass / Fail |
+| --------- | ----------- |
+| `dev` profile starts with H2-friendly settings | Pass / Fail |
+| `prod` refuses missing DB_PASSWORD / NORTHSTAR_API_KEY (or documented) | Pass / Fail |
+| Profile YAML files present for dev/test/prod | Pass / Fail |
+| No real secrets in Git | Pass / Fail |
+
+Continue remaining GUIDE steps as homework / full path if needed.

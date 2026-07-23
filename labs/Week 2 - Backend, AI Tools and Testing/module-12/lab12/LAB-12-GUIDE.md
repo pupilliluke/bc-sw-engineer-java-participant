@@ -3,7 +3,7 @@
 **Module:** 12 — Java Coding Standards and Best Practices  
 **Lab folder:** `labs/Week 2 - Backend, AI Tools and Testing/module-12/lab12/`  
 **Difficulty:** Intermediate  
-**Duration:** 3–4 Hours
+**Duration:** ~45 minutes (timed path with starter) · Full path: 3–4 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
 
@@ -14,15 +14,65 @@
 
 > **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **GitHub Copilot** signed in. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11; Maven 3.9.9):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| Prerequisite | Prefer `examples\lab11-crm\` (entities + JUnit/Mockito already present) |
+| This lab project | `examples\lab12-crm\` (`Copy-Item -Recurse lab11-crm lab12-crm`) |
+| Frozen mess | `CustomerService.before.java.txt` (~62 lines) |
+| Refactored service | `createCustomer` / `getCustomer` / `updateStatus` + validation helpers (~103 lines) |
+| Evidence docs | `docs\smells.md`, `before-after.md`, `ai-review-notes.md`, `CODING-STANDARDS-check.md` |
+| Tests | `CustomerTest` (2) + `CustomerServiceTest` (6) — Lab 11 notifier mock removed for new API |
+| Full suite | `mvn -B clean test` / `mvn -B verify` → **Tests run: 8**, Failures: 0 · **BUILD SUCCESS** |
+| Main demo | create/get/update + duplicate/unknown with `correlationId=lab-request-001` |
+
+**If it fails (Windows PowerShell):** Freeze baseline with a `.txt` suffix so Maven does not compile two `CustomerService` classes. After switching to the target API, update or remove Lab 11 tests that call `addCustomer` / `CustomerNotifier`. Prefer `Map` keyed by ID so `getCustomer(new String("CUS-1001"))` works (old `==` did not).
+
 ---
+
+## 45-minute timed path (use starter)
+
+In class, use the starter templates so the **core** objectives fit **~45 minutes**. The full Steps below remain for homework / extended depth.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/` into your `java-bootcamp/examples/lab12-crm/` target (see starter README).
+3. Fill every `// TODO` — do **not** wait on a perfect prior lab; the starter includes a baseline.
+4. Run the starter smoke test; evidence under `notes/screenshots/lab-12/`.
+5. Mark timed-path Pass criteria in the starter README. Continue remaining GUIDE steps as homework if needed.
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed (default)** | ~45 min | Starter TODOs + smoke test |
+| **Full (extended)** | see Duration | Every Step in this GUIDE |
+
 
 ## How to follow this lab
 
-1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/lab-12/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class (timed path):** prefer [`starter/README.md`](starter/README.md) — copy starter → `java-bootcamp/examples/lab12-crm`, fill `// TODO`, run smoke test (~45 min).
+2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
+3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+4. For each **Step N** (full path / homework): read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+6. Capture evidence under `notes/screenshots/lab-12/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
+
+## What you'll submit (read this first)
+
+Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+
+| # | Deliverable |
+| - | ----------- |
+| 1 | Refactored `CustomerService` with clear methods and typed storage |
+| 2 | Frozen before snapshot and `docs/smells.md` + `docs/before-after.md` |
+| 3 | Passing `CustomerServiceTest` (or equivalent) |
+| 4 | AI review notes or explicit manual-review substitute |
+| 5 | Standards checklist + controlled-failure evidence |
+| 6 | Architecture note: in-memory NOW vs React/Kafka/PostgreSQL LATER |
+| 7 | README run/cleanup + short SOLID applied/deferred decisions |
+| 8 | No secrets or generated dependency directories committed |
+
 
 ## Lab Overview
 
@@ -690,6 +740,8 @@ Keep `CustomerService.before.java.txt` and docs evidence. Remove temporary crede
 
 ## Expected Deliverables
 
+Same checklist as [What you'll submit](#what-youll-submit-read-this-first) above.
+
 * Refactored `CustomerService` with clear methods and typed storage
 * Frozen before snapshot and `docs/smells.md` + `docs/before-after.md`
 * Passing `CustomerServiceTest` (or equivalent)
@@ -765,7 +817,7 @@ You are finished when:
 * **Copilot:** Use without review notes should not earn full documentation credit.
 * **Continuity:** Keep packages `com.northstar.crm.*` and sample IDs for Lab 13. Prefer `examples/lab12-crm` path.
 * **Common pitfalls:** Leaving `==` bugs; returning null; keeping `"UPDATE"`; compiling the before file; accepting silent upserts from AI.
-* **Timing:** 3–4 hours. Smell catalog and evidence writing are graded—budget time beyond coding.
+* **Timing:** Timed path ~45 minutes with starter; full path remains 3–4 hours. Keep starter TODOs as the in-class core; remaining GUIDE steps are homework/extended depth.
 
 ---
 

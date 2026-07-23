@@ -3,7 +3,7 @@
 **Module:** 30 — Event-Driven Architecture with Kafka  
 **Lab folder:** `labs/Week 4 - Kafka, React, PostgreSQL and Resilience/module-30/lab30/`  
 **Difficulty:** Intermediate  
-**Duration:** 4–5 Hours
+**Duration:** ~45 minutes (timed path with starter) · Full path: 4–5 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
 
@@ -16,13 +16,47 @@
 
 ---
 
+## 45-minute timed path (use starter)
+
+In class, use the starter templates so the **core** objectives fit **~45 minutes**. The full Steps below remain for homework / extended depth.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/` into your `java-bootcamp/examples/…` target (see starter README).
+3. Fill every `// TODO` / `TODO` — do **not** wait on a perfect prior lab; the starter includes a baseline.
+4. Run the starter smoke test; evidence under `notes/screenshots/lab-30/`.
+5. Mark timed-path Pass criteria in the starter README. Continue remaining GUIDE steps as homework if needed.
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed (default)** | ~45 min | Starter TODOs + smoke test |
+| **Full (extended)** | see Duration | Every Step in this GUIDE |
+
+---
+
 ## How to follow this lab
 
-1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/lab-30/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class (timed path):** prefer [`starter/README.md`](starter/README.md) — copy starter → `java-bootcamp/examples/lab30-crm`, fill TODOs, run smoke test (~45 min).
+2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
+3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+4. For each **Step N** (full path / homework): read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+6. Capture evidence under `notes/screenshots/lab-30/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
+## What you'll submit (read this first)
+
+Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+
+| # | Deliverable |
+| - | ----------- |
+| 1 | `compose.yaml` KRaft broker definition |
+| 2 | Topics created (events + DLQ) with describe evidence |
+| 3 | Versioned event JSON samples (Amina/Ravi) |
+| 4 | CLI produce/consume evidence with keys/partitions/offsets |
+| 5 | Java producer with acks=all + idempotence |
+| 6 | Competing vs independent group evidence + lag describe |
+| 7 | `docs/kafka-notes.md` runbook + production checklist |
+| 8 | No secrets or generated junk committed |
+
 
 ## Lab Overview
 
@@ -649,6 +683,8 @@ git status
 
 ## Expected Deliverables
 
+Same checklist as [What you'll submit](#what-youll-submit-read-this-first) above.
+
 * `compose.yaml` KRaft broker definition
 * Topics created (events + DLQ) with describe evidence
 * Versioned event JSON samples (Amina/Ravi)
@@ -722,7 +758,7 @@ You are finished when:
 * **Assess:** Explicit topic create; keying; competing vs independent groups; lag literacy; DLQ topic present for Lab 31.
 * **Continuity:** Prefer `examples/lab30-crm`. Freeze topic names. Fixtures Amina/Ravi/`lab-request-001`.
 * **Common pitfalls:** Advertised listeners; forgetting key parse; using one group for “audit”; RF>1 on single node; auto-create left enabled mentally for prod.
-* **Timing:** 4–5 hours. Docker pull + first consume metadata often burn 30–45 minutes on restricted networks.
+* **Timing:** Timed path ~45 minutes with starter; full path remains 4–5 hours. Docker pull + first consume metadata often burn 30–45 minutes on restricted networks.
 
 ---
 

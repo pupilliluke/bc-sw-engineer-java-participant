@@ -9,6 +9,8 @@
 
 This document is the **capstone master document** for Modules 48–52 and Labs 48–52. Lab guides remain the day-to-day working instructions; use this document for scope, schedule, architecture expectations, deliverables, and assessment.
 
+**Session block (~45 min):** each Lab 48–52 has `starter/` templates for the scheduled class block (ADRs, stubs, checklists, defense outline). Multi-day build/defense stays on the full GUIDE path — see [`_STARTER-PATH.md`](../_STARTER-PATH.md).
+
 | Resource | Path |
 | -------- | ---- |
 | **Capstone project brief (DOCX, company-shareable)** | [Java_Software_Engineer_Capstone.docx](Java_Software_Engineer_Capstone.docx) |

@@ -13,7 +13,7 @@ Full course rule: [Which file do I open?](../../_PARTICIPANT-FILE-GUIDE.md)
 | A | After prior labs | Stay in IntelliJ with `java-bootcamp` open |
 | B | After Module 4 **slides** (Day 3) | [`exercises/EXERCISES-INDEX.md`](exercises/EXERCISES-INDEX.md) → exercises **1–7 in order** |
 | C | After Exercises 1–7 Pass (Day 4) | **One** OS how-to: [`lab4/LAB-4-WINDOWS.md`](lab4/LAB-4-WINDOWS.md) **or** [`lab4/LAB-4-MACOS.md`](lab4/LAB-4-MACOS.md) |
-| D | Graded lab (post-exercise consolidation) | [`lab4/LAB-4-GUIDE.md`](lab4/LAB-4-GUIDE.md) — follow every Step |
+| D | Graded lab (post-exercise consolidation) | [`lab4/LAB-4-GUIDE.md`](lab4/LAB-4-GUIDE.md) — in class use [`lab4/starter/`](lab4/starter/README.md) (~45 min); full path = every Step |
 | E | Done | Mark Pass/Fail in your notes |
 
 **Do not skip from slides straight to Lab 4.** Day 3 Lab 4 “briefing” is setup only — GUIDE Steps wait until Exercises 1–7 Pass.

@@ -3,7 +3,7 @@
 **Module:** 44 — Continuous Delivery and Environment Promotion  
 **Lab folder:** `labs/Week 5 - DevOps, CI-CD and k3s/lab44/`  
 **Difficulty:** Intermediate  
-**Duration:** 3–4 Hours
+**Duration:** ~45 minutes (timed path with starter) · Full path: 3–4 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
 
@@ -16,13 +16,46 @@
 
 ---
 
+## 45-minute timed path (use starter)
+
+In class, use the starter templates so the **core** objectives fit **~45 minutes**. The full Steps below remain for homework / extended depth.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/` into your `java-bootcamp/examples/…` target (see starter README).
+3. Fill every `// TODO` / `TODO` — do **not** wait on a perfect prior lab; the starter includes a baseline.
+4. Run the starter smoke test; evidence under `notes/screenshots/lab-44/`.
+5. Mark timed-path Pass criteria in the starter README. Continue remaining GUIDE steps as homework if needed.
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed (default)** | ~45 min | Starter TODOs + smoke test |
+| **Full (extended)** | see Duration | Every Step in this GUIDE |
+
+---
+
 ## How to follow this lab
 
-1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/lab-44/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class (timed path):** prefer [`starter/README.md`](starter/README.md) — copy starter → `java-bootcamp/examples/lab44-crm`, fill TODOs, run smoke test (~45 min).
+2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
+3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+4. For each **Step N** (full path / homework): read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+6. Capture evidence under `notes/screenshots/lab-44/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
+## What you'll submit (read this first)
+
+Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+
+| # | Deliverable |
+| - | ----------- |
+| 1 | `docs/release-plan.md` |
+| 2 | `docs/release-checklist.md` |
+| 3 | `docs/rollback-runbook.md` |
+| 4 | `artifact-manifest.json` |
+| 5 | Staging promotion evidence (digest + smoke) |
+| 6 | Controlled failure / NO-GO or rollback rehearsal |
+| 7 | No secrets or real customer records committed |
+
 
 ## Lab Overview
 
@@ -654,6 +687,8 @@ Leave staging on instructor-approved version. Delete temporary secret files. Kee
 
 ## Expected Deliverables
 
+Same checklist as [What you'll submit](#what-youll-submit-read-this-first) above.
+
 * `docs/release-plan.md`
 * `docs/release-checklist.md`
 * `docs/rollback-runbook.md`
@@ -727,7 +762,7 @@ You are finished when:
 * **Assess:** Manifest quality, objective gates, staging smoke with fixtures, honest rollback limits, clean secrets hygiene.
 * **Continuity:** Prefer `examples/lab44-crm`. Keep fixture IDs. Lab 45 should not require rewriting promotion docs—only infra automation around them.
 * **Common pitfalls:** `:latest`; rebuild on promote; secrets in manifests; checklist without timestamps; rollback without verification; ignoring migration limits.
-* **Timing:** 3–4 hours. Cluster permissions and registry digest lookup often burn 40 minutes—pre-stage credentials.
+* **Timing:** Timed path ~45 minutes with starter; full path remains 3–4 hours. Cluster permissions and registry digest lookup often burn 40 minutes—pre-stage credentials.
 
 ---
 

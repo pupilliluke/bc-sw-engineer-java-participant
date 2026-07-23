@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO: SOAP Fault for validation failure -->
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+  <Body><!-- TODO --></Body>
+</Envelope>

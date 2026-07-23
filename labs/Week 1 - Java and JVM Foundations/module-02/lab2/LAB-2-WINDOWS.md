@@ -10,6 +10,8 @@
 **Full lab steps:** [LAB-2-GUIDE.md](LAB-2-GUIDE.md)  
 **Other OS:** [macOS guide](LAB-2-MACOS.md) · [IDE conventions](../../_IDE-CONVENTIONS.md)
 
+**Verified:** IntelliJ Terminal (PowerShell) + Temurin OpenJDK **21.0.11** on Lab 0 workspace `%USERPROFILE%\java-bootcamp`. Participant path: create `examples\Lab2-JavaSyntax`, compile with **named** `.java` files (not `*.java` globs), run `java -cp out com.academy.student.Main`. Sample session (add `101`/`John`/`Java`/`91` → display table `91.00` → search → average `91.00` → exit `Thank You`) succeeded; class files land under `out\com\academy\student\`.
+
 - Pre-lab exercises (required before this lab): [`../exercises/EXERCISES-INDEX.md`](../exercises/EXERCISES-INDEX.md) — workspace: `%USERPROFILE%\java-bootcamp\examples\module-02-exercises`
 
 ## Prerequisites (Windows)
@@ -94,3 +96,18 @@ _Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are
 | 3 | Lab pass criteria / deliverables in the GUIDE are complete | Pass / Fail |
 | 4 | `javac -d out` / `java -cp out com.academy.student.Main` succeed in the IntelliJ terminal | Pass / Fail |
 | 5 | Screenshots (if required) saved under `notes/screenshots/lab-2/` | Pass / Fail |
+
+### Verified smoke commands (participant laptop)
+
+From `examples\Lab2-JavaSyntax` in the IntelliJ Terminal (PowerShell):
+
+```powershell
+Remove-Item -Recurse -Force out -ErrorAction SilentlyContinue
+javac -d out `
+  src\com\academy\student\Student.java `
+  src\com\academy\student\StudentManager.java `
+  src\com\academy\student\Main.java
+java -cp out com.academy.student.Main
+```
+
+**Verified result (Temurin 21.0.11):** `out\com\academy\student\*.class` created; interactive sample (`1` → `101`/`John`/`Java`/`91` → `2` → `3`/`101` → `4` → `5`) prints the `printf` table with `91.00`, search `display()`, `Average Marks : 91.00`, then `Thank You`. Marks `150` is rejected; duplicate ID `101` is rejected.

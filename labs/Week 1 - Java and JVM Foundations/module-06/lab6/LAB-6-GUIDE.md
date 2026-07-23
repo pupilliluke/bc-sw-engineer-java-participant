@@ -1,11 +1,11 @@
 # Lab 6: Streams and Lambda Expressions — Employee Analytics System
 
-> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 6 [pre-lab exercises 1–7](../exercises/EXERCISES-INDEX.md) (Pass in your notes). Exercise 8 (parallel bonus) is recommended but not required for the core gate. Then open **one** OS how-to ([Windows](LAB-6-WINDOWS.md) · [macOS](LAB-6-MACOS.md)) and do **every Step below**. Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
+> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 6 [pre-lab exercises 1–7](../exercises/EXERCISES-INDEX.md) (Pass in your notes). Exercise 8 (parallel bonus) is recommended but not required for the core gate. Then open **one** OS how-to ([Windows](LAB-6-WINDOWS.md) · [macOS](LAB-6-MACOS.md)). In class, prefer the **45-minute timed path** with [`starter/`](starter/README.md); the **full path** is every Step below (homework / extended). Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
 
 **Module:** 6 — Streams and Functional Programming  
 **Lab folder:** `labs/Week 1 - Java and JVM Foundations/module-06/lab6/`  
 **Difficulty:** Intermediate  
-**Duration:** 90–240 minutes (Day 5 core checkpoint ~75 min; finish remaining menu paths as extended work)
+**Duration:** ~45 minutes (timed path with starter) · Full path: 90–240 minutes (Day 5 core checkpoint ~75 min; finish remaining menu paths as extended work)
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
 
@@ -18,16 +18,59 @@
 
 > **Hard gate — pre-lab exercises:** Complete **Exercises 1–7** under [`../exercises/`](../exercises/EXERCISES-INDEX.md) and mark their Pass criteria **Pass** **before** Step 1 of this lab. **Exercise 8** (`parallelStream` bonus) is recommended stretch work — bring those notes if you completed it. Lab 6 is graded consolidation in a **separate** packaged project (`examples/Lab6-EmployeeAnalytics/`), not a replacement for the flat exercises folder (`examples/module-06-exercises/`).
 
+## 45-minute timed path (use starter)
+
+In class, use the starter templates so the **core** objectives fit **~45 minutes**. The full Steps below remain for homework / extended depth.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/Lab6-EmployeeAnalytics/` into your `java-bootcamp/examples/Lab6-EmployeeAnalytics/` target folder (commands in the starter README).
+3. Fill every `// TODO` / `_____` — do **not** open `solution/` first.
+4. Run the starter smoke test; capture evidence under `notes/screenshots/lab-6/`.
+5. Mark the **timed-path Pass criteria** in the starter README. Continue remaining GUIDE steps only if time allows (or as homework).
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed (default)** | ~45 min | Starter TODOs + smoke test |
+| **Full (extended)** | see Duration | Every Step in this GUIDE |
+
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| Pre-lab exercises | `examples\module-06-exercises\` (flat files — must exist before graded work) |
+| This lab project | `examples\Lab6-EmployeeAnalytics\` with `src\com\academy\analytics\` |
+| Compile / run | Named `javac -d out` on the five sources → `java -cp out com.academy.analytics.Main` |
+| Smoke-test output | Menu 1 (25 rows) → 8 dashboard Average Salary **100680** → 9 `Thank You` |
+
+**If it fails (Windows PowerShell):** Prefer naming each `.java` file in the `javac` line (as in [LAB-6-WINDOWS.md](LAB-6-WINDOWS.md)); do not rely on `*.java` globs. Mark `examples\Lab6-EmployeeAnalytics\src` as Sources Root — not `module-06-exercises`.
+
 ---
 
 ## How to follow this lab
 
-1. Confirm Lab 0 + Lab 5 List habits + Module 6 Exercises 1–7 are done (checklists below).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-4. For each **Step N**: read **Why** / **Builds on** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-6. Capture evidence under `notes/screenshots/lab-6/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class:** prefer the [45-minute timed path](#45-minute-timed-path-use-starter) with [`starter/`](starter/README.md).
+2. Confirm Lab 0 + Lab 5 List habits + Module 6 Exercises 1–7 are done (checklists below).
+3. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+4. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+5. For each **Step N**: read **Why** / **Builds on** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+6. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+7. Capture evidence under `notes/screenshots/lab-6/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
+## What you'll submit (read this first)
+
+Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+
+| # | Deliverable | Where / what |
+| - | ----------- | ------------ |
+| 1 | Full source | `examples/…/src/com/academy/analytics/` — `Employee`, `EmployeeData`, `EmployeeService`, `ReportService`, `Main` |
+| 2 | Screenshots | `notes/screenshots/lab-6/` — menu, filters/groups, **Dashboard** |
+| 3 | Stream operations table | Completed table of stream ops you used |
+| 4 | LMS / README notes | Overview, streams, functional interfaces, lambdas, compile/run, sample dashboard, learnings |
+| 5 | Reflection answers | `notes/lab6-answers.md` |
+
+Optional: labeled bonuses; git repo. Do not submit secrets or a verbatim instructor `solution/`.
+
 
 ## Core path first (menu options 1–9)
 
@@ -1142,8 +1185,25 @@ You may add options 10–21 for demos/bonuses as in [`solution/`](solution/) —
 
 **Do this:**
 
+**Windows PowerShell** (name each source file — do not rely on `*.java` globs):
+
+```powershell
+cd $env:USERPROFILE\java-bootcamp\examples\Lab6-EmployeeAnalytics
+Remove-Item -Recurse -Force out -ErrorAction SilentlyContinue
+javac -d out `
+  src\com\academy\analytics\Employee.java `
+  src\com\academy\analytics\EmployeeData.java `
+  src\com\academy\analytics\EmployeeService.java `
+  src\com\academy\analytics\ReportService.java `
+  src\com\academy\analytics\Main.java
+java -cp out com.academy.analytics.Main
+```
+
+**macOS / Linux:**
+
 ```bash
-cd ~/java-bootcamp/examples/Lab6-EmployeeAnalytics   # or %USERPROFILE%\java-bootcamp\examples\Lab6-EmployeeAnalytics
+cd ~/java-bootcamp/examples/Lab6-EmployeeAnalytics
+rm -rf out
 javac -d out src/com/academy/analytics/*.java
 java -cp out com.academy.analytics.Main
 ```
@@ -1165,7 +1225,7 @@ Or in IntelliJ: open the project, set SDK 21, run `com.academy.analytics.Main` (
 Employee Analytics Dashboard
 =============================
 Employees : 25
-Average Salary : 99720
+Average Salary : 100680
 Highest Salary : 165000
 Lowest Salary : 48000
 Departments : 5
@@ -1383,23 +1443,14 @@ Keep `.java` sources, stream notes, and evidence screenshots. Do not delete GitH
 
 ## Expected Deliverables
 
-Students should submit:
+Submit according to your LMS or instructor dropbox. Same checklist as [What you'll submit](#what-youll-submit-read-this-first) above.
 
-* Complete Java project with all source files under `src/com/academy/analytics/`
-* Source code for: `Employee`, `EmployeeData`, `EmployeeService`, `ReportService`, `Main`
-* Screenshots of the running application (menu, filters/groups, **Dashboard**)
-* Completed **stream operations table**
-* README / LMS notes containing:
-  * Project overview
-  * Stream operations implemented
-  * Functional interfaces used
-  * Example lambda expressions / method references
-  * How to compile and run (`javac -d out ...` / `java -cp out com.academy.analytics.Main`)
-  * Sample dashboard output
-  * Observations and learnings
-* Answers to reflection questions in `../../notes/lab6-answers.md` (from project; or `~/java-bootcamp/notes/lab6-answers.md`)
-* Optional: labeled bonuses
-* Git repository (optional)
+* **Sources** under `src/com/academy/analytics/`: `Employee`, `EmployeeData`, `EmployeeService`, `ReportService`, `Main`
+* **Screenshots:** menu, filters/groups, Dashboard
+* **Stream operations table** (completed)
+* **LMS / README notes:** overview; stream ops; functional interfaces; sample lambdas/method refs; compile/run (`javac -d out` / `java -cp out com.academy.analytics.Main`); sample dashboard; observations
+* **Answers** in `notes/lab6-answers.md`
+* Optional: labeled bonuses; git repository
 
 Do not submit secrets or a verbatim instructor [`solution/`](solution/) as your own work.
 
@@ -1549,7 +1600,7 @@ This lab bridges **Module 6 exercises** (after Lab 5) to graded stream analytics
 
 **Before students open this guide:** confirm exercise checkpoint Pass (lambda, filter, map, min/max/Optional, grouping, composed HR pipeline). Lab 6 pacing assumes those skills already exist on the five-employee dataset.
 
-* **Reference solution:** Full implementation including demo menu options 10–20 and bonus option 21 is in [`solution/`](solution/) under `Lab6-EmployeeAnalytics/` (`com.academy.analytics`). Guide learners to finish **CORE menu 1–9 + dashboard** before revealing bonus collectors. Dashboard expected: 25 employees, avg 99720, max 165000, min 48000, 5 departments, John Smith top performer, IT highest-paid dept, 23 active / 2 inactive.
+* **Reference solution:** Full implementation including demo menu options 10–20 and bonus option 21 is in [`solution/`](solution/) under `Lab6-EmployeeAnalytics/` (`com.academy.analytics`). Guide learners to finish **CORE menu 1–9 + dashboard** before revealing bonus collectors. Dashboard expected: 25 employees, avg **100680**, max 165000, min 48000, 5 departments, John Smith top performer, IT highest-paid dept, 23 active / 2 inactive.
 * **API fidelity:** Align teaching with solution signatures—`EmployeeService(List<Employee>)` defensive copy; `ReportService(EmployeeService)`; `EmployeeData.createSampleEmployees()` with 25 rows; messages and dashboard field names as above; `isActive()` boolean getter for method references.
 * **Common pitfalls:** Skipping exercises; reusing a Stream instance; calling `.get()` on empty Optional; confusing `filter` vs `map`; sorting without `.reversed()` for “top” lists; putting all pipelines in `Main`; forgetting `-d out`/`-cp out`; mixing `module-06-exercises/` flat files with packaged lab commands; inconsistent department string casing in seeds.
 * **Classpath / IDE:** Demo wrong compile without `-d out` so Step 19 sticks. Dual IDE on laptop: IntelliJ Community primary, VS Code optional — [`_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md). Keep streams pedagogy; CRM endpoints start Lab 8+. Score screenshots + operations table + intermediate-vs-terminal explanation. Core path fits ~75 min Day 5; bonuses are stretch.

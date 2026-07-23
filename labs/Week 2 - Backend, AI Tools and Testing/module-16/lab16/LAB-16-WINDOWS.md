@@ -8,6 +8,8 @@
 **Full lab steps:** [LAB-16-GUIDE.md](LAB-16-GUIDE.md)  
 **Other OS:** [macOS guide](LAB-16-MACOS.md) · [IDE conventions](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/_IDE-CONVENTIONS.md)
 
+**Verified:** IntelliJ Terminal (PowerShell) + Temurin OpenJDK **21.0.11** + Apache Maven **3.9.9**. Copied `examples\lab15-crm` → `examples\lab16-crm`; added `ErrorResponse` / `BusinessException` factories / `GlobalExceptionHandler` / `ApiResult`; facade returns Ok/Fail; service throws typed business exceptions. `mvn -B clean test` → **Tests run: 21**, Failures: 0 · **BUILD SUCCESS**. Main prints 400/404/409 JSON with `lab-request-001` and leaves `CUS-1001` ACTIVE after illegal transition.
+
 ## Prerequisites (Windows)
 
 - [Lab 0 (Windows)](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-WINDOWS.md) complete (JDK 21, Maven when needed, Git)
@@ -50,10 +52,18 @@ cd examples\lab16-crm
 
 ### Commands this lab typically uses
 
-```text
-mvn clean compile
-mvn -q -DskipTests package   # when the lab says so
+```powershell
+cd $env:USERPROFILE\java-bootcamp\examples
+Copy-Item -Recurse lab15-crm lab16-crm   # once
+cd lab16-crm
+mvn -q test "-Dtest=GlobalExceptionHandlerTest"
+mvn -B clean test
+mvn -q -DskipTests compile
+mvn -q -DincludeScope=runtime dependency:build-classpath "-Dmdep.outputFile=target\cp.txt"
+java -cp "target\classes;$(Get-Content target\cp.txt -Raw)" com.northstar.crm.Main
 ```
+
+Verified: **Tests run: 21**, Failures: 0 · **BUILD SUCCESS**. Main shows 400 validation, 404 not-found, 409 conflict JSON with `correlationId=lab-request-001`.
 
 ## Run configurations (IntelliJ)
 

@@ -18,10 +18,11 @@ Paths and compile/run: [`_IDE-CONVENTIONS.md`](_IDE-CONVENTIONS.md).
 1. Open **`module-NN/README.md`** (Start here)  
 2. After slides → **`exercises/EXERCISES-INDEX.md`**  
 3. Pick **one** OS how-to → **`LAB-N-WINDOWS.md`** *or* **`LAB-N-MACOS.md`**  
-4. Do the lab → **`LAB-N-GUIDE.md`**  
-5. Skip `INSTRUCTOR-DEMO.md` and `solution/` unless told
+4. **In class (~45 min):** `labN/starter/README.md` → copy templates → fill TODOs → smoke test ([`_STARTER-PATH.md`](../_STARTER-PATH.md))  
+5. **Homework / depth:** every Step in **`LAB-N-GUIDE.md`**  
+6. Skip `INSTRUCTOR-DEMO.md` and `solution/` unless told
 
-**Lab 0:** follow the OS how-to only ([Windows](module-00/lab0/LAB-0-WINDOWS.md) · [macOS](module-00/lab0/LAB-0-MACOS.md)) — no module README required.
+**Lab 0:** start with the [45-minute checklist](module-00/lab0/starter/README.md), then the OS how-to ([Windows](module-00/lab0/LAB-0-WINDOWS.md) · [macOS](module-00/lab0/LAB-0-MACOS.md)).
 
 | Guide | Link |
 | ----- | ---- |

@@ -3,7 +3,7 @@
 **Module:** 14 — DTOs, Validation and API Contracts  
 **Lab folder:** `labs/Week 2 - Backend, AI Tools and Testing/module-14/lab14/`  
 **Difficulty:** Intermediate  
-**Duration:** 3–4 Hours
+**Duration:** ~45 minutes (timed path with starter) · Full path: 3–4 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
 
@@ -14,15 +14,62 @@
 
 > **Environment reminder:** Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11; Maven 3.9.9):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| Prerequisite | Prefer `examples\lab12-crm\` (clean `createCustomer` / `getCustomer` API) |
+| This lab project | `examples\lab14-crm\` (`Copy-Item -Recurse lab12-crm lab14-crm`) |
+| Validation deps | `jakarta.validation-api` **3.1.0** · Hibernate Validator **8.0.2.Final** · Expressly **5.0.0** |
+| API edge | `CustomerApiFacade` + `CustomerRequestDTO` / `CustomerResponseDTO` + `CustomerMapper` |
+| Full suite | `mvn -B clean test` → **Tests run: 13**, Failures: 0 · **BUILD SUCCESS** |
+| Main | Response DTOs for `CUS-1001`/`CUS-1002`; invalid email + unknown id include `lab-request-001` |
+
+**If it fails (Windows PowerShell):** Use **Jakarta** validation packages (not `javax`). Missing EL → add `expressly`. Lab 12 service uses `createCustomer` / `getCustomer` — adapt the guide’s `addCustomer` / `findByCustomerId` examples. `java -cp target\classes` alone fails with `NoClassDefFoundError: jakarta/validation/Validation` — build a runtime classpath via `dependency:build-classpath` (see README) or run from IntelliJ.
+
 ---
+
+## 45-minute timed path (use starter)
+
+In class, use the starter templates so the **core** objectives fit **~45 minutes**. The full Steps below remain for homework / extended depth.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/` into your `java-bootcamp/examples/lab14-crm/` target (see starter README).
+3. Fill every `// TODO` — do **not** wait on a perfect prior lab; the starter includes a baseline.
+4. Run the starter smoke test; evidence under `notes/screenshots/lab-14/`.
+5. Mark timed-path Pass criteria in the starter README. Continue remaining GUIDE steps as homework if needed.
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed (default)** | ~45 min | Starter TODOs + smoke test |
+| **Full (extended)** | see Duration | Every Step in this GUIDE |
+
 
 ## How to follow this lab
 
-1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/lab-14/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class (timed path):** prefer [`starter/README.md`](starter/README.md) — copy starter → `java-bootcamp/examples/lab14-crm`, fill `// TODO`, run smoke test (~45 min).
+2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
+3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+4. For each **Step N** (full path / homework): read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+6. Capture evidence under `notes/screenshots/lab-14/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
+
+## What you'll submit (read this first)
+
+Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+
+| # | Deliverable |
+| - | ----------- |
+| 1 | `CustomerRequestDTO`, `CustomerResponseDTO`, `CustomerMapper`, `CustomerApiFacade` |
+| 2 | Automated validation test output |
+| 3 | Successful-path evidence (`CUS-1001` / `CUS-1002`) |
+| 4 | Controlled-failure evidence (invalid email / blank fields + correlation) |
+| 5 | Architecture note: entity vs DTO boundary |
+| 6 | README run/cleanup + design decisions |
+| 7 | No secrets or `target/` committed |
+
 
 ## Lab Overview
 
@@ -429,7 +476,7 @@ Wire `Main` to create Amina via a valid DTO with correlation ID `lab-request-001
 
 **Expected result:** Console shows create ok for `CUS-1001` / Amina / ACTIVE with correlation echoed in logs/notes.
 
-**If it fails:** `NoProviderFoundException` → Step 1 deps. Calling service before validate → reorder. Service method names differ → adapt, keep “validate first” rule.
+**If it fails:** `NoProviderFoundException` → Step 1 deps. Calling service before validate → reorder. Service method names differ → adapt, keep “validate first” rule. On Windows, if `java -cp target/classes` fails with `NoClassDefFoundError: jakarta/validation/Validation`, include Maven runtime jars (`dependency:build-classpath`) or run `Main` from IntelliJ.
 
 ---
 
@@ -736,6 +783,8 @@ No containers required. Keep DTOs/mapper/facade and tests. **Keep `lab14-crm`** 
 
 ## Expected Deliverables
 
+Same checklist as [What you'll submit](#what-youll-submit-read-this-first) above.
+
 * `CustomerRequestDTO`, `CustomerResponseDTO`, `CustomerMapper`, `CustomerApiFacade`
 * Automated validation test output
 * Successful-path evidence (`CUS-1001` / `CUS-1002`)
@@ -809,7 +858,7 @@ You are finished when:
 * **Flexibility:** Entity constructor/`Instant` vs `LocalDateTime` differences are OK when mapping is correct and documented.
 * **Common pitfalls:** `javax` imports; never calling `validate`; mapping status with wrong case; putting `@Entity` on DTOs; skipping correlation on errors.
 * **Continuity:** Prefer `examples/lab14-crm`. Keep sample IDs. Point forward to Spring `@Valid` without requiring Boot here.
-* **Timing:** 3–4 hours. Dependency resolution + EL provider issues dominate early failures—budget demo of `NoProviderFoundException` restore.
+* **Timing:** Timed path ~45 minutes with starter; full path remains 3–4 hours. Keep starter TODOs as the in-class core; remaining GUIDE steps are homework/extended depth.
 
 ---
 

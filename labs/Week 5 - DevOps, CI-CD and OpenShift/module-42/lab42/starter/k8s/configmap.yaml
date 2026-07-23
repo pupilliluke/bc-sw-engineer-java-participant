@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: crm-api-config
+  labels:
+    app: crm-api
+    # TODO(lab42): Add environment / student labels per instructor
+data:
+  # TODO(lab42): Non-secret config only (URLs, log level, profile)
+  SPRING_PROFILES_ACTIVE: "k8s"
+  SERVER_PORT: "8080"
+  # CRM_DB_HOST: "TODO(lab42)"

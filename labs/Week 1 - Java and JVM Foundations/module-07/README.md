@@ -13,7 +13,7 @@ Full course rule: [Which file do I open?](../../_PARTICIPANT-FILE-GUIDE.md)
 | A | After Lab 6 / prior labs | Stay in IntelliJ with `java-bootcamp` open |
 | B | After Module 7 **slides** (Day 5) | [`exercises/EXERCISES-INDEX.md`](exercises/EXERCISES-INDEX.md) → exercises **1–8 in order** |
 | C | After Exercises 1–8 Pass | **One** OS how-to: [`lab7/LAB-7-WINDOWS.md`](lab7/LAB-7-WINDOWS.md) **or** [`lab7/LAB-7-MACOS.md`](lab7/LAB-7-MACOS.md) |
-| D | Graded lab (post-exercise consolidation) | [`lab7/LAB-7-GUIDE.md`](lab7/LAB-7-GUIDE.md) — follow every Step |
+| D | Graded lab (post-exercise consolidation) | [`lab7/LAB-7-GUIDE.md`](lab7/LAB-7-GUIDE.md) — in class use [`lab7/starter/`](lab7/starter/README.md) (~45 min); full path = every Step |
 | E | Done | Mark Pass/Fail in your notes |
 
 **Do not skip from slides straight to Lab 7.** Lab 7 assumes Exercises 1–8 are already Pass.

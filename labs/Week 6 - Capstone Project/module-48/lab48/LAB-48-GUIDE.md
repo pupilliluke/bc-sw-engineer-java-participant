@@ -3,7 +3,7 @@
 **Module:** 48 — Capstone Planning and Architecture  
 **Lab folder:** `labs/Week 6 - Capstone Project/module-48/lab48/`  
 **Difficulty:** Advanced Capstone  
-**Duration:** 5–6 Hours
+**Duration:** ~45 minutes (timed path / session block with starter) · Full path: 5–6 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
 
@@ -16,13 +16,49 @@
 
 ---
 
+## 45-minute timed path (session block — use starter)
+
+In class, use the starter templates so the **session block** fits **~45 minutes**. Capstone planning remains **multi-day** on the full path below — the starter does not replace ADRs, NFRs, or the complete risk register.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/` into `java-bootcamp/examples/customer-management-platform/` (see starter README).
+3. Fill context diagram stub, ≥1 ADR, backlog rows, and risk seeds — do **not** wait on a perfect prior lab.
+4. Run the starter smoke check; evidence under `notes/screenshots/lab-48/`.
+5. Mark timed-path Pass criteria in the starter README. Continue remaining GUIDE steps as homework / multi-day work.
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed / session block** | ~45 min | Starter TODOs + smoke check |
+| **Full (multi-day)** | 5–6 Hours | Every Step in this GUIDE |
+
+Policy: [`labs/_STARTER-PATH.md`](../../../_STARTER-PATH.md)
+
+---
+
 ## How to follow this lab
 
-1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/lab-48/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class (session block):** prefer [`starter/README.md`](starter/README.md) — copy starter → `customer-management-platform`, fill planning TODOs (~45 min).
+2. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+4. For each **Step N** (full path / multi-day): read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+6. Capture evidence under `notes/screenshots/lab-48/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
+## What you'll submit (read this first)
+
+Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+
+| # | Deliverable |
+| - | ----------- |
+| 1 | `docs/architecture/context.md` (C4 context + product outcome) |
+| 2 | `docs/architecture/container.md` (containers + data flow) |
+| 3 | `docs/nfrs.md` (measurable NFRs) |
+| 4 | `docs/adrs/` (≥5 ADRs: DB, messaging, consistency, auth, deploy) |
+| 5 | `docs/backlog.md` (prioritized vertical stories including interaction recording) |
+| 6 | `docs/risk-register.md` (scored risks with mitigations) |
+| 7 | `docs/team-plan.md` (owners, milestones, critical path) |
+| 8 | Baseline note if platform code already exists |
+
 
 ## Lab Overview
 
@@ -636,6 +672,8 @@ Stop any exploratory containers started while sketching. Keep sanitized planning
 ---
 
 ## Expected Deliverables
+
+Same checklist as [What you'll submit](#what-youll-submit-read-this-first) above.
 
 * `docs/architecture/context.md` (C4 context + product outcome)
 * `docs/architecture/container.md` (containers + data flow)

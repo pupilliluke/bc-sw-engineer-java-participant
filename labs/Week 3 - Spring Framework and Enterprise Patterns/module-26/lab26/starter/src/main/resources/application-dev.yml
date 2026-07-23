@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    # TODO: H2 in-memory URL for lab
+    url:
+    username: sa
+    password:
+logging:
+  level:
+    com.northstar.crm: DEBUG

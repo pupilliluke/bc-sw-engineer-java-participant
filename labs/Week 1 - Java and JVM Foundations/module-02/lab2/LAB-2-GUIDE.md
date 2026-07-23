@@ -1,11 +1,11 @@
 # Lab 2: Java Syntax and Input/Output
 
-> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 2 [core pre-lab exercises 1–7](../exercises/EXERCISES-INDEX.md) (Pass in your notes). Exercises 8–9 are challenge/bonus — strongly recommended before the display/`printf` steps. Then open **one** OS how-to ([Windows](LAB-2-WINDOWS.md) · [macOS](LAB-2-MACOS.md)) and do **every Step below**. Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
+> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 2 [core pre-lab exercises 1–7](../exercises/EXERCISES-INDEX.md) (Pass in your notes). Exercises 8–9 are challenge/bonus — strongly recommended before the display/`printf` steps. Then open **one** OS how-to ([Windows](LAB-2-WINDOWS.md) · [macOS](LAB-2-MACOS.md)). In class, prefer the **45-minute timed path** with [`starter/`](starter/README.md); the **full path** is every Step below (homework / extended). Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
 
 **Module:** 2 — Java Syntax and Core Constructs  
 **Lab folder:** `labs/Week 1 - Java and JVM Foundations/module-02/lab2/`  
 **Difficulty:** Beginner  
-**Duration:** 90–180 minutes (Day 2 core checkpoint ~90 min; finish remaining menu paths as extended work)  
+**Duration:** ~45 minutes (timed path with starter) · Full path: 90–180 minutes (Day 2 core checkpoint ~90 min; finish remaining menu paths as extended work)  
 **IDE conventions:** See [`../_IDE-CONVENTIONS.md`](../../_IDE-CONVENTIONS.md)
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
@@ -19,16 +19,44 @@
 
 > **Hard gate — pre-lab exercises:** Complete Module 2 **Exercises 1–7** under [`../exercises/`](../exercises/EXERCISES-INDEX.md) and mark their Pass criteria **Pass** **before** Step 1 of this lab. Lab 2 is graded consolidation in a **separate** packaged project (`examples/Lab2-JavaSyntax/`), not a replacement for the flat exercises folder (`examples/module-02-exercises/`).
 
+## 45-minute timed path (use starter)
+
+In class, use the starter templates so the **core** objectives fit **~45 minutes**. The full Steps below remain for homework / extended depth.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/Lab2-JavaSyntax/` into your `java-bootcamp/examples/Lab2-JavaSyntax/` target folder (commands in the starter README).
+3. Fill every `// TODO` / `_____` — do **not** open `solution/` first.
+4. Run the starter smoke test; capture evidence under `notes/screenshots/lab-2/`.
+5. Mark the **timed-path Pass criteria** in the starter README. Continue remaining GUIDE steps only if time allows (or as homework).
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed (default)** | ~45 min | Starter TODOs + smoke test |
+| **Full (extended)** | see Duration | Every Step in this GUIDE |
+
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| Pre-lab exercises | `examples\module-02-exercises\` (flat `.java` files) |
+| This lab project | `examples\Lab2-JavaSyntax\` with `src\com\academy\student\` |
+| Compile / run (from `Lab2-JavaSyntax`) | `javac -d out` on the three sources → `java -cp out com.academy.student.Main` |
+| Smoke-test output | Menu → add John → table row `91.00` → search ID `101` → `Average Marks : 91.00` → `Thank You` |
+
+**If it fails (Windows PowerShell):** Prefer naming each `.java` file in the `javac` line (as in [LAB-2-WINDOWS.md](LAB-2-WINDOWS.md)); do not rely on `*.java` globs. Mark `examples\Lab2-JavaSyntax\src` as Sources Root — not `module-02-exercises`.
+
 ---
 
 ## How to follow this lab
 
-1. Confirm Lab 0 + Module 2 Exercises 1–7 are done (checklists below). Exercises 8–9 help with money/`printf` tables — finish them if you can before Step 7.
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-4. For each **Step N**: read **Why** / **Builds on** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-6. Capture evidence under `notes/screenshots/lab-2/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class:** prefer the [45-minute timed path](#45-minute-timed-path-use-starter) with [`starter/`](starter/README.md).
+2. Confirm Lab 0 + Module 2 Exercises 1–7 are done (checklists below). Exercises 8–9 help with money/`printf` tables — finish them if you can before Step 7.
+3. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+4. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+5. For each **Step N**: read **Why** / **Builds on** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+6. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+7. Capture evidence under `notes/screenshots/lab-2/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
 
 ## Module 2 exercises you must already have completed
 
@@ -651,22 +679,18 @@ Average Marks : 91.00
 
 **Do this:** From project root `Lab2-JavaSyntax`:
 
-**Windows PowerShell / macOS / Linux** (same `javac` / `java` once `cd` is correct):
-
-```bash
-javac -d out src/com/academy/student/*.java
-java -cp out com.academy.student.Main
-```
-
-**Windows PowerShell clean rebuild:**
+**Windows PowerShell** (name each source file — do not rely on `*.java` globs):
 
 ```powershell
 Remove-Item -Recurse -Force out -ErrorAction SilentlyContinue
-javac -d out src/com/academy/student/*.java
+javac -d out `
+  src\com\academy\student\Student.java `
+  src\com\academy\student\StudentManager.java `
+  src\com\academy\student\Main.java
 java -cp out com.academy.student.Main
 ```
 
-**macOS / Linux clean rebuild:**
+**macOS / Linux:**
 
 ```bash
 rm -rf out
@@ -694,7 +718,7 @@ Enter Choice :
 
 | Symptom | Fix |
 | ------- | --- |
-| `javac: file not found` | `cd` into `Lab2-JavaSyntax` first |
+| `javac: file not found` / empty glob | On Windows PowerShell, name each `.java` file (see [LAB-2-WINDOWS.md](LAB-2-WINDOWS.md)); `cd` into `Lab2-JavaSyntax` first |
 | `package ... does not match` | Check `src/com/academy/student` layout |
 | `Error: Could not find or load main class` | Use `-cp out` and fully qualified `com.academy.student.Main` |
 | Wrong Java version | `javac -version` must be 21 |
@@ -781,15 +805,27 @@ Also try Search (`3`) with `101` and a bad ID before exiting.
 
 ## Reference Commands
 
+**Windows PowerShell** (from `Lab2-JavaSyntax/`):
+
+```powershell
+javac -d out `
+  src\com\academy\student\Student.java `
+  src\com\academy\student\StudentManager.java `
+  src\com\academy\student\Main.java
+java -cp out com.academy.student.Main
+```
+
+**macOS / Linux:**
+
 ```bash
-# From Lab2-JavaSyntax/
 javac -d out src/com/academy/student/*.java
 java -cp out com.academy.student.Main
 ```
 
 | Goal | Command theme |
 | ---- | ------------- |
-| Compile to `out/` | `javac -d out src/com/academy/student/*.java` |
+| Compile to `out/` (Windows) | Named `javac -d out` lines for the three sources |
+| Compile to `out/` (macOS/Linux) | `javac -d out src/com/academy/student/*.java` |
 | Run main | `java -cp out com.academy.student.Main` |
 | List sources (Windows) | `Get-ChildItem -Recurse src\*.java` |
 | List sources (macOS/Linux) | `find src -name '*.java'` |

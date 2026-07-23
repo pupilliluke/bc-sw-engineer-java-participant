@@ -5,18 +5,19 @@ Hands-on lab guides for the Java Software Engineer Bootcamp.
 **Participants — which file when?** → **[_PARTICIPANT-FILE-GUIDE.md](_PARTICIPANT-FILE-GUIDE.md)**  
 For Week 1 Modules 1–7, also open **`module-NN/README.md`** first (Start here).
 
-- **Lab 0** — pre-course environment setup (`module-00/lab0`) — follow your **OS how-to** (`LAB-0-WINDOWS.md` or `LAB-0-MACOS.md`)
-- **Labs 1–52** — one lab per module under `module-NN/labN`, **grouped by week**
+- **Lab 0** — pre-course environment setup (`module-00/lab0`) — **timed path:** [`starter/README.md`](Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/starter/README.md); full install: **OS how-to** (`LAB-0-WINDOWS.md` or `LAB-0-MACOS.md`)
+- **Labs 1–52** — one lab per module under `module-NN/labN`, **grouped by week** — in class use **`labN/starter/`** (~45 min); see **[_STARTER-PATH.md](_STARTER-PATH.md)**
 - **Week 1 exercises** — `module-01`…`07/exercises/` (after slides, before the lab)
+- **Capstone 48–52** — starters are a **session block**; multi-day build/defense stays on the full GUIDE path
 
 Instructor curriculum twins (slide PNGs) live in [`../curriculum/`](../curriculum/) with the **same week and `module-NN` names**.
 
 ## How to use these labs
 
-1. Start from **[PARTICIPANT-SETUP-README.md](PARTICIPANT-SETUP-README.md)** and **[Lab 0](Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-WINDOWS.md)** (or macOS).
-2. Read **[_PARTICIPANT-FILE-GUIDE.md](_PARTICIPANT-FILE-GUIDE.md)** once so you know GUIDE vs WINDOWS vs exercises.
-3. For each later module: open **`module-NN/README.md`** (Week 1) → exercises (if any) → **one** OS how-to → **`LAB-N-GUIDE.md`**.
-4. Follow **How to follow this lab** at the top of each GUIDE: Step → Expected → next step.
+1. Start from **[PARTICIPANT-SETUP-README.md](PARTICIPANT-SETUP-README.md)** and **[Lab 0](Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-WINDOWS.md)** (or macOS) — prefer the [Lab 0 starter checklist](Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/starter/README.md) for the 45-minute block.
+2. Read **[_PARTICIPANT-FILE-GUIDE.md](_PARTICIPANT-FILE-GUIDE.md)** and **[_STARTER-PATH.md](_STARTER-PATH.md)** once so you know GUIDE vs WINDOWS vs starter timed path.
+3. For each later module: open **`module-NN/README.md`** (Week 1) → exercises (if any) → **one** OS how-to → **`starter/README.md`** (in class) → **`LAB-N-GUIDE.md`** (full path / homework).
+4. Follow **How to follow this lab** at the top of each GUIDE: timed path first in class, then Step → Expected → next step on the full path.
 5. Mark **Pass criteria** tables in your own notes (**Pass** / **Fail**). GitHub file view cannot tick checkboxes.
 6. Keep code under `~/java-bootcamp/examples/` (Windows: `%USERPROFILE%\java-bootcamp\examples`). Capture evidence under workspace-root `notes/screenshots/` (Lab 0) or `notes/screenshots/lab-N/` (Labs 1–52). Do not create a top-level `labs/` folder inside `java-bootcamp`.
 
@@ -24,6 +25,7 @@ Instructor curriculum twins (slide PNGs) live in [`../curriculum/`](../curriculu
 
 Every lab lives under its module folder as `module-NN/labN/` and includes:
 - `LAB-N-GUIDE.md` — full lab steps (**your main file for Labs 1–52**)  
+- `starter/` — **45-minute timed path** checklist + templates ([`_STARTER-PATH.md`](_STARTER-PATH.md))  
 - `LAB-N-WINDOWS.md` — Windows + IntelliJ how-to (**pick one OS**)  
 - `LAB-N-MACOS.md` — macOS + IntelliJ how-to (**pick one OS**)  
 - Week 1 also has `module-NN/exercises/` (pre-lab practice after slides) and `module-NN/README.md` (Start here)
@@ -31,6 +33,7 @@ Every lab lives under its module folder as `module-NN/labN/` and includes:
 | Guide | Purpose |
 | ----- | ------- |
 | [**Which file do I open?**](_PARTICIPANT-FILE-GUIDE.md) | Participant sequence + what to ignore |
+| [**45-minute timed path**](_STARTER-PATH.md) | Starter templates vs full GUIDE path |
 | [**Final Lab Environment Setup**](FINAL-SETUP-README.md) | **Authoritative final setup** — shared host Postgres 17, Kafka 4.0, k3s, GHCR |
 | [**Participant Setup README**](PARTICIPANT-SETUP-README.md) | Whole environment setup for students (laptop + shared services, accounts, pass criteria) |
 | [**Labs Setup Instructions**](SETUP-INSTRUCTIONS.md) | Tools, versions, ports, and lab-by-lab requirements matrix |

@@ -8,6 +8,8 @@
 **Full lab steps:** [LAB-9-GUIDE.md](LAB-9-GUIDE.md)  
 **Other OS:** [macOS guide](LAB-9-MACOS.md) · [IDE conventions](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/_IDE-CONVENTIONS.md)
 
+**Verified:** IntelliJ Terminal (PowerShell) + Temurin OpenJDK **21.0.11** + Apache Maven **3.9.9**. Copied `examples\lab8-crm` → `examples\lab9-crm`, expanded POM (Spring/JUnit placeholders, Surefire, jar `Main-Class`, `dev`/`test`/`prod` profiles). Lifecycle `validate`→`install` and `mvn -B verify` → **BUILD SUCCESS**; `PlaceholderTest` Tests run: **1**; `java -jar target\customer-service.jar` prints the CRM skeleton banner; default profile **`dev`**.
+
 ## Prerequisites (Windows)
 
 - [Lab 0 (Windows)](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-WINDOWS.md) complete (JDK 21, Maven when needed, Git)
@@ -42,17 +44,24 @@
 | Path style | Backslashes; quote paths with spaces |
 
 ```powershell
-cd $env:USERPROFILE\java-bootcamp
-# Lab 0 layout: evidence at workspace root; code under examples\
-New-Item -ItemType Directory -Force -Path notes\screenshots\lab-9 | Out-Null
-cd examples\lab9-crm
+cd $env:USERPROFILE\java-bootcamp\examples
+Copy-Item -Recurse lab8-crm lab9-crm
+New-Item -ItemType Directory -Force -Path ..\notes\screenshots\lab-9 | Out-Null
+cd lab9-crm
 ```
 
 ### Commands this lab typically uses
 
-```text
-mvn clean compile
-mvn -q -DskipTests package   # when the lab says so
+From `examples\lab9-crm` in the IntelliJ Terminal (PowerShell):
+
+```powershell
+mvn -q validate
+mvn -q test
+mvn -q clean package
+java -jar target\customer-service.jar
+mvn -B verify
+mvn dependency:tree
+mvn help:active-profiles
 ```
 
 ## Run configurations (IntelliJ)
@@ -82,3 +91,8 @@ _Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are
 | 3 | Lab pass criteria / deliverables in the GUIDE are complete | Pass / Fail |
 | 4 | Commands above succeed in the IntelliJ terminal (or as the lab specifies) | Pass / Fail |
 | 5 | Screenshots (if required) saved under `notes/screenshots/lab-9/` | Pass / Fail |
+
+### Verified smoke commands (participant laptop)
+
+**Verified result (Temurin 21.0.11 / Maven 3.9.9):** `target\customer-service.jar` exists; `java -jar` prints Lab 8 Main banner; Surefire runs `PlaceholderTest`; default active profile is `dev`; artifact installed under `~\.m2\repository\com\northstar\customer-service\0.1.0-SNAPSHOT\`. Finish Lab 8 first if `lab8-crm` is missing.
+

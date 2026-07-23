@@ -3,7 +3,7 @@
 **Module:** 29 — Validation and Exception Handling  
 **Lab folder:** `labs/Week 3 - Spring Framework and Enterprise Patterns/module-29/lab29/`  
 **Difficulty:** Intermediate  
-**Duration:** 4–5 Hours
+**Duration:** ~45 minutes (timed path with starter) · Full path: 4–5 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
 
@@ -16,13 +16,47 @@
 
 ---
 
+## 45-minute timed path (use starter)
+
+In class, use the starter templates so the **core** objectives fit **~45 minutes**. The full Steps below remain for homework / extended depth.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/` into your `java-bootcamp/examples/…` target (see starter README).
+3. Fill every `// TODO` — do **not** wait on a perfect prior lab; the starter includes a baseline.
+4. Run the starter smoke test; evidence under `notes/screenshots/lab-29/`.
+5. Mark timed-path Pass criteria in the starter README. Continue remaining GUIDE steps as homework if needed.
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed (default)** | ~45 min | Starter TODOs + smoke test |
+| **Full (extended)** | see Duration | Every Step in this GUIDE |
+
+---
+
 ## How to follow this lab
 
-1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/lab-29/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class (timed path):** prefer [`starter/README.md`](starter/README.md) — copy starter → `java-bootcamp/examples/lab29-crm`, fill `// TODO`, run smoke test (~45 min).
+2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
+3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+4. For each **Step N** (full path / homework): read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+6. Capture evidence under `notes/screenshots/lab-29/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
+
+## What you'll submit (read this first)
+
+Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+
+| # | Deliverable |
+| - | ----------- |
+| 1 | `lab29-crm` with Bean Validation + `GlobalExceptionHandler` + `ErrorResponse` |
+| 2 | Automated tests for validation and not-found envelopes |
+| 3 | Successful-path evidence (`CUS-1001`, `CUS-1002`) |
+| 4 | Controlled-failure evidence (400/404/409 + envelope) |
+| 5 | Lab 14/16 unify note (and optional SOAP alignment) |
+| 6 | Run and cleanup instructions |
+| 7 | No secrets or generated build directories committed |
+
 
 ## Lab Overview
 
@@ -665,6 +699,8 @@ Keep screenshots/excerpts. Do not commit `target/`.
 
 ## Expected Deliverables
 
+Same checklist as [What you'll submit](#what-youll-submit-read-this-first) above.
+
 * `lab29-crm` with Bean Validation + `GlobalExceptionHandler` + `ErrorResponse`
 * Automated tests for validation and not-found envelopes
 * Successful-path evidence (`CUS-1001`, `CUS-1002`)
@@ -737,7 +773,7 @@ You are finished when:
 * **Assess:** Error contract and status-code mapping, not annotations alone. Correlation ID on bodies. Safe 500. Lab 14/16 unify note present.
 * **Continuity:** Prefer `examples/lab29-crm`. Keep fixtures. Labs 30+ should not invent a second error dialect for HTTP.
 * **Common pitfalls:** Missing validation starter; forgetting `@Valid`; advice outside scan base; Security HTML; unsorted violation asserts; leaking SQL text in 500 bodies.
-* **Timing:** 4–5 hours. Optional Week-3 integration sketches must not replace working validation evidence.
+* **Timing:** Timed path ~45 minutes with starter; full path remains 4–5 hours. Keep starter TODOs as the in-class core; remaining GUIDE steps are homework/extended depth.
 
 ---
 

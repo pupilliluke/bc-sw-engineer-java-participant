@@ -1,11 +1,11 @@
 # Lab 5: Java Collections Framework — Library Management System
 
-> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 5 [pre-lab exercises 1–7](../exercises/EXERCISES-INDEX.md) (Pass in your notes). Then open **one** OS how-to ([Windows](LAB-5-WINDOWS.md) · [macOS](LAB-5-MACOS.md)) and do **every Step below**. Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
+> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 5 [pre-lab exercises 1–7](../exercises/EXERCISES-INDEX.md) (Pass in your notes). Then open **one** OS how-to ([Windows](LAB-5-WINDOWS.md) · [macOS](LAB-5-MACOS.md)). In class, prefer the **45-minute timed path** with [`starter/`](starter/README.md); the **full path** is every Step below (homework / extended). Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
 
 **Module:** 5 — Java Collections Framework  
 **Lab folder:** `labs/Week 1 - Java and JVM Foundations/module-05/lab5/`  
 **Difficulty:** Intermediate (Beginner-Friendly)  
-**Duration:** 90–240 minutes (Day 4 core checkpoint ~90 min; finish remaining menu paths as extended work)
+**Duration:** ~45 minutes (timed path with starter) · Full path: 90–240 minutes (Day 4 core checkpoint ~90 min; finish remaining menu paths as extended work)
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
 
@@ -18,16 +18,58 @@
 
 > **Hard gate — pre-lab exercises:** Complete **all seven** Module 5 exercises under [`../exercises/`](../exercises/EXERCISES-INDEX.md) and mark their Pass criteria **Pass** **before** Step 1 of this lab. Lab 5 is graded consolidation in a **separate** packaged project (`examples/Lab5-LibraryManagement/`), not a replacement for the flat exercises folder (`examples/module-05-exercises/`).
 
+## 45-minute timed path (use starter)
+
+In class, use the starter templates so the **core** objectives fit **~45 minutes**. The full Steps below remain for homework / extended depth.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/Lab5-LibraryManagement/` into your `java-bootcamp/examples/Lab5-LibraryManagement/` target folder (commands in the starter README).
+3. Fill every `// TODO` / `_____` — do **not** open `solution/` first.
+4. Run the starter smoke test; capture evidence under `notes/screenshots/lab-5/`.
+5. Mark the **timed-path Pass criteria** in the starter README. Continue remaining GUIDE steps only if time allows (or as homework).
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed (default)** | ~45 min | Starter TODOs + smoke test |
+| **Full (extended)** | see Duration | Every Step in this GUIDE |
+
+**Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11):**
+
+| Role | Path |
+| ---- | ---- |
+| IntelliJ opens | `%USERPROFILE%\java-bootcamp` (SDK / language level **21**) |
+| Pre-lab exercises | `examples\module-05-exercises\` (flat files — must exist before graded work) |
+| This lab project | `examples\Lab5-LibraryManagement\` with `src\com\academy\library\` |
+| Compile / run | Named `javac -d out` on the seven sources → `java -cp out com.academy.library.Main` |
+| Smoke-test output | Add `101` → register `1` → borrow → reports `Borrowed : 1` / popular `Programming` → `Thank You` |
+
+**If it fails (Windows PowerShell):** Prefer naming each `.java` file in the `javac` line (as in [LAB-5-WINDOWS.md](LAB-5-WINDOWS.md)); do not rely on `*.java` globs. Mark `examples\Lab5-LibraryManagement\src` as Sources Root — not `module-05-exercises`.
+
 ---
 
 ## How to follow this lab
 
-1. Confirm Lab 0 + Lab 2–3 package/menu habits + Module 5 Exercises 1–7 are done (checklists below).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-4. For each **Step N**: read **Why** / **Builds on** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-6. Capture evidence under `notes/screenshots/lab-5/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class:** prefer the [45-minute timed path](#45-minute-timed-path-use-starter) with [`starter/`](starter/README.md).
+2. Confirm Lab 0 + Lab 2–3 package/menu habits + Module 5 Exercises 1–7 are done (checklists below).
+3. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+4. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+5. For each **Step N**: read **Why** / **Builds on** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+6. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+7. Capture evidence under `notes/screenshots/lab-5/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
+## What you'll submit (read this first)
+
+Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+
+| # | Deliverable | Where / what |
+| - | ----------- | ------------ |
+| 1 | Full source | `examples/Lab5-LibraryManagement/src/com/academy/library/` |
+| 2 | Screenshots | `notes/screenshots/lab-5/` — menu + sample session (add/register/borrow/return/reports) |
+| 3 | Collection mapping notes | Which field uses List / Set / Map and why |
+| 4 | LMS write-up | Compile/run commands (`javac -d out` / `java -cp out com.academy.library.Main`) |
+
+Optional bonuses: history, top borrowed, export, multi-sort. Do not submit a verbatim instructor `solution/`.
+
 
 ## Module 5 exercises you must already have completed
 
@@ -482,8 +524,27 @@ Use `Scanner.nextLine()`, parse `int`, `switch` to service methods. Choice `11` 
 
 **Do this:** From project root `Lab5-LibraryManagement`:
 
+**Windows PowerShell** (name each source file — do not rely on `*.java` globs):
+
+```powershell
+cd $env:USERPROFILE\java-bootcamp\examples\Lab5-LibraryManagement
+Remove-Item -Recurse -Force out -ErrorAction SilentlyContinue
+javac -d out `
+  src\com\academy\library\Book.java `
+  src\com\academy\library\BookComparator.java `
+  src\com\academy\library\BorrowRecord.java `
+  src\com\academy\library\Member.java `
+  src\com\academy\library\ReportService.java `
+  src\com\academy\library\LibraryService.java `
+  src\com\academy\library\Main.java
+java -cp out com.academy.library.Main
+```
+
+**macOS / Linux:**
+
 ```bash
 cd "$HOME/java-bootcamp/examples/Lab5-LibraryManagement"
+rm -rf out
 javac -d out src/com/academy/library/*.java
 java -cp out com.academy.library.Main
 ```
@@ -494,16 +555,9 @@ java -cp out com.academy.library.Main
 
 **If it fails:**
 
-* `package does not exist` → folders under `src/com/academy/library` must exist  
+* `package does not exist` / empty glob → on Windows PowerShell name each `.java` file (see [LAB-5-WINDOWS.md](LAB-5-WINDOWS.md)); folders under `src/com/academy/library` must exist  
 * `Could not find or load main class` → use `-cp out` and fully qualified name  
 * Stale code → delete `out` and recompile
-
-Windows PowerShell cleanup:
-
-```powershell
-Remove-Item -Recurse -Force out -ErrorAction SilentlyContinue
-javac -d out src/com/academy/library/*.java
-```
 
 ---
 
@@ -753,7 +807,7 @@ Record pass/fail in `../../notes/lab5-answers.md` (from project; or `~/java-boot
 
 ---
 
-## Security, Cleanup, and Deliverables
+## Security and Cleanup
 
 **Security:** Training console only—no auth; data is in-memory. Do not paste real PII or secrets into notes/screenshots.
 
@@ -768,7 +822,21 @@ rm -f library-report.txt
 
 Keep sources and evidence. Leave [`solution/`](solution/) intact.
 
-**Deliverables:** `src/com/academy/library/*`; menu + sample-session screenshots; notes mapping each field to List/Set/Map; LMS write-up with compile/run commands. Optional bonuses (history, top borrowed, export, multi-sort). No verbatim solution copies.
+See [Expected Deliverables](#expected-deliverables) below for the submit list.
+
+
+---
+
+## Expected Deliverables
+
+Submit according to your LMS or instructor dropbox. Same checklist as [What you'll submit](#what-youll-submit-read-this-first) above.
+
+* **Sources** under `java-bootcamp/examples/Lab5-LibraryManagement/src/com/academy/library/`
+* **Screenshots** under `notes/screenshots/lab-5/`: menu + sample session
+* **Notes** mapping each field to List / Set / Map
+* **LMS write-up** with compile/run commands
+
+Optional bonuses (history, top borrowed, export, multi-sort). Do not submit a verbatim instructor [`solution/`](solution/).
 
 ---
 

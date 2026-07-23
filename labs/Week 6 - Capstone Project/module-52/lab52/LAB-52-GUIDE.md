@@ -3,7 +3,7 @@
 **Module:** 52 — Capstone Final Defense  
 **Lab folder:** `labs/Week 6 - Capstone Project/module-52/lab52/`  
 **Difficulty:** Advanced Capstone  
-**Duration:** 5–6 Hours
+**Duration:** ~45 minutes (timed path / session block with starter) · Full path: 5–6 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
 
@@ -16,13 +16,49 @@
 
 ---
 
+## 45-minute timed path (session block — use starter)
+
+In class, use the starter slide outline + demo script so the **session block** fits **~45 minutes**. Full panel delivery, PDF export, retrospective, and self-assessment remain **multi-day** on the full path.
+
+1. Open [`starter/README.md`](starter/README.md).
+2. Copy `starter/` into `java-bootcamp/examples/customer-management-platform/` (see starter README).
+3. Fill slide outline, timed demo script, and evidence-index stubs — fixtures `CUS-1001` / `lab-request-001`.
+4. Rehearse once (smoke); evidence under `notes/screenshots/lab-52/`.
+5. Mark timed-path Pass criteria in the starter README. Continue remaining GUIDE steps as homework / multi-day work.
+
+| Path | Time | Scope |
+| ---- | ---- | ----- |
+| **Timed / session block** | ~45 min | Starter TODOs + rehearsal smoke |
+| **Full (multi-day)** | 5–6 Hours | Every Step in this GUIDE |
+
+Policy: [`labs/_STARTER-PATH.md`](../../../_STARTER-PATH.md)
+
+---
+
 ## How to follow this lab
 
-1. Open the **Windows** or **macOS** how-to (links above) in a second tab.
-2. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-3. For each **Step N**: read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-4. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-5. Capture evidence under `notes/screenshots/lab-52/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+1. **In class (session block):** prefer [`starter/README.md`](starter/README.md) — copy starter → `defense/`, fill outline + demo script (~45 min).
+2. Open the **Windows** or **macOS** how-to (links above) in a second tab.
+3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
+4. For each **Step N** (full path / multi-day): read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
+5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
+6. Capture evidence under `notes/screenshots/lab-52/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+
+## What you'll submit (read this first)
+
+Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+
+| # | Deliverable |
+| - | ----------- |
+| 1 | `defense/final-presentation.pdf` (or instructor-approved slide export) |
+| 2 | `defense/demo-script.md` |
+| 3 | `defense/evidence-index.md` |
+| 4 | `defense/technical-q-and-a.md` |
+| 5 | `defense/retrospective.md` |
+| 6 | `defense/self-assessment.md` |
+| 7 | Baseline/demo validation notes (health, smoke, or fallback) |
+| 8 | One controlled failure-path demo beat result |
+
 
 ## Lab Overview
 
@@ -618,6 +654,8 @@ Capstone grading should weigh evidence linked from `defense/evidence-index.md` o
 ---
 
 ## Expected Deliverables
+
+Same checklist as [What you'll submit](#what-youll-submit-read-this-first) above.
 
 * `defense/final-presentation.pdf` (or instructor-approved slide export)
 * `defense/demo-script.md`
