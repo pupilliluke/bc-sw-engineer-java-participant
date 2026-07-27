@@ -51,3 +51,8 @@ for files, readers, streams use try-with-resources instead (Ex 3). manual
 close in finally works but it drops the original exception if close() throws
 too, try-with-resources closes for you and keeps the first one with the close
 failure attached as suppressed.
+
+- Skip & Continue: importing 10,000 CSV rows — one bad row should not stop the other 9,999.
+- Fail Fast: a required config value is missing at startup — do not limp along with a null.
+- Graceful Degradation: a recommendations service is down — show the page without recommendations instead of a 500 error.
+- Circuit Breaker: a downstream payment API is timing out repeatedly — stop hammering it and fail fast for a cooldown period.
