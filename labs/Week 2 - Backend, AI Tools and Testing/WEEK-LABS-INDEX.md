@@ -1,12 +1,18 @@
 # Week 2 - Backend, AI Tools and Testing — Lab Guides
 
+**Clone handouts · commit in your own repo:** [CLONE-AND-OWN-REPO-GUIDE.md](../CLONE-AND-OWN-REPO-GUIDE.md)
+
 **Range:** lab8–lab21  
 **Theme:** Maven, Copilot, SOAP/services, testing, logging, observability
+
+**Beginner-first manual:** [WEEK-2-BEGINNER-LAB-MANUAL.md](WEEK-2-BEGINNER-LAB-MANUAL.md) reviews Lab 8 through Lab 21 plus Module 8 exercises with clearer objectives, exact learner actions, commands, expected outputs, checkpoints, common mistakes, troubleshooting, and continuity between labs.
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code  
 **OS guides:** each `module-NN/labN/` has `LAB-N-WINDOWS.md` and `LAB-N-MACOS.md`.
 
 **In class (~45 min):** open each lab’s `starter/README.md` → copy templates → fill TODOs → smoke test. Full GUIDE steps = homework. See [`_STARTER-PATH.md`](../_STARTER-PATH.md).
+
+**Kahoot:** Modules 8–21 — instructor imports `Kahoot_Module_N.xlsx` from the authoring `curriculum/…/kahoot/` folder; students join at [kahoot.it](https://kahoot.it).
 
 Parent index: [labs/LABS-INDEX.md](../LABS-INDEX.md) · Setup: [SETUP-INSTRUCTIONS.md](../SETUP-INSTRUCTIONS.md)
 

@@ -1,5 +1,7 @@
 # Week 4 - Kafka, React, PostgreSQL and Resilience — Lab Guides
 
+**Clone handouts · commit in your own repo:** [CLONE-AND-OWN-REPO-GUIDE.md](../CLONE-AND-OWN-REPO-GUIDE.md)
+
 **Range:** lab30–lab39  
 **Theme:** Kafka, Resilience4j, React, PostgreSQL, JPA
 
@@ -7,6 +9,8 @@
 **OS guides:** each `module-NN/labN/` has `LAB-N-WINDOWS.md` and `LAB-N-MACOS.md`.
 
 **In class (~45 min):** open each lab’s `starter/README.md` → copy templates → fill TODOs → smoke test. Full GUIDE steps = homework. See [`_STARTER-PATH.md`](../_STARTER-PATH.md).
+
+**Kahoot:** Modules 30–39 — instructor imports `Kahoot_Module_N.xlsx` from the authoring `curriculum/…/kahoot/` folder; students join at [kahoot.it](https://kahoot.it).
 
 Parent index: [labs/LABS-INDEX.md](../LABS-INDEX.md) · Setup: [SETUP-INSTRUCTIONS.md](../SETUP-INSTRUCTIONS.md)
 
