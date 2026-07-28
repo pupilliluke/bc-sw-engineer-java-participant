@@ -11,6 +11,7 @@ replay_pid*
 
 # Build output
 out/
+target/
 
 # IDE
 .idea/
