@@ -9,7 +9,7 @@ Module 10: GitHub Copilot Fundamentals (exercise notes)
 | 5 | JDK 21 / Maven habit | below | Done |
 | 6 | Lab 10 prep checklist | below | Done |
 
-code artefact for ex 1 is examples\module-10-exercises\Customer.java.
+code artifact for ex 1 is examples\module-10-exercises\Customer.java.
 
 
 ================================================================

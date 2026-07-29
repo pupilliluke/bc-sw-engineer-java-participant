@@ -4,13 +4,14 @@ Module 11: GitHub Copilot for Testing and Refactoring (exercise notes)
 | --- | --- | --- | --- |
 | 1 | AAA template for status | below | Done |
 | 2 | Notifier extract plan | below | Done |
-| 3 | Trivial vs real asserts | below | Not started |
-| 4 | Fill acceptance checklist TODOs | lab11-acceptance-checklist.md | Not started |
-| 5 | Coverage gaps map | below | Not started |
-| 6 | Lab 11 prep checklist | below | Not started |
+| 3 | Trivial vs real asserts | lab11-prelab-asserts.md | Done |
+| 4 | Fill acceptance checklist TODOs | lab11-acceptance-todos.md | Done |
+| 5 | Coverage gaps map | lab11-coverage-gaps.md | Done |
+| 6 | Lab 11 prep checklist | below | Done |
 
-no code artefact for 1 and 2, both are paper work. examples\module-11-exercises
-is created and empty until exercise 4.
+no code artifact anywhere in this module, all six are paper work.
+examples\module-11-exercises was created for exercise 4 and stays empty, the
+acceptance sheet turned out to be markdown too. the java lands in lab 11.
 
 
 ================================================================
@@ -34,7 +35,7 @@ my version, act left blank to fill in the lab
 | Assert | getStatus() returns ACTIVE, correlation lab-request-001 asserted later |
 
 arrange is one customer. the test is about ravi's transition, a second fixture
-just adds noise. act is one call on purpose, if it takes two the test is covering
+just adds extra information. act is one call on purpose, if it takes two the test is covering
 two things.
 
 act is blank but the shape is known. there is no activate() on CustomerService,
@@ -122,3 +123,52 @@ pass criteria
 | 1 | Smell named | Pass |
 | 2 | Interface sketched | Pass |
 | 3 | Out-of-scope hosting noted | Pass |
+
+
+================================================================
+
+Exercise 6: Lab 11 Prep Checklist
+
+fixtures from memory
+
+| customerId | fullName | status |
+| --- | --- | --- |
+| CUS-1001 | Amina Khan | ACTIVE |
+| CUS-1002 | Ravi Singh | PROSPECT |
+
+checked back against the exercise 2 sketch in Module 10\notes.md rather than
+trusted from memory, both rows match, no swap. that check is the point of the
+step, the status swap is the one that writes itself in unnoticed.
+
+files present
+
+| Exercise | File | There? |
+| --- | --- | --- |
+| 3 | lab11-prelab-asserts.md | yes |
+| 4 | lab11-acceptance-todos.md | yes |
+| 5 | lab11-coverage-gaps.md | yes |
+
+the acceptance sheet from exercise 4 exists and is filled, all six blanks
+replaced, verdict Reject with the reason recorded.
+
+boundary
+
+pre-lab only, prepare for lab 11, do not complete the full lab 11 now.
+
+self-mark
+
+Pass. aaa template is in exercise 1, the acceptance todos and the gap map both
+exist as their own files, so the gate in step 4 is met and there is nothing to
+revisit in 2 to 5.
+
+one thing carried into the lab, the act line in exercise 1 is still blank on
+purpose. the method is updateStatus(customerId, CustomerStatus.ACTIVE), it goes
+in when the starter is open.
+
+pass criteria
+
+| # | Confirm | Notes |
+| --- | --- | --- |
+| 1 | Fixtures correct | Pass |
+| 2 | Pre-lab-only statement present | Pass |
+| 3 | Pass/Fail self-mark written | Pass |

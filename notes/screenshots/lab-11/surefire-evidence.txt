@@ -1,0 +1,172 @@
+Lab 11 build and test evidence, captured 2026-07-29
+Windows PowerShell, Temurin JDK 21, Maven 3.9.9, examples\lab11-crm
+
+Console captures of the runs screenshotted beside this file. Screenshot index,
+all taken in the IntelliJ terminal:
+
+  step1-deps-testscope.png            junit and mockito at test scope
+  step8-clean-test-green.png          full suite, 8 green
+  step9-exp1-trivial-green-1of2.png   experiment 1, failure detail
+  step9-exp1-trivial-green-2of2.png   experiment 1, summary and BUILD FAILURE
+  step9-exp2-verify-failure.png       experiment 2, mockito verify failure
+  step9-exp3-invented-api.png         experiment 3, invented method compile error
+  step9-restored-green-1of2.png       after restores, compile and test start
+  step9-restored-green-2of2.png       after restores, 8 green and BUILD SUCCESS
+
+the two 1of2 / 2of2 pairs are the top and bottom of one terminal run each, not
+duplicates. experiment 1's readable failure summary is only in 2of2, and it is
+the one that shows serviceIsNotNull absent from a list of four failures out of
+six tests, which is the whole point of that experiment.
+
+
+=== BASELINE, BEFORE ANY LAB 11 WORK ===
+
+mvn clean test
+
+[ERROR] .../src/test/java/com/northstar/crm/CustomerTest.java:[15,92] cannot find symbol
+  symbol:   variable INACTIVE
+  location: class com.northstar.crm.entity.CustomerStatus
+[ERROR] .../src/test/java/com/northstar/crm/entity/CustomerTest.java:[13,92] cannot find symbol
+  symbol:   variable INACTIVE
+  location: class com.northstar.crm.entity.CustomerStatus
+[ERROR] Failed to execute goal ...maven-compiler-plugin:3.13.0:testCompile
+BUILD FAILURE
+
+the enum is PROSPECT, ACTIVE, SUSPENDED, CLOSED. invented constant, two copies
+of the same file. written up as lab11-001 rejection 1.
+
+
+=== STEP 1, TEST-SCOPE DEPENDENCIES ===
+
+mvn dependency:tree "-Dincludes=org.junit.jupiter,org.mockito"
+
+[INFO] +- org.junit.jupiter:junit-jupiter:jar:5.11.4:test
+[INFO] |  +- org.junit.jupiter:junit-jupiter-api:jar:5.11.4:test
+[INFO] |  +- org.junit.jupiter:junit-jupiter-params:jar:5.11.4:test
+[INFO] |  \- org.junit.jupiter:junit-jupiter-engine:jar:5.11.4:test
+[INFO] +- org.mockito:mockito-core:jar:5.14.2:test
+[INFO] \- org.mockito:mockito-junit-jupiter:jar:5.14.2:test
+[INFO] BUILD SUCCESS
+
+every entry test scoped. note the guide prints this command unquoted, which
+splits on the comma in powershell and fails with "Unknown lifecycle phase
+.junit.jupiter,org.mockito". quote the whole -D token.
+
+
+=== FULL SUITE, GREEN ===
+
+mvn clean test
+
+[INFO] Running com.northstar.crm.entity.CustomerTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.entity.CustomerTest
+[INFO] Running com.northstar.crm.service.CustomerNotifierMockTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerNotifierMockTest
+[INFO] Running com.northstar.crm.service.CustomerServiceTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerServiceTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+
+
+=== EXPERIMENT 1, TRIVIAL ASSERTION AGAINST A GUTTED SERVICE ===
+
+addCustomer changed to validate and return without calling customers.add,
+serviceIsNotNull left in the class.
+
+[ERROR] Tests run: 6, Failures: 3, Errors: 1, Skipped: 0
+[ERROR] CustomerServiceTest.addCustomerStoresNewCustomer:43 expected: <1> but was: <0>
+[ERROR] CustomerServiceTest.addCustomerRejectsDuplicateId:55 Expected
+        java.lang.IllegalStateException to be thrown, but nothing was thrown.
+[ERROR] CustomerServiceTest.findByStatusReturnsOnlyMatchingCustomers:82 expected: <1> but was: <0>
+[ERROR] CustomerServiceTest.updateStatusChangesExistingCustomer:63
+        IllegalArgument Customer does not exist: CUS-1002
+BUILD FAILURE
+
+four real tests red, serviceIsNotNull green. restored, trivial test deleted.
+
+
+=== EXPERIMENT 2, UPDATESTATUS SKIPS THE NOTIFIER ===
+
+notifier.notifyStatusChange(...) deleted from updateStatus, nothing else changed.
+
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0
+        <<< FAILURE! -- in com.northstar.crm.service.CustomerNotifierMockTest
+
+Wanted but not invoked:
+-> at CustomerNotifierMockTest.updateStatusInvokesNotifierWithOldAndNewStatus(CustomerNotifierMockTest.java:30)
+Actually, there were zero interactions with this mock.
+
+BUILD FAILURE
+
+CustomerServiceTest stayed entirely green through this, the status still
+changed. only the mock noticed. restored, suite back to 8 green.
+
+
+=== EXPERIMENT 3, INVENTED INTERFACE METHOD ===
+
+InventedApiScratchTest verifying notifyCreated(Customer), which is not on
+CustomerNotifier.
+
+[ERROR] .../service/InventedApiScratchTest.java:[28,25] cannot find symbol
+  symbol:   method notifyCreated(com.northstar.crm.entity.Customer)
+  location: interface com.northstar.crm.service.CustomerNotifier
+BUILD FAILURE
+
+rejected, file deleted.
+
+
+=== EXPERIMENT 4, SAME SUITE TWICE ===
+
+RUN 1   Tests run: 8, Failures: 0, Errors: 0, Skipped: 0   BUILD SUCCESS
+RUN 2   Tests run: 8, Failures: 0, Errors: 0, Skipped: 0   BUILD SUCCESS
+
+identical. only elapsed times moved, CustomerNotifierMockTest 1.999s then
+2.856s, which is mockito's agent attach on the first run, not flake.
+
+
+=== MAIN AFTER THE REFACTOR ===
+
+mvn -q -DskipTests compile
+java -cp target/classes com.northstar.crm.Main
+
+All customers: [Customer{customerId='CUS-1001', fullName='Amina Khan', status=ACTIVE}, Customer{customerId='CUS-1002', fullName='Ravi Singh', status=PROSPECT}]
+PROSPECT customers: [Customer{customerId='CUS-1002', fullName='Ravi Singh', status=PROSPECT}]
+After activation: Optional[Customer{customerId='CUS-1002', fullName='Ravi Singh', status=ACTIVE}]
+
+byte-identical to lab 10's output. the activation line means Main reaches
+updateStatus, so it runs the notifier on every launch and prints nothing extra,
+because the no-arg constructor hands it the no-op. that is the compatibility
+claim in lab11-002 proven at runtime, a collaborator was added to updateStatus
+and no existing caller noticed.
+
+an earlier capture of this section showed two lines and said "two lines, not
+four". that was the lab 11 starter's Main, which never called updateStatus.
+replaced after the lab 10 merge below rather than left standing, stale evidence
+is worse than no evidence.
+
+
+=== LAB 10 MERGE, AFTER THE CAPTURES ABOVE ===
+
+the timed path copies starter/ in, and the starter is a leaner rewrite rather
+than my lab 10 project. merged lab10-crm back over it, controller, repository,
+the seven package-info files, deleteCustomer, the DTO stubs, the javadoc and
+lab 10's Main harness. src/main is now the lab 10 tree plus CustomerNotifier.
+
+mvn clean package
+java -jar target/customer-service.jar
+
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0
+BUILD SUCCESS
+
+count, class split and every experiment result above are unchanged by the merge,
+so the screenshots beside this file still match the build. only Main's output
+moved, which is the section above.
+
+
+=== KNOWN WARNING, HARMLESS ===
+
+Mockito is currently self-attaching to enable the inline-mock-maker.
+WARNING: A Java agent has been loaded dynamically (byte-buddy-agent-1.15.4.jar)
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+
+prints on every mockito run on jdk 21. flagged as expected in the guide's
+windows troubleshooting while tests are green. not suppressed.
