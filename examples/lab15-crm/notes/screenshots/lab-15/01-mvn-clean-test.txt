@@ -1,0 +1,85 @@
+Lab 15 test evidence, captured 2026-07-30
+Windows, Temurin JDK 21, Maven 3.9.9, examples\lab15-crm
+
+  mvn -B clean test
+
+40 tests, up from lab 14's 22. New here are InMemoryCustomerRepositoryTest,
+CustomerValidatorTest and DefaultCustomerServiceTest; CustomerServiceTest is
+gone, its cases moved to the last of those. The WARNING lines are
+CustomerApiFacade logging the same strings it throws.
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< com.northstar:customer-service >-------------------
+[INFO] Building Northstar Customer Service 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ customer-service ---
+[INFO] Deleting C:\Users\lukel\java-bootcamp\examples\lab15-crm\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ customer-service ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ customer-service ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 20 source files with javac [debug release 21] to target\classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ customer-service ---
+[INFO] skip non existing resourceDirectory C:\Users\lukel\java-bootcamp\examples\lab15-crm\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ customer-service ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 7 source files with javac [debug release 21] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.5.2:test (default-test) @ customer-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.northstar.crm.api.CustomerApiFacadeTest
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (C:\Users\lukel\.m2\repository\net\bytebuddy\byte-buddy-agent\1.15.4\byte-buddy-agent-1.15.4.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+Jul 30, 2026 5:39:56 PM org.hibernate.validator.internal.util.Version <clinit>
+INFO: HV000001: Hibernate Validator 8.0.2.Final
+Jul 30, 2026 5:39:57 PM com.northstar.crm.api.CustomerApiFacade fail
+WARNING: [lab-request-001] CUSTOMER_VALIDATION_FAILED: fullName: fullName is required; fullName: fullName must be between 2 and 100 characters
+Jul 30, 2026 5:39:57 PM com.northstar.crm.api.CustomerApiFacade fail
+WARNING: [lab-request-001] CUSTOMER_CONFLICT: duplicate customerId: CUS-1001
+Jul 30, 2026 5:39:57 PM com.northstar.crm.api.CustomerApiFacade fail
+WARNING: [lab-request-001] CUSTOMER_NOT_FOUND: customerId: CUS-9999
+Jul 30, 2026 5:39:57 PM com.northstar.crm.api.CustomerApiFacade fail
+WARNING: [lab-request-001] CUSTOMER_TRANSITION_INVALID: illegal status transition ACTIVE -> PROSPECT [lab-request-001]
+Jul 30, 2026 5:39:57 PM com.northstar.crm.api.CustomerApiFacade fail
+WARNING: [lab-request-001] CUSTOMER_VALIDATION_FAILED: email: email must be a valid address
+Jul 30, 2026 5:39:57 PM com.northstar.crm.api.CustomerApiFacade fail
+WARNING: [lab-request-001] CUSTOMER_STATUS_INVALID: status: ACTVE is not a known status
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.703 s -- in com.northstar.crm.api.CustomerApiFacadeTest
+[INFO] Running com.northstar.crm.dto.CustomerRequestDTOValidationTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.082 s -- in com.northstar.crm.dto.CustomerRequestDTOValidationTest
+[INFO] Running com.northstar.crm.entity.CustomerTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in com.northstar.crm.entity.CustomerTest
+[INFO] Running com.northstar.crm.mapper.CustomerMapperTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 s -- in com.northstar.crm.mapper.CustomerMapperTest
+[INFO] Running com.northstar.crm.repository.InMemoryCustomerRepositoryTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in com.northstar.crm.repository.InMemoryCustomerRepositoryTest
+[INFO] Running com.northstar.crm.service.CustomerValidatorTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.030 s -- in com.northstar.crm.service.CustomerValidatorTest
+[INFO] Running com.northstar.crm.service.DefaultCustomerServiceTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s -- in com.northstar.crm.service.DefaultCustomerServiceTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 40, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  11.087 s
+[INFO] Finished at: 2026-07-30T17:39:58-04:00
+[INFO] ------------------------------------------------------------------------
+
