@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <soapenv:Fault>
+      <faultcode>soapenv:Client</faultcode>
+      <faultstring>fullName must be provided (correlationId=lab-request-001)</faultstring>
+      <detail>
+        <errorCode>VALIDATION_FAILED</errorCode>
+        <field>fullName</field>
+        <correlationId>lab-request-001</correlationId>
+      </detail>
+    </soapenv:Fault>
+  </soapenv:Body>
+</soapenv:Envelope>
