@@ -14,7 +14,7 @@ For Week 1 Modules 1–7, also open **`module-NN/README.md`** first (Start here)
 
 Instructor curriculum twins (slide PNGs) live in [`../curriculum/`](../curriculum/) with the **same week and `module-NN` names**.
 
-**Kahoot knowledge checks (Modules 1–39 / Weeks 1–4):** instructors import Excel banks from the authoring `curriculum/Week N …/kahoot/` folders; participants join with the classroom PIN at [kahoot.it](https://kahoot.it). Index: [`../curriculum/CURRICULUM-INDEX.md`](../curriculum/CURRICULUM-INDEX.md#kahoot-quizzes).
+**Kahoot knowledge checks (Modules 1–39 / Weeks 1–4):** instructors import Excel banks from [`../kahoot/`](../kahoot/README.md) (`week-1` … `week-4`); participants join with the classroom PIN at [kahoot.it](https://kahoot.it).
 
 ## How to use these labs
 
@@ -154,7 +154,7 @@ labs/
 
 ### Week 6 — Capstone Project
 
-**Master document:** [Week 6 Capstone index](Week%206%20-%20Capstone%20Project/WEEK-LABS-INDEX.md) · [Brief DOCX](../Java_Software_Engineer_Capstone.docx) · [Rubric DOCX](../Java_Software_Engineer_Capstone_Rubric.docx) · [Markdown brief](Week%206%20-%20Capstone%20Project/CAPSTONE-BRIEF-AND-RUBRIC.md)
+**Master document:** [Week 6 Capstone index](Week%206%20-%20Capstone%20Project/WEEK-LABS-INDEX.md) · [Brief DOCX](Week%206%20-%20Capstone%20Project/Java_Software_Engineer_Capstone.docx) · [Rubric DOCX](Week%206%20-%20Capstone%20Project/Java_Software_Engineer_Capstone_Rubric.docx) · [Markdown brief](Week%206%20-%20Capstone%20Project/CAPSTONE-BRIEF-AND-RUBRIC.md)
 
 | Lab | Module | Module Title | Pre-lab exercises | Lab Title |
 | --- | ------ | ------------ | ----------------- | --------- |

@@ -1,12 +1,23 @@
 # Exercise 6 — Fill a Mini POM
 
-**Module 9** · Small Maven exercise · [setup](EXERCISES-INDEX.md)
+**Module 9** · Small Maven exercise · [setup + file names](EXERCISES-INDEX.md)
 
 ## Goal
 
-Build a tiny Maven project that compiles, runs one JUnit test, and packages a JAR with a `Main-Class` — before you expand the full Lab 9 CRM POM.
+Build a tiny Maven project that compiles, runs one JUnit test, and packages a JAR with a `Main-Class` — before you expand the full Lab 9 CRM POM. Capture results in `notes/mini-maven-notes.md`.
 
 > No Spring Boot, JPA, Kafka, or React. Plain Java + JUnit Jupiter only.
+
+## Deliverable
+
+**Submit only** the file(s) in the table below (not the full graded lab).
+
+**Submit only** the file(s) in the table below (not the full graded lab).
+
+| Item | Path (under `examples/module-09-exercises/`) |
+| ---- | --------------------------------------------- |
+| Mini project | `mini-maven/` (see tree below) |
+| Your notes file | `notes/mini-maven-notes.md` |
 
 ## Files
 
@@ -17,6 +28,30 @@ mini-maven/
     ├── main/java/com/northstar/crm/BuildDemo.java
     └── test/java/com/northstar/crm/BuildDemoTest.java
 ```
+
+## Worked example (read first)
+
+Here is the shape of a complete answer for this exercise. Adapt the content — do not leave blanks.
+
+Complete form of the idea (your file should look similar when TODOs are filled):
+
+```java
+package com.northstar.crm;
+
+public class BuildDemo {
+    public static void main(String[] args) {
+        // TODO: print exactly: BuildDemo ready for Lab 9
+        System.out.println("_____");
+    }
+
+    public static String greeting() {
+        return "BuildDemo ready for Lab 9";
+    }
+}
+```
+
+Then follow **Steps** to create your own file.
+
 
 ## Starter (fill in the TODOs)
 
@@ -142,12 +177,15 @@ Use the expected values table. Save all three files.
 
 ### Step 2 — Run Maven from `mini-maven/`
 
+Use **full output** the first time so you can see Surefire results (`Tests run: 1`).  
+`-q` (quiet) hides most of that log — skip it until you only need a quieter rebuild.
+
 **Windows (PowerShell):**
 
 ```powershell
 cd $env:USERPROFILE\java-bootcamp\examples\module-09-exercises\mini-maven
-mvn -q test
-mvn -q package
+mvn test
+mvn package
 java -jar target\build-demo.jar
 ```
 
@@ -155,16 +193,18 @@ java -jar target\build-demo.jar
 
 ```bash
 cd ~/java-bootcamp/examples/module-09-exercises/mini-maven
-mvn -q test
-mvn -q package
+mvn test
+mvn package
 java -jar target/build-demo.jar
 ```
 
+Optional quieter rebuild later: `mvn -q test` / `mvn -q package` (still look for `BUILD SUCCESS`).
+
 ### Step 3 — Capture evidence
 
-In `mini-maven-notes.md` record:
+In `notes/mini-maven-notes.md` record:
 
-- last lines of `mvn -q test` (or note `BUILD SUCCESS`);
+- Surefire line from `mvn test` (look for `Tests run: 1`) or `BUILD SUCCESS`;
 - that `target/build-demo.jar` exists;
 - console output from `java -jar`.
 
@@ -189,6 +229,6 @@ Surefire reports one passing test. `target/build-demo.jar` runs `BuildDemo`.
 
 | # | Confirm | Notes |
 | - | ------- | ----- |
-| 1 | `mvn -q test` succeeds | Pass / Fail |
+| 1 | `mvn test` succeeds (`Tests run: 1` or `BUILD SUCCESS`) | Pass / Fail |
 | 2 | `java -jar target/build-demo.jar` prints the banner | Pass / Fail |
 | 3 | JUnit is `test` scope; compiler release is 21 | Pass / Fail |

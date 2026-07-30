@@ -1,14 +1,48 @@
 # Exercise 4 — Fill Q&A Stubs
 
-**Module 52** · Hands-on exercise · [setup](EXERCISES-INDEX.md)
+**Module 52** · Hands-on exercise · [setup + file names](EXERCISES-INDEX.md)
 
 ## Goal
 
-Complete answer stubs for likely panel questions.
+Create `notes/lab52-qa-stubs.md` — complete answer stubs for likely panel questions.
+
+## Deliverable
+
+**Submit only** the file(s) in the table below (not the full graded lab).
+
+**Submit only** the file(s) in the table below (not the full graded lab).
+
+| Item | Path (under `examples/module-52-exercises/`) |
+| ---- | --------------------------------------------- |
+| Guide | `exercises/exercise-04-qa-stubs.md` (this file in the course repo) |
+| Your notes file | `notes/lab52-qa-stubs.md` |
+
+## Worked example (read first)
+
+Here is the shape of a complete answer for this exercise. Adapt the content — do not leave blanks.
+
+```markdown
+# Lab 52 — Fill Q&A Stubs
+
+## Step 1 — Template
+
+Fill blanks for:
+```
+
+Then follow **Steps** to create your own file.
 
 ## Steps
 
-### Step 1 — Template
+### Step 1 — Create the notes file
+
+From `examples/module-52-exercises/`, create `notes/` if needed, then create `notes/lab52-qa-stubs.md`.
+
+### Step 2 — Paste and complete this template
+
+```markdown
+# Lab 52 — Fill Q&A Stubs
+
+## Step 1 — Template
 
 Fill blanks for:
 ```
@@ -19,26 +53,44 @@ How do you roll back?: _____
 What residual risk remains?: _____
 ```
 
-### Step 2 — Link slots
+## Step 2 — Link slots
 
 Add `Evidence:` line under each with a path placeholder.
 
-### Step 3 — Practice aloud
+## Step 3 — Practice aloud
 
 Read one answer aloud in under 60 seconds; note cuts.
 
-### Step 4 — Scope
+## Step 4 — Scope
 
 Stubs only—polish in Lab 52.
 
+## Scope
+Pre-lab only — do not finish the full graded lab in this exercise.
+```
+
+### Step 3 — Self-check
+
+Confirm fixtures if used: Amina `CUS-1001`/`ACTIVE`, Ravi `CUS-1002`/`PROSPECT`, correlation `lab-request-001`. Replace every `_____` before Pass.
+
 ## Expected result
 
-Five Q&A stubs with evidence link slots.
+Five Q&A stubs with evidence link slots in `notes/lab52-qa-stubs.md`.
+
+## If it fails
+
+| Problem | Fix |
+| --- | --- |
+| No file / wrong name | Must be `notes/lab52-qa-stubs.md` |
+| Leaving blanks or skipping steps | Complete every step before claiming Pass |
+| Starting the full lab mid-exercise | Finish pre-lab notes first, then open Lab 52 |
 
 ## Pass criteria
 
-| # | Confirm | Notes |
-| --- | --- | --- |
-| 1 | Five answers drafted | Pass / Fail |
-| 2 | Evidence lines present | Pass / Fail |
-| 3 | One timed practice noted | Pass / Fail |
+Self-check before marking Pass:
+
+- [ ] File exists at `notes/lab52-qa-stubs.md`
+- [ ] Five answers drafted
+- [ ] Evidence lines present
+- [ ] One timed practice noted
+

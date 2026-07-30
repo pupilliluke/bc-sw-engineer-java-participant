@@ -4,7 +4,7 @@
 
 ## Goal
 
-Create `profiles-notes.md` explaining how `dev` and `prod` profiles keep laptop settings from silently becoming production settings.
+Create `notes/profiles-notes.md` explaining how `dev` and `prod` profiles keep laptop settings from silently becoming production settings.
 
 ## Profile map
 
@@ -36,6 +36,18 @@ Create `profiles-notes.md` explaining how `dev` and `prod` profiles keep laptop 
   </profile>
 </profiles>
 ```
+
+## Worked example (read first)
+
+Here is the shape of a complete answer for this exercise. Adapt the content — do not leave blanks.
+
+```markdown
+Keep `dev` as the laptop default.
+Activate `prod` intentionally with `-Pprod`.
+Never store real production secrets in `pom.xml` profiles.
+```
+
+Then follow **Steps** to create your own file.
 
 ## Steps
 

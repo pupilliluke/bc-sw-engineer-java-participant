@@ -4,7 +4,7 @@
 
 ## Goal
 
-Create `pom-coordinates-notes.md` and explain how Maven names a project so teammates and CI resolve the same artifact.
+Create `notes/pom-coordinates-notes.md` and explain how Maven names a project so teammates and CI resolve the same artifact.
 
 ## Coordinate map
 
@@ -15,6 +15,16 @@ Create `pom-coordinates-notes.md` and explain how Maven names a project so teamm
 | `version` | Release or snapshot label | `0.1.0-SNAPSHOT` |
 | `packaging` | Output type (`jar`, `war`, `pom`, …) | `jar` |
 | GAV string | Combined identity | `com.northstar:customer-service:0.1.0-SNAPSHOT` |
+
+## Worked example (read first)
+
+Here is the shape of a complete answer for this exercise. Adapt the content — do not leave blanks.
+
+**Goal reminder:** Create `notes/pom-coordinates-notes.md` and explain how Maven names a project so teammates and CI resolve the same artifact.
+
+**Done looks like:** You can read a POM header and state the exact GAV plus packaging without guessing.
+
+Then follow **Steps** to create your own file.
 
 ## Steps
 

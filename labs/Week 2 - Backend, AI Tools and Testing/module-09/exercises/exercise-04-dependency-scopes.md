@@ -4,7 +4,7 @@
 
 ## Goal
 
-Create `dependency-scopes-notes.md` and assign the correct Maven scope so libraries land on the right classpath.
+Create `notes/dependency-scopes-notes.md` and assign the correct Maven scope so libraries land on the right classpath.
 
 ## Scope map
 
@@ -14,6 +14,17 @@ Create `dependency-scopes-notes.md` and assign the correct Maven scope so librar
 | `test` | Tests only | Tests only | JUnit, Mockito, test helpers |
 | `runtime` | No | Yes | Drivers needed to run but not compile against |
 | `provided` | Yes | No (container supplies) | Servlet API on an app server; JDK-provided APIs |
+
+## Worked example (read first)
+
+Here is the shape of a complete answer for this exercise. Adapt the content — do not leave blanks.
+
+```markdown
+Test libraries always use `<scope>test</scope>`.
+Do not leave JUnit on the default `compile` scope.
+```
+
+Then follow **Steps** to create your own file.
 
 ## Steps
 

@@ -1,44 +1,96 @@
 # Exercise 5 — Peer Review Rewrite Practice
 
-**Module 47** · Analysis exercise · [setup](EXERCISES-INDEX.md)
+**Module 47** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
 
 ## Goal
 
-Practice concrete, respectful review comments.
+Create `notes/lab47-peer-review-practice.md` — practice concrete, respectful review comments.
 
-## Steps
+## Deliverable
 
-### Step 1 — Weak sentence
+**Submit only** the file(s) in the table below (not the full graded lab).
+
+**Submit only** the file(s) in the table below (not the full graded lab).
+
+| Item | Path (under `examples/module-47-exercises/`) |
+| ---- | --------------------------------------------- |
+| Guide | `exercises/exercise-05-peer-review-practice.md` (this file in the course repo) |
+| Your notes file | `notes/lab47-peer-review-practice.md` |
+
+## Worked example (read first)
+
+Here is the shape of a complete answer for this exercise. Adapt the content — do not leave blanks.
+
+```markdown
+# Lab 47 — Peer Review Rewrite Practice
+
+## Step 1 — Weak sentence
 
 Given: “Someone broke Kafka again.” Rewrite to blameless + factual.
 
-### Step 2 — Check the reference
+## Step 2 — Check the reference
 
 Feedback should cite the line/section and suggest a rewrite.
 
-### Step 3 — Second rewrite
+## Step 3 — Second rewrite
 
 Improve a vague PR line: “Fixed stuff” → specific verify/rollback language.
 
-### Step 4 — Save
+## Scope
+Pre-lab only — do not finish the full graded lab in this exercise.
+```
 
-Keep both before/after pairs in notes.
+Then follow **Steps** to create your own file.
+
+## Steps
+
+### Step 1 — Create the notes file
+
+From `examples/module-47-exercises/`, create `notes/` if needed, then create `notes/lab47-peer-review-practice.md`.
+
+### Step 2 — Paste and complete this template
+
+```markdown
+# Lab 47 — Peer Review Rewrite Practice
+
+## Step 1 — Weak sentence
+
+Given: “Someone broke Kafka again.” Rewrite to blameless + factual.
+
+## Step 2 — Check the reference
+
+Feedback should cite the line/section and suggest a rewrite.
+
+## Step 3 — Second rewrite
+
+Improve a vague PR line: “Fixed stuff” → specific verify/rollback language.
+
+## Scope
+Pre-lab only — do not finish the full graded lab in this exercise.
+```
+
+### Step 3 — Self-check
+
+Confirm fixtures if used: Amina `CUS-1001`/`ACTIVE`, Ravi `CUS-1002`/`PROSPECT`, correlation `lab-request-001`. Replace every `_____` before Pass.
 
 ## Expected result
 
-Two before/after peer-review rewrites saved.
+Two before/after peer-review rewrites saved in `notes/lab47-peer-review-practice.md`.
 
 ## If it fails
 
 | Problem | Fix |
 | --- | --- |
+| No file / wrong name | Must be `notes/lab47-peer-review-practice.md` |
 | Contradictory severity across docs | Share one fact base |
 | Leaking secrets in screenshots | Redact before attach |
 
 ## Pass criteria
 
-| # | Confirm | Notes |
-| --- | --- | --- |
-| 1 | Blame removed | Pass / Fail |
-| 2 | PR line made specific | Pass / Fail |
-| 3 | Pairs saved | Pass / Fail |
+Self-check before marking Pass:
+
+- [ ] File exists at `notes/lab47-peer-review-practice.md`
+- [ ] Blame removed
+- [ ] PR line made specific
+- [ ] Pairs saved
+

@@ -12,7 +12,7 @@
 | Windows | [LAB-10-WINDOWS.md](LAB-10-WINDOWS.md) |
 | macOS | [LAB-10-MACOS.md](LAB-10-MACOS.md) |
 
-> **Environment reminder:** Complete the [Module 10 pre-lab exercises](../exercises/EXERCISES-INDEX.md) after the slides and before this lab.  Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **GitHub Copilot** signed in. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Environment reminder:** Complete the [Module 10 pre-lab exercises](../exercises/EXERCISES-INDEX.md) after the slides and before this lab — the index lists every notes filename (no need to dig through the deck). Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **GitHub Copilot** signed in. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
 
 **Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11; Maven 3.9.9):**
 
@@ -48,13 +48,14 @@ In class, use the starter templates so the **core** objectives fit **~45 minutes
 
 ## How to follow this lab
 
-1. **In class (timed path):** prefer [`starter/README.md`](starter/README.md) — copy starter → `java-bootcamp/examples/lab10-crm`, fill `// TODO`, run smoke test (~45 min).
+1. **In class:** prefer [`starter/README.md`](starter/README.md) when a timed path exists — fill `// TODO`, run the smoke test (~45 min).
 2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
-3. Create/work only under your `java-bootcamp/examples/…` folder from the steps (not inside this `labs/` git clone unless a step says otherwise).
-4. For each **Step N** (full path / homework): read **Why** (if present) → do the actions → confirm **Expected** / **Expected result** → then continue.
-5. When stuck, use **Failure Experiments** / troubleshooting in this guide before asking for help.
-6. Capture evidence under `notes/screenshots/lab-10/` (workspace root under `java-bootcamp`; redact secrets). Use the **Pass criteria** tables — write **Pass** or **Fail** in your notes. GitHub file view does not support clickable checkboxes.
+3. Work only under your `java-bootcamp/examples/…` folder (not inside this `labs/` clone unless a step says otherwise).
+4. Read **Worked example** once, then for each **Step**: **Why** → **Do this** → confirm **Expected result**.
+5. When stuck, use **Troubleshooting** / **Failure Experiments** before asking for help.
+6. Capture evidence under `notes/screenshots/` (redact secrets). Mark Pass/Fail in your own notes — GitHub does not support clickable checkboxes.
 
+---
 
 ## What you'll submit (read this first)
 
@@ -70,6 +71,9 @@ Keep this checklist visible while you work. Full detail is under [Expected Deliv
 | 6 | Failure-experiment notes and compile/`Main` evidence |
 | 7 | No secrets or generated `target/` committed |
 
+**Must submit:** the items in the table above (sources + evidence + short notes).
+
+**Do not submit:** `target/`, `node_modules/`, secrets, heap dumps, or a verbatim instructor `solution/`.
 
 ## Lab Overview
 
@@ -77,7 +81,7 @@ This Module 10 lab continues the **Northstar Customer Service Platform** into `l
 
 **Purpose.** Copilot can accelerate boilerplate, but unreviewed AI code is a production risk. Enterprise teams treat suggestions like work from a junior teammate: useful, never trusted blindly. This lab trains **deliberate prompting** and a **mandatory human-review log** before anything merges.
 
-**What you build (exercise).** Install/sign in to Copilot in VS Code; practice weak vs strong prompts; scaffold `CustomerStatus` and `Customer` with inline completions; draft `CustomerService` with Copilot Chat; prove behavior with `Main` using `CUS-1001` / `CUS-1002`; complete review-log entries `lab10-001`–`lab10-004`. Still no JPA, no Spring annotations, no REST.
+**What you build (exercise).** Install/sign in to Copilot in **IntelliJ** (optional VS Code); practice weak vs strong prompts; scaffold `CustomerStatus` and `Customer` with inline completions; draft `CustomerService` with Copilot Chat; prove behavior with `Main` using `CUS-1001` / `CUS-1002`; complete review-log entries `lab10-001`–`lab10-004`. Still no JPA, no Spring annotations, no REST.
 
 **What success looks like.** Under `~/java-bootcamp/examples/lab10-crm/` you compile with `mvn -q compile`, run `Main` showing both sample customers and a status change, and hand graders an `ai-review-notes.md` that proves you rejected at least one bad suggestion (commonly phantom JPA annotations).
 
@@ -91,7 +95,7 @@ This Module 10 lab continues the **Northstar Customer Service Platform** into `l
 
 After completing this lab, you will be able to:
 
-* Install, sign in to, and verify GitHub Copilot in VS Code against a Java project
+* Install, sign in to, and verify GitHub Copilot in **IntelliJ IDEA** (primary) against a Java project
 * Distinguish weak prompts from strong prompts and explain why specificity changes output
 * Use inline completions and Copilot Chat to scaffold a JavaBean-style entity class
 * Use Copilot Chat to draft a first-pass service layer with business validation
@@ -230,20 +234,32 @@ Ignore `target/`, IDE metadata, and local env files.
 
 ---
 
-## Concepts to Discuss
+## Key ideas (skim — no write-up)
 
-Write 2–3 sentences each in `copilot-notes/ai-review-notes.md` (or `notes/lab10-answers.md`) before or during the steps:
+Skim these ideas before coding. **No separate essay write-up required.**
 
-1. Difference between a Copilot **inline completion** and a **Copilot Chat** request—when is each better?
-2. Why prompt specificity (fields, types, rules) changes enterprise Java output quality vs a vague comment?
-3. What is the “trust boundary” between an AI suggestion and code allowed to touch real customer data?
-4. Which business rule protects integrity in `Customer` (fixed `CustomerStatus` enum vs free-text `String`)?
-5. What happens if Copilot suggests a class/annotation/library not on this project’s classpath?
-6. Why must every accepted suggestion be reviewed line-by-line, not only “does it compile”?
-7. What is the risk of pasting real customer data or credentials into Copilot Chat?
-8. How does license/provenance risk apply to a multi-line AI block, and what if it looks copied from a known OSS project?
-9. Why is Copilot **not** a runtime dependency of `customer-service`?
-10. How will Lab 11 reuse today’s review discipline when generating tests?
+In `copilot-notes/ai-review-notes.md`, add a short **Prep** section with **one line each** (not paragraphs):
+
+1. Inline completion vs Copilot Chat — when you use each.
+2. Why a strong prompt (fields, types, no Spring/JPA) beats “write a customer class.”
+3. Trust boundary: AI suggests; you own what merges / touches customer data.
+4. Phantom classpath risk: reject annotations/libraries not in this POM (e.g. `@Entity`).
+
+The graded review log entries `lab10-001`–`lab10-004` (later steps) carry the real evidence — do not duplicate long write-ups here.
+---
+
+## Worked example (read before you code)
+
+Study this pattern once before Step 1. Your job is to apply the same idea in the Steps — do not skip ahead to a full solution.
+
+```powershell
+cd $env:USERPROFILE\java-bootcamp\examples
+Copy-Item -Recurse lab9-crm lab10-crm
+cd lab10-crm
+New-Item -ItemType Directory -Force -Path copilot-notes, ..\..\notes\screenshots\lab-10 | Out-Null
+```
+
+**What to notice:** Match names, IDs, and failure behavior from the scenario — graders check these.
 
 ---
 
@@ -253,42 +269,50 @@ Complete each step in order. Commands assume `~/java-bootcamp/examples/lab10-crm
 
 ---
 
-### Step 1 — Install and sign in to GitHub Copilot; copy Lab 9 → Lab 10
+### Step 1 — Install and sign in to GitHub Copilot in IntelliJ; copy Lab 9 → Lab 10
 
-**Why:** Copilot must be authenticated and the workspace must be a clean copy of the Lab 9 tree so Maven coordinates and packages stay consistent.
+**Why:** Copilot must be authenticated in your **primary IDE (IntelliJ)** and the workspace must be a clean copy of the Lab 9 tree so Maven coordinates and packages stay consistent.
 
-**Do this:**
+**Do this — IntelliJ Copilot setup (demo checklist):**
 
-1. Extensions (`Ctrl+Shift+X`) → install **GitHub Copilot** and **GitHub Copilot Chat**.
-2. Sign in (`GitHub Copilot: Sign In` / browser authorize).
-3. Copy the project:
+1. Open IntelliJ IDEA Community → open `%USERPROFILE%\java-bootcamp` (macOS: `~/java-bootcamp`).
+2. Install the plugin: **Settings / Preferences → Plugins → Marketplace** → search **GitHub Copilot** → **Install** → restart if prompted.
+3. Sign in: click the **Copilot** icon in the IDE status bar (or **Tools → GitHub Copilot → Login**) → authorize in the browser.
+4. Confirm settings (quick pass): **Settings → Tools → GitHub Copilot** (wording may vary slightly by plugin version):
+   - Completions / suggestions **enabled** for Java
+   - Optional: enable Copilot Chat if shown as a separate toggle
+5. Status check: status bar Copilot icon should show **Ready** / signed-in (not an error slash).
+
+**Do this — project copy:**
 
 ```bash
 cd ~/java-bootcamp/examples
 cp -r lab9-crm lab10-crm
 cd lab10-crm
 mkdir -p copilot-notes ~/java-bootcamp/notes/screenshots/lab-10
-code .   # or: open folder in already-connected VS Code window
 ```
 
-Windows PowerShell (local mode only):
+Windows PowerShell:
 
 ```powershell
+cd $env:USERPROFILE\java-bootcamp\examples
 Copy-Item -Recurse lab9-crm lab10-crm
 cd lab10-crm
+New-Item -ItemType Directory -Force -Path copilot-notes, ..\..\notes\screenshots\lab-10 | Out-Null
 ```
+
+Then in IntelliJ: open / refresh `examples/lab10-crm` so Maven imports the POM.
+
+**Optional IDE:** VS Code — Extensions → install **GitHub Copilot** + **GitHub Copilot Chat** → Sign In → `code .` from `lab10-crm`. Prefer IntelliJ for this bootcamp unless your instructor says otherwise.
 
 **Expected result:**
 
 ```text
-Command Palette > GitHub Copilot: Check Status
-GitHub.copilot: Ready
-GitHub.copilot-chat: Ready
-Status bar Copilot icon shows no slash/error badge.
+IntelliJ status bar: GitHub Copilot Ready / signed in
+lab10-crm/ exists as a copy of lab9-crm with copilot-notes/
 ```
 
-**If it fails:** No Copilot license → request/enable in GitHub settings. Sign-in loops → Sign Out then Sign In; check Output → GitHub Copilot. Missing `lab9-crm` → finish Lab 9 first. Wrong path → use `examples/` as in Labs 8–9.
-
+**If it fails:** No Copilot license → enable in GitHub settings (free/student/enterprise as applicable). Sign-in loops → Log out then Login again. Missing `lab9-crm` → finish Lab 9 first. Plugin missing → Marketplace install + restart. Wrong path → use `examples/` as in Labs 8–9.
 ---
 
 ### Step 2 — Sanity-check Copilot against this Java project
@@ -322,6 +346,7 @@ Create `copilot-notes/ai-review-notes.md` with entries `lab10-001` and `lab10-00
 
 ```markdown
 ## lab10-001 — weak vs strong (entity)
+
 - Date:
 - Weak prompt used:
 - Output summary:
@@ -331,6 +356,7 @@ Create `copilot-notes/ai-review-notes.md` with entries `lab10-001` and `lab10-00
 - Reason (1 sentence):
 
 ## lab10-002 — weak vs strong (addCustomer)
+
 - ...
 ```
 
@@ -416,7 +442,7 @@ public class Customer {
 }
 ```
 
-**Watch for this common Copilot mistake:** “entity” often triggers `@Entity`, `@Id`, `@Column` from `jakarta.persistence` / `javax.persistence`. **This project has no JPA in `pom.xml` and no Spring until Lab 22.** Reject those annotations—this is the review discipline Step 7 formalizes.
+**Watch for this common Copilot mistake:** “entity” often triggers `@Entity`, `@Id`, `@Column` from `jakarta.persistence` / `javax.persistence`, and a numeric **`Long id`**. **This project has no JPA in `pom.xml` and no Spring until Lab 22.** Reject those annotations and keep identity as **`String customerId`** (`"CUS-1001"` style)—this is the review discipline Step 7 formalizes. A leftover `Long` here breaks Lab 11 tests with `String cannot be converted to Long`.
 
 ```bash
 mvn -q compile
@@ -571,7 +597,7 @@ After activation: Optional[Customer{customerId='CUS-1002', ..., status=ACTIVE}]
 
 **Do this:** Walk every accepted suggestion from Steps 4–5 through this checklist; log as `lab10-003`:
 
-_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+_Mark **Pass** or **Fail** in your lab notes._
 
 | # | Confirm | Your notes |
 | - | ------- | ---------- |
@@ -627,7 +653,7 @@ git status
 
 ### Checkpoint A — Environment + Copilot ready
 
-_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+_Mark **Pass** or **Fail** in your lab notes._
 
 | # | Confirm | Your notes |
 | - | ------- | ---------- |
@@ -637,7 +663,7 @@ _Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are
 
 ### Checkpoint B — Domain + service compile
 
-_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+_Mark **Pass** or **Fail** in your lab notes._
 
 | # | Confirm | Your notes |
 | - | ------- | ---------- |
@@ -647,7 +673,7 @@ _Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are
 
 ### Checkpoint C — Behavior + sample IDs
 
-_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+_Mark **Pass** or **Fail** in your lab notes._
 
 | # | Confirm | Your notes |
 | - | ------- | ---------- |
@@ -657,7 +683,7 @@ _Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are
 
 ### Checkpoint D — Review log + risks + experiments
 
-_Mark each row **Pass** or **Fail** in your lab notes (GitHub markdown files are not interactive checklists)._
+_Mark **Pass** or **Fail** in your lab notes._
 
 | # | Confirm | Your notes |
 | - | ------- | ---------- |
@@ -760,18 +786,14 @@ Re-state constraints in every prompt, or use bonus `.github/copilot-instructions
 
 ## Security and Production Review
 
-Answer in project README or review-log closing section:
+Optional — jot brief notes in your README if useful for the rubric (not a separate essay):
 
 1. Which parts of a Copilot prompt are untrusted from the model’s perspective, and which are trusted (your business rules)?
 2. Where is human review formally enforced before AI code reaches the shared repo?
 3. Which values must never appear in Chat, even as examples?
-4. What can be safely regenerated if rejected, and what must a human write from scratch?
-5. What if an AI-suggested dependency only fails in CI `mvn compile`, not locally?
-6. What would a tech lead audit to confirm AI-assisted code met the same bar as hand-written code?
-7. Which licensing/IP concern applies to large verbatim-looking suggestions, and how do you mitigate it?
-8. How do you keep an audit trail of what a human verified vs what the AI produced?
 
 ---
+
 
 ## Cleanup
 
@@ -789,15 +811,9 @@ No containers or cloud services were started. Remove scratch prompt files that c
 
 ## Expected Deliverables
 
-Same checklist as [What you'll submit](#what-youll-submit-read-this-first) above.
+Same checklist as [What you'll submit](#what-youll-submit-read-this-first) at the top. You are done when those items are complete and the Implementation Checkpoints pass.
 
-* `Customer` entity (`com.northstar.crm.entity.Customer`)
-* `CustomerStatus` enum (`com.northstar.crm.entity.CustomerStatus`)
-* `CustomerService` (`com.northstar.crm.service.CustomerService`)
-* `Main.java` harness demonstrating `CUS-1001` and `CUS-1002`
-* `copilot-notes/ai-review-notes.md` with entries `lab10-001`–`lab10-004`
-* Failure-experiment notes and compile/`Main` evidence
-* No secrets or generated `target/` committed
+Do **not** submit `target/`, secrets, or a verbatim instructor `solution/`.
 
 ---
 
@@ -817,44 +833,29 @@ Same checklist as [What you'll submit](#what-youll-submit-read-this-first) above
 
 ---
 
-## Reflection Questions
+## Reflection (optional stretch — 3 short bullets max)
 
-Write short answers (3–6 sentences) in the review log or `notes/lab10-answers.md`:
+If you have time after the timed path, add **at most three bullets** under `## Stretch reflection` in `copilot-notes/ai-review-notes.md` (one line each):
 
-1. Which prompt changed most between first attempt and final accepted version?
-2. What was the most dangerous Copilot suggestion you saw, and how did you catch it?
-3. What evidence would convince a skeptical tech lead you did not blindly accept AI output?
-4. How would review change if this code touched real (non-fictional) customer PII?
-5. Which task was faster with Copilot, and which was slower once review time counted?
-6. How does this lab connect to the Northstar CRM platform across Weeks 2–6?
-7. What would you put in `.github/copilot-instructions.md` to prevent the JPA-annotation mistake?
-8. What is the difference between “Copilot wrote this” and “I am responsible for this” professionally?
-9. (Forward look) How should Lab 11 treat AI-generated tests differently from AI-generated production code?
+1. Most dangerous suggestion you caught, and how.
+2. One prompt change that improved the accepted output.
+3. What you would tell a tech lead to prove you did not blind-accept AI.
+
+Do **not** write multi-paragraph essays. Graded work is the review-log entries + working code.
 
 ---
 
 ## Bonus Challenges
 
+Optional — only after core deliverables pass. Pick at most one if time is short.
+
+
 1. Add `.github/copilot-instructions.md` stating constraints (Java 21, no Spring, no JPA until Lab 22) and re-run Step 4’s prompt.
-2. Use Copilot Chat `/explain` on generated `equals`/`hashCode` and summarize in your own words.
+2. Use Copilot Chat `/explain` on generated `equals`/`hashCode` and summarize in your own words (2–3 bullets).
 3. Ask Copilot for Javadoc on `CustomerService` and review accuracy against behavior.
-4. Compare VS Code vs IntelliJ Copilot outputs for Step 5 in the review log (if IntelliJ is available).
-5. Ask Chat `/tests` on `CustomerService` and save (do not yet trust/run as final)—evaluate formally in Lab 11.
 
 ---
 
-## Success Criteria
-
-You are finished when:
-
-* GitHub Copilot is signed in and producing suggestions inside `lab10-crm/`
-* `Customer`, `CustomerStatus`, and `CustomerService` compile and behave correctly for `CUS-1001` and `CUS-1002`
-* Review log shows weak-vs-strong comparison and at least one caught/corrected AI mistake
-* Three failure experiments are documented
-* No production secret or real customer data was placed in a prompt
-* You can explain, unaided, every accepted Copilot line
-
----
 
 ## Instructor Notes
 
