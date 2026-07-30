@@ -1,0 +1,116 @@
+Lab 12 build and demo evidence, captured 2026-07-29
+Windows PowerShell, Temurin JDK 21, Maven 3.9.9, examples\lab12-crm
+
+Console captures of the runs to screenshot. Suggested shot list, all from the
+IntelliJ terminal, do not use -q or the output is suppressed and the shot is
+blank:
+
+  step1-before-demo.png        messy baseline running, == bug visible
+  step3-red-tests.png          Compile-error.png already covers this
+  step7-clean-verify.png       mvn -B clean verify, 8 green
+  step7-after-demo.png         refactored Main, correlation ids visible
+  step9-exp1-import.png        removed import, compile error
+  step9-exp5-update-magic.png  "UPDATE" branch reintroduced
+
+Compile-error.png is already captured and covers the step 3 red run.
+
+
+=== BEFORE, FROZEN BASELINE ===
+
+java -cp target/classes com.northstar.crm.Main
+
+ok CUS-1001
+ok CUS-1002
+get literal      -> Customer{customerId='CUS-1001', fullName='Amina Khan', status=ACTIVE}
+get new String   -> null
+dup
+duplicate 1001   -> null
+bad
+blank id         -> null
+ok CUS-1003
+typo status      -> Customer{customerId='CUS-1003', fullName='Priya Patel', status=PROSPECT}
+unknown id       -> null
+
+three things in one screen. get new String lost amina one line after creating
+her, that is the == bug. get new String and unknown id are both null, so the
+caller cannot tell a broken lookup from a missing customer. typo status was
+called with "AKTIVE" and returned PROSPECT with a cheerful ok.
+
+
+=== STEP 3, TARGET TESTS BEFORE THE REFACTOR ===
+
+mvn -B test
+
+[ERROR] CustomerServiceTest.java:[23,35] cannot find symbol
+  symbol:   method createCustomer(String,String,String,String,CustomerStatus)
+  location: variable service of type com.northstar.crm.service.CustomerService
+BUILD FAILURE
+
+not red, uncompilable. worth the distinction, nothing about behaviour was proven
+at this point.
+
+
+=== AFTER, FULL SUITE ===
+
+mvn -B clean verify
+
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.entity.CustomerTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerServiceTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Building jar: target\customer-service.jar
+[INFO] BUILD SUCCESS
+
+
+=== AFTER, DEMO ===
+
+java -cp target/classes com.northstar.crm.Main
+
+get literal      -> Customer{customerId='CUS-1001', fullName='Amina Khan', status=ACTIVE}
+get new String   -> Customer{customerId='CUS-1001', fullName='Amina Khan', status=ACTIVE}
+duplicate 1001   -> EX: Customer id already exists: CUS-1001 correlationId=lab-request-001
+blank id         -> EX: customerId must be provided correlationId=lab-request-001
+activate 1002    -> Customer{customerId='CUS-1002', fullName='Ravi Singh', status=ACTIVE}
+null status      -> defaults to PROSPECT: Customer{customerId='CUS-1003', fullName='Priya Patel', status=PROSPECT}
+unknown id       -> EX: Customer not found: CUS-9999 correlationId=lab-request-001
+
+get new String returns amina now. the three failures are distinguishable by type
+and message and all carry the correlation id. the "AKTIVE" line is gone from
+this transcript because it can no longer be written, the parameter is
+CustomerStatus so the typo is a compile error.
+
+
+=== EXPERIMENT 1, BROKEN IMPORT ===
+
+removed "import com.northstar.crm.entity.Customer;" from CustomerService.
+
+[ERROR] CustomerService.java:[23,31] cannot find symbol
+  symbol:   class Customer
+[ERROR] CustomerService.java:[34,12] cannot find symbol
+[ERROR] CustomerService.java:[52,12] cannot find symbol
+[ERROR] CustomerService.java:[56,12] cannot find symbol
+BUILD FAILURE
+
+one deleted line, four error sites. restored, verify green.
+
+
+=== EXPERIMENT 5, "UPDATE" MAGIC REINTRODUCED ===
+
+branch re-added to createCustomer, two customers created differing only in name.
+
+plain name    -> PROSPECT
+upd
+name w/UPDATE -> ACTIVE
+
+same method, same requested status, different result, decided by whether the
+name contained a keyword. amina khan gets PROSPECT, "amina UPDATE khan" gets
+ACTIVE. branch deleted again, verify green at 8.
+
+
+=== SIZING ===
+
+CustomerService.before.java.txt    68 lines
+CustomerService.java               86 lines
+
+the refactor is longer. three documented public methods and three named
+validation helpers cost more lines than one 39-line method that returned null
+three different ways. lines are not the metric.
