@@ -1,0 +1,27 @@
+Lab 14 demo evidence, captured 2026-07-30
+Windows, Temurin JDK 21, Maven 3.9.9, examples\lab14-crm
+
+  mvn -B -q compile exec:java
+
+Both fixtures created and read back as response DTOs, then five failures in four
+places. java -jar does not work here, the jar bundles no dependencies.
+
+Jul 30, 2026 4:09:34 PM org.hibernate.validator.internal.util.Version <clinit>
+INFO: HV000001: Hibernate Validator 8.0.2.Final
+create 1001      -> CustomerResponseDTO{customerId='CUS-1001', fullName='Amina Khan', email='amina.khan@example.com', status=ACTIVE, createdAt=2026-07-30T16:09:35.455438300Z, updatedAt=2026-07-30T16:09:35.455438300Z}
+create 1002      -> CustomerResponseDTO{customerId='CUS-1002', fullName='Ravi Singh', email='ravi.singh@example.com', status=PROSPECT, createdAt=2026-07-30T16:09:35.473916900Z, updatedAt=2026-07-30T16:09:35.473916900Z}
+get 1001         -> CustomerResponseDTO{customerId='CUS-1001', fullName='Amina Khan', email='amina.khan@example.com', status=ACTIVE, createdAt=2026-07-30T16:09:35.455438300Z, updatedAt=2026-07-30T16:09:35.455438300Z}
+get 1002         -> CustomerResponseDTO{customerId='CUS-1002', fullName='Ravi Singh', email='ravi.singh@example.com', status=PROSPECT, createdAt=2026-07-30T16:09:35.473916900Z, updatedAt=2026-07-30T16:09:35.473916900Z}
+Jul 30, 2026 4:09:35 PM com.northstar.crm.api.CustomerApiFacade fail
+WARNING: [lab-request-001] CUSTOMER_VALIDATION_FAILED: email: email must be a valid address
+invalid email    -> EX: [lab-request-001] CUSTOMER_VALIDATION_FAILED: email: email must be a valid address
+Jul 30, 2026 4:09:35 PM com.northstar.crm.api.CustomerApiFacade fail
+WARNING: [lab-request-001] CUSTOMER_VALIDATION_FAILED: fullName: fullName is required; fullName: fullName must be between 2 and 100 characters
+blank name       -> EX: [lab-request-001] CUSTOMER_VALIDATION_FAILED: fullName: fullName is required; fullName: fullName must be between 2 and 100 characters
+Jul 30, 2026 4:09:35 PM com.northstar.crm.api.CustomerApiFacade fail
+WARNING: [lab-request-001] CUSTOMER_STATUS_INVALID: status: ACTVE is not a known status
+status typo      -> EX: [lab-request-001] CUSTOMER_STATUS_INVALID: status: ACTVE is not a known status
+duplicate 1001   -> EX: Customer id already exists: CUS-1001 correlationId=lab-request-001
+Jul 30, 2026 4:09:35 PM com.northstar.crm.api.CustomerApiFacade fail
+WARNING: [lab-request-001] CUSTOMER_NOT_FOUND: customerId: CUS-9999
+unknown id       -> EX: [lab-request-001] CUSTOMER_NOT_FOUND: customerId: CUS-9999
