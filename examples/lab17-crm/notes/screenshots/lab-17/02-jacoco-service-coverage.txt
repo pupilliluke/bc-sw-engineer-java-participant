@@ -1,0 +1,50 @@
+Lab 17 coverage evidence, captured 2026-07-31
+Windows, Temurin JDK 21, Maven 3.9.9, examples\lab17-crm
+
+  mvn -B clean verify
+  target\site\jacoco\index.html, target\site\jacoco\jacoco.csv
+
+Lines and branches per package, summed from jacoco.csv after the full suite.
+The gate reads the first row only.
+
+  package                        lines      ratio   branches
+  com.northstar.crm.service      46 / 46    1.00    20 / 20
+  com.northstar.crm.mapper       15 / 15    1.00     3 / 4
+  com.northstar.crm.repository   15 / 15    1.00     3 / 4
+  com.northstar.crm.entity       41 / 42    0.98     3 / 6
+  com.northstar.crm.dto          37 / 39    0.95     0 / 0
+  com.northstar.crm.exception    72 / 78    0.92    14 / 20
+  com.northstar.crm.api          42 / 50    0.84     7 / 8
+  com.northstar.crm.config        0 / 1     0.00     0 / 0
+  com.northstar.crm               0 / 25    0.00     0 / 2
+  total                        268 / 311    0.86    50 / 64
+
+THE BRANCH THAT WAS RED LAST
+
+CustomerValidator line 56, if (customer.getFullName() == null ||
+customer.getFullName().isBlank()). The first full run reported "1 of 4 branches
+missed" on that line: blank was covered by blankFullNameIsA400NamingTheField and
+null was not. aMissingFullNameIsA400LikeABlankOne closed it and took the service
+package from 19 of 20 branches to 20 of 20. Lines were already 46 of 46 at that
+point, so the gate was green before the branch was covered; the HTML report is
+what showed it.
+
+UNCOVERED, AND WHY IT STAYS UNCOVERED
+
+com.northstar.crm.Main, 25 lines, is the demo transcript. It is run by
+exec:java, not by a test, and asserting on printed output would test the demo
+rather than the service.
+
+com.northstar.crm.config.AppConfig, 1 line, is a private constructor that
+exists to stop instantiation.
+
+com.northstar.crm.api, 8 lines missed, and com.northstar.crm.exception, 6,
+are unused ErrorResponse accessors and facade paths lab 16 left. They are
+outside this lab's gate.
+
+WHAT THE NUMBER DOES NOT PROVE
+
+Excluding the three service suites and running the rest still leaves the
+package at 0.84, because CustomerApiFacadeTest drives the service through the
+facade. A 0.80 line gate on this package can be met with no service test at
+all.
