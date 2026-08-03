@@ -1,0 +1,65 @@
+Lab 18 determinism evidence, captured 2026-08-02
+Windows, Temurin JDK 21, Maven 3.9.9, examples\lab18-crm
+
+Four runs. Two consecutive, one in reverse class order, one test on its own.
+Same counts every time. Elapsed times are cut from the lines below; they are
+the only numbers that differ between runs.
+
+Mocks are the thing that could break this and do not. @Mock fields are
+recreated per test by MockitoExtension, nothing is static, and no stub or
+verification outlives the method that wrote it.
+
+RUN 1, mvn -B clean verify
+
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.api.CustomerApiFacadeTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.dto.CustomerRequestDTOValidationTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.entity.CustomerTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.exception.ErrorResponseTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.exception.GlobalExceptionHandlerTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.mapper.CustomerMapperTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.repository.InMemoryCustomerRepositoryTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerServiceBddMockTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerServiceMockitoTest
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerServiceTests
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerValidatorParameterizedTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerValidatorTest
+[INFO] Tests run: 98, Failures: 0, Errors: 0, Skipped: 0
+
+RUN 2, mvn -B test
+
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.api.CustomerApiFacadeTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.dto.CustomerRequestDTOValidationTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.entity.CustomerTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.exception.ErrorResponseTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.exception.GlobalExceptionHandlerTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.mapper.CustomerMapperTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.repository.InMemoryCustomerRepositoryTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerServiceBddMockTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerServiceMockitoTest
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerServiceTests
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerValidatorParameterizedTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerValidatorTest
+[INFO] Tests run: 98, Failures: 0, Errors: 0, Skipped: 0
+
+RUN 3, mvn -B test -Dsurefire.runOrder=reversealphabetical
+
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerValidatorTest
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerValidatorParameterizedTest
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerServiceTests
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerServiceMockitoTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerServiceBddMockTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.repository.InMemoryCustomerRepositoryTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.mapper.CustomerMapperTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.exception.GlobalExceptionHandlerTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.exception.ErrorResponseTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.entity.CustomerTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.dto.CustomerRequestDTOValidationTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.api.CustomerApiFacadeTest
+[INFO] Tests run: 98, Failures: 0, Errors: 0, Skipped: 0
+
+RUN 4, one test alone
+
+  mvn -B test "-Dtest=CustomerServiceMockitoTest#unknownIdIsA404AndNeverSaves"
+
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.service.CustomerServiceMockitoTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0

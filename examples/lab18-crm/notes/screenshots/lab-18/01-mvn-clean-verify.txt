@@ -1,0 +1,161 @@
+Lab 18 verify evidence, captured 2026-08-02
+Windows, Temurin JDK 21, Maven 3.9.9, examples\lab18-crm
+
+  mvn -B clean verify
+
+Ninety-eight tests, up from lab 17's eighty-three. The fifteen new ones are
+CustomerServiceMockitoTest 12 and CustomerServiceBddMockTest 3, both wired on
+a mocked CustomerRepository. No production class and no lab 17 test changed,
+so every other count matches lab 17 line for line.
+
+The pom needed no edit. Mockito 5.14.2, core and junit-jupiter, was already
+test scoped in the pom copied forward from lab17-crm, and mock(CustomerService
+.class) has been in CustomerApiFacadeTest since lab 14. The tree is in
+02-mockito-deps-and-suites.txt.
+
+The gate is still the last goal in the run, jacoco check on package
+com.northstar.crm.service, LINE covered ratio at least 0.80, "All coverage
+checks have been met". The package stays at 46 of 46 lines and 20 of 20
+branches: the mocked suites walk paths the real-repository suites already
+reached, which is the point, isolation is not extra coverage.
+
+The WARNING and SEVERE blocks are lab 16's handler logging what the client
+payload does not carry. Below the first three frames of each, the JUnit and
+surefire frames are elided.
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< com.northstar:customer-service >-------------------
+[INFO] Building Northstar Customer Service 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ customer-service ---
+[INFO] Deleting C:\Users\lukel\java-bootcamp\examples\lab18-crm\target
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ customer-service ---
+[INFO] argLine set to -javaagent:C:\\Users\\lukel\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.12\\org.jacoco.agent-0.8.12-runtime.jar=destfile=C:\\Users\\lukel\\java-bootcamp\\examples\\lab18-crm\\target\\jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ customer-service ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ customer-service ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 23 source files with javac [debug release 21] to target\classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ customer-service ---
+[INFO] skip non existing resourceDirectory C:\Users\lukel\java-bootcamp\examples\lab18-crm\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ customer-service ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 12 source files with javac [debug release 21] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.5.2:test (default-test) @ customer-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.northstar.crm.api.CustomerApiFacadeTest
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (C:\Users\lukel\.m2\repository\net\bytebuddy\byte-buddy-agent\1.15.4\byte-buddy-agent-1.15.4.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+Aug 02, 2026 10:30:02 PM org.hibernate.validator.internal.util.Version <clinit>
+INFO: HV000001: Hibernate Validator 8.0.2.Final
+Aug 02, 2026 10:30:03 PM com.northstar.crm.exception.GlobalExceptionHandler fromFields
+WARNING: [lab-request-001] VALIDATION_FAILED: [fullName]
+Aug 02, 2026 10:30:03 PM com.northstar.crm.exception.GlobalExceptionHandler fromFields
+WARNING: [lab-request-001] VALIDATION_FAILED: [email]
+Aug 02, 2026 10:30:03 PM com.northstar.crm.exception.GlobalExceptionHandler fromBusiness
+WARNING: [lab-request-001] BUSINESS_CONFLICT: duplicate customerId: CUS-1001
+Aug 02, 2026 10:30:03 PM com.northstar.crm.exception.GlobalExceptionHandler fromUnexpected
+SEVERE: [lab-request-001] INTERNAL_ERROR
+java.lang.RuntimeException: connection to crm-db refused
+	at com.northstar.crm.api.CustomerApiFacade.getById(CustomerApiFacade.java:75)
+	at com.northstar.crm.api.CustomerApiFacadeTest.unexpectedFailureBecomesAGeneric500(CustomerApiFacadeTest.java:140)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	... JUnit and surefire frames elided
+
+Aug 02, 2026 10:30:03 PM com.northstar.crm.exception.GlobalExceptionHandler fromBusiness
+WARNING: [lab-request-001] CUSTOMER_NOT_FOUND: Customer not found: CUS-9999
+Aug 02, 2026 10:30:03 PM com.northstar.crm.exception.GlobalExceptionHandler fromBusiness
+WARNING: [lab-request-001] BUSINESS_CONFLICT: illegal status transition ACTIVE -> PROSPECT
+Aug 02, 2026 10:30:03 PM com.northstar.crm.exception.GlobalExceptionHandler fromFields
+WARNING: [lab-request-001] VALIDATION_FAILED: [status]
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.011 s -- in com.northstar.crm.api.CustomerApiFacadeTest
+[INFO] Running com.northstar.crm.dto.CustomerRequestDTOValidationTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in com.northstar.crm.dto.CustomerRequestDTOValidationTest
+[INFO] Running com.northstar.crm.entity.CustomerTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in com.northstar.crm.entity.CustomerTest
+[INFO] Running com.northstar.crm.exception.ErrorResponseTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s -- in com.northstar.crm.exception.ErrorResponseTest
+[INFO] Running com.northstar.crm.exception.GlobalExceptionHandlerTest
+Aug 02, 2026 10:30:03 PM com.northstar.crm.exception.GlobalExceptionHandler fromFields
+WARNING: [lab-request-001] VALIDATION_FAILED: [email]
+Aug 02, 2026 10:30:03 PM com.northstar.crm.exception.GlobalExceptionHandler fromBusiness
+WARNING: [lab-request-001] CUSTOMER_NOT_FOUND: Customer not found: CUS-9999
+Aug 02, 2026 10:30:03 PM com.northstar.crm.exception.GlobalExceptionHandler fromBusiness
+WARNING: [lab-request-001] BUSINESS_CONFLICT: illegal status transition ACTIVE -> PROSPECT
+Aug 02, 2026 10:30:03 PM com.northstar.crm.exception.GlobalExceptionHandler fromBusiness
+WARNING: [lab-request-001] CUSTOMER_NOT_FOUND: Customer not found: CUS-9999
+Aug 02, 2026 10:30:03 PM com.northstar.crm.exception.GlobalExceptionHandler fromFields
+WARNING: [lab-request-001] VALIDATION_FAILED: [email]
+Aug 02, 2026 10:30:03 PM com.northstar.crm.exception.GlobalExceptionHandler fromUnexpected
+SEVERE: [lab-request-001] INTERNAL_ERROR
+java.lang.RuntimeException: boom
+	at com.northstar.crm.exception.GlobalExceptionHandlerTest.everyMappingCarriesTheCorrelationId(GlobalExceptionHandlerTest.java:84)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	... JUnit and surefire frames elided
+
+Aug 02, 2026 10:30:03 PM com.northstar.crm.exception.GlobalExceptionHandler fromFields
+WARNING: [lab-request-001] VALIDATION_FAILED: [email, fullName]
+Aug 02, 2026 10:30:03 PM com.northstar.crm.exception.GlobalExceptionHandler fromUnexpected
+SEVERE: [lab-request-001] INTERNAL_ERROR
+java.lang.IllegalStateException: connection to jdbc:postgresql://crm-db/customers refused
+	at com.northstar.crm.exception.GlobalExceptionHandlerTest.unexpectedIsGeneric500(GlobalExceptionHandlerTest.java:64)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	... JUnit and surefire frames elided
+
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.043 s -- in com.northstar.crm.exception.GlobalExceptionHandlerTest
+[INFO] Running com.northstar.crm.mapper.CustomerMapperTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in com.northstar.crm.mapper.CustomerMapperTest
+[INFO] Running com.northstar.crm.repository.InMemoryCustomerRepositoryTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.northstar.crm.repository.InMemoryCustomerRepositoryTest
+[INFO] Running com.northstar.crm.service.CustomerServiceBddMockTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.098 s -- in com.northstar.crm.service.CustomerServiceBddMockTest
+[INFO] Running com.northstar.crm.service.CustomerServiceMockitoTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.047 s -- in com.northstar.crm.service.CustomerServiceMockitoTest
+[INFO] Running com.northstar.crm.service.CustomerServiceTests
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in com.northstar.crm.service.CustomerServiceTests
+[INFO] Running com.northstar.crm.service.CustomerValidatorParameterizedTest
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.120 s -- in com.northstar.crm.service.CustomerValidatorParameterizedTest
+[INFO] Running com.northstar.crm.service.CustomerValidatorTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.northstar.crm.service.CustomerValidatorTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 98, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ customer-service ---
+[INFO] Loading execution data file C:\Users\lukel\java-bootcamp\examples\lab18-crm\target\jacoco.exec
+[INFO] Analyzed bundle 'Northstar Customer Service' with 16 classes
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ customer-service ---
+[INFO] Building jar: C:\Users\lukel\java-bootcamp\examples\lab18-crm\target\customer-service.jar
+[INFO] 
+[INFO] --- jacoco:0.8.12:check (check-service-package) @ customer-service ---
+[INFO] Loading execution data file C:\Users\lukel\java-bootcamp\examples\lab18-crm\target\jacoco.exec
+[INFO] Analyzed bundle 'customer-service' with 16 classes
+[INFO] All coverage checks have been met.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  7.130 s
+[INFO] Finished at: 2026-08-02T22:30:05-04:00
+[INFO] ------------------------------------------------------------------------

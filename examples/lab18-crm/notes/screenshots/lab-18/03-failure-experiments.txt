@@ -1,0 +1,169 @@
+Lab 18 failure experiments, captured 2026-08-02
+Windows, Temurin JDK 21, Maven 3.9.9, examples\lab18-crm
+
+Eight, the guide's five and three more on wiring and rule order. Seven of the
+eight were edits to CustomerServiceMockitoTest, the eighth to
+CustomerValidator; every one is restored and the suite is green at
+ninety-eight in 01-mvn-clean-verify.txt, captured after all of them.
+
+
+1, THE PORT THROWS
+
+Stub findById to throw instead of returning Ravi.
+
+  when(repository.findById("CUS-1002"))
+          .thenThrow(new RuntimeException("connection to crm-db refused"));
+
+  mvn -B test "-Dtest=CustomerServiceMockitoTest#activatesProspectUsingStubbedRepository"
+
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0
+com.northstar.crm.service.CustomerServiceMockitoTest.activatesProspectUsingStubbedRepository <<< ERROR!
+java.lang.RuntimeException: connection to crm-db refused
+	at com.northstar.crm.service.DefaultCustomerService.changeStatus(DefaultCustomerService.java:57)
+	at com.northstar.crm.service.CustomerServiceMockitoTest.activatesProspectUsingStubbedRepository(CustomerServiceMockitoTest.java:62)
+
+An error, not a failure, and the frame names changeStatus line 57, the
+findById call. The service does not translate an infrastructure fault into a
+BusinessException, it lets it through, and the 500 mapping happens at the
+facade. CustomerApiFacadeTest.unexpectedFailureBecomesAGeneric500 has asserted
+that since lab 16, with the same stubbed message. Restored.
+
+
+2, THE ILLEGAL TRANSITION
+
+The guide's experiment 2, stub Amina ACTIVE and ask for PROSPECT, is a
+permanent test rather than an experiment here:
+
+  illegalTransitionIsA409AndNeverSaves
+
+409, BUSINESS_CONFLICT, "illegal status transition ACTIVE -> PROSPECT", and
+verify(repository, never()).save(any(Customer.class)). Nothing to restore.
+
+
+3, TWO CALLS, ONE VERIFY
+
+Called addCustomer twice in addCustomerCapturesSavedEntity, leaving the
+implicit times(1) on the verify.
+
+  mvn -B test "-Dtest=CustomerServiceMockitoTest#addCustomerCapturesSavedEntity"
+
+org.mockito.exceptions.verification.TooManyActualInvocations:
+repository.save(
+    <Capturing argument: Customer>
+);
+Wanted 1 time:
+-> at CustomerServiceMockitoTest.addCustomerCapturesSavedEntity(CustomerServiceMockitoTest.java:155)
+But was 2 times:
+-> at DefaultCustomerService.addCustomer(DefaultCustomerService.java:37)
+-> at DefaultCustomerService.addCustomer(DefaultCustomerService.java:37)
+
+Both call sites are printed, which is what makes a count failure readable. The
+mock is not shared between tests, @BeforeEach builds a new one and
+MockitoExtension resets it, so this was two calls inside one test rather than
+leakage from another. Restored.
+
+
+4, A STUB NOTHING CALLS
+
+Added an existsById stub to unknownIdIsA404AndNeverSaves, where the path stops
+at findById.
+
+org.mockito.exceptions.misusing.UnnecessaryStubbingException:
+Unnecessary stubbings detected.
+Following stubbings are unnecessary (click to navigate to relevant line of code):
+  1. -> at CustomerServiceMockitoTest.unknownIdIsA404AndNeverSaves(CustomerServiceMockitoTest.java:109)
+	at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:197)
+
+Thrown from afterEach, so it is the extension's strictness and not an
+assertion. This is why the never-saves tests stub findById only and leave save
+unstubbed: stubbing a call the test then proves never happens fails the run
+twice over. Restored.
+
+
+5, THREAD.SLEEP
+
+Two seconds at the top of activatesProspectUsingStubbedRepository.
+
+  mvn -B test "-Dtest=CustomerServiceMockitoTest"
+
+  Tests run: 12 ... Time elapsed: 3.460 s   with the sleep
+  Tests run: 12 ... Time elapsed: 1.559 s   without
+
+Green either way, which is the problem. Nothing in these tests is
+asynchronous; every collaborator is a mock answering on the calling thread, so
+a sleep can only buy delay. Removed. The same experiment is in lab 17 and the
+answer has not changed.
+
+
+6, MOCK THE VALIDATOR
+
+Not in the guide's table. Replaced the real CustomerValidator with
+mock(CustomerValidator.class), leaving the mocked repository alone.
+
+  mvn -B test "-Dtest=CustomerServiceMockitoTest"
+
+[ERROR] Tests run: 12, Failures: 4, Errors: 1, Skipped: 0
+[ERROR]   aDuplicateEmailIsA409AndNeverSaves:197 Expected BusinessException to be thrown, but nothing was thrown.
+[ERROR]   aDuplicateIdIsRejectedBeforeTheEmailIsLookedUp:183 Expected BusinessException to be thrown, but nothing was thrown.
+[ERROR]   aMissingNewStatusIsA400AndNeverSaves:137 Expected BusinessException to be thrown, but nothing was thrown.
+[ERROR]   illegalTransitionIsA409AndNeverSaves:124 Expected BusinessException to be thrown, but nothing was thrown.
+[ERROR]   addCustomerCapturesSavedEntity - UnnecessaryStubbing
+
+Every rejection in the class disappears, because a mocked void
+validateTransition does nothing and ACTIVE to PROSPECT is written through. The
+four happy-path tests stay green, so a suite without the negatives would have
+passed with the rule switched off. This is the reason the validator stays
+real: it holds the transition table these tests exist to check. Restored.
+
+
+7, TWO REPOSITORIES
+
+Also not in the guide. Built the validator on a second mock while the service
+kept the first, the wiring pitfall the guide warns about with @InjectMocks.
+
+[ERROR] Tests run: 12, Failures: 2, Errors: 1, Skipped: 0
+[ERROR]   aDuplicateEmailIsA409AndNeverSaves:198 Expected BusinessException to be thrown, but nothing was thrown.
+[ERROR]   aDuplicateIdIsRejectedBeforeTheEmailIsLookedUp:184 Expected BusinessException to be thrown, but nothing was thrown.
+[ERROR]   addCustomerCapturesSavedEntity - UnnecessaryStubbing
+  1. -> at CustomerServiceMockitoTest.addCustomerCapturesSavedEntity(CustomerServiceMockitoTest.java:148)
+  2. -> at CustomerServiceMockitoTest.addCustomerCapturesSavedEntity(CustomerServiceMockitoTest.java:149)
+
+Narrower than 6 and it names itself. Only the two uniqueness rules fail,
+because only they read the repository, and the exists stubs on the first mock
+are then reported as unnecessary, which points straight at the mock the
+validator never saw. Lab 17 ran the same experiment with two in-memory
+repositories and got the two failures without that second signal. Restored.
+
+
+8, THE RULE ORDER
+
+Not in the guide. Reordered CustomerValidator.validateNew to look up the email
+before the id.
+
+  mvn -B test
+
+[ERROR] Tests run: 98, Failures: 1, Errors: 1, Skipped: 0
+
+Both orders reject a duplicate id with the same 409 and store the same
+nothing, so all eighty-three tests carried forward from lab 17 stayed green.
+Two of the new ones failed:
+
+org.mockito.exceptions.verification.NeverWantedButInvoked:
+repository.existsByEmail(<any string>);
+Never wanted here:
+-> at CustomerServiceMockitoTest.aDuplicateIdIsRejectedBeforeTheEmailIsLookedUp(CustomerServiceMockitoTest.java:188)
+But invoked here:
+-> at CustomerValidator.validateNew(CustomerValidator.java:59) with arguments: [ravi.singh@example.com]
+
+org.mockito.exceptions.misusing.UnnecessaryStubbingException:
+  1. -> at CustomerServiceMockitoTest.aDuplicateEmailIsA409AndNeverSaves(CustomerServiceMockitoTest.java:194)
+
+The second one is the same reorder seen from the other side, the existsById
+stub is now dead because the email check throws first.
+
+This is what the interaction tests add. A rule that runs in the wrong order
+throws the same exception, stores the same nothing and covers the same lines,
+so neither a state assertion nor the coverage gate can see it. It matters in
+production too: an id check that happens after an email check sends the
+customer's address to the store on a request that was already invalid.
+Restored, and the order is asserted rather than assumed from now on.

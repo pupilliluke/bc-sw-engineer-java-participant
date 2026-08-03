@@ -1,0 +1,71 @@
+Lab 18 isolation tooling evidence, captured 2026-08-02
+Windows, Temurin JDK 21, Maven 3.9.9, examples\lab18-crm
+
+Step 1 of the guide adds Mockito to the pom. Nothing was added here, the two
+artifacts came forward from lab17-crm and are already test scoped, so the
+tree below is the check rather than the result of an edit.
+
+  mvn -B dependency:tree -Dincludes=org.mockito
+
+[INFO] com.northstar:customer-service:jar:0.1.0-SNAPSHOT
+[INFO] +- org.mockito:mockito-core:jar:5.14.2:test
+[INFO] \- org.mockito:mockito-junit-jupiter:jar:5.14.2:test
+
+Both on the same 5.14.2 line. mockito-junit-jupiter is what supplies
+MockitoExtension, and without it @Mock fields stay null.
+
+The self-attaching notice below is Mockito loading the byte-buddy agent at
+runtime on JDK 21. It is a warning about a future JDK, not a failure, and it
+prints once per forked JVM.
+
+  mvn -B test "-Dtest=CustomerServiceMockitoTest,CustomerServiceBddMockTest"
+
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.northstar.crm.service.CustomerServiceBddMockTest
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (C:\Users\lukel\.m2\repository\net\bytebuddy\byte-buddy-agent\1.15.4\byte-buddy-agent-1.15.4.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.503 s -- in com.northstar.crm.service.CustomerServiceBddMockTest
+[INFO] Running com.northstar.crm.service.CustomerServiceMockitoTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.061 s -- in com.northstar.crm.service.CustomerServiceMockitoTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ customer-service ---
+[INFO] Loading execution data file C:\Users\lukel\java-bootcamp\examples\lab18-crm\target\jacoco.exec
+[INFO] Analyzed bundle 'Northstar Customer Service' with 16 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+
+THE FIFTEEN TESTS
+
+CustomerServiceMockitoTest, classic when/verify/captor, 12
+
+  activatesProspectUsingStubbedRepository
+  activationCapturesTheCustomerThatCrossedThePort
+  activationReadsThroughThePortBeforeItWrites
+  unknownIdIsA404AndNeverSaves
+  illegalTransitionIsA409AndNeverSaves
+  aMissingNewStatusIsA400AndNeverSaves
+  addCustomerCapturesSavedEntity
+  aCustomerWithoutAStatusIsSavedAsProspect
+  aDuplicateIdIsRejectedBeforeTheEmailIsLookedUp
+  aDuplicateEmailIsA409AndNeverSaves
+  findByIdReturnsWhatThePortReturns
+  listAllCopiesWhatThePortReturns
+
+CustomerServiceBddMockTest, BDDMockito given/then/should, 3
+
+  activatesRaviInBddStyle
+  unknownIdNeverSavesInBddStyle
+  addingAminaCapturesTheSavedCustomerInBddStyle
+
+Four of the twelve assert that save was never called. That is the half of the
+contract lab 17 could only argue from a count of stored customers.
