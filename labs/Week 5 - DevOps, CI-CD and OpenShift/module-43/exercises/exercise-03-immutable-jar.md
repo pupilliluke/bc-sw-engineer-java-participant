@@ -1,20 +1,45 @@
 # Exercise 3 — Package-Once Identity
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **C** (after slides 107–110) |
+| **Deliverable** | `notes/lab43-immutable-jar.md` |
+| **Fixtures** | CUS-1001/CUS-1002 synthetic only · no secrets in Git |
+
+### What you will learn
+
+Sketch package-once JAR + SHA-256 tied to commit for later promotion.
+
+### Enterprise context
+
+Lab 44 promotes this identity—do not rebuild silently in deploy.
+
+### Predict
+
+Deploy step runs mvn package again — what breaks?
+
+### Debug
+
+Empty checksum artifact — causes?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Rebuild in deploy | Pass CI artifacts only |
+| Checksum not tied to commit | Record GITHUB_SHA with SHA-256 |
+
 **Module 43** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab43-immutable-jar.md` — explain why the JAR verified in CI must be the one promoted later.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-43-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-03-immutable-jar.md` (this file in the course repo) |
 | Your notes file | `notes/lab43-immutable-jar.md` |
 
 ## Worked example (read first)

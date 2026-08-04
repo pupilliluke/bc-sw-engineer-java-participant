@@ -1,20 +1,43 @@
 # Exercise 3 — Event Envelope Sketch
 
-**Module 30** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
+## Activity card
 
-## Goal
+| | |
+| --- | --- |
+| **Time** | 12–15 minutes |
+| **Checkpoint** | **C** (after slides 15–19) |
+| **Deliverable** | `notes/lab30-envelope-sketch.md` |
+| **Fixtures** | CUS-1001 Amina ACTIVE · CUS-1002 Ravi PROSPECT |
 
-Create `notes/lab30-envelope-sketch.md` — draft paper JSON for Amina Created and Ravi StatusChanged events.
+### What you will learn
+
+Sketch versioned CustomerCreated / CustomerStatusChanged envelopes.
+
+### Enterprise context
+
+Consumers need eventType, version, correlationId, occurredAt.
+
+### Predict
+
+Can a v2 consumer read v1 payloads safely?
+
+### Debug
+
+PII in the event body — what stays out?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| No version field | Add schemaVersion or eventVersion |
+| Key vs payload id mismatch | Key must match data.customerId |
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-30-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-03-envelope-sketch.md` (this file in the course repo) |
 | Your notes file | `notes/lab30-envelope-sketch.md` |
 
 ## Worked example (read first)

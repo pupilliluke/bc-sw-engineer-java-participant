@@ -1,20 +1,45 @@
 # Exercise 2 — Plan Dependency-Check Gate
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **C** (after slides 19–22) |
+| **Deliverable** | `notes/lab40-dependency-check-plan.md` |
+| **Fixtures** | Synthetic CUS-1001 / CUS-1002 only · no real PII |
+
+### What you will learn
+
+Plan Maven `-Psecurity-scan` profile, pin version, fail CVSS threshold.
+
+### Enterprise context
+
+SCA findings need triage — not silent suppressions.
+
+### Predict
+
+Where does the NVD DB live on first run?
+
+### Debug
+
+Unpinned plugin version — what drifts?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| API key in Git | Use env only for NVD key |
+| Deleting the profile to go green | Triage/fix instead |
+
 **Module 40** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab40-dependency-check-plan.md` — draft how Dependency-Check will run under JDK 21 / Maven without claiming a finished lab.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-40-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-02-dependency-check-plan.md` (this file in the course repo) |
 | Your notes file | `notes/lab40-dependency-check-plan.md` |
 
 ## Worked example (read first)

@@ -1,8 +1,20 @@
 # Lab 24: SOAP Web Service Endpoints — Northstar CRM Spring-WS
 
+> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 24 [pre-lab exercises 1–6](../exercises/EXERCISES-INDEX.md) (Pass in your notes; order **1 → 2 → 3 → 4 → 5 → 6**). Then open **one** OS how-to ([Windows](LAB-24-WINDOWS.md) · [macOS](LAB-24-MACOS.md)). In class, prefer the **45-minute timed path** with [`starter/`](starter/README.md); the **full path** is every Step below (homework / extended). Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
+
+## Activity card
+
+| | |
+| --- | --- |
+| **Objective** | Ship contract-first Spring-WS SOAP beside REST, sharing CustomerService |
+| **Skills practiced** | XSD/WSDL, @Endpoint/@PayloadRoot, mapper, SOAP faults, UsernameToken |
+| **Expected outcome** | WSDL live · getCustomer works · REST still works · faults/security evidence |
+| **Estimated time** | Timed path ~45 min · Full path 4–5 hours |
+| **Prerequisites** | Lab 0 · Lab 23 preferred · Lab 13 contract preferred · Exercises 1–6 Pass · JDK 21 · Maven 3.9+ |
+| **Expected files** | `examples/lab24-crm/` — XSD, endpoint, mapper, requests/, tests |
+| **Validation checkpoints** | Starter smoke · GUIDE Implementation Checkpoints |
+
 **Module:** 24 — SOAP Web Services with Spring WS  
-**Lab folder:** `labs/Week 3 - Spring Framework and Enterprise Patterns/module-24/lab24/`  
-**Difficulty:** Advanced  
 **Duration:** ~45 minutes (timed path with starter) · Full path: 4–5 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
@@ -12,9 +24,11 @@
 | Windows | [LAB-24-WINDOWS.md](LAB-24-WINDOWS.md) |
 | macOS | [LAB-24-MACOS.md](LAB-24-MACOS.md) |
 
-> **Environment reminder:** Complete the [Module 24 pre-lab exercises](../exercises/EXERCISES-INDEX.md) after the slides and before this lab.  Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Incremental build:** Contract-first → ops map → PayloadRoot → fault vs REST → UsernameToken → Lab 24.
 
----
+> **Classroom pacing:** [`../PACING.md`](../PACING.md) (Checkpoints A–E).
+
+> **Critical scope:** **Contract-first** XSD. **Keep REST**. Thin `@Endpoint` delegates to **one** `CustomerService`. **UsernameToken** lab security only — not JWT (Lab 28) or full WS-Security suite.
 
 ## 45-minute timed path (use starter)
 
@@ -33,20 +47,9 @@ In class, use the starter templates so the **core** objectives fit **~45 minutes
 
 ---
 
-## How to follow this lab
-
-1. **In class:** prefer [`starter/README.md`](starter/README.md) when a timed path exists — fill `// TODO`, run the smoke test (~45 min).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
-3. Work only under your `java-bootcamp/examples/…` folder (not inside this `labs/` clone unless a step says otherwise).
-4. Read **Worked example** once, then for each **Step**: **Why** → **Do this** → confirm **Expected result**.
-5. When stuck, use **Troubleshooting** / **Failure Experiments** before asking for help.
-6. Capture evidence under `notes/screenshots/` (redact secrets). Mark Pass/Fail in your own notes — GitHub does not support clickable checkboxes.
-
----
-
 ## What you'll submit (read this first)
 
-Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+Keep this checklist visible while you work.
 
 | # | Deliverable |
 | - | ----------- |
@@ -67,18 +70,6 @@ Keep this checklist visible while you work. Full detail is under [Expected Deliv
 
 This Module 24 lab extends the **Northstar Customer Service Platform** with a contract-first **Spring Web Services** SOAP endpoint beside the Lab 23 REST API. You author `customer.xsd`, generate JAXB types, implement `CustomerEndpoint`, serve a live WSDL, map business faults, and add a minimal WS-Security **UsernameToken** — all while delegating to the same `CustomerService` so protocol never forks business rules.
 
-**Purpose.** A partner billing platform still speaks SOAP. Leadership freezes: expose Lab 13’s customer contract over Spring-WS, backed by Lab 23’s service layer, with inspectable WSDL and message-level UsernameToken — without duplicating validation inside the endpoint.
-
-**What you build (this lab).** Copy to `lab24-crm`; add Spring-WS + jaxb2 plugin; author XSD; configure `MessageDispatcherServlet` + `DefaultWsdl11Definition`; map JAXB ↔ domain; implement `@Endpoint` / `@PayloadRoot`; SOAP fault mapping; UsernameToken interceptor; raw XML `curl` + `MockWebServiceClient` tests; evidence with correlation `lab24-001`.
-
-**What success looks like.** Under `~/java-bootcamp/examples/lab24-crm/` WSDL lists four operations, secured get of `CUS-1001` succeeds, missing security and not-found faults are distinct, REST still works against the same service, and `mvn test` is green twice.
-
-**Depends on Lab 23 (+ Lab 13 contract / Lab 16 exceptions preferred).** Need runnable Boot + `CustomerService`. If Lab 13 WSDL is missing, use this lab’s XSD (same namespace/operations). If Lab 16 exceptions are missing, add the hierarchy in Step 6.
-
-**CRM connection.** Fixtures `CUS-1001` / `CUS-1002` / `CUS-9999`, correlation `lab24-001` (SOAP evidence; also accept `lab-request-001` on the shared REST path). Lab 25 refactors repository layering without changing endpoint method signatures.
-
----
-
 ## Learning Objectives
 
 After completing this lab, you will be able to:
@@ -88,13 +79,6 @@ After completing this lab, you will be able to:
 * Generate JAXB request/response classes with `jaxb2-maven-plugin`
 * Implement `@Endpoint` with `@PayloadRoot` / `@RequestPayload` / `@ResponsePayload`
 * Configure `MessageDispatcherServlet` and `DefaultWsdl11Definition`
-* Delegate SOAP logic to existing `CustomerService` without duplicating rules
-* Translate `BusinessException` subtypes into structured SOAP faults
-* Configure a minimal WS-Security UsernameToken interceptor and explain message-level security
-* Test with raw XML `curl` and `spring-ws-test`
-* Keep fictional CRM fixtures consistent for partner-style evidence
-
----
 
 ## Business Scenario
 
@@ -120,7 +104,6 @@ Use these examples consistently:
 ---
 
 ## Architecture Context
-
 ### NOW (this lab)
 
 ```mermaid
@@ -136,35 +119,11 @@ flowchart TB
   XSD["customer.xsd"] --> WSDL["/ws/customer.wsdl"]
 ```
 
-### Lab flow (mermaid)
-
-```mermaid
-flowchart TD
-    A["Copy lab23 -> lab24<br/>+ Spring-WS deps"] --> B["customer.xsd<br/>+ jaxb2 generate"]
-    B --> C["WebServiceConfig<br/>servlet + WSDL"]
-    C --> D["CustomerSoapMapper"]
-    D --> E["CustomerEndpoint<br/>four at PayloadRoot"]
-    E --> F["BusinessException<br/>-> SOAP faults"]
-    F --> G["UsernameToken<br/>interceptor"]
-    G --> H["curl + MockWebServiceClient<br/>evidence pack"]
-```
-
-### Architecture NOW vs LATER
-
-| Aspect | Lab 24 (NOW) | Lab 25–28 (LATER) |
-| ------ | ------------ | ----------------- |
-| Persistence | In-memory behind service | Repository interface → JPA later |
-| Security | Lab UsernameToken | Broader Spring Security (Lab 28) |
-| Config | Single YAML | Profiles + secrets (Lab 26) |
-| Endpoint | Stable `@PayloadRoot` signatures | Should not rewrite when repo changes |
-
-**Lab focus:** Contract-first XSD/WSDL, `@Endpoint` mapping, SOAP faults, WS-Security basics, shared service with REST.
-
----
-
 ## Prerequisites
 
-Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md), and [Lab 23](../../module-23/lab23/LAB-23-GUIDE.md). Confirm:
+Prior labs: [Lab 23](../../module-23/lab23/LAB-23-GUIDE.md).
+
+Confirm (Lab 0 tools assumed):
 
 * JDK 21; Maven; Git
 * Working `lab23-crm` (Boot 3, web, actuator, `CustomerService`)
@@ -178,67 +137,7 @@ Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%
 ```bash
 java -version
 mvn -version
-git --version
-pwd
-ls ~/java-bootcamp/examples
 ```
-
----
-
-## Suggested Project Files
-
-```text
-~/java-bootcamp/examples/lab24-crm/
-├── src/
-│   ├── main/
-│   │   ├── java/com/northstar/crm/
-│   │   │   ├── CrmApplication.java
-│   │   │   ├── config/WebServiceConfig.java
-│   │   │   ├── endpoint/
-│   │   │   │   ├── CustomerEndpoint.java
-│   │   │   │   ├── CustomerSoapMapper.java
-│   │   │   │   └── CustomerEndpointExceptionConfig.java
-│   │   │   ├── api/CustomerController.java
-│   │   │   ├── service/CustomerService.java
-│   │   │   ├── repository/...
-│   │   │   ├── entity/...
-│   │   │   └── exception/...
-│   │   └── resources/
-│   │       ├── customer.xsd
-│   │       └── application.yml
-│   └── test/java/com/northstar/crm/endpoint/
-│       └── CustomerEndpointTest.java
-├── requests/
-│   ├── create-customer.xml
-│   ├── get-customer.xml
-│   ├── get-customer-secured.xml
-│   ├── update-customer-status.xml
-│   └── get-customer-not-found.xml
-├── docs/
-│   └── soap-notes.md
-├── notes/screenshots/
-├── pom.xml
-├── .gitignore
-└── README.md
-```
-
-Ignore `target/` (including generated XJC sources unless course policy says otherwise), tokens, and passwords.
-
----
-
-## Key ideas (skim — no write-up)
-
-Skim these ideas before coding. **No separate write-up required** (you will apply them in the Steps).
-
-1. Why contract-first beats contract-last for partner SOAP
-2. `@PayloadRoot` vs REST `@RequestMapping`
-3. Why endpoint must not re-implement lifecycle rules
-4. What SOAP fault communicates vs REST `ErrorResponse`
-5. Idempotency: `getCustomer` vs `createCustomer` retries
-6. HTTPS (transport) vs WS-Security (message) and why both matter
-
----
-
 
 ## Worked example (read before you code)
 
@@ -487,7 +386,7 @@ mvn -q test
 
 **Why:** Integration teams learn more from fault taxonomy than from green paths alone.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Capture WSDL snippet, secured response, not-found fault, missing-token fault under `notes/screenshots/lab-24/`. `git status` clean of `target/` and real secrets.
+**Do this:** Complete Failure Experiments. Capture WSDL snippet, secured response, not-found fault, missing-token fault under `notes/screenshots/lab-24/`. `git status` clean of `target/` and real secrets.
 
 **Expected result:** ≥3 experiments; evidence pack complete; no plaintext prod secrets in Git.
 
@@ -563,58 +462,6 @@ _Mark **Pass** or **Fail** in your lab notes._
 </dependency>
 ```
 
-### `application.yml`
-
-```yaml
-spring:
-  application:
-    name: customer-service
-server:
-  port: 8080
-logging:
-  level:
-    org.springframework.ws: INFO
-    com.northstar.crm: INFO
-```
-
-### `requests/get-customer.xml` (unsecured — expect WSS fault after Step 6)
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-                   xmlns:cust="http://northstar.com/crm/customer">
-  <soapenv:Header/>
-  <soapenv:Body>
-    <cust:getCustomerRequest>
-      <cust:customerId>CUS-1001</cust:customerId>
-    </cust:getCustomerRequest>
-  </soapenv:Body>
-</soapenv:Envelope>
-```
-
-### `requests/get-customer-secured.xml`
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-                   xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
-                   xmlns:cust="http://northstar.com/crm/customer">
-  <soapenv:Header>
-    <wsse:Security>
-      <wsse:UsernameToken>
-        <wsse:Username>crm-partner</wsse:Username>
-        <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-username-token-profile-1.0#PasswordText">lab24-shared-secret</wsse:Password>
-      </wsse:UsernameToken>
-    </wsse:Security>
-  </soapenv:Header>
-  <soapenv:Body>
-    <cust:getCustomerRequest>
-      <cust:customerId>CUS-1001</cust:customerId>
-    </cust:getCustomerRequest>
-  </soapenv:Body>
-</soapenv:Envelope>
-```
-
 ### WSDL / curl
 
 ```bash
@@ -636,47 +483,6 @@ curl -s http://localhost:8080/api/customers/CUS-1001
 mvn -q test
 mvn -q test
 ```
-
-### Evidence checklist
-
-```text
-[ ] /ws/customer.wsdl lists create/get/updateStatus/list
-[ ] Secured get CUS-1001 → Amina ACTIVE
-[ ] Unsecured get → security fault
-[ ] CUS-9999 → CLIENT not-found fault (no stack)
-[ ] REST GET same customer matches SOAP status
-[ ] lab24-001 correlation in logs (if instrumented)
-[ ] mvn test twice identical
-[ ] UsernameToken labeled lab-only in README
-```
-
-### Class map
-
-| Class | Role |
-| ----- | ---- |
-| `customer.xsd` | Contract source of truth |
-| `WebServiceConfig` | Servlet, WSDL, security interceptor |
-| `CustomerEndpoint` | `@PayloadRoot` operations |
-| `CustomerSoapMapper` | JAXB ↔ domain |
-| `CustomerEndpointExceptionConfig` | SOAP fault mappings |
-| `CustomerEndpointTest` | `MockWebServiceClient` gate |
-| `requests/*.xml` | Partner-style samples |
----
-
-## Manual Verification
-
-1. WSDL served and lists all four operations.
-2. Secured `getCustomer` for `CUS-1001` returns Amina / ACTIVE.
-3. `createCustomer` returns a customer payload with new or assigned id.
-4. `updateCustomerStatus` change visible via REST too.
-5. `CUS-9999` yields CLIENT not-found fault (not a stack dump).
-6. Request without UsernameToken is rejected before business logic.
-7. Correlation `lab24-001` appears in logs where instrumented.
-8. Two consecutive `mvn test` runs match.
-9. UsernameToken secret documented as lab-only.
-10. No real partner passwords or `target/` in Git.
-
----
 
 ## Failure Experiments
 
@@ -700,8 +506,8 @@ mvn -q test
 | WSS rejects valid-looking XML | Wrong wsse URI / password / Content-Type | Copy secured sample exactly |
 | XJC empty | Plugin source path | Point at `src/main/resources/customer.xsd` |
 | REST/SOAP diverge | Two services/stores | One injected `CustomerService` |
-
----
+| Working in `module-24-exercises` for the lab | Wrong project | Lab lives in `examples/lab24-crm` |
+| Deleted REST controller “to focus on SOAP” | Scope misunderstanding | Keep both protocols |
 
 ## Security and Production Review
 
@@ -726,14 +532,6 @@ git status
 Do not commit `target/` or real secrets. Keep `requests/` samples with **lab** credentials only if course policy allows — never production passwords.
 
 **Keep `lab24-crm`**—Lab 25 refactors layering under the same service contract.
-
----
-
-## Expected Deliverables
-
-Same checklist as [What you'll submit](#what-youll-submit-read-this-first) at the top. You are done when those items are complete and the Implementation Checkpoints pass.
-
-Do **not** submit `target/`, secrets, or a verbatim instructor `solution/`.
 
 ---
 
@@ -764,26 +562,3 @@ Write **1–3 sentence** answers (not essays):
 ---
 
 
-## Bonus Challenges
-
-Optional — only after core deliverables pass. Pick at most one if time is short.
-
-
-1. Add `closeCustomer` / `deleteCustomer` to XSD + endpoint + tests.
-2. `PayloadValidatingInterceptor` for schema validation before the method.
-3. PasswordDigest instead of PasswordText.
-
----
-
-
-## Instructor Notes
-
-* **Live probe:** Have the student open WSDL, run secured get for `CUS-1001`, then missing-token and not-found faults — interpret each XML line.
-* **Assess:** No business rules inside `CustomerEndpoint`; mapper isolation; lab-only secret labeled; dual green tests.
-* **Continuity:** Prefer `examples/lab24-crm` from Lab 23. Keep fixture IDs. Lab 25 must not force endpoint signature rewrites.
-* **Common pitfalls:** Namespace trailing slash; WSDL bean name mismatch; interceptor never registered; contract-last “quick” JAX-WS without explaining trade-off.
-* **Timing:** Timed path ~45 minutes with starter; full path remains 4–5 hours. Keep starter TODOs as the in-class core; remaining GUIDE steps are homework/extended depth.
-
----
-
-*End of Lab 24 — SOAP Web Service Endpoints: Northstar CRM Spring-WS. Keep `lab24-crm` for Lab 25 and portfolio evidence.*

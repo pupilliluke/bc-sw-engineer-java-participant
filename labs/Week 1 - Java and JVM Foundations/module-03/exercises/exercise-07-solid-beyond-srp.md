@@ -1,6 +1,6 @@
 # Exercise 7 — SOLID Spot-Check: OCP, LSP, ISP, DIP
 
-**Module 3** · Pre-lab practice · finish all 8 Pass, then [`../lab3/LAB-3-GUIDE.md`](../lab3/LAB-3-GUIDE.md)
+**Module 3** · Pre-lab practice · Checkpoint E · all 8 then lab
 **Folder:** `examples/module-03-exercises/` ([setup](EXERCISES-INDEX.md))
 
 ![SOLID Principles in a Banking Design](../../../lab_diagrams/mod03-ex07-solid-principles.png)
@@ -8,10 +8,25 @@
 > **Builds on Exercises 3–6:** Reuse `Account`, `SavingsAccount`,
 > `CurrentAccount`, `InheritanceDemo`, `Printable`, and your SRP notes.
 
-## Goal
+## Activity card
 
-For each remaining SOLID principle, write one short justification and prove LSP
-with a working `FrozenAccount` that runs inside the existing polymorphic loop.
+| | |
+| --- | --- |
+| **Objective** | Apply OCP, LSP, ISP, DIP with short banking examples |
+| **Skills practiced** | OCP, LSP, ISP, DIP recognition |
+| **Expected outcome** | Pass criteria answers for each principle |
+| **Estimated time** | 15–18 minutes |
+| **File to create** | `examples/module-03-exercises/notes / small demos` |
+| **Checkpoint** | E (after slides 104–107) |
+
+## What you will learn
+
+- Open for extension / closed for modification
+- Subtypes must honor parent contracts
+- Fat interfaces force unused methods
+- Depend on abstractions
+
+**Enterprise context:** Adding a new account product should not rewrite every switch in production banking code.
 
 ## Worked example (read first)
 
@@ -27,6 +42,9 @@ Then follow **Steps** to create your own file.
 
 
 ## Starter (fill in the TODOs)
+
+Optional: copy matching files from [`starter/`](starter/README.md). Or paste:
+
 
 Paste these skeletons, then replace each `_____` and `// TODO` with working code. Do **not** leave TODOs or blanks in your finished files.
 
@@ -176,7 +194,14 @@ Segregation, Dependency Inversion.
 `FrozenAccount` compiles and runs inside the same loop with no special-casing,
 and you have one written sentence for each remaining SOLID principle.
 
-## If it fails
+
+## Predict the Output / Behavior
+
+If FrozenAccount.withdraw always throws but Account promises withdrawal, is LSP violated?
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | ------- | --- |

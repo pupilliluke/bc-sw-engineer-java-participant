@@ -1,20 +1,45 @@
 # Exercise 2 — Plan Terraform Checks
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **B** (after slides 154–164) |
+| **Deliverable** | `notes/lab45-terraform-checks.md` |
+| **Fixtures** | CRM tags only · no PII in IaC · no tfstate/keys in Git |
+
+### What you will learn
+
+Plan fmt/init/validate/plan checks and remote-state narrative (no state in Git).
+
+### Enterprise context
+
+Never commit *.tfstate, real tfvars, or cloud keys.
+
+### Predict
+
+Why read the plan before apply?
+
+### Debug
+
+Plan wants unexpected destroy — next step?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Committing tfstate | gitignore; use remote state narrative |
+| Apply without reading plan | Fail the gate; review first |
+
 **Module 45** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab45-terraform-checks.md` — list fmt/init/validate/plan expectations without applying.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-45-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-02-terraform-checks.md` (this file in the course repo) |
 | Your notes file | `notes/lab45-terraform-checks.md` |
 
 ## Worked example (read first)

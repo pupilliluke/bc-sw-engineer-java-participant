@@ -1,20 +1,45 @@
 # Exercise 1 — Draft Infra Contract
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 12–15 minutes |
+| **Checkpoint** | **A** (after slides 148–153) |
+| **Deliverable** | `notes/lab45-infra-contract.md` |
+| **Fixtures** | CRM tags only · no PII in IaC · no tfstate/keys in Git |
+
+### What you will learn
+
+Write a bounded non-prod infra contract: env, region, network, DB, tags, cost, forbidden public exposure.
+
+### Enterprise context
+
+AI drafts must stay inside the contract—public DB still fails even if HCL validates.
+
+### Predict
+
+Should CRM customer PII appear in Terraform tags or variables?
+
+### Debug
+
+Contract allows 0.0.0.0/0 on DB port — reject or accept?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Vague 'make CRM infra' | Bound env/region/cost/exposure |
+| PII in .tf | Tags like application=crm only |
+
 **Module 45** · Architecture exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab45-infra-contract.md` — define what AI-assisted Terraform/Ansible may create for CRM.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-45-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-01-infra-contract.md` (this file in the course repo) |
 | Your notes file | `notes/lab45-infra-contract.md` |
 
 ## Worked example (read first)

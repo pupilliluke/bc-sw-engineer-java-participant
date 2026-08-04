@@ -1,20 +1,45 @@
 # Exercise 1 — Delivery vs Deployment
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 8–10 minutes |
+| **Checkpoint** | **A** (after slides 122–127) |
+| **Deliverable** | `notes/lab44-cd-vs-cdeploy.md` |
+| **Fixtures** | CUS-1001/CUS-1002 synthetic · Lab 43 digest · no secrets in artifact |
+
+### What you will learn
+
+Distinguish continuous delivery (always releasable) from continuous deployment (auto to prod).
+
+### Enterprise context
+
+CRM releases need human/approval gates before production—CD ≠ auto-prod.
+
+### Predict
+
+Every main merge auto-deploys to prod with no approval — CD or CDeploy?
+
+### Debug
+
+Calling a green CI build 'released to prod' without promotion evidence — fix?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Confusing CD with CDeploy | CD = releasable; CDeploy = auto prod |
+| Real prod promote in pre-lab | Plan only; Lab 44 for evidence |
+
 **Module 44** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab44-cd-vs-cdeploy.md` — explain CD concepts in Northstar CRM language.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-44-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-01-cd-vs-cdeploy.md` (this file in the course repo) |
 | Your notes file | `notes/lab44-cd-vs-cdeploy.md` |
 
 ## Worked example (read first)

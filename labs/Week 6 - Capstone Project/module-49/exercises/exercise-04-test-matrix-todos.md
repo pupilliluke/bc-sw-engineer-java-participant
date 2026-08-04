@@ -1,20 +1,45 @@
 # Exercise 4 — Fill Test Matrix TODOs
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **D** (after slides 54–58) |
+| **Deliverable** | `notes/lab49-test-matrix-todos.md` |
+| **Fixtures** | CUS-1001/CUS-1002 · lab-request-001 · CUS-9999 not-found |
+
+### What you will learn
+
+Fill happy-path and failure-path unit/IT TODOs for the slice.
+
+### Enterprise context
+
+Green demo without failure-path evidence fails capstone quality.
+
+### Predict
+
+Name one not-found and one validation failure to test.
+
+### Debug
+
+Skipping all failure tests — gate?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Only happy path | Add 400/404 Problem Details cases |
+| Flaky Kafka IT plan | Unique keys / awaitility notes |
+
 **Module 49** · Hands-on exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab49-test-matrix-todos.md` — complete a happy/failure test matrix for Lab 49.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-49-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-04-test-matrix-todos.md` (this file in the course repo) |
 | Your notes file | `notes/lab49-test-matrix-todos.md` |
 
 ## Worked example (read first)

@@ -1,20 +1,45 @@
 # Exercise 2 — Fallback Contract
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 12–15 minutes |
+| **Checkpoint** | **C** (after slides 65–67) |
+| **Deliverable** | `notes/lab32-fallback-contract.md` |
+| **Fixtures** | CUS-1001 Account Profile · instance `accountProfile` |
+
+### What you will learn
+
+Define AccountSummary.unavailable — available=false, never fake success.
+
+### Enterprise context
+
+UI must show degraded read honestly for CUS-1001.
+
+### Predict
+
+Fallback returns available=true with empty data — why is that wrong?
+
+### Debug
+
+Write operations using the same fallback — safe?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Fake 200 success | Degraded read only; never claim write succeeded |
+| Missing customerId in fallback | Always echo requested customerId |
+
 **Module 32** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab32-fallback-contract.md` — specify what minimal Account Profile means for Amina when the dependency fails.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-32-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-03-fallback-contract.md` (this file in the course repo) |
 | Your notes file | `notes/lab32-fallback-contract.md` |
 
 ## Worked example (read first)

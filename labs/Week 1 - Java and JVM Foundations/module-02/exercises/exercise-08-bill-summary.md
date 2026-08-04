@@ -1,15 +1,30 @@
 # Exercise 8 — Bill Summary (challenge)
 
-**Module 2** · Pre-lab practice · finish core 1–7 Pass, then [`../lab2/LAB-2-GUIDE.md`](../lab2/LAB-2-GUIDE.md)  
+**Module 2** · Pre-lab practice · Checkpoint F · core 1–7 then lab
 **Folder:** `examples/module-02-exercises/` ([setup](EXERCISES-INDEX.md))
 
 ![Java Bill Calculation: Total, Discount, and Final Amount](../../../lab_diagrams/mod02-ex08-bill-summary.png)
 
 > **Combines Exercises 1, 6–7:** product input, arithmetic, money-style `printf`.
 
-## Goal
+## Activity card
 
-Create `BillSummary.java` that reads product name, quantity, and unit price; computes total, 10% discount, and final amount; prints a short bill with `%.2f`.
+| | |
+| --- | --- |
+| **Objective** | Compute subtotal, 10% discount, final amount; printf money |
+| **Skills practiced** | multi-step calc, %.2f |
+| **Expected outcome** | Bill lines match worked example money format |
+| **Estimated time** | 10–12 minutes |
+| **File to create** | `examples/module-02-exercises/BillSummary.java` |
+| **Checkpoint** | F (challenge) |
+
+## What you will learn
+
+- Chain calculations without losing decimals
+- Label money output consistently
+- Challenge prep for Lab averages/tables
+
+**Enterprise context:** Retail checkout: subtotal → discount → payable.
 
 ## Worked example (read first)
 
@@ -32,6 +47,9 @@ Then follow **Steps** to create your own file.
 
 
 ## Starter (fill in the TODOs)
+
+Optional: copy from [`starter/BillSummary.java`](starter/BillSummary.java). Or paste:
+
 
 Paste this skeleton, then replace each `// TODO` with working code. Do **not** leave TODOs in your finished file.
 
@@ -124,7 +142,14 @@ Check: `3 × 59.99 = 179.97`, `10% = 17.997 → 18.00` displayed, final `161.97`
 
 Bill shows total, discount, and final amount with two decimal places.
 
-## If it fails
+
+## Predict the Output
+
+Price 50 qty 2 discount 10% → final?
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | ------- | --- |

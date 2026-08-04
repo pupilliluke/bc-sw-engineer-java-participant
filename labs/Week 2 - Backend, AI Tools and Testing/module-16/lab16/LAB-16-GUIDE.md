@@ -1,8 +1,20 @@
 # Lab 16: API Exception Handling — Northstar CRM Error Model
 
+> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 16 [pre-lab exercises 1–6](../exercises/EXERCISES-INDEX.md) (Pass in your notes; order **1 → 2 → 3 → 4 → 5 → 6**). Then open **one** OS how-to ([Windows](LAB-16-WINDOWS.md) · [macOS](LAB-16-MACOS.md)). In class, prefer the **45-minute timed path** with [`starter/`](starter/README.md); the **full path** is every Step below (homework / extended). Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
+
+## Activity card
+
+| | |
+| --- | --- |
+| **Objective** | Ship ErrorResponse + GlobalExceptionHandler + Fail demos (400/404/409) with correlation |
+| **Skills practiced** | Catch order, BusinessException mapping, safe messages, ApiResult Fail JSON |
+| **Expected outcome** | Green `mvn test` · 400/404/409 demos · `lab-request-001` on every Fail |
+| **Estimated time** | Timed path ~45 min · Full path 3–4 hours |
+| **Prerequisites** | Lab 0 · Lab 15 preferred · Exercises 1–6 Pass · JDK 21 · Maven 3.9+ |
+| **Expected files** | `examples/lab16-crm/` — ErrorResponse, handler, facade, tests, notes |
+| **Validation checkpoints** | Starter smoke `mvn -B clean test` · GUIDE Implementation Checkpoints |
+
 **Module:** 16 — Exception Handling in Distributed APIs  
-**Lab folder:** `labs/Week 2 - Backend, AI Tools and Testing/module-16/lab16/`  
-**Difficulty:** Intermediate  
 **Duration:** ~45 minutes (timed path with starter) · Full path: 3–4 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
@@ -12,7 +24,11 @@
 | Windows | [LAB-16-WINDOWS.md](LAB-16-WINDOWS.md) |
 | macOS | [LAB-16-MACOS.md](LAB-16-MACOS.md) |
 
-> **Environment reminder:** Complete the [Module 16 pre-lab exercises](../exercises/EXERCISES-INDEX.md) after the slides and before this lab.  Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Incremental build:** Catch order → ErrorResponse JSON → status map → hygiene/correlation → Lab 16 `lab16-crm`.
+
+> **Classroom pacing:** [`../PACING.md`](../PACING.md) (Checkpoints A–E). Status cheat sheet: [`../HTTP-STATUS-CODES.md`](../HTTP-STATUS-CODES.md).
+
+> **Critical scope:** Catch **BusinessException before Exception**. Prefer **409** for illegal transitions (document if you choose 422). No stack traces / SQL / PII in client JSON. Deep logging → Lab 20.
 
 **Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11; Maven 3.9.9):**
 
@@ -46,20 +62,9 @@ In class, use the starter templates so the **core** objectives fit **~45 minutes
 | **Full (extended)** | see Duration | Every Step in this GUIDE |
 
 
-## How to follow this lab
-
-1. **In class:** prefer [`starter/README.md`](starter/README.md) when a timed path exists — fill `// TODO`, run the smoke test (~45 min).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
-3. Work only under your `java-bootcamp/examples/…` folder (not inside this `labs/` clone unless a step says otherwise).
-4. Read **Worked example** once, then for each **Step**: **Why** → **Do this** → confirm **Expected result**.
-5. When stuck, use **Troubleshooting** / **Failure Experiments** before asking for help.
-6. Capture evidence under `notes/screenshots/` (redact secrets). Mark Pass/Fail in your own notes — GitHub does not support clickable checkboxes.
-
----
-
 ## What you'll submit (read this first)
 
-Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+Keep this checklist visible while you work.
 
 | # | Deliverable |
 | - | ----------- |
@@ -78,18 +83,6 @@ Keep this checklist visible while you work. Full detail is under [Expected Deliv
 
 This Module 16 lab extends the **Customer Management Platform** with a consistent **API error model**: `BusinessException`, `ErrorResponse`, and a `GlobalExceptionHandler` that maps validation failures and not-found cases to one payload shape, always carrying a **correlation ID**.
 
-**Purpose.** Support cannot triage CRM failures when every layer throws different unstructured exceptions. A stable error document lets React (later) and SoapUI partners display field errors, distinguish 404 from 409, and paste `lab-request-001` into logs.
-
-**What you build (this lab).** Copy `lab15-crm` → `lab16-crm`; implement `ErrorResponse` + `BusinessException` factories; build `GlobalExceptionHandler`; integrate into `CustomerApiFacade` (`ApiResult`); demo 400 / 404 / 409 JSON with correlation; add `GlobalExceptionHandlerTest`; document status-code choices.
-
-**What success looks like.** Under `~/java-bootcamp/examples/lab16-crm/` every failure path prints the same JSON fields (`timestamp`, `status`, `error`, `message`, `correlationId`, `errors`), never a stack trace to the “API” channel, and tests lock handler mapping.
-
-**Depends on Labs 14–15.** Need Bean Validation at the facade and `BusinessException`-worthy service/validator failures (illegal transitions, not found). Finish Lab 15 if activation/transition rules are missing.
-
-**CRM connection.** Same fixtures (`CUS-1001`, `CUS-1002`, `CUS-9999` for not-found). Lab 29+ maps this handler to Spring MVC advice. No HTTP server required today.
-
----
-
 ## Learning Objectives
 
 After completing this lab, you will be able to:
@@ -99,11 +92,6 @@ After completing this lab, you will be able to:
 * Design `ErrorResponse` with timestamp, status, message, errors map, and `correlationId`
 * Centralize mapping in `GlobalExceptionHandler`
 * Map Bean Validation violations and missing customers to consistent payloads
-* Propagate `lab-request-001` from facade entry to error JSON/text
-* Avoid leaking stack traces or internal entity details to API consumers
-* Explain how this design maps to Spring `@ControllerAdvice` later
-
----
 
 ## Business Scenario
 
@@ -137,7 +125,6 @@ Use these examples consistently:
 ---
 
 ## Architecture Context
-
 ### NOW (this lab)
 
 ```mermaid
@@ -151,35 +138,11 @@ flowchart TB
   GEH --> Err["ErrorResponse<br/>+ correlationId"]
 ```
 
-### Lab flow (mermaid)
-
-```mermaid
-flowchart TD
-    A["Copy lab15 -> lab16"] --> B["ErrorResponse<br/>JSON shape"]
-    B --> C["BusinessException<br/>factories"]
-    C --> D["GlobalExceptionHandler<br/>400/404/409/500"]
-    D --> E["Facade ApiResult<br/>Ok / Fail"]
-    E --> F["Demo validation<br/>400 JSON"]
-    F --> G["Demo not-found<br/>+ conflict"]
-    G --> H["Handler tests<br/>+ docs"]
-```
-
-### Architecture NOW vs LATER
-
-| Aspect | Lab 16 (NOW) | Later (Spring) |
-| ------ | ------------ | -------------- |
-| Entry | Facade returns `ApiResult` | `@RestController` + advice |
-| Handler | Plain `GlobalExceptionHandler` | `@ControllerAdvice` |
-| Payload | Same JSON fields | Same contract preferred |
-| Logging | stdout / simple logger | SLF4J + correlation MDC |
-
-**Lab focus:** Global exception handling, stable error payloads, correlation IDs for distributed debugging.
-
----
-
 ## Prerequisites
 
-Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md), and Labs [14](../../module-14/lab14/LAB-14-GUIDE.md)–[15](../../module-15/lab15/LAB-15-GUIDE.md). Confirm:
+Prior labs: [14](../../module-14/lab14/LAB-14-GUIDE.md) · [15](../../module-15/lab15/LAB-15-GUIDE.md).
+
+Confirm (Lab 0 tools assumed):
 
 * JDK 21; Maven; Git
 * Lab 15 service/validator + Lab 14 validation wired
@@ -190,57 +153,7 @@ Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%
 ```bash
 java -version
 mvn -version
-git --version
-pwd
-ls ~/java-bootcamp/examples
 ```
-
-Fix environment failures before changing application code.
-
----
-
-## Suggested Project Files
-
-```text
-~/java-bootcamp/examples/lab16-crm/
-├── src/
-│   ├── main/java/com/northstar/crm/
-│   │   ├── Main.java
-│   │   ├── api/CustomerApiFacade.java
-│   │   ├── dto/ ...
-│   │   ├── service/ ...
-│   │   ├── repository/ ...
-│   │   └── exception/
-│   │       ├── BusinessException.java
-│   │       ├── ErrorResponse.java
-│   │       └── GlobalExceptionHandler.java
-│   └── test/java/com/northstar/crm/exception/
-│       └── GlobalExceptionHandlerTest.java
-├── docs/
-│   └── error-model-notes.md
-├── notes/screenshots/
-├── pom.xml
-├── .gitignore
-└── README.md
-```
-
-Ignore `target/`, IDE metadata, tokens, and passwords.
-
----
-
-## Key ideas (skim — no write-up)
-
-Skim these ideas before coding. **No separate write-up required** (you will apply them in the Steps).
-
-1. Main error flow (throw/fail → handler → `ErrorResponse`)
-2. Trust boundary: what clients may see vs what logs may hold
-3. Success vs 400 vs 404 vs 409 contracts
-4. Stable identity in messages (`CUS-9999`) without dumping entities
-5. Retry implications (404/409 often not blindly retried; 500 maybe)
-6. Why one JSON shape beats ad-hoc `ex.getMessage()` strings for React
-
----
-
 
 ## Worked example (read before you code)
 
@@ -560,7 +473,7 @@ mvn -q test -Dtest=GlobalExceptionHandlerTest
 
 **Why:** 500 paths and multi-field validation are where leaks and double-wrapping appear.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Document in README/`docs/error-model-notes.md`: status table (400/404/409/500), why 409 vs 422 if you considered both, and Spring advice forward map.
+**Do this:** Complete Failure Experiments. Document in README/`docs/error-model-notes.md`: status table (400/404/409/500), why 409 vs 422 if you considered both, and Spring advice forward map.
 
 ```bash
 mvn -q clean test
@@ -619,19 +532,6 @@ _Mark **Pass** or **Fail** in your lab notes._
 
 ## Reference Commands, Configuration, and Code
 
-### Error shape
-
-```json
-{
-  "timestamp": "2026-07-14T17:00:00Z",
-  "status": 404,
-  "error": "CUSTOMER_NOT_FOUND",
-  "message": "Customer not found: CUS-9999",
-  "correlationId": "lab-request-001",
-  "errors": {}
-}
-```
-
 ### Factories
 
 ```java
@@ -648,41 +548,6 @@ mvn -q test -Dtest=GlobalExceptionHandlerTest
 mvn -q exec:java -Dexec.mainClass=com.northstar.crm.Main
 git status
 ```
-
-### Status table (lab standard)
-
-| Case | status | error code |
-| ---- | -----: | ---------- |
-| Bean Validation | 400 | `VALIDATION_FAILED` |
-| Not found | 404 | `CUSTOMER_NOT_FOUND` |
-| Illegal transition / duplicate policy | 409 | `BUSINESS_CONFLICT` |
-| Unexpected | 500 | `INTERNAL_ERROR` |
-
-### Class map
-
-| Class | Role |
-| ----- | ---- |
-| `ErrorResponse` | Client payload |
-| `BusinessException` | Domain/API failure with hints |
-| `GlobalExceptionHandler` | Mapping center |
-| `ApiResult` | Facade Ok/Fail channel |
-
----
-
-## Manual Verification
-
-1. Create/get `CUS-1001` still succeeds (Ok path).
-2. Invalid email → 400 with `errors.email` and correlation.
-3. `CUS-9999` → 404 payload.
-4. Illegal transition → 409 payload; status unchanged.
-5. Correlation on every failure.
-6. No stack traces in client-facing JSON.
-7. Handler unit tests pass.
-8. No secrets in Git; `target/` ignored.
-9. README documents status choices.
-10. You can explain Spring `@ControllerAdvice` mapping in one paragraph.
-
----
 
 ## Failure Experiments
 
@@ -706,8 +571,8 @@ git status
 | Double-wrapped errors | Fail mapped again as unexpected | Return Fail once |
 | Flaky timestamp asserts | Exact Instant equality | Assert status/fields only |
 | JSON broken quotes | Manual escape of messages | Keep messages free of raw quotes or escape |
-
----
+| Stack trace in Fail JSON | Message hygiene skipped | Return safe message; log stack server-side |
+| 200 with error payload | Wrong success path | Return Fail / non-2xx status for failures |
 
 ## Security and Production Review
 
@@ -729,14 +594,6 @@ git status
 ```
 
 No containers required. **Keep `lab16-crm`**—Labs 17–18 test behavior; Week 3 adapts the handler to Spring.
-
----
-
-## Expected Deliverables
-
-Same checklist as [What you'll submit](#what-youll-submit-read-this-first) at the top. You are done when those items are complete and the Implementation Checkpoints pass.
-
-Do **not** submit `target/`, secrets, or a verbatim instructor `solution/`.
 
 ---
 
@@ -767,27 +624,3 @@ Write **1–3 sentence** answers (not essays):
 ---
 
 
-## Bonus Challenges
-
-Optional — only after core deliverables pass. Pick at most one if time is short.
-
-
-1. ThreadLocal/MDC-style correlation for server logs matching the payload.
-2. Counters for 400 vs 404 vs 409 in Main.
-3. Map Lab 13 SOAP fault samples to the same codes in a crosswalk table.
-
----
-
-
-## Instructor Notes
-
-* **Live probe:** Reproduce 404 for `CUS-9999` with `correlationId=lab-request-001`. Reject stack traces or entity dumps as client body.
-* **Assess:** Catch order, BusinessException refactor completeness, empty `errors` object present, status unchanged after 409.
-* **Flexibility:** Classic Result class instead of sealed `ApiResult` is fine. 422 instead of 409 only with clear docs.
-* **Continuity:** Prefer `examples/lab16-crm`. Keep sample IDs. Week 3 should reuse this JSON shape.
-* **Common pitfalls:** Wrapping Fail as 500; blank correlation; leaving IllegalStateException; asserting exact timestamps.
-* **Timing:** Timed path ~45 minutes with starter; full path remains 3–4 hours. Keep starter TODOs as the in-class core; remaining GUIDE steps are homework/extended depth. Service refactor to BusinessException often underscoped—check call sites explicitly.
-
----
-
-*End of Lab 16 — API Exception Handling: Northstar CRM Error Model. Keep `lab16-crm` for Labs 17–18 / Week 3 and portfolio evidence.*

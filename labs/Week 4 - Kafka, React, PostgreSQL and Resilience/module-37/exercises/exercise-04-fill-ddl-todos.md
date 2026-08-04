@@ -1,20 +1,45 @@
 # Exercise 4 — Fill DDL TODOs
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 12–15 minutes |
+| **Checkpoint** | **D** (after slides 176–178) |
+| **Deliverable** | `notes/lab37-ddl-todos.md` |
+| **Fixtures** | CUS-1001 Amina ACTIVE · CUS-1002 Ravi PROSPECT |
+
+### What you will learn
+
+Draft CREATE TABLE TODOs offline (types, PKs, FKs, indexes).
+
+### Enterprise context
+
+Money uses exact decimal; timestamps with time zone.
+
+### Predict
+
+Why index FK columns?
+
+### Debug
+
+Running Docker in pre-lab — park it?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| FLOAT for money | Use NUMERIC/DECIMAL |
+| CASCADE everything | Document intentional FK actions |
+
 **Module 37** · Hands-on exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab37-ddl-todos.md` — fill blanks in CREATE TABLE drafts (offline SQL-on-paper).
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-37-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-04-fill-ddl-todos.md` (this file in the course repo) |
 | Your notes file | `notes/lab37-ddl-todos.md` |
 
 ## Worked example (read first)

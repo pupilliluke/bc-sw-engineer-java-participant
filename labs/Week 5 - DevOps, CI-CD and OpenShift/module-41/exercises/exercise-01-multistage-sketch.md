@@ -1,20 +1,45 @@
 # Exercise 1 — Sketch Multi-Stage Build
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 12–15 minutes |
+| **Checkpoint** | **A** (after slides 30–45) |
+| **Deliverable** | `notes/lab41-multistage-sketch.md` |
+| **Fixtures** | Synthetic CUS-1001 smoke · no secrets in notes |
+
+### What you will learn
+
+Sketch build stage (Maven) vs runtime stage (JRE) for CRM JAR.
+
+### Enterprise context
+
+Small reproducible images — no Maven toolchain in production runtime.
+
+### Predict
+
+What stays out of the final image if multi-stage is correct?
+
+### Debug
+
+Single-stage with full JDK + source — size/security risk?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Baking .env into layers | Runtime env only — never passwords in Dockerfile |
+| k3s manifests now | Park Lab 42 |
+
 **Module 41** · Architecture exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab41-multistage-sketch.md` — separate Maven build stage from JRE runtime stage on paper.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-41-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-01-multistage-sketch.md` (this file in the course repo) |
 | Your notes file | `notes/lab41-multistage-sketch.md` |
 
 ## Worked example (read first)

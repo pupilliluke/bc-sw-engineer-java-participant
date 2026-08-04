@@ -1,20 +1,45 @@
 # Exercise 2 — Token Storage Options
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 12–15 minutes |
+| **Checkpoint** | **B** (after slides 146–148) |
+| **Deliverable** | `notes/lab36-token-storage.md` |
+| **Fixtures** | CUS-1001 / CUS-1002 · no real secrets |
+
+### What you will learn
+
+Compare memory vs localStorage/sessionStorage for access tokens.
+
+### Enterprise context
+
+Lab 36 freezes in-memory tokens — no persistent web storage.
+
+### Predict
+
+XSS + localStorage token — what can an attacker do?
+
+### Debug
+
+Refresh token in localStorage 'for convenience' — tradeoff?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Wanting localStorage for demo | Use memory store; document tradeoff |
+| Real production secrets in notes | Use placeholders only |
+
 **Module 36** · Architecture exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab36-token-storage.md` — recommend where the CRM SPA keeps access tokens for the lab.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-36-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-02-token-storage.md` (this file in the course repo) |
 | Your notes file | `notes/lab36-token-storage.md` |
 
 ## Worked example (read first)

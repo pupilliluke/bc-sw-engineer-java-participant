@@ -1,20 +1,32 @@
 # Exercise 6 — Lab 12 Prep Checklist
 
-**Module 12** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
+**Module 12** · Checkpoint C · Exercises 1–6 Pass then Lab 12
 
-## Goal
+## Activity card
 
-Create `notes/lab12-prep-checklist.md` — confirm prior notes exist and you are ready for Lab 12 without finishing it now.
+| | |
+| --- | --- |
+| **Objective** | Complete Lab 12 prep checklist (freeze before file, docs paths) |
+| **Skills practiced** | Lab readiness |
+| **Expected outcome** | notes/lab12-prep-checklist.md |
+| **Estimated time** | 8–10 minutes |
+| **File to create** | `examples/module-12-exercises/` → notes/lab12-prep-checklist.md |
+| **Checkpoint** | C (after slides 105–107) |
+
+## What you will learn
+
+- Freeze messy baseline as .before.java.txt so Maven compiles one service
+- Evidence docs are graded: smells, before-after, standards check
+- No Spring phantoms; no SOAP yet
+
+**Enterprise context:** Before/after evidence turns cleanup labs into auditable improvements.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-12-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-06-lab12-prep-checklist.md` (this file in the course repo) |
 | Your notes file | `notes/lab12-prep-checklist.md` |
 
 ## Worked example (read first)
@@ -91,7 +103,18 @@ Confirm fixtures if used: Amina `CUS-1001`/`ACTIVE`, Ravi `CUS-1002`/`PROSPECT`,
 
 Readiness checklist with pre-lab-only scope stated in `notes/lab12-prep-checklist.md`.
 
-## If it fails
+
+## Debug / design challenge
+
+If before file is still .java, rename to .before.java.txt.
+
+## Predict the Output / Behavior
+
+What Surefire count is expected after Lab 12 (~8 tests)?
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | --- | --- |

@@ -1,20 +1,45 @@
 # Exercise 2 — ER Sketch
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 12–15 minutes |
+| **Checkpoint** | **B** (after slides 168–171) |
+| **Deliverable** | `notes/lab37-er-sketch.md` |
+| **Fixtures** | CUS-1001 Amina ACTIVE · CUS-1002 Ravi PROSPECT |
+
+### What you will learn
+
+Sketch cardinalities: customer–account, customer–address, history.
+
+### Enterprise context
+
+Ravi PROSPECT may have no account; Amina ACTIVE has one.
+
+### Predict
+
+Can an ACCOUNT exist without a CUSTOMER?
+
+### Debug
+
+Using email as primary key — what breaks if email changes?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Missing cardinalities | Mark 1:N / 1:0..1 explicitly |
+| Mutable business id as PK | Prefer surrogate PK + unique customer_code |
+
 **Module 37** · Architecture exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab37-er-sketch.md` — draw customer—account cardinality on paper/markdown.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-37-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-02-er-sketch.md` (this file in the course repo) |
 | Your notes file | `notes/lab37-er-sketch.md` |
 
 ## Worked example (read first)

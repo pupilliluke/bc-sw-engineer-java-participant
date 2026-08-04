@@ -1,20 +1,45 @@
 # Exercise 2 — ConfigMap vs Secret Split
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **A** (after slides 61–73) |
+| **Deliverable** | `notes/lab42-config-vs-secret.md` |
+| **Fixtures** | CUS-1001 smoke · digest-pinned Lab 41 image · no Secret values |
+
+### What you will learn
+
+Split non-secret URLs/flags into ConfigMap; passwords into Secret refs.
+
+### Enterprise context
+
+Never commit kubeconfig, tokens, or Secret data values.
+
+### Predict
+
+SPRING_DATASOURCE_PASSWORD — ConfigMap or Secret?
+
+### Debug
+
+Secret.example.yaml with real password — gate fail?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| All env in ConfigMap | Move credentials to Secret |
+| Committing kubeconfig | Keep out of Git; redact screenshots |
+
 **Module 42** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab42-config-vs-secret.md` — classify CRM settings into ConfigMap vs Secret.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-42-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-02-config-vs-secret.md` (this file in the course repo) |
 | Your notes file | `notes/lab42-config-vs-secret.md` |
 
 ## Worked example (read first)

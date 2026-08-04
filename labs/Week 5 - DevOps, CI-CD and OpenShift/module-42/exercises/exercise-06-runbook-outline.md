@@ -1,20 +1,45 @@
 # Exercise 6 — Outline Deployment Runbook
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 8–10 minutes |
+| **Checkpoint** | **D** (after slides 85–87) |
+| **Deliverable** | `notes/lab42-runbook-outline.md` |
+| **Fixtures** | CUS-1001 smoke · digest-pinned Lab 41 image · no Secret values |
+
+### What you will learn
+
+Outline apply, wait, smoke, rollback commands for peers.
+
+### Enterprise context
+
+Hard gate: peer can deploy from runbook without verbal help.
+
+### Predict
+
+Which namespace and Ingress host go in the runbook?
+
+### Debug
+
+Terraform/Ansible for cluster now — wrong lab?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Vague 'kubectl apply somehow' | Exact -f paths and rollout status |
+| Secrets in runbook screenshots | Redact tokens/passwords |
+
 **Module 42** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab42-runbook-outline.md` — outline `docs/deployment-runbook.md` for a peer on shared k3s.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-42-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-06-runbook-outline.md` (this file in the course repo) |
 | Your notes file | `notes/lab42-runbook-outline.md` |
 
 ## Worked example (read first)

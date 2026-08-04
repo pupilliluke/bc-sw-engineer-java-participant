@@ -1,20 +1,45 @@
 # Exercise 5 — Digest vs Latest
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **D** (after slides 55–56) |
+| **Deliverable** | `notes/lab41-digest-discipline.md` |
+| **Fixtures** | Synthetic CUS-1001 smoke · no secrets in notes |
+
+### What you will learn
+
+Explain why :latest-only is rejected; plan digest pinning notes.
+
+### Enterprise context
+
+Lab 42/44 pull reproducible digests — not floating latest.
+
+### Predict
+
+Two engineers pull :latest a week apart — same bits?
+
+### Debug
+
+Pushing only :latest with secrets — gate fail reasons?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Skipping digest capture | Record image id/digest in runbook |
+| Registry auth in Git | Auth outside repo |
+
 **Module 41** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab41-digest-discipline.md` — explain why `:latest` is insufficient for later k3s deploys.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-41-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-05-digest-discipline.md` (this file in the course repo) |
 | Your notes file | `notes/lab41-digest-discipline.md` |
 
 ## Worked example (read first)

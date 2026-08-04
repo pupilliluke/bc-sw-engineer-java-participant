@@ -1,20 +1,32 @@
 # Exercise 3 — Smell Bingo
 
-**Module 12** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
+**Module 12** · Checkpoint B · Exercises 1–6 Pass then Lab 12
 
-## Goal
+## Activity card
 
-Create `notes/lab12-smell-bingo.md` — mark five smells you expect in a rushed Customer service sketch.
+| | |
+| --- | --- |
+| **Objective** | Mark smells in a messy CustomerService snippet (bingo) |
+| **Skills practiced** | Smell recognition, refactor triggers |
+| **Expected outcome** | notes/lab12-smell-bingo.md |
+| **Estimated time** | 12–15 minutes |
+| **File to create** | `examples/module-12-exercises/` → notes/lab12-smell-bingo.md |
+| **Checkpoint** | B (after slides 100–104) |
+
+## What you will learn
+
+- Smells are signals — name them before rewriting
+- Complexity/readability issues often cluster
+- Lab 12 docs/smells.md will expand this list
+
+**Enterprise context:** Smell catalogs make code review concrete instead of taste-based.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-12-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-03-smell-bingo.md` (this file in the course repo) |
 | Your notes file | `notes/lab12-smell-bingo.md` |
 
 ## Worked example (read first)
@@ -77,7 +89,18 @@ Confirm fixtures if used: Amina `CUS-1001`/`ACTIVE`, Ravi `CUS-1002`/`PROSPECT`,
 
 A smell bingo card prioritized for Lab 12 in `notes/lab12-smell-bingo.md`.
 
-## If it fails
+
+## Debug / design challenge
+
+Find == on String ids — mark it as a smell with a fix note.
+
+## Predict the Output / Behavior
+
+Is a 60-line doStuff method a long-method smell?
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | --- | --- |

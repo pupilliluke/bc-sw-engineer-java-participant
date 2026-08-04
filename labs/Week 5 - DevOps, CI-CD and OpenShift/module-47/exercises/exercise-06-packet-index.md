@@ -1,20 +1,45 @@
 # Exercise 6 — Communication Packet Index
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 8–10 minutes |
+| **Checkpoint** | **D** (after slides 222–229) |
+| **Deliverable** | `notes/lab47-packet-index.md` |
+| **Fixtures** | CUS-1001/CUS-1002 synthetic · one fact base · no secrets |
+
+### What you will learn
+
+Index the four artifacts + shared facts and secrecy scrub checklist.
+
+### Enterprise context
+
+Hard gate: peer can find all files and confirm consistency without verbal help.
+
+### Predict
+
+Which fields must match across all four docs?
+
+### Debug
+
+Week review slides 234–244 as this lab deliverable — park?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Missing shared-facts link | Index all paths |
+| Skipping secrecy scrub | Search for token/password patterns |
+
 **Module 47** · Architecture exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab47-packet-index.md` — index the four artifacts Lab 47 expects.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-47-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-06-packet-index.md` (this file in the course repo) |
 | Your notes file | `notes/lab47-packet-index.md` |
 
 ## Worked example (read first)

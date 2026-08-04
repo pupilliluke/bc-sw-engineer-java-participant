@@ -1,20 +1,32 @@
 # Exercise 1 — Entity vs DTO
 
-**Module 14** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
+**Module 14** · Checkpoint A · Exercises 1–6 Pass then Lab 14
 
-## Goal
+## Activity card
 
-Create `notes/lab14-entity-vs-dto.md` — explain why Northstar HTTP/SOAP payloads should not be persistence entities.
+| | |
+| --- | --- |
+| **Objective** | Explain why Northstar HTTP/SOAP payloads must not be persistence entities |
+| **Skills practiced** | Entity vs DTO boundary, leak risk naming |
+| **Expected outcome** | notes/lab14-entity-vs-dto.md |
+| **Estimated time** | 10–12 minutes |
+| **File to create** | `examples/module-14-exercises/` → notes/lab14-entity-vs-dto.md |
+| **Checkpoint** | A (after slides 133–135) |
+
+## What you will learn
+
+- Entity = persistence shape; DTO = API contract shape
+- Exposing entities leaks audit columns, lazy relations, internal flags
+- Amina/Ravi fixtures drive response field lists without JPA annotations
+
+**Enterprise context:** CRM APIs that return entities couple clients to schema churn and risk leaking PII/internal fields.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-14-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-01-entity-vs-dto.md` (this file in the course repo) |
 | Your notes file | `notes/lab14-entity-vs-dto.md` |
 
 ## Worked example (read first)
@@ -25,15 +37,12 @@ Here is the shape of a complete answer for this exercise. Adapt the content — 
 # Lab 14 — Entity vs DTO
 
 ## Step 1 — Definitions
-
 Entity = persistence shape; DTO = API contract shape.
 
 ## Step 2 — Leak risks
-
 List two leaks: internal flags, lazy relations, or audit columns in responses.
 
 ## Step 3 — Fixture DTO fields
-
 DTO fields for Amina: customerId, fullName, status — no persistence annotations.
 
 ## Scope
@@ -54,16 +63,14 @@ From `examples/module-14-exercises/`, create `notes/` if needed, then create `no
 # Lab 14 — Entity vs DTO
 
 ## Step 1 — Definitions
-
-Entity = persistence shape; DTO = API contract shape.
+Entity = _____; DTO = _____.
 
 ## Step 2 — Leak risks
-
-List two leaks: internal flags, lazy relations, or audit columns in responses.
+1. _____
+2. _____
 
 ## Step 3 — Fixture DTO fields
-
-DTO fields for Amina: customerId, fullName, status — no persistence annotations.
+Amina (`CUS-1001`) response fields: _____
 
 ## Scope
 Pre-lab only — do not finish the full graded lab in this exercise.
@@ -77,12 +84,22 @@ Confirm fixtures if used: Amina `CUS-1001`/`ACTIVE`, Ravi `CUS-1002`/`PROSPECT`,
 
 Clear entity/DTO split with fixture field list in `notes/lab14-entity-vs-dto.md`.
 
-## If it fails
+## Debug / design challenge
+
+Someone returned `Customer` from the facade — name two fields that should never appear on the wire.
+
+## Predict the Output / Behavior
+
+If the client gets `version`/`createdBy` after a schema change, what broke?
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | --- | --- |
 | No file / wrong name | Must be `notes/lab14-entity-vs-dto.md` |
-| Leaving blanks or skipping steps | Complete every step before claiming Pass |
+| Treating entity and DTO as synonyms | Rewrite definitions with persistence vs contract |
 | Starting the full lab mid-exercise | Finish pre-lab notes first, then open Lab 14 |
 
 ## Pass criteria
@@ -93,4 +110,3 @@ Self-check before marking Pass:
 - [ ] Definitions written
 - [ ] Two leak risks
 - [ ] Amina DTO fields listed
-

@@ -1,15 +1,30 @@
 # Exercise 4 — Abstract Classes
 
-**Module 3** · Pre-lab practice · finish all 8 Pass, then [`../lab3/LAB-3-GUIDE.md`](../lab3/LAB-3-GUIDE.md)  
+**Module 3** · Pre-lab practice · Checkpoint D · all 8 then lab
 **Folder:** `examples/module-03-exercises/` ([setup](EXERCISES-INDEX.md))
 
 ![Abstract Classes and Concrete Subclasses](../../../lab_diagrams/mod03-ex04-abstract-classes.png)
 
 > **Builds on Exercise 3:** `SavingsAccount` and `CurrentAccount` already override behavior — now make the parent itself impossible to instantiate directly.
 
-## Goal
+## Activity card
 
-Turn `Account` into an `abstract class` with one abstract method, and prove it can no longer be created directly.
+| | |
+| --- | --- |
+| **Objective** | Make Account abstract with an abstract method subclasses must implement |
+| **Skills practiced** | abstract class, abstract method, compiler contracts |
+| **Expected outcome** | Cannot instantiate abstract type; subclasses implement required method |
+| **Estimated time** | 15–18 minutes |
+| **File to create** | `examples/module-03-exercises/AbstractAccount.java (+ subclasses/demo)` |
+| **Checkpoint** | D (after slides 99–101) |
+
+## What you will learn
+
+- Abstract types model incomplete concepts
+- Compiler enforces subclass contracts
+- When to prefer abstract class vs interface
+
+**Enterprise context:** Banks rarely instantiate a generic Account — only Savings/Current/etc.
 
 ## Worked example (read first)
 
@@ -23,6 +38,9 @@ Then follow **Steps** to create your own file.
 
 
 ## Starter (fill in the TODOs)
+
+Optional: copy matching files from [`starter/`](starter/README.md). Or paste:
+
 
 Paste these skeletons, then replace each `_____` and `// TODO` with working code. Do **not** leave TODOs or blanks in your finished files.
 
@@ -123,7 +141,14 @@ Savings balance: 50.0
 
 The direct-instantiation line fails to compile; the program runs once you go through the concrete `AbstractSavings` subclass instead.
 
-## If it fails
+
+## Predict the Output / Behavior
+
+What happens if you write new AbstractAccount(...)?
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | ------- | --- |

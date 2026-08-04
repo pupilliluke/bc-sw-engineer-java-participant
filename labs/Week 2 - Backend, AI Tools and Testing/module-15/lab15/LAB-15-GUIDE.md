@@ -1,8 +1,20 @@
 # Lab 15: Service Layer Design — Northstar CRM Business Rules
 
+> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 15 [pre-lab exercises 1–6](../exercises/EXERCISES-INDEX.md) (Pass in your notes; order **1 → 2 → 3 → 4 → 5 → 6**). Then open **one** OS how-to ([Windows](LAB-15-WINDOWS.md) · [macOS](LAB-15-MACOS.md)). In class, prefer the **45-minute timed path** with [`starter/`](starter/README.md); the **full path** is every Step below (homework / extended). Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
+
+## Activity card
+
+| | |
+| --- | --- |
+| **Objective** | Ship repository + validator + DefaultCustomerService with legal/illegal status transitions |
+| **Skills practiced** | Service/repo boundaries, transition matrix, ctor DI, validate-before-mutate |
+| **Expected outcome** | Green `mvn test` · activate CUS-1002 · reject ACTIVE→PROSPECT with `lab-request-001` |
+| **Estimated time** | Timed path ~45 min · Full path 3–4 hours |
+| **Prerequisites** | Lab 0 · Lab 14 DTOs preferred · Exercises 1–6 Pass · JDK 21 · Maven 3.9+ |
+| **Expected files** | `examples/lab15-crm/` — repo, validator, service, tests, notes |
+| **Validation checkpoints** | Starter smoke `mvn -B clean test` · GUIDE Implementation Checkpoints |
+
 **Module:** 15 — Business Logic and Service Layer Design  
-**Lab folder:** `labs/Week 2 - Backend, AI Tools and Testing/module-15/lab15/`  
-**Difficulty:** Intermediate  
 **Duration:** ~45 minutes (timed path with starter) · Full path: 3–4 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
@@ -12,7 +24,11 @@
 | Windows | [LAB-15-WINDOWS.md](LAB-15-WINDOWS.md) |
 | macOS | [LAB-15-MACOS.md](LAB-15-MACOS.md) |
 
-> **Environment reminder:** Complete the [Module 15 pre-lab exercises](../exercises/EXERCISES-INDEX.md) after the slides and before this lab.  Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Incremental build:** Layer diagram → repo boundary → transition matrix → interface/ctor → activate Ravi → Lab 15 `lab15-crm`.
+
+> **Classroom pacing:** [`../PACING.md`](../PACING.md) (Checkpoints A–E).
+
+> **Critical scope:** Transitions in **service/validator**. Map private inside repository. No `HashMap`/JDBC in `service`. HTTP exception mapping is **Lab 16**.
 
 **Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11; Maven 3.9.9):**
 
@@ -46,20 +62,9 @@ In class, use the starter templates so the **core** objectives fit **~45 minutes
 | **Full (extended)** | see Duration | Every Step in this GUIDE |
 
 
-## How to follow this lab
-
-1. **In class:** prefer [`starter/README.md`](starter/README.md) when a timed path exists — fill `// TODO`, run the smoke test (~45 min).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
-3. Work only under your `java-bootcamp/examples/…` folder (not inside this `labs/` clone unless a step says otherwise).
-4. Read **Worked example** once, then for each **Step**: **Why** → **Do this** → confirm **Expected result**.
-5. When stuck, use **Troubleshooting** / **Failure Experiments** before asking for help.
-6. Capture evidence under `notes/screenshots/` (redact secrets). Mark Pass/Fail in your own notes — GitHub does not support clickable checkboxes.
-
----
-
 ## What you'll submit (read this first)
 
-Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+Keep this checklist visible while you work.
 
 | # | Deliverable |
 | - | ----------- |
@@ -78,18 +83,6 @@ Keep this checklist visible while you work. Full detail is under [Expected Deliv
 
 This Module 15 lab extends the **Customer Management Platform** with a deliberate **service layer**: `CustomerService` (interface + implementation), `CustomerValidator` for business rules, and status-transition rules such as `PROSPECT → ACTIVE`—without leaking persistence details through the API.
 
-**Purpose.** Bean Validation (Lab 14) checks *shape*. Business rules check *meaning*: duplicate IDs/emails, who may become ACTIVE, and which transitions are illegal. Those rules belong in one place so Labs 17–18 can unit-test them and Lab 22+ can inject the same constructors with Spring.
-
-**What you build (this lab).** Copy `lab14-crm` → `lab15-crm`; introduce `CustomerRepository` + in-memory impl (Map private); define `CustomerService` / `DefaultCustomerService`; implement `CustomerValidator` transitions; activate `CUS-1002`; reject `ACTIVE → PROSPECT` with `lab-request-001`; prove no Map/SQL leak; document the transition table.
-
-**What success looks like.** Under `~/java-bootcamp/examples/lab15-crm/` Main activates Ravi to ACTIVE, illegal transitions leave Amina ACTIVE, validator tests pass, and grep shows no `HashMap` in the service package.
-
-**Depends on Lab 14.** Need DTO/facade boundary plus `Customer` / `CustomerStatus`. If Lab 14 is incomplete, finish it first.
-
-**CRM connection.** Same fixtures. Lab 16 will expand exceptions; Labs 17–18 test this service with mocks. Persistence stays in-memory; React/Kafka/PostgreSQL remain future.
-
----
-
 ## Learning Objectives
 
 After completing this lab, you will be able to:
@@ -99,11 +92,6 @@ After completing this lab, you will be able to:
 * Implement `CustomerValidator` for identity, email uniqueness, and status transitions
 * Enforce `PROSPECT → ACTIVE` and reject illegal transitions in one place
 * Keep persistence details (`Map`, SQL, file I/O) behind a repository interface
-* Wire constructor injection manually as a preview of Spring DI
-* Explain what changes under Spring `@Service` later **without** rewriting rules
-* Prove failed transitions do not corrupt stored status
-
----
 
 ## Business Scenario
 
@@ -129,7 +117,6 @@ Use these examples consistently:
 ---
 
 ## Architecture Context
-
 ### NOW (this lab)
 
 ```mermaid
@@ -139,35 +126,11 @@ flowchart TB
   Repo --> Mem["InMemoryCustomerRepository"]
 ```
 
-### Lab flow (mermaid)
-
-```mermaid
-flowchart TD
-    A["Copy lab14 -> lab15"] --> B["CustomerRepository<br/>+ in-memory impl"]
-    B --> C["CustomerService<br/>interface"]
-    C --> D["CustomerValidator<br/>transitions"]
-    D --> E["DefaultCustomerService<br/>constructor DI"]
-    E --> F["Activate CUS-1002<br/>PROSPECT -> ACTIVE"]
-    F --> G["Reject ACTIVE -> PROSPECT<br/>+ tests"]
-    G --> H["No persistence leak<br/>+ README table"]
-```
-
-### Architecture NOW vs LATER
-
-| Aspect | Lab 15 (NOW) | Later (Spring / DB) |
-| ------ | ------------ | ------------------- |
-| Wiring | Manual `new` in Main | `@Service` / `@Autowired` constructors |
-| Store | In-memory Map behind interface | JPA repository |
-| Rules | `CustomerValidator` | Same rules; maybe domain events |
-| Errors | `IllegalStateException` (+ Lab 16 types) | Exception handlers / Problem Details |
-
-**Lab focus:** Service layer design, business rules, DI-friendly interfaces, no persistence leak.
-
----
-
 ## Prerequisites
 
-Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md), and preferably [Lab 14](../../module-14/lab14/LAB-14-GUIDE.md). Confirm:
+Prior labs: [Lab 14](../../module-14/lab14/LAB-14-GUIDE.md).
+
+Confirm (Lab 0 tools assumed):
 
 * JDK 21; Maven; Git
 * Lab 14 DTOs, mapper, and facade as starting point (`lab14-crm/` → `lab15-crm/`)
@@ -178,64 +141,7 @@ Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%
 ```bash
 java -version
 mvn -version
-git --version
-pwd
-ls ~/java-bootcamp/examples
 ```
-
-Fix environment failures before changing application code.
-
----
-
-## Suggested Project Files
-
-```text
-~/java-bootcamp/examples/lab15-crm/
-├── src/
-│   ├── main/java/com/northstar/crm/
-│   │   ├── Main.java
-│   │   ├── dto/ ...
-│   │   ├── entity/
-│   │   │   ├── Customer.java
-│   │   │   └── CustomerStatus.java
-│   │   ├── api/CustomerApiFacade.java
-│   │   ├── mapper/CustomerMapper.java
-│   │   ├── service/
-│   │   │   ├── CustomerService.java
-│   │   │   ├── DefaultCustomerService.java
-│   │   │   └── CustomerValidator.java
-│   │   ├── repository/
-│   │   │   ├── CustomerRepository.java
-│   │   │   └── InMemoryCustomerRepository.java
-│   │   └── exception/
-│   │       └── BusinessException.java   (thin stub OK; Lab 16 expands)
-│   └── test/java/com/northstar/crm/service/
-│       └── CustomerValidatorTest.java
-├── docs/
-│   └── service-layer-notes.md
-├── notes/screenshots/
-├── pom.xml
-├── .gitignore
-└── README.md
-```
-
-Ignore `target/`, IDE metadata, tokens, and passwords.
-
----
-
-## Key ideas (skim — no write-up)
-
-Skim these ideas before coding. **No separate write-up required** (you will apply them in the Steps).
-
-1. Main data/request flow (facade → service → validator/repository)
-2. Trust boundary: Bean Validation (shape) vs `CustomerValidator` (meaning)
-3. Success/failure contract for create and `changeStatus`
-4. Stable identity (`CUS-1001`) vs mutable status
-5. Retry/idempotency for `changeStatus` when already ACTIVE
-6. In-memory repository vs future JPA behind the same interface
-
----
-
 
 ## Worked example (read before you code)
 
@@ -614,7 +520,7 @@ CLOSED    -> (none)
 
 **Why:** Shared-repo wiring bugs and illegal transitions are the classic support tickets.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Capture Main + Surefire evidence under `notes/screenshots/lab-15/`.
+**Do this:** Complete Failure Experiments. Capture Main + Surefire evidence under `notes/screenshots/lab-15/`.
 
 ```bash
 mvn -q clean test
@@ -698,33 +604,6 @@ mvn -q exec:java -Dexec.mainClass=com.northstar.crm.Main
 git status
 ```
 
-### Class map
-
-| Class | Role |
-| ----- | ---- |
-| `CustomerService` | Use-case API |
-| `DefaultCustomerService` | Orchestration + DI constructors |
-| `CustomerValidator` | Business meaning rules |
-| `CustomerRepository` | Persistence port |
-| `InMemoryCustomerRepository` | Adapter (Map hidden) |
-
----
-
-## Manual Verification
-
-1. Create Amina ACTIVE and Ravi PROSPECT.
-2. Activate Ravi → ACTIVE succeeds.
-3. Illegal `ACTIVE → PROSPECT` on Amina fails with correlation id.
-4. Amina still ACTIVE after failure.
-5. Duplicate customerId/email fail with clear messages.
-6. Service has no HashMap/SQL imports.
-7. `listAll` is unmodifiable from caller’s perspective.
-8. Constructor DI graph explicit in Main.
-9. Validator tests pass.
-10. README transition table matches code.
-
----
-
 ## Failure Experiments
 
 | # | Experiment | Observe | Restore / conclude |
@@ -747,12 +626,8 @@ git status
 | Status corrupted on error | Mutate before validate | Reorder Step 4 method |
 | Facade compile errors | Old concrete service type | Depend on interface |
 | Flaky tests | Shared static mutable state | Fresh repo per test |
-
-### Email case policy
-
-Document whether emails are case-sensitive or lowercased before `existsByEmail`.
-
----
+| HashMap visible in `service` package | Persistence leak | Move Map into `InMemoryCustomerRepository` only |
+| Activating Amina as happy path | Wrong fixture | Activate Ravi `CUS-1002` (PROSPECT) |
 
 ## Security and Production Review
 
@@ -774,14 +649,6 @@ git status
 ```
 
 No containers required. **Keep `lab15-crm`**—Lab 16 expands exceptions on these paths.
-
----
-
-## Expected Deliverables
-
-Same checklist as [What you'll submit](#what-youll-submit-read-this-first) at the top. You are done when those items are complete and the Implementation Checkpoints pass.
-
-Do **not** submit `target/`, secrets, or a verbatim instructor `solution/`.
 
 ---
 
@@ -812,26 +679,3 @@ Write **1–3 sentence** answers (not essays):
 ---
 
 
-## Bonus Challenges
-
-Optional — only after core deliverables pass. Pick at most one if time is short.
-
-
-1. Structured correlation + customerId on every business-rule failure object.
-2. Extract `StatusTransitionPolicy` interface for swappable rules in tests.
-3. Query method `canActivate(customerId)` without mutating state.
-
----
-
-
-## Instructor Notes
-
-* **Live probe:** Reproduce `ACTIVE → PROSPECT` with `lab-request-001` and show `CUS-1001` unchanged. Ask whether validator and repository share one instance—a common wiring mistake.
-* **Assess:** Transition table documented vs coded consistency; DI constructors; no Map leak.
-* **Continuity:** Prefer `examples/lab15-crm`. Keep sample IDs. Lab 16 should wrap these failures in richer exception types.
-* **Common pitfalls:** Two repos; mutating before validate; putting transition rules in the repository; Spring annotations early; undocumented same-status behavior.
-* **Timing:** Timed path ~45 minutes with starter; full path remains 3–4 hours. Keep starter TODOs as the in-class core; remaining GUIDE steps are homework/extended depth. Wiring bugs dominate—demo shared vs split repository for five minutes if many students “lose” uniqueness.
-
----
-
-*End of Lab 15 — Service Layer Design: Northstar CRM Business Rules. Keep `lab15-crm` for Lab 16+ and portfolio evidence.*

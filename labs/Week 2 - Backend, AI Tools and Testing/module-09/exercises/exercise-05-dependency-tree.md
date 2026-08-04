@@ -1,20 +1,32 @@
 # Exercise 5 — Read a Dependency Tree
 
-**Module 9** · Analysis + CI habit exercise · [setup + file names](EXERCISES-INDEX.md)
+**Module 9** · Checkpoint C · Exercises 1–6 Pass then Lab 9
 
-## Goal
+## Activity card
 
-Create `notes/dependency-tree-notes.md` distinguishing direct vs transitive dependencies and recording why CI prefers `mvn -B verify`.
+| | |
+| --- | --- |
+| **Objective** | Read mvn dependency:tree and separate direct vs transitive deps |
+| **Skills practiced** | dependency:tree, transitive dependencies |
+| **Expected outcome** | notes/dependency-tree-notes.md with tree interpretation |
+| **Estimated time** | 12–15 minutes |
+| **File to create** | `examples/module-09-exercises/` → notes/dependency-tree-notes.md |
+| **Checkpoint** | C (after slides 48–51) |
+
+## What you will learn
+
+- Never use -q with dependency:tree — you need the output
+- Transitive deps arrive because of direct deps
+- Trees help spot version conflicts early
+
+**Enterprise context:** Security and license reviews start from the resolved dependency tree, not just the POM list.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-09-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | this file in the course repo |
 | Your notes file | `notes/dependency-tree-notes.md` |
 
 ## How to read Maven tree symbols
@@ -117,6 +129,19 @@ CI habit for this bootcamp: mvn -B verify
 ## Expected result
 
 You can label direct vs transitive rows, explain `+-` vs `\-`, spot `:test` scope, and know the CI verify habit—before Lab 9’s full evidence pack.
+
+
+## Debug / design challenge
+
+Tree is empty because -q was used — re-run correctly.
+
+## Predict the Output / Behavior
+
+Is a nested library under junit-jupiter a direct or transitive dependency?
+
+## Troubleshooting
+
+See steps above if Maven commands fail. Prefer full logs (no `-q`) while learning.
 
 ## Pass criteria
 

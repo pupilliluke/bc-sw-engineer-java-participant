@@ -1,20 +1,45 @@
 # Exercise 6 — Lab 32 Readiness
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 8–10 minutes |
+| **Checkpoint** | **D** (after slides 71–72) |
+| **Deliverable** | `notes/lab32-prep-checklist.md` |
+| **Fixtures** | CUS-1001 Account Profile · instance `accountProfile` |
+
+### What you will learn
+
+Confirm WireMock plan, fixtures, and no React error toasts yet.
+
+### Enterprise context
+
+Hard gate before Resilience4j coding.
+
+### Predict
+
+Can you prove OPEN without asserting WireMock request count?
+
+### Debug
+
+Starting React Module 33 early — park UI?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| No WireMock plan | Stub 503 / slow / OK for CUS-1001 |
+| Unsafe write retry in notes | Document: reads only for aggressive retry |
+
 **Module 32** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab32-prep-checklist.md` — confirm prior notes exist and you are ready for Lab 32 without finishing it now.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-32-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-06-lab32-readiness.md` (this file in the course repo) |
 | Your notes file | `notes/lab32-prep-checklist.md` |
 
 ## Worked example (read first)

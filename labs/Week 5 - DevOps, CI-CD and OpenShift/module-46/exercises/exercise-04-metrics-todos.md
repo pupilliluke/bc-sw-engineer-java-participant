@@ -1,20 +1,45 @@
 # Exercise 4 — Fill Metrics/Alert TODOs
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **B** (after slides 187–194) |
+| **Deliverable** | `notes/lab46-metrics-todos.md` |
+| **Fixtures** | CUS-1001/CUS-1002 synthetic · correlation lab-request-001 · no PII in metrics |
+
+### What you will learn
+
+Fill lag, error, DLT-rate, and latency panel/alert TODOs.
+
+### Enterprise context
+
+Operators need lag and DLT growth signals before release watch windows expire.
+
+### Predict
+
+High-cardinality email tags on metrics — risk?
+
+### Debug
+
+Metrics empty in Actuator — exposure/security?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| No lag panel | Add consumer lag + alert idea |
+| Raw emails as tags | Use customerId/eventType only |
+
 **Module 46** · Hands-on exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab46-metrics-todos.md` — complete blanks for metrics and dashboard panels.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-46-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-04-metrics-todos.md` (this file in the course repo) |
 | Your notes file | `notes/lab46-metrics-todos.md` |
 
 ## Worked example (read first)

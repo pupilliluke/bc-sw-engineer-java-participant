@@ -1,8 +1,20 @@
 # Lab 27: Transaction Management with AI Assistance — Northstar CRM Transfers
 
+> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 27 [pre-lab exercises 1–6](../exercises/EXERCISES-INDEX.md) (Pass in your notes; order **1 → 2 → 3 → 4 → 5 → 6**). Then open **one** OS how-to ([Windows](LAB-27-WINDOWS.md) · [macOS](LAB-27-MACOS.md)). In class, prefer the **45-minute timed path** with [`starter/`](starter/README.md); the **full path** is every Step below (homework / extended). Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
+
+## Activity card
+
+| | |
+| --- | --- |
+| **Objective** | Implement atomic TransferService (debit + credit + log) with proven rollback |
+| **Skills practiced** | @Transactional, ACID evidence, ACC-FORCE-FAIL, AI TX review |
+| **Expected outcome** | Happy MAIN→LOYALTY · forced-fail rollback · ACID notes · tests green |
+| **Estimated time** | Timed path ~45 min · Full path 4–5 hours |
+| **Prerequisites** | Lab 0 · Labs 25–26 preferred · Exercises 1–6 Pass · JDK 21 · Maven 3.9+ |
+| **Expected files** | `examples/lab27-crm/` — TransferService, accounts, log, acid-notes, tests |
+| **Validation checkpoints** | Starter smoke · GUIDE Implementation Checkpoints |
+
 **Module:** 27 — Transaction Management with AI Assistance  
-**Lab folder:** `labs/Week 3 - Spring Framework and Enterprise Patterns/module-27/lab27/`  
-**Difficulty:** Intermediate  
 **Duration:** ~45 minutes (timed path with starter) · Full path: 4–5 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
@@ -12,9 +24,11 @@
 | Windows | [LAB-27-WINDOWS.md](LAB-27-WINDOWS.md) |
 | macOS | [LAB-27-MACOS.md](LAB-27-MACOS.md) |
 
-> **Environment reminder:** Complete the [Module 27 pre-lab exercises](../exercises/EXERCISES-INDEX.md) after the slides and before this lab.  Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Incremental build:** ACID → TX boundary → rollback plan → pseudocode → propagation warnings → Lab 27.
 
----
+> **Classroom pacing:** [`../PACING.md`](../PACING.md) (Checkpoints A–D).
+
+> **Critical scope:** `@Transactional` on **service** only. Prove **`ACC-FORCE-FAIL`**. ACID notes cite **evidence**. Reject AI drafts that swallow exceptions or split commits. JWT / XA → later.
 
 ## 45-minute timed path (use starter)
 
@@ -33,20 +47,9 @@ In class, use the starter templates so the **core** objectives fit **~45 minutes
 
 ---
 
-## How to follow this lab
-
-1. **In class:** prefer [`starter/README.md`](starter/README.md) when a timed path exists — fill `// TODO`, run the smoke test (~45 min).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
-3. Work only under your `java-bootcamp/examples/…` folder (not inside this `labs/` clone unless a step says otherwise).
-4. Read **Worked example** once, then for each **Step**: **Why** → **Do this** → confirm **Expected result**.
-5. When stuck, use **Troubleshooting** / **Failure Experiments** before asking for help.
-6. Capture evidence under `notes/screenshots/` (redact secrets). Mark Pass/Fail in your own notes — GitHub does not support clickable checkboxes.
-
----
-
 ## What you'll submit (read this first)
 
-Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+Keep this checklist visible while you work.
 
 | # | Deliverable |
 | - | ----------- |
@@ -67,18 +70,6 @@ Keep this checklist visible while you work. Full detail is under [Expected Deliv
 
 This Module 27 lab adds Spring **`@Transactional`** boundaries for CRM financial-account updates that must succeed or fail together. You implement a **`TransferService`** (debit + credit + log), prove automatic **rollback** with destination `ACC-FORCE-FAIL`, and map observations to **ACID** guarantees used in production ledger updates. Optional Copilot drafts require review for unsafe propagation, swallowed exceptions, and transaction-on-controller anti-patterns.
 
-**Purpose.** Partial money movement destroys finance trust. Leadership freezes: multi-account updates run inside one service transaction; forced mid-transfer failure leaves balances unchanged and writes no success log; students explain ACID with curl/SQL evidence — not slogans.
-
-**What you build (this lab).** Copy forward to `lab27-crm`; add JPA + H2 (preferred); seed Amina/Ravi accounts; implement repositories + `TransactionLog`; `@Transactional TransferService`; HTTP transfer endpoint; rollback demo via `ACC-FORCE-FAIL`; ACID README table; automated rollback tests; AI review notes; dual green `mvn test`.
-
-**What success looks like.** Under `~/java-bootcamp/examples/lab27-crm/` happy transfer MAIN→LOYALTY updates both balances + log; forced fail leaves MAIN unchanged and no log row; tests assert balances after failure; ACID table cites evidence; no secrets in Git.
-
-**Depends on Labs 25–26.** Need Service/Repository layering and sane config. Prefer Lab 26 profile habits (H2 under `dev`/`test`).
-
-**CRM connection.** Customers `CUS-1001` / `CUS-1002`; accounts `ACC-1001-MAIN`, `ACC-1001-LOYALTY`, `ACC-1002-MAIN`; force id `ACC-FORCE-FAIL`; correlation `lab-request-001`. Lab 28 adds security around these money paths.
-
----
-
 ## Learning Objectives
 
 After completing this lab, you will be able to:
@@ -88,12 +79,6 @@ After completing this lab, you will be able to:
 * Implement a transfer (debit + credit + transaction log) for CRM accounts
 * Force a mid-operation failure with `ACC-FORCE-FAIL` and prove both sides roll back
 * Map Atomicity, Consistency, Isolation, and Durability to observable CRM behavior
-* Choose sensible `rollbackFor` / exception types for domain failures
-* Use Copilot productively while rejecting unsafe transaction advice
-* Document local (H2 mem) versus production (PostgreSQL) transaction differences
-* Keep fixtures and correlation IDs stable for peer review
-
----
 
 ## Business Scenario
 
@@ -120,7 +105,6 @@ Use these examples consistently:
 ---
 
 ## Architecture Context
-
 ### NOW (this lab)
 
 ```mermaid
@@ -134,35 +118,11 @@ flowchart TB
   Fail["ACC-FORCE-FAIL -> throw -> rollback"] -.-> TS
 ```
 
-### Lab flow (mermaid)
-
-```mermaid
-flowchart TD
-    A["Copy lab25/26 -> lab27<br/>+ JPA/H2"] --> B["Seed accounts<br/>Amina/Ravi"]
-    B --> C["Repos + TransactionLog"]
-    C --> D["TransferService<br/>@Transactional"]
-    D --> E["POST /api/transfers<br/>happy MAIN->LOYALTY"]
-    E --> F["ACC-FORCE-FAIL<br/>rollback proof"]
-    F --> G["ACID table in README"]
-    G --> H["TransferServiceTest<br/>+ AI review + mvn test ×2"]
-```
-
-### Architecture NOW vs LATER
-
-| Aspect | Lab 27 (NOW) | Lab 28+ (LATER) |
-| ------ | ------------ | --------------- |
-| Authn/Authz | Correlation header only | Spring Security on transfers |
-| Durability | H2 mem caveat honest | PostgreSQL + backups |
-| Idempotency | Document double-submit risk | Transfer request ID unique constraint |
-| Isolation | Default + discussion | Explicit isolation tuning with DBA |
-
-**Lab focus:** `@Transactional` transfer; `ACC-FORCE-FAIL` rollback; ACID with evidence; AI review of TX advice.
-
----
-
 ## Prerequisites
 
-Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md), and Labs [25](../../module-25/lab25/LAB-25-GUIDE.md)–[26](../../module-26/lab26/LAB-26-GUIDE.md). Confirm:
+Prior labs: [25](../../module-25/lab25/LAB-25-GUIDE.md) · [26](../../module-26/lab26/LAB-26-GUIDE.md).
+
+Confirm (Lab 0 tools assumed):
 
 * JDK 21; Maven; Spring Boot 3.x
 * Layered service/repository skills from Lab 25
@@ -176,66 +136,7 @@ Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%
 ```bash
 java -version
 mvn -version
-git --version
-pwd
-ls ~/java-bootcamp/examples
 ```
-
----
-
-## Suggested Project Files
-
-```text
-~/java-bootcamp/examples/lab27-crm/
-├── src/
-│   ├── main/
-│   │   ├── java/com/northstar/crm/
-│   │   │   ├── CrmApplication.java
-│   │   │   ├── controller/TransferController.java
-│   │   │   ├── service/TransferService.java
-│   │   │   ├── repository/
-│   │   │   │   ├── AccountRepository.java
-│   │   │   │   └── TransactionLogRepository.java
-│   │   │   ├── entity/
-│   │   │   │   ├── Customer.java
-│   │   │   │   ├── Account.java
-│   │   │   │   └── TransactionLog.java
-│   │   │   └── exception/
-│   │   │       ├── InsufficientFundsException.java
-│   │   │       └── AccountNotFoundException.java
-│   │   └── resources/
-│   │       ├── application.yml
-│   │       ├── application-dev.yml   (if continuing Lab 26)
-│   │       └── data.sql             (optional seed)
-│   └── test/java/com/northstar/crm/service/
-│       └── TransferServiceTest.java
-├── copilot-notes/
-│   └── ai-tx-review.md
-├── docs/
-│   └── acid-notes.md
-├── notes/screenshots/
-├── pom.xml
-├── .gitignore
-└── README.md
-```
-
-Ignore `target/`, local env files, DB volumes, tokens, and passwords.
-
----
-
-## Key ideas (skim — no write-up)
-
-Skim these ideas before coding. **No separate write-up required** (you will apply them in the Steps).
-
-1. Transfer flow: HTTP → transactional service → two account updates + log
-2. Trust boundary: amounts, account ownership, correlation ID
-3. Success/failure contracts (HTTP + ledger appearance after failure)
-4. Stable account IDs vs transfer idempotency keys
-5. Retry risks after network timeout (double spend)
-6. H2 local shortcut vs PostgreSQL production isolation/durability
-
----
-
 
 ## Worked example (read before you code)
 
@@ -516,7 +417,7 @@ mvn -q test
 
 **Why:** Ledger support needs insufficient-funds and double-submit stories, not only the force flag.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Capture before/after balances and Surefire under `notes/screenshots/lab-27/`. Ensure `git status` clean of `target/` and secrets.
+**Do this:** Complete Failure Experiments. Capture before/after balances and Surefire under `notes/screenshots/lab-27/`. Ensure `git status` clean of `target/` and secrets.
 
 **Expected result:** ≥3 experiments; dual green tests; ACID + rollback evidence packaged.
 
@@ -592,40 +493,6 @@ logging:
     com.northstar.crm: INFO
 ```
 
-### Seed (`data.sql`)
-
-```sql
-INSERT INTO ACCOUNT (ACCOUNT_ID, CUSTOMER_ID, BALANCE, STATUS) VALUES
- ('ACC-1001-MAIN', 'CUS-1001', 1000.00, 'ACTIVE'),
- ('ACC-1001-LOYALTY', 'CUS-1001', 100.00, 'ACTIVE'),
- ('ACC-1002-MAIN', 'CUS-1002', 250.00, 'ACTIVE');
-```
-
-### Transfer core
-
-```java
-@Transactional
-public TransactionLog transfer(String fromId, String toId,
-                               BigDecimal amount, String correlationId) {
-  // debit, credit, log — throw on ACC-FORCE-FAIL / business failure → rollback
-}
-```
-
-### Rollback test excerpt
-
-```java
-@Test
-void transfer_rollsBack_whenForceFail() {
-  BigDecimal before = accounts.findById("ACC-1001-MAIN").orElseThrow().getBalance();
-  assertThrows(IllegalStateException.class,
-      () -> transferService.transfer(
-          "ACC-1001-MAIN", "ACC-FORCE-FAIL",
-          new BigDecimal("10.00"), "lab-request-001"));
-  assertEquals(0, before.compareTo(
-      accounts.findById("ACC-1001-MAIN").orElseThrow().getBalance()));
-}
-```
-
 ### Commands
 
 ```bash
@@ -643,47 +510,6 @@ mvn -q test
 mvn -q test
 git status
 ```
-
-### Evidence checklist
-
-```text
-[ ] Seeds: MAIN 1000 / LOYALTY 100 / Ravi 250 (pre-demo or reset)
-[ ] Happy transfer → MAIN 950 / LOYALTY 150 + log with lab-request-001
-[ ] ACC-FORCE-FAIL → MAIN unchanged + no success log
-[ ] Insufficient funds leaves destination unchanged
-[ ] @Transactional on TransferService (not controller)
-[ ] ACID table cites curls/balances + H2 durability caveat
-[ ] Tests assert post-failure balances
-[ ] lab27-001 AI TX review or manual N/A
-[ ] mvn test twice identical
-```
-
-### Class map
-
-| Class | Role |
-| ----- | ---- |
-| `TransferService` | `@Transactional` unit of work |
-| `TransferController` | HTTP adapter only |
-| `AccountRepository` | Account persistence |
-| `TransactionLogRepository` | Transfer audit row |
-| `TransferServiceTest` | Happy + rollback gate |
-| `ai-tx-review.md` | AI TX advice audit |
----
-
-## Manual Verification
-
-1. Seeds show MAIN 1000 / LOYALTY 100 / Ravi 250 before demos (or known reset).
-2. Happy transfer MAIN→LOYALTY updates both balances.
-3. `TransactionLog` stores `lab-request-001`.
-4. `ACC-FORCE-FAIL` returns error and leaves MAIN unchanged.
-5. No success log row for forced failure.
-6. Insufficient funds leaves destination unchanged.
-7. `@Transactional` lives on service, not controller.
-8. ACID section cites lab evidence + H2 durability caveat.
-9. Two consecutive `mvn test` runs match.
-10. AI review exists if Copilot was used; no secrets in Git.
-
----
 
 ## Failure Experiments
 
@@ -707,8 +533,8 @@ git status
 | Seeds missing | `data.sql` timing | Defer datasource init / runner |
 | `@Transactional` ignored | Not public / wrong bean | Public method on Spring bean |
 | Controllers “own” TX | Misplaced annotation | Move to service |
-
----
+| Working in `module-27-exercises` for the lab | Wrong project | Lab lives in `examples/lab27-crm` |
+| AI draft catches Exception and returns null | Swallowed failure | Rethrow unchecked; keep rollback |
 
 ## Security and Production Review
 
@@ -733,14 +559,6 @@ git status
 ```
 
 **Keep `lab27-crm`**—Lab 28 secures transfer and customer APIs.
-
----
-
-## Expected Deliverables
-
-Same checklist as [What you'll submit](#what-youll-submit-read-this-first) at the top. You are done when those items are complete and the Implementation Checkpoints pass.
-
-Do **not** submit `target/`, secrets, or a verbatim instructor `solution/`.
 
 ---
 
@@ -771,26 +589,3 @@ Write **1–3 sentence** answers (not essays):
 ---
 
 
-## Bonus Challenges
-
-Optional — only after core deliverables pass. Pick at most one if time is short.
-
-
-1. Unique `transferRequestId` constraint + conflict response.
-2. Structured correlation logging without PII.
-3. Readiness vs liveness including DB health.
-
----
-
-
-## Instructor Notes
-
-* **Live probe:** Show before/after balances for happy path and `ACC-FORCE-FAIL`; ask where `@Transactional` lives; ask which AI TX suggestion was rejected.
-* **Assess:** Real rollback (not just exception); log absence on failure; ACID evidence; service-layer boundary.
-* **Continuity:** Prefer `examples/lab27-crm`. Keep account and customer fixtures. Lab 28 should wrap security without rewriting transfer math.
-* **Common pitfalls:** Self-invocation; catching Exception and returning null; `@Transactional` on controller; H2 mem durability oversold; force-fail destination accidentally persisted as a real account row without throw.
-* **Timing:** Timed path ~45 minutes with starter; full path remains 4–5 hours. Keep starter TODOs as the in-class core; remaining GUIDE steps are homework/extended depth.
-
----
-
-*End of Lab 27 — Transaction Management with AI Assistance: Northstar CRM Transfers. Keep `lab27-crm` for Lab 28 and portfolio evidence.*

@@ -1,20 +1,45 @@
 # Exercise 2 — Sargability
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 12–15 minutes |
+| **Checkpoint** | **C** (after slides 198–200) |
+| **Deliverable** | `notes/lab38-sargability.md` |
+| **Fixtures** | Preserve CUS-1001 / CUS-1002 · Lab 37 schema |
+
+### What you will learn
+
+Contrast wrapping columns (TRUNC/UPPER) vs sargable range/equality predicates.
+
+### Enterprise context
+
+Non-sargable predicates disable index use and force scans.
+
+### Predict
+
+WHERE TRUNC(created_at) = CURRENT_DATE — rewrite how?
+
+### Debug
+
+WHERE LOWER(email) = ... without functional index — plan?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Function on column left side | Rewrite to range or store normalized column |
+| Leading wildcard LIKE '%x' | Often not index-friendly |
+
 **Module 38** · Architecture exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab38-sargability.md` — classify predicates as sargable or not for PostgreSQL.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-38-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-05-sargability.md` (this file in the course repo) |
 | Your notes file | `notes/lab38-sargability.md` |
 
 ## Worked example (read first)

@@ -1,20 +1,32 @@
 # Exercise 3 — Phantom Annotation Hunt
 
-**Module 10** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
+**Module 10** · Checkpoint C · Exercises 1–6 Pass then Lab 10
 
-## Goal
+## Activity card
 
-Create `notes/phantom-annotation-notes.md` and flag Copilot-style annotations that do not belong in a plain Java prep sketch.
+| | |
+| --- | --- |
+| **Objective** | Hunt phantom annotations and invented APIs in sample AI output |
+| **Skills practiced** | AI risk detection, human review |
+| **Expected outcome** | notes/phantom-annotation-notes.md listing rejects |
+| **Estimated time** | 10–12 minutes |
+| **File to create** | `examples/module-10-exercises/` → notes/phantom-annotation-notes.md |
+| **Checkpoint** | C (after slides 70–71) |
+
+## What you will learn
+
+- Phantom annotations compile only if you add the wrong dependencies
+- Invented methods are a common Copilot failure mode
+- Reject is a valid engineering action
+
+**Enterprise context:** Security reviews treat unexplained framework imports as defects, not features.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-10-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-03-phantom-annotation-hunt.md` (this file in the course repo) |
 | Your notes file | `notes/phantom-annotation-notes.md` |
 
 ## Reference
@@ -57,6 +69,19 @@ Note: SOAP and Spring Boot hosting are not in this pre-lab (before Labs 13/24).
 ## Expected result
 
 A phantom-annotation checklist in `notes/phantom-annotation-notes.md` tied to JDK 21 / Maven honesty.
+
+
+## Debug / design challenge
+
+Find @Column or jakarta.persistence in a snippet — remove and restate constraints.
+
+## Predict the Output / Behavior
+
+Does accepting @Entity without JPA on the classpath break compile?
+
+## Troubleshooting
+
+If Copilot is unavailable, complete the notes analysis manually — do not block on license issues for pre-lab Pass.
 
 ## Pass criteria
 

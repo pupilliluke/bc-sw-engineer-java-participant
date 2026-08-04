@@ -1,13 +1,28 @@
 # Exercise 7 — String vs StringBuilder
 
-**Module 4** · Pre-lab practice · finish all 7 Pass, then [`../lab4/LAB-4-GUIDE.md`](../lab4/LAB-4-GUIDE.md)  
+**Module 4** · Pre-lab practice · Checkpoint D · all 7 then lab
 **Folder:** `examples/module-04-exercises/` ([setup](EXERCISES-INDEX.md))
 
 ![String Concatenation Compared with StringBuilder](../../../lab_diagrams/mod04-ex07-string-vs-builder.png)
 
-## Goal
+## Activity card
 
-Create `StringBuilderComparison.java` and compare repeated immutable `String` concatenation with mutable `StringBuilder`.
+| | |
+| --- | --- |
+| **Objective** | Compare String + in a loop vs StringBuilder timing/allocation pattern |
+| **Skills practiced** | allocation churn, microbench caution, StringBuilder |
+| **Expected outcome** | Notes show StringBuilder is cheaper for repeated appends |
+| **Estimated time** | 12–15 minutes |
+| **File to create** | `examples/module-04-exercises/StringBuilderComparison.java` |
+| **Checkpoint** | D (after slides 124–126) |
+
+## What you will learn
+
+- String + in loops creates many temporaries
+- Measure patterns, not absolute nanos across machines
+- Prefer StringBuilder for heavy concatenation
+
+**Enterprise context:** Log/report builders in batch jobs avoid String + in hot loops.
 
 ## Worked example (read first)
 
@@ -22,6 +37,9 @@ Then follow **Steps** to create your own file.
 
 
 ## Starter (fill in the TODOs)
+
+Optional: copy from [`starter/`](starter/README.md). Or paste:
+
 
 Paste this skeleton, then replace each `// TODO` with working code. Do **not** leave TODOs in your finished file.
 
@@ -126,7 +144,14 @@ Add to `notes.md`:
 
 Both methods produce 50,000 characters. Across repeated runs, `StringBuilder` should usually be substantially faster for this workload.
 
-## If it fails
+
+## Predict the Output / Behavior
+
+Which approach creates more temporary String objects?
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | ------- | --- |

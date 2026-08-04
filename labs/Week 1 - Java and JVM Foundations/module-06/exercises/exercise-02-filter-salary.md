@@ -1,16 +1,30 @@
 # Exercise 2 — Filter Employees by Salary
 
-**Module 6** · Pre-lab practice · finish Exercises 1–7 Pass, then OS how-to → [`../lab6/LAB-6-GUIDE.md`](../lab6/LAB-6-GUIDE.md)
+**Module 6** · Pre-lab practice · Checkpoint B · Exercises 1–7 Pass then Lab 6
 **Folder:** `examples/module-06-exercises/` ([setup](EXERCISES-INDEX.md))
 
 ![Java Streams: Filtering Employees by Salary](../../../lab_diagrams/mod06-ex02-filter-salary.png)
 
 > **Builds on Exercise 1:** Reuse `Employee.java` and `EmployeeData.java`.
 
-## Goal
+## Activity card
 
-Create `FilterSalaryDemo.java` and use `filter` to select employees whose
-salary is greater than 60,000 without changing the source list.
+| | |
+| --- | --- |
+| **Objective** | Filter employees with salary > 60_000 using stream().filter(...).toList() |
+| **Skills practiced** | Stream source, intermediate filter, terminal toList |
+| **Expected outcome** | High earners listed; source list size unchanged |
+| **Estimated time** | 12–15 minutes |
+| **File to create** | `examples/module-06-exercises/` → FilterSalaryDemo.java |
+| **Checkpoint** | B (after slides 158–159) |
+
+## What you will learn
+
+- filter keeps elements that match a Predicate
+- Intermediate ops are lazy until a terminal op runs
+- Source collections are not mutated by a normal stream pipeline
+
+**Enterprise context:** Payroll dashboards filter active / high-band employees without cloning HR master lists.
 
 ## Worked example (read first)
 
@@ -147,7 +161,18 @@ Restore `> 60_000` when finished.
 The filtered list contains Alice, Bob, Charlie, and Diana. Evan is excluded,
 and the original source list still contains five employees.
 
-## If it fails
+
+## Debug / design challenge
+
+Accidentally call employees.removeIf(...) — restore stream filter and prove source size stays 5.
+
+## Predict the Output / Behavior
+
+For the sample data, how many employees have salary > 60_000?
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | ------- | --- |

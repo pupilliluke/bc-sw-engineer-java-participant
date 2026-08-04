@@ -1,20 +1,45 @@
 # Exercise 3 — Define Promotion Gates
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 12–15 minutes |
+| **Checkpoint** | **B** (after slides 128–131) |
+| **Deliverable** | `notes/lab44-promotion-gates.md` |
+| **Fixtures** | CUS-1001/CUS-1002 synthetic · Lab 43 digest · no secrets in artifact |
+
+### What you will learn
+
+Define objective gates for test → staging → prod (verify, smoke, approval).
+
+### Enterprise context
+
+Each environment has different risk; gates must be measurable, not vibes.
+
+### Predict
+
+What blocks staging→prod if smoke fails on CUS-1001?
+
+### Debug
+
+Rebuilding on the deploy host during promote — risk?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Subjective GO only | Add checklist evidence fields |
+| Skipping staging | Require staging smoke before prod candidate |
+
 **Module 44** · Architecture exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab44-promotion-gates.md` — write measurable gates for test → staging → prod.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-44-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-03-promotion-gates.md` (this file in the course repo) |
 | Your notes file | `notes/lab44-promotion-gates.md` |
 
 ## Worked example (read first)

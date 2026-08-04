@@ -1,10 +1,25 @@
 # Exercise 4 — Assign Layer Responsibilities
 
-**Module 8** · Analysis exercise · [setup](EXERCISES-INDEX.md)
+**Module 8** · Checkpoint C · Exercises 1–6 Pass then Lab 8
 
-## Goal
+## Activity card
 
-Create `layer-responsibilities.md` and assign each CRM task to the layer that should own it.
+| | |
+| --- | --- |
+| **Objective** | Assign responsibilities to controller, service, and repository layers |
+| **Skills practiced** | Layered architecture boundaries |
+| **Expected outcome** | layer-responsibilities.md with clear ownership |
+| **Estimated time** | 12–15 minutes |
+| **File to create** | `examples/module-08-exercises/` → layer-responsibilities.md |
+| **Checkpoint** | C (after slides 10–14) |
+
+## What you will learn
+
+- Controller adapts input/output; service owns business rules
+- Repository owns persistence access details
+- Cross-cutting concerns (logging/config) should not dump logic into every layer
+
+**Enterprise context:** Audit and change control need a clear owner when a customer update rule changes.
 
 ## Layer map
 
@@ -87,6 +102,19 @@ Write 3–5 sentences covering:
 ## Expected result
 
 Every responsibility has one primary home, and the repaired flow follows controller → service → repository.
+
+
+## Debug / design challenge
+
+Put SQL string building in the controller — rewrite ownership correctly.
+
+## Predict the Output / Behavior
+
+Which layer should enforce 'status must be ACTIVE or INACTIVE'?
+
+## Troubleshooting
+
+See steps above if something does not compile or match the worked example.
 
 ## Pass criteria
 

@@ -1,20 +1,45 @@
 # Exercise 6 — Release Readiness Scorecard
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 8–10 minutes |
+| **Checkpoint** | **D** (after slides 112–115) |
+| **Deliverable** | `notes/lab51-prep-checklist.md` |
+| **Fixtures** | CUS-1001 smoke · 401/403 negatives · no secrets in Git |
+
+### What you will learn
+
+Score release readiness: security, pipeline, image, deploy, smoke, rollback, residual risks.
+
+### Enterprise context
+
+Lab 52 defends with this evidence pack—owners required on accepted risks.
+
+### Predict
+
+Can you GO with undocumented residual Critical findings?
+
+### Debug
+
+Starting Lab 52 slides as this warmup — park?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| No residual risk owner | Name owner + expiry |
+| Secrets in evidence | Redact; rotate |
+
 **Module 51** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab51-prep-checklist.md` — confirm prior notes exist and you are ready for Lab 51 without finishing it now.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-51-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-06-release-readiness.md` (this file in the course repo) |
 | Your notes file | `notes/lab51-prep-checklist.md` |
 
 ## Worked example (read first)

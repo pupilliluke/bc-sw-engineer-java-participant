@@ -1,20 +1,45 @@
 # Exercise 4 — Circuit States
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 12–15 minutes |
+| **Checkpoint** | **B** (after slides 60–64) |
+| **Deliverable** | `notes/lab32-circuit-states.md` |
+| **Fixtures** | CUS-1001 Account Profile · instance `accountProfile` |
+
+### What you will learn
+
+Describe CLOSED, OPEN, HALF_OPEN and what CRM traffic does in each.
+
+### Enterprise context
+
+OPEN must fail fast so WireMock (dependency) is not hammered.
+
+### Predict
+
+In OPEN, do outbound calls still hit the Account API?
+
+### Debug
+
+CB never opens in tests — wrong instance name?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Forgot half-open | HALF_OPEN probes before returning to CLOSED |
+| Confused with Kafka lag | Circuit is for outbound HTTP calls here |
+
 **Module 32** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab32-circuit-states.md` — document closed, open, and half-open for the Account Profile breaker.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-32-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-02-circuit-states.md` (this file in the course repo) |
 | Your notes file | `notes/lab32-circuit-states.md` |
 
 ## Worked example (read first)

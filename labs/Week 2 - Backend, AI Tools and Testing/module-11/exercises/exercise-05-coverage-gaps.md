@@ -1,20 +1,32 @@
 # Exercise 5 — Coverage Gaps Map
 
-**Module 11** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
+**Module 11** · Checkpoint D · Exercises 1–6 Pass then Lab 11
 
-## Goal
+## Activity card
 
-Create `notes/lab11-coverage-gaps.md` that names what Lab 11 prep proves versus what Labs 17–18 deepen later.
+| | |
+| --- | --- |
+| **Objective** | Map what Lab 11 covers vs what Labs 17–18 will deepen |
+| **Skills practiced** | Coverage honesty, curriculum boundaries |
+| **Expected outcome** | notes/lab11-coverage-gaps.md |
+| **Estimated time** | 8–10 minutes |
+| **File to create** | `examples/module-11-exercises/` → notes/lab11-coverage-gaps.md |
+| **Checkpoint** | D (after slides 89) |
+
+## What you will learn
+
+- Lab 11 is a bridge — not 100% coverage theater
+- JUnit depth and Mockito isolation expand later
+- Name gaps so Copilot cannot claim completeness
+
+**Enterprise context:** Honest coverage maps prevent false audit claims from AI suites.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-11-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-05-coverage-gaps.md` (this file in the course repo) |
 | Your notes file | `notes/lab11-coverage-gaps.md` |
 
 ## Worked example (read first)
@@ -83,7 +95,18 @@ File separates **Lab 11** vs **Lab 17** vs **Lab 18** — no “Copilot = 100% c
 
 `notes/lab11-coverage-gaps.md` with a clear boundary map between Lab 11 and Labs 17–18.
 
-## If it fails
+
+## Debug / design challenge
+
+List one gap Lab 18 will own that Lab 11 only samples.
+
+## Predict the Output / Behavior
+
+Is 'Copilot wrote 8 tests' enough proof of production readiness?
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | --- | --- |

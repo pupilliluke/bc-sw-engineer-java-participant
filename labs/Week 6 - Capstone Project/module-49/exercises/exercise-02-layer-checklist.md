@@ -1,20 +1,45 @@
 # Exercise 2 — Controller-Service-Repository Checklist
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **A** (after slides 35–41) |
+| **Deliverable** | `notes/lab49-layer-checklist.md` |
+| **Fixtures** | CUS-1001/CUS-1002 · lab-request-001 · CUS-9999 not-found |
+
+### What you will learn
+
+Checklist DTO validation, service transactions, and repository boundaries.
+
+### Enterprise context
+
+Controllers stay thin; business rules and transactions live in the service.
+
+### Predict
+
+Where should Bean Validation annotations live?
+
+### Debug
+
+Entity leaked in JSON response — fix?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Fat controllers | Move logic to service |
+| Weaken validation for demos | Keep constraints; fix tests |
+
 **Module 49** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab49-layer-checklist.md` — list responsibilities per layer for the chosen slice.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-49-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-02-layer-checklist.md` (this file in the course repo) |
 | Your notes file | `notes/lab49-layer-checklist.md` |
 
 ## Worked example (read first)

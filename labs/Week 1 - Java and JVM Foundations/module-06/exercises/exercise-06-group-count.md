@@ -1,14 +1,28 @@
 # Exercise 6 — Count Employees by Department
 
-**Module 6** · Pre-lab practice · finish Exercises 1–7 Pass, then OS how-to → [`../lab6/LAB-6-GUIDE.md`](../lab6/LAB-6-GUIDE.md)
+**Module 6** · Pre-lab practice · Checkpoint D · Exercises 1–7 Pass then Lab 6
 **Folder:** `examples/module-06-exercises/` ([setup](EXERCISES-INDEX.md))
 
 ![Java Streams: Grouping and Counting by Department](../../../lab_diagrams/mod06-ex06-group-count.png)
 
-## Goal
+## Activity card
 
-Create `DepartmentCountDemo.java`. Group employees by department, count each
-group, and print the report in deterministic alphabetical key order.
+| | |
+| --- | --- |
+| **Objective** | Count employees per department with Collectors.groupingBy + counting |
+| **Skills practiced** | Collectors.groupingBy, counting, Map results |
+| **Expected outcome** | Department counts print (HR/IT/Finance) |
+| **Estimated time** | 12–15 minutes |
+| **File to create** | `examples/module-06-exercises/` → DepartmentCountDemo.java |
+| **Checkpoint** | D (after slides 163–166) |
+
+## What you will learn
+
+- groupingBy builds a Map from a classifier function
+- counting is a downstream collector
+- Collectors turn streams into useful summary structures
+
+**Enterprise context:** Org charts and headcount dashboards group roster rows by department or cost center.
 
 ## Worked example (read first)
 
@@ -144,7 +158,18 @@ stable.
 
 The report prints Finance 1, HR 2, and IT 2 in alphabetical department order.
 
-## If it fails
+
+## Debug / design challenge
+
+Forgot Collectors import — add import java.util.stream.Collectors;
+
+## Predict the Output / Behavior
+
+How many employees are in IT in the sample dataset?
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | ------- | --- |

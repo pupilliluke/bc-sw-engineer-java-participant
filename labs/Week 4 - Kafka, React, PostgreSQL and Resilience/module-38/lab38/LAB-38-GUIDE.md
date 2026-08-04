@@ -1,8 +1,6 @@
 # Lab 38: PostgreSQL SQL and CRM Query Performance — DBMS_XPLAN, Indexes, Sargable Predicates
 
 **Module:** 38 — PostgreSQL SQL and CRM Query Performance  
-**Lab folder:** `labs/Week 4 - Kafka, React, PostgreSQL and Resilience/module-38/lab38/`  
-**Difficulty:** Intermediate  
 **Duration:** ~45 minutes (timed path with starter) · Full path: 4–5 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
@@ -12,11 +10,38 @@
 | Windows | [LAB-38-WINDOWS.md](LAB-38-WINDOWS.md) |
 | macOS | [LAB-38-MACOS.md](LAB-38-MACOS.md) |
 
-> **Environment reminder:** Complete the [Module 38 pre-lab exercises](../exercises/EXERCISES-INDEX.md) after the slides and before this lab.  Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **psql** or pgAdmin and instructor **shared PostgreSQL** credentials. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
+---
+
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | ~45 min timed · full path 4–5 h |
+| **Checkpoint** | **E** (after Ex 1→2→4→5→3→6) |
+| **Must prove** | Baseline plan · index re-measure · keyset paging note · report.md |
+| **Hard gate** | Pre-lab Pass · Lab 37 schema · preserve CUS-1001/CUS-1002 |
+
+### What you will learn
+
+Tune CRM SQL with evidence: EXPLAIN before/after, selective indexes, sargable predicates, paging.
+
+### Enterprise context
+
+No “add index because it felt slow” — every retained index must earn its keep.
+
+### Predict
+
+Deep `OFFSET 50000` for CRM lists — what latency/shape problem appears?
+
+### Debug
+
+Index exists but plan still Seq Scan — sargability or stats first?
 
 ---
 
 ## 45-minute timed path (use starter)
+
+> **Pacing reminder:** [PACING.md](../PACING.md) checkpoint **E**. Homework: join compare + index challenge cycle + full report.md.
 
 In class, use the starter templates so the **core** objectives fit **~45 minutes**. The full Steps below remain for homework / extended depth.
 
@@ -33,20 +58,9 @@ In class, use the starter templates so the **core** objectives fit **~45 minutes
 
 ---
 
-## How to follow this lab
-
-1. **In class:** prefer [`starter/README.md`](starter/README.md) when a timed path exists — fill `// TODO`, run the smoke test (~45 min).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
-3. Work only under your `java-bootcamp/examples/…` folder (not inside this `labs/` clone unless a step says otherwise).
-4. Read **Worked example** once, then for each **Step**: **Why** → **Do this** → confirm **Expected result**.
-5. When stuck, use **Troubleshooting** / **Failure Experiments** before asking for help.
-6. Capture evidence under `notes/screenshots/` (redact secrets). Mark Pass/Fail in your own notes — GitHub does not support clickable checkboxes.
-
----
-
 ## What you'll submit (read this first)
 
-Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+Keep this checklist visible while you work.
 
 | # | Deliverable |
 | - | ----------- |
@@ -67,18 +81,6 @@ Keep this checklist visible while you work. Full detail is under [Expected Deliv
 
 This Module 38 lab teaches **evidence-based PostgreSQL tuning** for the **Customer Management Platform**: generate volume, gather statistics, capture **actual** plans with `DBMS_XPLAN`, create selective indexes, rewrite non-sargable predicates, compare join strategies, implement deterministic and **keyset** paging, and write a tuning report that another engineer can reproduce.
 
-**Purpose.** Leadership freezes a performance gate before Spring Data JPA (Lab 39): no “add index because it felt slow” without before/after plans, buffer counts, and median timings. Guesswork indexes waste storage and slow writes; this lab makes you earn every retained index.
-
-**What you build (this lab).** Copy Lab 37 scripts into `lab38-crm`; generate ≥50k customers with skewed status; gather `DBMS_STATS`; baseline email lookup with `gather_plan_statistics` + `DISPLAY_CURSOR ALLSTATS LAST`; add unique email and status/created indexes; rewrite `TRUNC(created_at)` to a half-open range; compare nested loops vs hash join on customer→account; implement offset and keyset paging; challenge each index by dropping and re-measuring; publish `database/performance/report.md`.
-
-**What success looks like.** Under `~/java-bootcamp/examples/lab38-crm/` you have scripts `01`–`05`, a report with plan hash / buffers / median time / write cost, and you can explain why keyset paging beats deep `OFFSET` for CRM list APIs.
-
-**Depends on Lab 37.** Need `CUSTOMER` / `ACCOUNT` tables, `email_normalized`, `status`, `created_at`, and seeds for `CUS-1001` / `CUS-1002`. Finish Lab 37 first if the schema is incomplete.
-
-**CRM connection.** Fixtures `CUS-1001` (Amina) / `CUS-1002` (Ravi) / correlation `lab-request-001`. Lab 39 will map these tables with Flyway + JPA—keep column names and indexes that the repository and list APIs will use.
-
----
-
 ## Learning Objectives
 
 After completing this lab, you will be able to:
@@ -88,13 +90,6 @@ After completing this lab, you will be able to:
 * Interpret scans, joins, cardinality, and buffer gets
 * Create indexes for measured queries (not speculative ones)
 * Rewrite non-sargable predicates (`TRUNC` on columns) into range forms
-* Compare nested-loops vs hash-join strategies by selectivity
-* Implement deterministic `OFFSET`/`FETCH` and efficient **keyset** paging
-* Write an evidence-based tuning report with before/after metrics
-* Challenge every index: drop, re-plan, keep only justified indexes
-* Keep secret-free SQL and synthetic fixtures only
-
----
 
 ## Business Scenario
 
@@ -119,7 +114,6 @@ Use these examples consistently:
 ---
 
 ## Architecture Context
-
 ### NOW (this lab)
 
 ```mermaid
@@ -132,36 +126,11 @@ flowchart TB
   PG --> Report["database/performance/report.md"]
 ```
 
-### Lab flow (mermaid)
-
-```mermaid
-flowchart TD
-    A["Copy lab37 -> lab38<br/>+ performance scripts"] --> B["Generate ≥50k<br/>skewed customers"]
-    B --> C["DBMS_STATS<br/>+ distribution"]
-    C --> D["Baseline plan<br/>DBMS_XPLAN ALLSTATS"]
-    D --> E["Email unique index<br/>+ status list index"]
-    E --> F["Sargable date<br/>+ join compare"]
-    F --> G["Offset + keyset<br/>paging"]
-    G --> H["Challenge indexes<br/>drop / remeasure"]
-    H --> I["Tuning report<br/>+ evidence pack"]
-```
-
-### Architecture NOW vs LATER
-
-| Aspect | Lab 38 (NOW) | Lab 39 / Spring |
-| ------ | ------------ | --------------- |
-| Access | psql scripts, manual plans | JPA repositories + Flyway |
-| Performance proof | DBMS_XPLAN + report.md | IT query counts + paging APIs |
-| Indexes | Created/challenged in SQL | Assumed by Hibernate; keep names |
-| Paging | SQL OFFSET + keyset | Spring `Pageable` + later keyset API |
-
-**Lab focus:** indexes, sargable predicates, statistics, execution plans, joins, paging, and evidence-based tuning—not Spring yet.
-
----
-
 ## Prerequisites
 
-Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md), and [Lab 37](../../module-37/lab37/LAB-37-GUIDE.md). Confirm:
+Prior labs: [Lab 37](../../module-37/lab37/LAB-37-GUIDE.md).
+
+Confirm (Lab 0 tools assumed):
 
 * PostgreSQL from Lab 37 running (`crm database / assigned schema`)
 * psql or pgAdmin connected as schema owner / least-priv user
@@ -172,59 +141,8 @@ Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%
 
 ```bash
 java -version
-docker --version
-docker ps
-sql -version 2>/dev/null || echo "use pgAdmin / sqlplus"
-git --version
-pwd
-ls ~/java-bootcamp/examples
+mvn -version
 ```
-
-Confirm PostgreSQL is healthy (Lab 37 container) before generating volume.
-
----
-
-## Suggested Project Files
-
-Prefer a self-contained lab tree under examples (SQL-first). If you also integrate with the shared platform repo later, keep scripts portable:
-
-```text
-~/java-bootcamp/examples/lab38-crm/
-├── database/
-│   ├── ddl/                         (from Lab 37 — do not silently rewrite)
-│   └── performance/
-│       ├── 01_generate_data.sql
-│       ├── 02_baseline.sql
-│       ├── 03_indexes.sql
-│       ├── 04_optimized.sql
-│       ├── 05_cleanup_indexes.sql
-│       └── report.md
-├── notes/screenshots/
-├── docs/
-│   └── performance-concepts.md
-├── .gitignore
-└── README.md
-```
-
-Optional platform path note: if your cohort shares `customer-management-platform/`, place the same files under `database/performance/` there—do **not** commit PostgreSQL passwords or dumps.
-
-Ignore `*.dmp`, volume mounts with secrets, IDE metadata, tokens, and passwords.
-
----
-
-## Key ideas (skim — no write-up)
-
-Skim these ideas before coding. **No separate write-up required** (you will apply them in the Steps).
-
-1. Main flow: how a CRM email lookup and ACTIVE list query hit PostgreSQL
-2. Trust boundary: who may run DDL/DML vs who runs SELECT (app least-priv)
-3. Success/failure contracts: plan must show expected access path; wrong cardinality is a “failure”
-4. Stable fixtures (`CUS-1001`) vs synthetic bulk generators
-5. Idempotency of `GATHER_TABLE_STATS` and recreate-from-script indexes
-6. Why measure actual rows/buffers, not only EXPLAIN without execute
-
----
-
 
 ## Worked example (read before you code)
 
@@ -270,7 +188,7 @@ mkdir -p database/performance docs ~/java-bootcamp/notes/screenshots/lab-38
 
 Create empty script stubs `01_generate_data.sql` … `05_cleanup_indexes.sql` and `report.md` headings (Baseline / After indexes / Joins / Paging / Retained indexes).
 
-**Expected result:** Tree matches Suggested Project Files; Lab 37 DDL still present.
+**Expected result:** Tree matches starter / Activity card expected files; Lab 37 DDL still present.
 
 **If it fails:** Missing `lab37-crm` → finish Lab 37 first. Accidental overwrite of DDL → restore from Lab 37 copy.
 
@@ -564,7 +482,7 @@ Capture plan excerpts under `notes/screenshots/lab-38/`.
 
 **Why:** Tuning culture fails when people cannot reproduce regressions.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Save sanitized plan text (not password prompts). Confirm `git status` excludes dumps and credentials.
+**Do this:** Complete Failure Experiments. Save sanitized plan text (not password prompts). Confirm `git status` excludes dumps and credentials.
 
 **Expected result:** ≥3 experiments documented; scripts runnable; evidence pack complete.
 
@@ -618,40 +536,6 @@ _Mark **Pass** or **Fail** in your lab notes._
 
 ## Reference Commands, Configuration, and Code
 
-### Plan capture pattern
-
-```sql
-ALTER SESSION SET statistics_level = ALL;
-SELECT /*+ gather_plan_statistics */ customer_id, public_id, full_name
-FROM customer WHERE email_normalized = :email;
-SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY_CURSOR(NULL, NULL,
-  'ALLSTATS LAST +PREDICATE'));
-```
-
-### Index set (justify each)
-
-```sql
-CREATE UNIQUE INDEX ux_customer_email_norm ON customer (email_normalized);
-CREATE INDEX ix_customer_status_created ON customer (status, created_at DESC, customer_id DESC);
-CREATE INDEX ix_account_customer ON account (customer_id);
-```
-
-### Sargable date range
-
-```sql
-SELECT customer_id, public_id, created_at FROM customer
-WHERE created_at >= TIMESTAMP '2026-07-01 00:00:00'
-  AND created_at <  TIMESTAMP '2026-07-02 00:00:00'
-ORDER BY created_at, customer_id;
-```
-
-### Keyset predicate (DESC list)
-
-```sql
-AND (created_at < :last_created
-  OR (created_at = :last_created AND customer_id < :last_id))
-```
-
 ### Commands
 
 ```bash
@@ -660,34 +544,6 @@ cd ~/java-bootcamp/examples/lab38-crm
 ls database/performance
 git status
 ```
-
-### Artifact map
-
-| Artifact | Role |
-| -------- | ---- |
-| `01_generate_data.sql` | Volume + skew |
-| `02_baseline.sql` | Stats + baseline plans |
-| `03_indexes.sql` | Measured indexes |
-| `04_optimized.sql` | Sargable + join + paging |
-| `05_cleanup_indexes.sql` | Challenge cycle |
-| `report.md` | Evidence gate |
-
----
-
-## Manual Verification
-
-1. ≥50k customers loaded; fixtures `CUS-1001` / `CUS-1002` intact.
-2. Stats gathered after load (and after major index adds if needed).
-3. Baseline vs indexed email plans differ with lower buffers after unique index.
-4. ACTIVE list query measured with status-leading index evidence.
-5. Date filter rewritten without `TRUNC` on the indexed column.
-6. Selective join plan captured for `CUS-1001` (or documented bind).
-7. OFFSET pages deterministic; keyset pages have no dup/miss for static data.
-8. At least one index challenged with drop + remeasure notes.
-9. `report.md` includes plan hash, buffers, median time, write cost.
-10. No passwords, dumps, or real PII in the repo.
-
----
 
 ## Failure Experiments
 
@@ -712,8 +568,7 @@ git status
 | Out of space | 50k + indexes + Docker volume | Instructor-approved cleanup; do not wipe peers’ DBs |
 | “Fast enough” debate | No median/buffers | Re-run with `ALLSTATS LAST`; record numbers |
 | Missing Amina | Bulk load wiped seed | Re-insert `CUS-1001` / `CUS-1002` after load |
-
----
+| Prefer Oracle-only plan tools | Wrong primary path | Use PostgreSQL `EXPLAIN (ANALYZE, BUFFERS)` |
 
 ## Security and Production Review
 
@@ -737,14 +592,6 @@ git status
 Do not commit PostgreSQL password files, datapump dumps, or full plan HTML exports with connection strings.
 
 **Keep `lab38-crm`**—Lab 39 maps these tables with Spring Data JPA + Flyway and should preserve justified indexes.
-
----
-
-## Expected Deliverables
-
-Same checklist as [What you'll submit](#what-youll-submit-read-this-first) at the top. You are done when those items are complete and the Implementation Checkpoints pass.
-
-Do **not** submit `target/`, secrets, or a verbatim instructor `solution/`.
 
 ---
 
@@ -775,26 +622,3 @@ Write **1–3 sentence** answers (not essays):
 ---
 
 
-## Bonus Challenges
-
-Optional — only after core deliverables pass. Pick at most one if time is short.
-
-
-1. Histogram / column-group thought experiment on `status` skew—document only.
-2. Compare `INDEX SKIP SCAN` myths vs your actual plans.
-3. Measure index storage (`user_segments`) before/after.
-
----
-
-
-## Instructor Notes
-
-* **Live probe:** Ask the student to open a plan and point to A-Rows vs E-Rows mismatch before stats or after a bad predicate. Have them walk keyset vs deep offset numbers.
-* **Assess:** Actual `ALLSTATS` evidence, sargable rewrite, index challenge honesty, fixture continuity (`CUS-1001` / `CUS-1002`).
-* **Continuity:** Prefer `examples/lab38-crm`. Keep index and column names Lab 39 will map. Do not require Spring in this lab.
-* **Common pitfalls:** EXPLAIN-only without execute; `TRUNC` on columns; ORDER BY without tie-breaker; committing passwords; wiping Lab 37 seeds during bulk load.
-* **Timing:** Timed path ~45 minutes with starter; full path remains 4–5 hours. Bulk load + first plans often burn 60–90 minutes—urge early commit of `01`/`02` scripts.
-
----
-
-*End of Lab 38 — PostgreSQL SQL and CRM Query Performance. Keep `lab38-crm` for Lab 39 Spring Data JPA and portfolio evidence.*

@@ -1,8 +1,20 @@
 # Lab 10: GitHub Copilot Fundamentals for Java Developers — Northstar CRM
 
+> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 10 [pre-lab exercises 1–6](../exercises/EXERCISES-INDEX.md) (Pass in your notes; order **1 → 2 → 3 → 4 → 5 → 6**). Then open **one** OS how-to ([Windows](LAB-10-WINDOWS.md) · [macOS](LAB-10-MACOS.md)). In class, prefer the **45-minute timed path** with [`starter/`](starter/README.md); the **full path** is every Step below (homework / extended). Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
+
+## Activity card
+
+| | |
+| --- | --- |
+| **Objective** | Use Copilot with strong prompts to flesh plain-Java CRM domain code and keep a review log |
+| **Skills practiced** | Prompt constraints, reject phantoms, Accept/Reject/Edit logging, Maven compile smoke |
+| **Expected outcome** | `CUS-1001` ACTIVE + `CUS-1002` PROSPECT→ACTIVE; `copilot-notes/ai-review-notes.md` entries |
+| **Estimated time** | Timed path ~45 min · Full path 3–4 hours |
+| **Prerequisites** | Lab 0 · Lab 9 habits · Exercises 1–6 Pass · JDK 21 · Maven 3.9+ · Copilot (or instructor alternate) |
+| **Expected files** | `examples/lab10-crm/` + review log `copilot-notes/ai-review-notes.md` |
+| **Validation checkpoints** | Starter smoke test · GUIDE Implementation Checkpoints |
+
 **Module:** 10 — GitHub Copilot Fundamentals for Java Developers  
-**Lab folder:** `labs/Week 2 - Backend, AI Tools and Testing/module-10/lab10/`  
-**Difficulty:** Beginner–Intermediate  
 **Duration:** ~45 minutes (timed path with starter) · Full path: 3–4 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
@@ -12,7 +24,11 @@
 | Windows | [LAB-10-WINDOWS.md](LAB-10-WINDOWS.md) |
 | macOS | [LAB-10-MACOS.md](LAB-10-MACOS.md) |
 
-> **Environment reminder:** Complete the [Module 10 pre-lab exercises](../exercises/EXERCISES-INDEX.md) after the slides and before this lab — the index lists every notes filename (no need to dig through the deck). Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **GitHub Copilot** signed in. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Incremental build:** Prompt/review notes (Ex 1–6) → Lab 10 Copilot-assisted CRM domain + review log.
+
+> **Classroom pacing:** [`../PACING.md`](../PACING.md) (Checkpoints A–E).
+
+> **AI hygiene:** Restate “Java 21, no Spring, no JPA” in prompts. Reject `@Entity` / `@Id` / `@Column`. Never paste secrets or production PII.
 
 **Verified participant layout (Windows IntelliJ + PowerShell; Temurin JDK 21.0.11; Maven 3.9.9):**
 
@@ -46,20 +62,9 @@ In class, use the starter templates so the **core** objectives fit **~45 minutes
 | **Full (extended)** | see Duration | Every Step in this GUIDE |
 
 
-## How to follow this lab
-
-1. **In class:** prefer [`starter/README.md`](starter/README.md) when a timed path exists — fill `// TODO`, run the smoke test (~45 min).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
-3. Work only under your `java-bootcamp/examples/…` folder (not inside this `labs/` clone unless a step says otherwise).
-4. Read **Worked example** once, then for each **Step**: **Why** → **Do this** → confirm **Expected result**.
-5. When stuck, use **Troubleshooting** / **Failure Experiments** before asking for help.
-6. Capture evidence under `notes/screenshots/` (redact secrets). Mark Pass/Fail in your own notes — GitHub does not support clickable checkboxes.
-
----
-
 ## What you'll submit (read this first)
 
-Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+Keep this checklist visible while you work.
 
 | # | Deliverable |
 | - | ----------- |
@@ -79,18 +84,6 @@ Keep this checklist visible while you work. Full detail is under [Expected Deliv
 
 This Module 10 lab continues the **Northstar Customer Service Platform** into `lab10-crm/`, picking up the Maven project (`com.northstar:customer-service`) from Lab 9. There is still **no Spring Framework** in application code — Week 2 (Labs 8–21) stays plain Java and Maven. What is new is the tool you write that plain Java with: **GitHub Copilot**.
 
-**Purpose.** Copilot can accelerate boilerplate, but unreviewed AI code is a production risk. Enterprise teams treat suggestions like work from a junior teammate: useful, never trusted blindly. This lab trains **deliberate prompting** and a **mandatory human-review log** before anything merges.
-
-**What you build (exercise).** Install/sign in to Copilot in **IntelliJ** (optional VS Code); practice weak vs strong prompts; scaffold `CustomerStatus` and `Customer` with inline completions; draft `CustomerService` with Copilot Chat; prove behavior with `Main` using `CUS-1001` / `CUS-1002`; complete review-log entries `lab10-001`–`lab10-004`. Still no JPA, no Spring annotations, no REST.
-
-**What success looks like.** Under `~/java-bootcamp/examples/lab10-crm/` you compile with `mvn -q compile`, run `Main` showing both sample customers and a status change, and hand graders an `ai-review-notes.md` that proves you rejected at least one bad suggestion (commonly phantom JPA annotations).
-
-**Depends on Lab 9.** If Lab 9 packages or `mvn verify` failed, stop and fix [Lab 9](../../module-09/lab9/LAB-9-GUIDE.md). If VS Code / JDK / Maven fail, fix [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md) / [SETUP](../../../SETUP-INSTRUCTIONS.md).
-
-**CRM connection (domain flesh-out).** Labs 8–9 built structure and build truth. Lab 10 implements the first real in-memory customer domain operations. Lab 11 will add Copilot-assisted tests; Labs 12+ deepen standards and APIs. React, Kafka, PostgreSQL, and Spring Boot remain **future**.
-
----
-
 ## Learning Objectives
 
 After completing this lab, you will be able to:
@@ -100,11 +93,6 @@ After completing this lab, you will be able to:
 * Use inline completions and Copilot Chat to scaffold a JavaBean-style entity class
 * Use Copilot Chat to draft a first-pass service layer with business validation
 * Apply a mandatory human-review checklist before accepting any AI-generated code
-* Recognize and correct a common Copilot mistake: suggesting frameworks not on the classpath (JPA/Spring)
-* Explain licensing, intellectual-property, and data-leakage risks of AI assistants and how to mitigate them
-* Compile and run the CRM harness with Maven on your laptop after AI-assisted edits
-
----
 
 ## Business Scenario
 
@@ -129,7 +117,6 @@ Use these examples consistently:
 ---
 
 ## Architecture Context
-
 ### NOW (this lab)
 
 ```mermaid
@@ -140,33 +127,6 @@ flowchart TB
   Copilot["GitHub Copilot<br/>design-time only"] -.-> Main
   Copilot -.-> Svc
 ```
-
-### Lab flow (mermaid)
-
-```mermaid
-flowchart TD
-    A["Sign in Copilot<br/>+ copy lab9 -> lab10"] --> B["Sanity inline<br/>suggestion"]
-    B --> C["Weak vs strong<br/>prompts -> lab10-001/002"]
-    C --> D["Scaffold enum<br/>+ Customer entity"]
-    D --> E["Copilot Chat<br/>CustomerService"]
-    E --> F["Main harness<br/>CUS-1001 / CUS-1002"]
-    F --> G["Human review<br/>lab10-003"]
-    G --> H["AI risk notes<br/>lab10-004 + experiments"]
-```
-
-### Architecture NOW vs LATER
-
-| Aspect | Lab 10 (NOW) | Later CRM labs |
-| ------ | ------------ | -------------- |
-| Authoring | Copilot + human review | Same discipline + more frameworks |
-| Domain | In-memory `CustomerService` | Repository → JPA/PostgreSQL |
-| Annotations | None from JPA/Spring | Arrive when dependencies do |
-| Tests | Manual `Main` | Lab 11 Copilot-assisted tests |
-| Transport | None | SOAP/REST later |
-
-**Lab focus:** Copilot setup, prompting strategy for Java, scaffolding, and mandatory human-review discipline—not Spring or HTTP.
-
----
 
 ## Prerequisites
 
@@ -197,55 +157,6 @@ In VS Code:
 
 Fix environment/Copilot failures before changing application code. Record tool versions and Copilot status in evidence if asked.
 
----
-
-## Suggested Project Files
-
-```text
-~/java-bootcamp/examples/lab10-crm/
-├── src/
-│   ├── main/
-│   │   └── java/
-│   │       └── com/northstar/crm/
-│   │           ├── Main.java
-│   │           ├── entity/
-│   │           │   ├── Customer.java
-│   │           │   └── CustomerStatus.java
-│   │           ├── service/
-│   │           │   └── CustomerService.java
-│   │           ├── controller/ ...   (stubs from Lab 8/9 — leave for now)
-│   │           ├── repository/ ...
-│   │           ├── dto/ ...
-│   │           ├── config/ ...
-│   │           └── exception/ ...
-│   └── test/
-│       └── java/com/northstar/crm/   (Lab 11 adds tests; keep PlaceholderTest if present)
-├── copilot-notes/
-│   └── ai-review-notes.md
-├── docs/                             (from Labs 8–9)
-├── notes/
-│   └── screenshots/
-├── pom.xml
-├── .gitignore
-└── README.md
-```
-
-Ignore `target/`, IDE metadata, and local env files.
-
----
-
-## Key ideas (skim — no write-up)
-
-Skim these ideas before coding. **No separate essay write-up required.**
-
-In `copilot-notes/ai-review-notes.md`, add a short **Prep** section with **one line each** (not paragraphs):
-
-1. Inline completion vs Copilot Chat — when you use each.
-2. Why a strong prompt (fields, types, no Spring/JPA) beats “write a customer class.”
-3. Trust boundary: AI suggests; you own what merges / touches customer data.
-4. Phantom classpath risk: reject annotations/libraries not in this POM (e.g. `@Entity`).
-
-The graded review log entries `lab10-001`–`lab10-004` (later steps) carry the real evidence — do not duplicate long write-ups here.
 ---
 
 ## Worked example (read before you code)
@@ -635,7 +546,7 @@ If you deliberately let the JPA-annotation mistake through, document catching an
 
 **Why:** Graders want proof you can recover when Copilot is wrong or unavailable.
 
-**Do this:** Complete the experiments in [Failure Experiments](#failure-experiments). Capture compile/`Main` output and review-log screenshots under `notes/screenshots/lab-10/` (no secrets). Re-run:
+**Do this:** Complete the experiments in Failure Experiments. Capture compile/`Main` output and review-log screenshots under `notes/screenshots/lab-10/` (no secrets). Re-run:
 
 ```bash
 mvn -q clean compile
@@ -713,45 +624,6 @@ No **new** dependencies are required for this lab—keep Lab 9 POM. Do not add J
 <artifactId>customer-service</artifactId>
 ```
 
-### Copilot keyboard reference (VS Code)
-
-| Action | Shortcut |
-| ------ | -------- |
-| Open Copilot Chat | `Ctrl+Alt+I` |
-| Accept inline suggestion | `Tab` |
-| Dismiss inline suggestion | `Esc` |
-| Next/previous suggestion | `Alt+]` / `Alt+[` |
-| Open suggestions panel | `Ctrl+Enter` |
-
-### Class map
-
-| Class | Responsibility |
-| ----- | -------------- |
-| `CustomerStatus` | Lifecycle enum |
-| `Customer` | Domain bean; identity = `customerId` |
-| `CustomerService` | In-memory rules + queries |
-| `Main` | Manual proof for sample customers |
-| `ai-review-notes.md` | Audit trail of prompts and human decisions |
-
----
-
-## Manual Verification
-
-1. Copilot status Ready; workspace is `lab10-crm`.
-2. `Customer` / `CustomerStatus` compile with zero JPA/Spring imports.
-3. `CustomerService` rejects blank ID, duplicate ID, unknown ID on update.
-4. `Main` prints both sample customers; PROSPECT list includes `CUS-1002`; after activation status is ACTIVE.
-5. `ai-review-notes.md` has `lab10-001`–`lab10-004`.
-6. At least one deliberately caught Copilot mistake documented.
-7. No real PII/secrets in prompts or committed files.
-8. `git status` shows no staged `target/` or IDE junk.
-9. `mvn -q clean compile` succeeds.
-10. You can explain accepted AI lines without reopening Chat.
-
-Record pass/fail in the review log.
-
----
-
 ## Failure Experiments
 
 Perform deliberately; document in `ai-review-notes.md`.
@@ -778,12 +650,6 @@ Perform deliberately; document in `ai-review-notes.md`.
 | Review log empty | Skipped writing | Entries are required deliverables |
 | Edited Lab 9 by mistake | Wrong folder | Work only in `lab10-crm` |
 
-### Suggestions target wrong Java version
-
-Re-state constraints in every prompt, or use bonus `.github/copilot-instructions.md`. Reject and correct rather than infinite re-prompt loops on the same wrong pattern.
-
----
-
 ## Security and Production Review
 
 Optional — jot brief notes in your README if useful for the rubric (not a separate essay):
@@ -806,14 +672,6 @@ git status
 No containers or cloud services were started. Remove scratch prompt files that contained example-only sensitive data before committing. Keep `copilot-notes/` and domain sources.
 
 **Keep `lab10-crm`**—Lab 11 builds tests on this service.
-
----
-
-## Expected Deliverables
-
-Same checklist as [What you'll submit](#what-youll-submit-read-this-first) at the top. You are done when those items are complete and the Implementation Checkpoints pass.
-
-Do **not** submit `target/`, secrets, or a verbatim instructor `solution/`.
 
 ---
 
@@ -845,28 +703,3 @@ Do **not** write multi-paragraph essays. Graded work is the review-log entries +
 
 ---
 
-## Bonus Challenges
-
-Optional — only after core deliverables pass. Pick at most one if time is short.
-
-
-1. Add `.github/copilot-instructions.md` stating constraints (Java 21, no Spring, no JPA until Lab 22) and re-run Step 4’s prompt.
-2. Use Copilot Chat `/explain` on generated `equals`/`hashCode` and summarize in your own words (2–3 bullets).
-3. Ask Copilot for Javadoc on `CustomerService` and review accuracy against behavior.
-
----
-
-
-## Instructor Notes
-
-* **Pedagogy:** Score prompting discipline as much as working code. A student who pastes the first suggestion unreviewed should score lower than one who rejected a flawed suggestion and explained why—even if finals look similar.
-* **JPA trap:** Specifically check Step 4 for phantom persistence annotations or a clear explanation of how the prompt avoided them.
-* **Unaided check:** Ask the student to reproduce “Copilot unavailable” live and complete a small task without AI.
-* **Continuity:** Keep packages `com.northstar.crm.*` and sample IDs for Lab 11. Do not allow Spring Boot starters “to silence Copilot.”
-* **Paths:** Prefer `~/java-bootcamp/examples/lab10-crm` for parity with Labs 8–9.
-* **Common pitfalls:** Committing Chat transcripts with secrets; accepting `@Service`; skipping the review log; treating `Main` as optional.
-* **Timing:** Timed path ~45 minutes with starter; full path remains 3–4 hours. Keep starter TODOs as the in-class core; remaining GUIDE steps are homework/extended depth.
-
----
-
-*End of Lab 10 — GitHub Copilot Fundamentals for Java Developers. Keep `lab10-crm` and `copilot-notes/` for Lab 11 and portfolio evidence.*

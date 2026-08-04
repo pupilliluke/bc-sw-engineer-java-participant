@@ -1,20 +1,45 @@
 # Exercise 1 — Spring Kafka Roles
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **A** (after slides 27–32) |
+| **Deliverable** | `notes/lab31-spring-kafka.md` |
+| **Fixtures** | CUS-1001 Amina · CUS-1002 Ravi · `crm.customer-events.v1` |
+
+### What you will learn
+
+Map KafkaTemplate / @KafkaListener to Lab 30 producer/consumer ideas.
+
+### Enterprise context
+
+CRM service both publishes customer events and consumes for notifications.
+
+### Predict
+
+Can one Spring Boot app be both producer and consumer?
+
+### Debug
+
+Putting KafkaTemplate only in a @RestController — seam risk?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Confused with raw KafkaProducer | Lab 31 uses Spring wrappers; Lab 30 was CLI/Java client |
+| Forgot group id | Listener needs spring.kafka.consumer.group-id |
+
 **Module 31** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab31-spring-kafka.md` — connect KafkaTemplate and @KafkaListener to producer/consumer concepts.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-31-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-01-spring-kafka-roles.md` (this file in the course repo) |
 | Your notes file | `notes/lab31-spring-kafka.md` |
 
 ## Worked example (read first)

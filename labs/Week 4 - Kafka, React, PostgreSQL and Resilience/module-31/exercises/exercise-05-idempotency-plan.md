@@ -1,20 +1,45 @@
 # Exercise 4 — Idempotency Plan
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **D** (after slides 41–46) |
+| **Deliverable** | `notes/lab31-idempotency-plan.md` |
+| **Fixtures** | CUS-1001 Amina · CUS-1002 Ravi · `crm.customer-events.v1` |
+
+### What you will learn
+
+Choose an idempotency key and ProcessedEventStore mark timing.
+
+### Enterprise context
+
+Replay of Amina CustomerCreated must not double-notify.
+
+### Predict
+
+Mark after side-effect vs before — which duplicates?
+
+### Debug
+
+Using only offset as id — what if rebalance/replay?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| No eventId | Use eventId or customerId+eventType+occurredAt |
+| Store in memory only | OK for lab; note prod needs durable store |
+
 **Module 31** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab31-idempotency-plan.md` — define how a consumer ignores a second delivery of Amina's Created event.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-31-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-05-idempotency-plan.md` (this file in the course repo) |
 | Your notes file | `notes/lab31-idempotency-plan.md` |
 
 ## Worked example (read first)

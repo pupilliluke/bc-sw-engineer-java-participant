@@ -1,20 +1,45 @@
 # Exercise 3 — Outline Delivery Gates
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **B** (after slides 97–104) |
+| **Deliverable** | `notes/lab51-pipeline-gates.md` |
+| **Fixtures** | CUS-1001 smoke · 401/403 negatives · no secrets in Git |
+
+### What you will learn
+
+Outline GitHub Actions gates: verify, SAST/deps, image build/scan, deploy.
+
+### Enterprise context
+
+Promote only through evidenced gates—not :latest folklore.
+
+### Predict
+
+Which job should fail the pipeline on critical CVEs?
+
+### Debug
+
+Pipeline green with skipped tests — acceptable?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Skip security job | Keep gate; triage exceptions |
+| :latest only identity | Pin digest |
+
 **Module 51** · Architecture exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab51-pipeline-gates.md` — list pipeline stages required for capstone delivery.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-51-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-03-pipeline-gates.md` (this file in the course repo) |
 | Your notes file | `notes/lab51-pipeline-gates.md` |
 
 ## Worked example (read first)

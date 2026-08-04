@@ -1,20 +1,45 @@
 # Exercise 2 — Draft Incident Update Skeleton
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **D** (after slides 222–224) |
+| **Deliverable** | `notes/lab47-incident-update.md` |
+| **Fixtures** | CUS-1001/CUS-1002 synthetic · one fact base · no secrets |
+
+### What you will learn
+
+Draft blameless incident update: impact, actions, next update time.
+
+### Enterprise context
+
+Blame and invented certainty are unacceptable under release stress.
+
+### Predict
+
+Should an incident update name a person as the root cause?
+
+### Debug
+
+Update has secrets from log paste — gate fail?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Blame tone | Blameless rewrite pass |
+| Missing next-update time | Set from shared facts |
+
 **Module 47** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab47-incident-update.md` — outline an incident update without naming blame.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-47-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-02-incident-update.md` (this file in the course repo) |
 | Your notes file | `notes/lab47-incident-update.md` |
 
 ## Worked example (read first)

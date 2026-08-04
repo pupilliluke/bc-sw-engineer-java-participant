@@ -1,20 +1,45 @@
 # Exercise 4 — Controlled Form Sketch
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 12–15 minutes |
+| **Checkpoint** | **B** (after slides 108–110) |
+| **Deliverable** | `notes/lab34-controlled-form.md` |
+| **Fixtures** | CUS-1001 Amina · CUS-1002 Ravi · in-memory only |
+
+### What you will learn
+
+Sketch controlled inputs: value from state + onChange setters.
+
+### Enterprise context
+
+CustomerForm stays presentational; App owns draft state.
+
+### Predict
+
+Input won’t type — what’s usually missing?
+
+### Debug
+
+Uncontrolled defaultValue mixed with value — when OK?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| value without onChange | Bind both or input appears stuck |
+| Draft in every card | Lift draft to App / form parent |
+
 **Module 34** · Architecture exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab34-controlled-form.md` — sketch a controlled form flow for creating a customer (paper).
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-34-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-03-controlled-form.md` (this file in the course repo) |
 | Your notes file | `notes/lab34-controlled-form.md` |
 
 ## Worked example (read first)

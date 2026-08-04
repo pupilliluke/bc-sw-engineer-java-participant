@@ -1,20 +1,45 @@
 # Exercise 1 — Why Resilience
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **A** (after slides 51–56) |
+| **Deliverable** | `notes/lab32-resilience.md` |
+| **Fixtures** | CUS-1001 Account Profile · instance `accountProfile` |
+
+### What you will learn
+
+Explain why sync Account Profile enrichment must not hang CRM.
+
+### Enterprise context
+
+Amina/Ravi pages call an outbound dependency that can be slow or 503.
+
+### Predict
+
+If Account API hangs 30s with no timeout — what happens to CRM threads?
+
+### Debug
+
+Team retries POST create forever — what duplicate risk?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Thinking Kafka replaces this | Lab 32 is HTTP outbound; Kafka is Lab 30/31 |
+| Only listing 'retry' | Also name CB, timeout, truthful fallback |
+
 **Module 32** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab32-resilience.md` — explain how a slow Account Profile dependency hurts the CRM API.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-32-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-01-why-resilience.md` (this file in the course repo) |
 | Your notes file | `notes/lab32-resilience.md` |
 
 ## Worked example (read first)
@@ -37,7 +62,6 @@ Write the four Resilience4j ideas: retry, circuit breaker, time limiter, fallbac
 One sentence: resilience wraps calls; it does not fix a permanently wrong URL.
 
 ## Step 4 — Notes file
-
 
 
 ## Scope
@@ -70,7 +94,6 @@ Write the four Resilience4j ideas: retry, circuit breaker, time limiter, fallbac
 One sentence: resilience wraps calls; it does not fix a permanently wrong URL.
 
 ## Step 4 — Notes file
-
 
 
 ## Scope

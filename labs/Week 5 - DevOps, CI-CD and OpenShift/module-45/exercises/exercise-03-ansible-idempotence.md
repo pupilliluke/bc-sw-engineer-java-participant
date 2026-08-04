@@ -1,20 +1,45 @@
 # Exercise 3 — Ansible Idempotence Notes
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **C** (after slides 165–171) |
+| **Deliverable** | `notes/lab45-ansible-idempotence.md` |
+| **Fixtures** | CRM tags only · no PII in IaC · no tfstate/keys in Git |
+
+### What you will learn
+
+Sketch idempotent playbook responsibilities vs Terraform provisioning.
+
+### Enterprise context
+
+Second run should report no change when authorized—shell-only hacks often aren't idempotent.
+
+### Predict
+
+Terraform vs Ansible: who owns VM create vs package config?
+
+### Debug
+
+Playbook always 'changed' on second run — likely cause?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Only raw shell tasks | Prefer modules with desired state |
+| Real inventory IPs with secrets | Use inventory.example.yml |
+
 **Module 45** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab45-ansible-idempotence.md` — describe idempotent Ansible tasks for a CRM host sketch.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-45-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-03-ansible-idempotence.md` (this file in the course repo) |
 | Your notes file | `notes/lab45-ansible-idempotence.md` |
 
 ## Worked example (read first)

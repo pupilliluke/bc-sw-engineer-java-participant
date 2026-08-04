@@ -1,20 +1,45 @@
 # Exercise 5 — UI Verification Evidence Plan
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 8–10 minutes |
+| **Checkpoint** | **D** (after slides 83–84) |
+| **Deliverable** | `notes/lab50-verification-plan.md` |
+| **Fixtures** | CUS-1001/CUS-1002 · lab-request-001 · no real PII |
+
+### What you will learn
+
+Plan component/E2E evidence and one controlled failure path.
+
+### Enterprise context
+
+Defense needs screenshots/commands proving UI→API→DB—not vibes.
+
+### Predict
+
+What SELECT proves correlation lab-request-001?
+
+### Debug
+
+Flaky Selenium only — add component tests?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| No failure path | Invalid input or outage case |
+| Secrets in screenshots | Redact tokens |
+
 **Module 50** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab50-verification-plan.md` — plan component/E2E evidence without claiming full coverage.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-50-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-05-verification-plan.md` (this file in the course repo) |
 | Your notes file | `notes/lab50-verification-plan.md` |
 
 ## Worked example (read first)

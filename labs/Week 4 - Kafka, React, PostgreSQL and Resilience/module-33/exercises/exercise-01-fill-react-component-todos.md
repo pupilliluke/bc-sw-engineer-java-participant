@@ -1,20 +1,45 @@
 # Exercise 2 — Fill Component TODOs
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **A** (after slides 77–82) |
+| **Deliverable** | `notes/lab33-todos.md` |
+| **Fixtures** | CUS-1001 Amina ACTIVE · CUS-1002 Ravi PROSPECT |
+
+### What you will learn
+
+List crm-ui folders, types, and presentational components to build.
+
+### Enterprise context
+
+Northstar freezes UI building blocks before state (34) and fetch (35).
+
+### Predict
+
+Can presentation components stay useful without fetch yet?
+
+### Debug
+
+Planning class components as primary — why prefer function components?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Running npm in pre-lab | Notes only now — Vite in Lab 33 |
+| Mixing API fetch | Fixtures only until Lab 35 |
+
 **Module 33** · Hands-on exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab33-todos.md` — fill TODOs in a CustomerCard pseudocode component.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-33-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-01-fill-react-component-todos.md` (this file in the course repo) |
 | Your notes file | `notes/lab33-todos.md` |
 
 ## Worked example (read first)

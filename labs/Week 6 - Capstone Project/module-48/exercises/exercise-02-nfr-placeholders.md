@@ -1,20 +1,45 @@
 # Exercise 2 — Draft Measurable NFRs
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **A** (after slides 5–8) |
+| **Deliverable** | `notes/lab48-nfr-placeholders.md` |
+| **Fixtures** | CUS-1001/CUS-1002 · lab-request-001 · no secrets in ADRs |
+
+### What you will learn
+
+Replace vague 'fast/scalable' with measurable NFRs and evidence ideas.
+
+### Enterprise context
+
+Ambiguous NFR language is an acceptance-blocker for Week 6 defense.
+
+### Predict
+
+Is 'system should be fast' an acceptable NFR?
+
+### Debug
+
+NFR with no measurement method — fix?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Vague adjectives only | Add metric + target + how measured |
+| Skipping NFRs for later | Required before Lab 49 |
+
 **Module 48** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab48-nfr-placeholders.md` — replace vague quality words with measurable NFR placeholders.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-48-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-02-nfr-placeholders.md` (this file in the course repo) |
 | Your notes file | `notes/lab48-nfr-placeholders.md` |
 
 ## Worked example (read first)

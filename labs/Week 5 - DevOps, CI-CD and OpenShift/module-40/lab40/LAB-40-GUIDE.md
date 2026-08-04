@@ -1,8 +1,6 @@
 # Lab 40: Application Security Testing for the CRM — Dependency-Check, SAST, Remediation
 
 **Module:** 40 — Application Security Testing for the CRM  
-**Lab folder:** `labs/Week 5 - DevOps, CI-CD and OpenShift/module-40/lab40/`  
-**Difficulty:** Intermediate  
 **Duration:** ~45 minutes (timed path with starter) · Full path: 3–4 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
@@ -12,11 +10,38 @@
 | Windows | [LAB-40-WINDOWS.md](LAB-40-WINDOWS.md) |
 | macOS | [LAB-40-MACOS.md](LAB-40-MACOS.md) |
 
-> **Environment reminder:** Complete the [Module 40 pre-lab exercises](../exercises/EXERCISES-INDEX.md) after the slides and before this lab.  Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (OWASP Dependency-Check via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
+---
+
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | ~45 min timed · full path 3–4 h |
+| **Checkpoint** | **E** (after Ex 1→4→2→3→5→6) |
+| **Must prove** | `-Psecurity-scan` · triage CSV row · assessment residual risk |
+| **Hard gate** | Pre-lab Pass · Lab 39 verify green · no secrets in Git |
+
+### What you will learn
+
+Run a CRM AppSec gate: Dependency-Check, triage, focused SAST, remediate, re-scan.
+
+### Enterprise context
+
+Scanners alone are not a release decision — every finding needs fix, timed accept, or evidenced FP.
+
+### Predict
+
+Suppressing a Critical CVE with no owner/expiry — does the gate pass?
+
+### Debug
+
+Scan fails only because of high CVSS — delete profile or triage?
 
 ---
 
 ## 45-minute timed path (use starter)
+
+> **Pacing reminder:** [PACING.md](../PACING.md) checkpoint **E**. Homework: remediation + regression + before/after scan evidence.
 
 In class, use the starter templates so the **core** objectives fit **~45 minutes**. The full Steps below remain for homework / extended depth.
 
@@ -33,20 +58,9 @@ In class, use the starter templates so the **core** objectives fit **~45 minutes
 
 ---
 
-## How to follow this lab
-
-1. **In class:** prefer [`starter/README.md`](starter/README.md) when a timed path exists — fill `// TODO`, run the smoke test (~45 min).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
-3. Work only under your `java-bootcamp/examples/…` folder (not inside this `labs/` clone unless a step says otherwise).
-4. Read **Worked example** once, then for each **Step**: **Why** → **Do this** → confirm **Expected result**.
-5. When stuck, use **Troubleshooting** / **Failure Experiments** before asking for help.
-6. Capture evidence under `notes/screenshots/` (redact secrets). Mark Pass/Fail in your own notes — GitHub does not support clickable checkboxes.
-
----
-
 ## What you'll submit (read this first)
 
-Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+Keep this checklist visible while you work.
 
 | # | Deliverable |
 | - | ----------- |
@@ -67,18 +81,6 @@ Keep this checklist visible while you work. Full detail is under [Expected Deliv
 
 This Module 40 lab turns the CRM into a **defensible security gate**: map OWASP-relevant attack surfaces, run **OWASP Dependency-Check**, triage CVEs, perform focused **manual SAST**, reproduce one confirmed issue, remediate with the smallest safe fix, re-scan and regression-test, and publish `docs/security-assessment.md`.
 
-**Purpose.** Leadership freezes a release gate before containers (Lab 41): scanners alone are not enough. Every confirmed finding needs severity rationale, evidence, and either a fix, a time-bounded acceptance with owner, or a documented false positive—never silent suppressions.
-
-**What you build (this lab).** Branch `lab40-crm` from Lab 39; define scope and threat checklist; add Dependency-Check Maven profile (HTML+JSON, CVSS fail threshold); run and triage findings; perform SAST on request→sink paths and object-level authz; write a failing regression test; remediate; re-scan; complete `security-assessment.md` + `security-findings.csv`.
-
-**What success looks like.** Under `~/java-bootcamp/examples/lab40-crm/` (or platform `backend/` if integrating) you have before/after scan evidence, one verified remediation, a green functional regression, and an assessment a peer can reproduce without verbal hand-waving.
-
-**Depends on Lab 39.** Need a building Spring CRM with fixtures and tests. Finish Lab 39 if verify is already red—do not hide inherited failures.
-
-**CRM connection.** Fixtures `CUS-1001` (Amina) / `CUS-1002` (Ravi) / correlation `lab-request-001`. Security tests must use synthetic emails only. Lab 41 must not bake secrets into images—findings here become Dockerfile rules.
-
----
-
 ## Learning Objectives
 
 After completing this lab, you will be able to:
@@ -88,13 +90,6 @@ After completing this lab, you will be able to:
 * Interpret CVE, CVSS, CPE, and transitive dependency paths
 * Perform focused manual SAST on injection, authz, and secrets
 * Triage false positives and accepted risks with owners and expiry
-* Reproduce one confirmed issue with an automated regression test
-* Apply the smallest root-cause remediation and re-scan
-* Write a before-and-after security assessment without leaking secrets
-* Keep suppressions narrow, justified, and time-bounded
-* Refuse to weaken tests or controls just to get a green badge
-
----
 
 ## Business Scenario
 
@@ -119,7 +114,6 @@ Use these examples consistently:
 ---
 
 ## Architecture Context
-
 ### NOW (this lab)
 
 ```mermaid
@@ -131,36 +125,11 @@ flowchart TB
   Fix --> Docs["security-assessment.md<br/>+ findings.csv"]
 ```
 
-### Lab flow (mermaid)
-
-```mermaid
-flowchart TD
-    A["Branch lab39 -> lab40<br/>baseline verify"] --> B["Scope + OWASP<br/>threat checklist"]
-    B --> C["Dependency-Check<br/>Maven profile"]
-    C --> D["Triage CVE<br/>CSV classifications"]
-    D --> E["Focused SAST<br/>data-flow review"]
-    E --> F["Reproduce one issue<br/>+ failing test"]
-    F --> G["Remediate<br/>smallest root-cause fix"]
-    G --> H["Re-scan + regress<br/>before/after evidence"]
-    H --> I["security-assessment.md<br/>+ residual risks"]
-```
-
-### Architecture NOW vs LATER
-
-| Aspect | Lab 40 (NOW) | Lab 41–42 |
-| ------ | ------------ | --------- |
-| Focus | Deps + SAST + assessment | Image hardening, cluster RBAC |
-| Gate | CVSS threshold + remediation proof | Non-root image, Secrets, probes |
-| Artifacts | `security-assessment.md`, HTML report | Dockerfile, K8s manifests |
-| Authz tests | `@WithMockUser` / MockMvc | Same tests still must pass in CI |
-
-**Lab focus:** OWASP-aware review, dependency scanning, focused SAST, one verified remediation, before-and-after report—not full penetration testing or attacking shared systems.
-
----
-
 ## Prerequisites
 
-Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md), and [Lab 39](../../../Week%204%20-%20Kafka,%20React,%20PostgreSQL%20and%20Resilience/module-39/lab39/LAB-39-GUIDE.md). Confirm:
+Prior labs: [Lab 39](../../../Week%204%20-%20Kafka,%20React,%20PostgreSQL%20and%20Resilience/module-39/lab39/LAB-39-GUIDE.md).
+
+Confirm (Lab 0 tools assumed):
 
 * CRM backend builds with Java 21 + Maven Wrapper
 * OWASP Dependency-Check via Maven plugin (version pinned)
@@ -171,67 +140,8 @@ Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%
 
 ```bash
 java -version
-./mvnw --version 2>/dev/null || mvn -version
-docker --version
-git status --short
-pwd
-ls ~/java-bootcamp/examples
+mvn -version
 ```
-
-Record baseline:
-
-```bash
-cd ~/java-bootcamp/examples
-cp -r lab39-crm lab40-crm
-cd lab40-crm
-./mvnw -B clean verify
-```
-
-If baseline fails, save the exact error and agree with the instructor whether it is pre-existing. Do not skip tests to hide inherited failure.
-
----
-
-## Suggested Project Files
-
-Prefer `~/java-bootcamp/examples/lab40-crm/`. For platform integration cohorts, mirror the same artifacts under `customer-management-platform/backend/` and `docs/` / `reports/`.
-
-```text
-~/java-bootcamp/examples/lab40-crm/
-├── src/
-│   ├── main/java/com/northstar/crm/...
-│   └── test/java/com/northstar/crm/
-│       └── security/
-│           └── ObjectOwnershipSecurityTest.java
-├── docs/
-│   ├── security-assessment.md
-│   ├── security-findings.csv
-│   └── threat-checklist.md
-├── reports/                         (sanitized; gitignore bulky HTML if policy requires)
-│   └── dependency-check-report.html
-├── dependency-check-suppressions.xml
-├── notes/screenshots/
-├── pom.xml                          (security-scan profile)
-├── .gitignore
-└── README.md
-```
-
-Ignore real `.env`, NVD keys, private reports with tokens, `target/`, and customer dumps.
-
----
-
-## Key ideas (skim — no write-up)
-
-Skim these ideas before coding. **No separate write-up required** (you will apply them in the Steps).
-
-1. Main flow under review (HTTP API → service → PostgreSQL; optional Kafka later)
-2. Trust boundary: who is authenticated vs what every agent may read
-3. Success/failure contracts for unauthorized access (403 vs 404 policy)
-4. Stable fixtures (`CUS-1001`) vs real PII (never)
-5. Idempotency of re-scan (`mvn -Psecurity-scan`) and regression tests
-6. Why CVSS alone is insufficient without reachability notes
-
----
-
 
 ## Worked example (read before you code)
 
@@ -440,7 +350,7 @@ Compare before/after for the remediating finding. Confirm the reproducer now pas
 
 **Why:** Security work fails socially when evidence contains secrets or cannot be reproduced.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Run `git status` and scrub reports of tokens. Ensure `.gitignore` covers local NVD data and `.env`.
+**Do this:** Complete Failure Experiments. Run `git status` and scrub reports of tokens. Ensure `.gitignore` covers local NVD data and `.env`.
 
 **Expected result:** ≥3 experiments; peer-reviewable packet; no secrets staged.
 
@@ -530,10 +440,6 @@ _Mark **Pass** or **Fail** in your lab notes._
 
 ## Reference Commands, Configuration, and Code
 
-### Dependency-Check profile
-
-See Step 2 XML sample (`failBuildOnCVSS` 7, HTML+JSON, suppressions file). Keep the plugin under `-Psecurity-scan` unless your CI already requires it by default.
-
 ### Suppression snippet (time-bounded)
 
 ```xml
@@ -547,37 +453,6 @@ See Step 2 XML sample (`failBuildOnCVSS` 7, HTML+JSON, suppressions file). Keep 
 </suppressions>
 ```
 
-### Parameterized query reminder
-
-```java
-@Query("select c from CustomerEntity c where lower(c.normalizedEmail) = lower(:email)")
-Optional<CustomerEntity> findByEmailIgnoreCase(@Param("email") String email);
-```
-
-### Object-ownership security test
-
-```java
-@Test
-@WithMockUser(username = "agent-a", roles = "AGENT")
-void agentCannotReadAnotherAgentsCustomer() throws Exception {
-  mvc.perform(get("/api/customers/{id}", otherAgentsCustomerId)
-          .header("X-Correlation-Id", "lab-request-001"))
-     .andExpect(status().isForbidden());
-}
-```
-
-### Findings CSV header
-
-```csv
-finding_id,source,package_or_location,cve_or_rule,cvss,classification,owner,due_date,notes
-lab40-001,dependency-check,example:lib:1.2.3,CVE-2024-XXXX,7.5,needs_review,student,2026-07-21,transitive via spring-boot
-lab40-002,sast,CustomerController#get,ACL-missing,,confirmed,student,2026-07-15,agent-a vs CUS-1002
-```
-
-### Assessment outline (minimum sections)
-
-```markdown
-# Security Assessment — Lab 40 CRM
 ## Scope and assets
 ## Method and tool versions
 ## Dependency findings (before / after)
@@ -613,21 +488,6 @@ git status --short
 
 ---
 
-## Manual Verification
-
-1. Baseline verify recorded before security changes.
-2. Dependency-Check runs via `-Psecurity-scan` with pinned version.
-3. Findings classified; accepted risks have owner + expiry.
-4. Manual SAST covers request→sink and object-level authz.
-5. One issue reproduced with automated test (red then green).
-6. Remediation is minimal and reviewable.
-7. Re-scan shows improvement for that finding (or honest residual note).
-8. Assessment separates facts vs assumptions; evidence sanitized.
-9. CRM fixtures only; no real PII; correlation used where relevant.
-10. No secrets, kubeconfig, or wallet files committed.
-
----
-
 ## Failure Experiments
 
 | # | Experiment | Observe | Restore |
@@ -652,11 +512,6 @@ git status --short
 | Report too large for Git | Bulky HTML | Excerpt + gitignore; keep JSON summary |
 | Inherited verify red | Lab 39 drift | Fix baseline first |
 | Plugin version drift | Unpinned property | Pin `${dependency-check.version}` |
-| CPE mismatch noise | Wrong package identity | Confirm artifactId/groupId path |
-| Authz test always 200 | Security filter not applied in `@WebMvcTest` | Use slice/`@SpringBootTest` + security config as designed |
-| Assessment vague | No commands/versions | Add reproduce section from Reference |
-
----
 
 ## Evidence Log Template
 
@@ -700,14 +555,6 @@ Do not commit live credentials rotated during the lab without scrubbing history 
 
 ---
 
-## Expected Deliverables
-
-Same checklist as [What you'll submit](#what-youll-submit-read-this-first) at the top. You are done when those items are complete and the Implementation Checkpoints pass.
-
-Do **not** submit `target/`, secrets, or a verbatim instructor `solution/`.
-
----
-
 ## Evaluation Rubric (100 Marks)
 
 | Criteria | Marks |
@@ -735,26 +582,3 @@ Write **1–3 sentence** answers (not essays):
 ---
 
 
-## Bonus Challenges
-
-Optional — only after core deliverables pass. Pick at most one if time is short.
-
-
-1. Generate a CycloneDX SBOM and link it in the assessment.
-2. Add a time-bounded suppression with evidence and expiry.
-3. Create a CI snippet that archives reports on failure.
-
----
-
-
-## Instructor Notes
-
-* **Live probe:** Ask which suggestion/finding they rejected as false positive and why. Have them show the ownership test red→green story.
-* **Assess:** Triage quality, minimal remediation, assessment honesty, secret hygiene.
-* **Continuity:** Prefer `examples/lab40-crm`; allow platform `backend/` if cohort integrates. Keep CRM fixtures.
-* **Common pitfalls:** Counting CVEs instead of classifying; forever suppressions; committing HTML with tokens; skipping baseline verify.
-* **Timing:** Timed path ~45 minutes with starter; full path remains 3–4 hours. First Dependency-Check DB update can burn 30–45 minutes—start the scan early.
-
----
-
-*End of Lab 40 — Application Security Testing for the CRM. Keep `lab40-crm` for Lab 41 containerization and portfolio evidence.*

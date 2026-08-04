@@ -1,20 +1,45 @@
 # Exercise 1 — Validation Messages
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **D** (after slides 114–115) |
+| **Deliverable** | `notes/lab34-validation-messages.md` |
+| **Fixtures** | CUS-1001 Amina · CUS-1002 Ravi · in-memory only |
+
+### What you will learn
+
+Plan field errors for empty name/status; accessible error text.
+
+### Enterprise context
+
+Client UX validation before Lab 35 server errors.
+
+### Predict
+
+Where should errors live in state?
+
+### Debug
+
+Only red borders, no text — RTL/a11y fail?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Validate only on blur forever | Also block invalid submit |
+| Clearing errors on cancel | Reset errors with draft discard |
+
 **Module 34** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab34-validation-messages.md` — write validation messages for empty/invalid CRM form fields.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-34-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-04-validation-messages.md` (this file in the course repo) |
 | Your notes file | `notes/lab34-validation-messages.md` |
 
 ## Worked example (read first)

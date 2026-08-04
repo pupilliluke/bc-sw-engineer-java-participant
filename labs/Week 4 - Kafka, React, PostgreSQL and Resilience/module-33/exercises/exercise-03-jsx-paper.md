@@ -1,20 +1,45 @@
 # Exercise 3 — JSX on Paper
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **C** (after slides 87–89) |
+| **Deliverable** | `notes/lab33-jsx-paper.md` |
+| **Fixtures** | CUS-1001 Amina ACTIVE · CUS-1002 Ravi PROSPECT |
+
+### What you will learn
+
+Sketch JSX for a CustomerCard row with Amina ACTIVE fixture.
+
+### Enterprise context
+
+JSX maps props to accessible UI before coding Vite.
+
+### Predict
+
+What goes in curly braces vs string attributes?
+
+### Debug
+
+Using array index as key in a list sketch — why reject?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| class vs className | JSX uses className |
+| Missing key on list | key={customer.customerId} |
+
 **Module 33** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab33-jsx-paper.md` — hand-write JSX structure for a two-row customer list.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-33-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-03-jsx-paper.md` (this file in the course repo) |
 | Your notes file | `notes/lab33-jsx-paper.md` |
 
 ## Worked example (read first)

@@ -1,20 +1,45 @@
 # Exercise 4 — Fill AI Prompt TODOs
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **D** (after slides 172–173) |
+| **Deliverable** | `notes/lab45-ai-prompt-todos.md` |
+| **Fixtures** | CRM tags only · no PII in IaC · no tfstate/keys in Git |
+
+### What you will learn
+
+Fill constrained AI prompt TODOs: contract limits, no public DB, pinned providers.
+
+### Enterprise context
+
+Weak prompts invent resources outside the contract—re-prompt and delete extras.
+
+### Predict
+
+What three constraints belong in every IaC AI prompt?
+
+### Debug
+
+AI opens public database — accept because it 'works'?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Accepting first AI draft | Threat-model; reject public exposure |
+| Kafka DLT in IaC prompts | Park Lab 46 |
+
 **Module 45** · Hands-on exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab45-ai-prompt-todos.md` — complete a bounded prompt template for scaffolding IaC.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-45-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-04-ai-prompt-todos.md` (this file in the course repo) |
 | Your notes file | `notes/lab45-ai-prompt-todos.md` |
 
 ## Worked example (read first)

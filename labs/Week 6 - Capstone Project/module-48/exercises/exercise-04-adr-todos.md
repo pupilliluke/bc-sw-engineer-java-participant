@@ -1,20 +1,45 @@
 # Exercise 4 — Fill ADR Topic TODOs
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **C** (after slides 15–20) |
+| **Deliverable** | `notes/lab48-adr-todos.md` |
+| **Fixtures** | CUS-1001/CUS-1002 · lab-request-001 · no secrets in ADRs |
+
+### What you will learn
+
+List ADR topics: DB, messaging, consistency, auth, deploy—with status placeholders.
+
+### Enterprise context
+
+Conflicting silent tech choices fail review—accept one ADR and supersede others.
+
+### Predict
+
+Which five ADR themes does Lab 48 expect at minimum?
+
+### Debug
+
+Two accepted ADRs that contradict — fix?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| No ADR status | Proposed/Accepted/Superseded |
+| Secrets in ADR body | Never paste tokens/passwords |
+
 **Module 48** · Hands-on exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab48-adr-todos.md` — complete an ADR shortlist with blanks for status/owners.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-48-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-04-adr-todos.md` (this file in the course repo) |
 | Your notes file | `notes/lab48-adr-todos.md` |
 
 ## Worked example (read first)

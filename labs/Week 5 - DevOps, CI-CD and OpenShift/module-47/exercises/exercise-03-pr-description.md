@@ -1,20 +1,45 @@
 # Exercise 3 — PR Description Outline
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **B** (after slides 215–218) |
+| **Deliverable** | `notes/lab47-pr-description.md` |
+| **Fixtures** | CUS-1001/CUS-1002 synthetic · one fact base · no secrets |
+
+### What you will learn
+
+Outline PR description with verify steps, fixtures, and rollback note.
+
+### Enterprise context
+
+Reviewers cannot test without commands and CRM fixture IDs.
+
+### Predict
+
+What verification steps belong in a CRM fix PR?
+
+### Debug
+
+PR says 'fixed stuff' with no test plan — rewrite?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| No verify commands | Add mvn/test or curl steps |
+| Secrets in PR body | Scrub tokens/passwords |
+
 **Module 47** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab47-pr-description.md` — structure a PR body for a mitigation/fix related to the incident.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-47-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-03-pr-description.md` (this file in the course repo) |
 | Your notes file | `notes/lab47-pr-description.md` |
 
 ## Worked example (read first)

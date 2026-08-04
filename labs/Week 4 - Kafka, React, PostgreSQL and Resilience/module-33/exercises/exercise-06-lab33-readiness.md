@@ -1,20 +1,45 @@
 # Exercise 6 — Lab 33 Readiness
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 8–10 minutes |
+| **Checkpoint** | **D** (after slides 93–94) |
+| **Deliverable** | `notes/lab33-prep-checklist.md` |
+| **Fixtures** | CUS-1001 Amina ACTIVE · CUS-1002 Ravi PROSPECT |
+
+### What you will learn
+
+Confirm Node 22+, fixtures, and no fetch/auth yet.
+
+### Enterprise context
+
+Hard gate before Vite scaffold.
+
+### Predict
+
+Will Lab 33 need the Spring Boot API running?
+
+### Debug
+
+Starting Lab 34 useState early in pre-lab — park it?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Node missing | Install Node 22+; verify node -v / npm -v |
+| Wrong fixtures | CUS-1001 ACTIVE / CUS-1002 PROSPECT |
+
 **Module 33** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab33-prep-checklist.md` — confirm prior notes exist and you are ready for Lab 33 without finishing it now.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-33-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-06-lab33-readiness.md` (this file in the course repo) |
 | Your notes file | `notes/lab33-prep-checklist.md` |
 
 ## Worked example (read first)

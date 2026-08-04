@@ -1,20 +1,45 @@
 # Exercise 5 — Outline AI IaC Review Record
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 8–10 minutes |
+| **Checkpoint** | **D** (after slides 172–173) |
+| **Deliverable** | `notes/lab45-ai-review-record.md` |
+| **Fixtures** | CRM tags only · no PII in IaC · no tfstate/keys in Git |
+
+### What you will learn
+
+Outline ai-iac-review fields: suggestion, risk, human correction, validation evidence.
+
+### Enterprise context
+
+Undocumented AI acceptance fails the lab—humans stay accountable.
+
+### Predict
+
+Must you document at least one rejection or hardening?
+
+### Debug
+
+Review says 'AI looked fine' with no evidence — gate fail?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| No rejection recorded | Find ≥1 hardening or reject |
+| Secrets in review screenshots | Redact keys/state |
+
 **Module 45** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab45-ai-review-record.md` — outline `docs/ai-iac-review.md` entry `lab45-001`.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-45-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-05-ai-review-record.md` (this file in the course repo) |
 | Your notes file | `notes/lab45-ai-review-record.md` |
 
 ## Worked example (read first)

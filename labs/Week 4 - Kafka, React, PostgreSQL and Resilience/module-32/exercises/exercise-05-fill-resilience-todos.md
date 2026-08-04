@@ -1,20 +1,45 @@
 # Exercise 3 — Fill Resilience TODOs
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **D** (after slides 68–72) |
+| **Deliverable** | `notes/lab32-todos.md` |
+| **Fixtures** | CUS-1001 Account Profile · instance `accountProfile` |
+
+### What you will learn
+
+List Resilience4j YAML/annotation TODOs for accountProfile.
+
+### Enterprise context
+
+Boot 3 + AOP required for annotations to apply.
+
+### Predict
+
+Self-invocation of find() inside same class — annotations fire?
+
+### Debug
+
+TimeLimiter on sync return — what must change?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Annotations ignored | Add spring-boot-starter-aop; call via proxy |
+| Missing Actuator | Expose health/metrics for observation evidence |
+
 **Module 32** · Hands-on exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab32-todos.md` — fill TODOs in Resilience4j pseudocode for the CRM client.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-32-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-05-fill-resilience-todos.md` (this file in the course repo) |
 | Your notes file | `notes/lab32-todos.md` |
 
 ## Worked example (read first)

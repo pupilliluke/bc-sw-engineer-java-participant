@@ -1,20 +1,45 @@
 # Exercise 4 — Fill Q&A Stubs
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **C** (after slides 134–137) |
+| **Deliverable** | `notes/lab52-qa-stubs.md` |
+| **Fixtures** | CUS-1001/CUS-1002 · lab-request-001 · no invented evidence |
+
+### What you will learn
+
+Draft Q&A stubs for architecture, security, data, messaging, ops with links.
+
+### Enterprise context
+
+Handling questions is half the defense—stubs prevent blank stares.
+
+### Predict
+
+How do you explain trade-offs without blaming teammates?
+
+### Debug
+
+Q&A answers that invent metrics — fix?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| No links in answers | Cite evidence-index rows |
+| Blame language | System/conditions framing |
+
 **Module 52** · Hands-on exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab52-qa-stubs.md` — complete answer stubs for likely panel questions.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-52-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-04-qa-stubs.md` (this file in the course repo) |
 | Your notes file | `notes/lab52-qa-stubs.md` |
 
 ## Worked example (read first)

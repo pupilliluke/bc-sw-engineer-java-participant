@@ -1,8 +1,20 @@
 # Lab 19: Integration and UI Testing with Selenium — Northstar CRM Regression Suite
 
+> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 19 [pre-lab exercises](../exercises/EXERCISES-INDEX.md) (Pass; classroom order **1 → 2 → 3 → 4 → 6 → 5**). Then open **one** OS how-to ([Windows](LAB-19-WINDOWS.md) · [macOS](LAB-19-MACOS.md)). In class, prefer the **45-minute timed path** with [`starter/`](starter/README.md); the **full path** is every Step below (homework / extended). Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
+
+## Activity card
+
+| | |
+| --- | --- |
+| **Objective** | Ship CustomerApiIT + Selenium Page Object UI IT with correlation and data-testid |
+| **Skills practiced** | API IT, WebDriver, Page Objects, explicit waits, regression evidence |
+| **Expected outcome** | Green ApiIT + UiIT · correlation echo · regression-notes.md |
+| **Estimated time** | Timed path ~45 min · Full path 4–5 hours |
+| **Prerequisites** | Lab 0 · Lab 18 preferred · Exercises 1–4, 6, 5 Pass · JDK 21 · Maven · Chrome/Chromium |
+| **Expected files** | `examples/lab19-crm/` — controller/static UI, ApiIT, UiIT, notes |
+| **Validation checkpoints** | Starter smoke ApiIT + UiIT · GUIDE Implementation Checkpoints |
+
 **Module:** 19 — Integration and UI Testing with Selenium  
-**Lab folder:** `labs/Week 2 - Backend, AI Tools and Testing/module-19/lab19/`  
-**Difficulty:** Intermediate  
 **Duration:** ~45 minutes (timed path with starter) · Full path: 4–5 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
@@ -12,9 +24,11 @@
 | Windows | [LAB-19-WINDOWS.md](LAB-19-WINDOWS.md) |
 | macOS | [LAB-19-MACOS.md](LAB-19-MACOS.md) |
 
-> **Environment reminder:** Complete the [Module 19 pre-lab exercises](../exercises/EXERCISES-INDEX.md) after the slides and before this lab.  Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21**, **Maven 3.9+**, and **Chrome/Chromium** for Selenium. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Incremental build:** Pyramid → locators → Page Object → flake/CI → correlation → prep → Lab 19.
 
----
+> **Classroom pacing:** [`../PACING.md`](../PACING.md) (Checkpoints A–E).
+
+> **Critical scope:** Prefer **data-testid** + Page Objects + explicit waits. Attach **X-Correlation-Id**. Do not replace unit tests with only UI. Actuator is **Lab 21**.
 
 ## 45-minute timed path (use starter)
 
@@ -32,20 +46,9 @@ In class, use the starter templates so the **core** objectives fit **~45 minutes
 | **Full (extended)** | see Duration | Every Step in this GUIDE |
 
 
-## How to follow this lab
-
-1. **In class:** prefer [`starter/README.md`](starter/README.md) when a timed path exists — fill `// TODO`, run the smoke test (~45 min).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
-3. Work only under your `java-bootcamp/examples/…` folder (not inside this `labs/` clone unless a step says otherwise).
-4. Read **Worked example** once, then for each **Step**: **Why** → **Do this** → confirm **Expected result**.
-5. When stuck, use **Troubleshooting** / **Failure Experiments** before asking for help.
-6. Capture evidence under `notes/screenshots/` (redact secrets). Mark Pass/Fail in your own notes — GitHub does not support clickable checkboxes.
-
----
-
 ## What you'll submit (read this first)
 
-Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+Keep this checklist visible while you work.
 
 | # | Deliverable |
 | - | ----------- |
@@ -66,18 +69,6 @@ Keep this checklist visible while you work. Full detail is under [Expected Deliv
 
 This Module 19 lab extends the **Customer Management Platform** with **HTTP integration tests** for the CRM API and a **Selenium WebDriver** UI automation suite. You treat tests as regression assets: each scenario protects a business path that must keep working after later labs change logging, Actuator, Spring IoC, and Boot.
 
-**Purpose.** Unit isolation (Lab 18) does not prove HTTP headers, status codes, or browser-visible create/get. Leadership freezes a regression mindset: green `CustomerApiIT` + `CustomerUiIT` before and after deliberate non-functional edits; stable fixtures; explicit waits—no blind sleeps; failure screenshots when locators break.
-
-**What you build (this lab).** Copy to `lab19-crm`; add Spring Web + Selenium 4.x + WebDriverManager; expose create/get API with `X-Correlation-Id`; write `CustomerApiIT`; add minimal `customers.html` with `data-testid` hooks; build Page Object `CustomerFormPage` + `CustomerUiIT`; add negative UI/API cases; run regression twice and archive surefire/screenshot evidence.
-
-**What success looks like.** Under `~/java-bootcamp/examples/lab19-crm/` `CustomerApiIT` creates/gets `CUS-1001` with correlation echo, UI suite saves Amina via Page Object, blank-name fails visibly, and you can reproduce a broken-locator screenshot then restore green.
-
-**Depends on Labs 17–18.** Need customer domain, service rules, and preferably injectable constructors. If your prior labs are pure Java without Web yet, scaffold the controller/static UI in this lab on top of the copied module.
-
-**CRM connection.** Fixtures `CUS-1001` / `CUS-1002` / missing IDs, correlation `lab-request-001`. Lab 20 keys structured logs off the same header and IDs—do not invent new fixture schemes.
-
----
-
 ## Learning Objectives
 
 After completing this lab, you will be able to:
@@ -87,12 +78,6 @@ After completing this lab, you will be able to:
 * Configure Selenium WebDriver with Chrome/Chromium via WebDriverManager (or an equivalent managed driver)
 * Build a small Page Object–style UI suite for CRM customer forms
 * Assert stable identifiers, correlation headers, and visible status without sleeping blindly
-* Run a regression mindset: green suite before and after a deliberate code change
-* Capture failure evidence (screenshots, surefire reports, HTTP bodies)
-* Explain flaky UI tests and how to harden waits and isolation
-* Document local-versus-CI browser strategy
-
----
 
 ## Business Scenario
 
@@ -117,7 +102,6 @@ Use these examples consistently:
 ---
 
 ## Architecture Context
-
 ### NOW (this lab)
 
 ```mermaid
@@ -128,34 +112,11 @@ flowchart TB
   ApiIT["CustomerApiIT<br/>@SpringBootTest RANDOM_PORT"] -->|TestRestTemplate| Ctrl
 ```
 
-### Lab flow (mermaid)
-
-```mermaid
-flowchart TD
-    A["Copy lab18 -> lab19<br/>+ Web/Selenium deps"] --> B["Create/get API<br/>+ correlation header"]
-    B --> C["CustomerApiIT<br/>HTTP integration"]
-    C --> D["customers.html<br/>data-testid form"]
-    D --> E["WebDriverManager<br/>headless Chrome"]
-    E --> F["Page Object<br/>+ UI happy path"]
-    F --> G["Negatives UI/API<br/>blank name / 404"]
-    G --> H["Regression twice<br/>+ screenshot evidence"]
-```
-
-### Architecture NOW vs LATER
-
-| Aspect | Lab 18 (was) | Lab 19 (NOW) | Lab 20–21 |
-| ------ | ------------ | ------------ | --------- |
-| Boundary | Service + mock repo | HTTP + browser | Logs + Actuator |
-| Evidence | Mockito verify | Surefire + screenshots | MDC / metrics |
-| Flake risk | Stub strictness | Waits / locators | Log timing |
-
-**Lab focus:** Integration tests for CRM API/service plus Selenium WebDriver UI suite with a regression mindset. Browser: Chrome/Chromium managed via WebDriverManager or similar.
-
----
-
 ## Prerequisites
 
-Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md), and Labs [17](../../module-17/lab17/LAB-17-GUIDE.md)–[18](../../module-18/lab18/LAB-18-GUIDE.md). Confirm:
+Prior labs: [17](../../module-17/lab17/LAB-17-GUIDE.md) · [18](../../module-18/lab18/LAB-18-GUIDE.md).
+
+Confirm (Lab 0 tools assumed):
 
 * JDK 21; Maven; Git
 * Chrome or Chromium installed (or instructor-provided browser)
@@ -168,60 +129,7 @@ Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%
 ```bash
 java -version
 mvn -version
-git --version
-pwd
-ls ~/java-bootcamp/examples
-google-chrome --version || chromium --version || echo "Confirm Chrome/Chromium path with instructor"
 ```
-
----
-
-## Suggested Project Files
-
-```text
-~/java-bootcamp/examples/lab19-crm/
-├── src/
-│   ├── main/
-│   │   ├── java/com/northstar/crm/
-│   │   │   ├── api/CustomerController.java
-│   │   │   ├── service/...
-│   │   │   └── ...
-│   │   └── resources/
-│   │       ├── application.yml
-│   │       └── static/customers.html
-│   └── test/
-│       ├── java/com/northstar/crm/
-│       │   ├── integration/CustomerApiIT.java
-│       │   └── ui/
-│       │       ├── CustomerUiIT.java
-│       │       └── pages/CustomerFormPage.java
-│       └── resources/
-│           └── application-test.yml
-├── docs/
-│   └── regression-notes.md
-├── notes/screenshots/
-├── pom.xml
-├── .gitignore
-└── README.md
-```
-
-Ignore `target/`, `node_modules`, downloaded drivers under home directories, tokens, and passwords.
-
----
-
-## Key ideas (skim — no write-up)
-
-Skim these ideas before coding. **No separate write-up required** (you will apply them in the Steps).
-
-1. Main request flow: UI/API → controller → service → repository
-2. Trust boundary: validation at API/UI edge vs service rules
-3. Success/failure contracts (201/200/400/404, visible result text)
-4. Stable identities (`CUS-1001`) vs random data in IT
-5. Idempotency of repeated create and UI double-submit
-6. Local headed Chrome vs CI headless WebDriverManager
-
----
-
 
 ## Worked example (read before you code)
 
@@ -638,13 +546,6 @@ _Mark **Pass** or **Fail** in your lab notes._
 </dependency>
 ```
 
-### Explicit wait sample
-
-```java
-wait.until(ExpectedConditions.textToBePresentInElementLocated(
-    By.cssSelector("[data-testid=result]"), "CUS-1001"));
-```
-
 ### Commands
 
 ```bash
@@ -655,43 +556,6 @@ mvn -q clean verify
 mvn spring-boot:run
 git status
 ```
-
-### HTTP sample
-
-```http
-POST /api/customers HTTP/1.1
-X-Correlation-Id: lab-request-001
-Content-Type: application/json
-
-{"customerId":"CUS-1001","fullName":"Amina Khan","status":"ACTIVE"}
-```
-
-### Class map
-
-| Class | Role |
-| ----- | ---- |
-| `CustomerApiIT` | HTTP create/get/404 |
-| `CustomerUiIT` | Selenium suite |
-| `CustomerFormPage` | Page Object locators/actions |
-| `customers.html` | Minimal CRM UI surface |
-| `regression-notes.md` | Scope + CI browser policy |
-
----
-
-## Manual Verification
-
-1. `CustomerApiIT` covers create/get for `CUS-1001` with correlation echo.
-2. Not-found returns 404 for a missing customer ID.
-3. Manual or automated UI creates Amina and shows result text.
-4. Page Object encapsulates locators (`data-testid`).
-5. Blank-name UI case asserts a validation message.
-6. WebDriverManager headless Chrome starts and quits cleanly.
-7. No arbitrary `Thread.sleep` required for green suite.
-8. Regression run twice (or after trivial edit) stays green.
-9. Deliberate broken locator produced a screenshot, then restored.
-10. README/docs explain unit vs IT vs UI and CI browser strategy.
-
----
 
 ## Failure Experiments
 
@@ -716,8 +580,7 @@ Content-Type: application/json
 | Static 404 | Resource path wrong | `src/main/resources/static/customers.html` |
 | Duplicate creates | Shared in-memory store | Reset between tests or assert duplicate rule |
 | Config ignored | Wrong profile | Check `application-test.yml` and active profile |
-
----
+| Correlation missing on create | Header not set in IT | Send `X-Correlation-Id: lab-request-001` |
 
 ## Security and Production Review
 
@@ -743,14 +606,6 @@ git status
 ```
 
 **Keep `lab19-crm`**—Lab 20 adds structured logging on the same create/get paths.
-
----
-
-## Expected Deliverables
-
-Same checklist as [What you'll submit](#what-youll-submit-read-this-first) at the top. You are done when those items are complete and the Implementation Checkpoints pass.
-
-Do **not** submit `target/`, secrets, or a verbatim instructor `solution/`.
 
 ---
 
@@ -781,27 +636,3 @@ Write **1–3 sentence** answers (not essays):
 ---
 
 
-## Bonus Challenges
-
-Optional — only after core deliverables pass. Pick at most one if time is short.
-
-
-1. Add structured correlation and customer IDs without sensitive fields in UI failure reports.
-2. Add one container-backed integration test (Testcontainers) for the API layer.
-3. Gate the UI suite on readiness once Actuator exists (Lab 21 preview).
-
----
-
-
-## Instructor Notes
-
-* **Live probe:** Reproduce one flaky-wait failure and interpret the screenshot, surefire report, or HTTP body. Require stable IDs `CUS-1001`, `CUS-1002`, and correlation `lab-request-001`.
-* **Assess:** Separation of IT vs UI, Page Object quality, explicit waits, negative coverage, regression discipline.
-* **Continuity:** Prefer `examples/lab19-crm`. Keep fixture IDs for Lab 20 logging traces.
-* **Common pitfalls:** Committed ChromeDriver; implicit wait 10s + explicit wait stacking; testing against a different app than IT boots; XPath full of indexes; skipping API IT because “UI is enough.”
-* **Timing:** Timed path ~45 minutes with starter; full path remains 4–5 hours. Keep starter TODOs as the in-class core; remaining GUIDE steps are homework/extended depth. Browser environment often burns 45–60 minutes—verify Chrome before deep Page Object work.
-* **Equivalents:** Playwright or preinstalled ChromeDriver OK only when outcomes preserved and differences documented.
-
----
-
-*End of Lab 19 — Integration and UI Testing with Selenium: Northstar CRM Regression Suite. Keep `lab19-crm` for Lab 20 and portfolio evidence.*

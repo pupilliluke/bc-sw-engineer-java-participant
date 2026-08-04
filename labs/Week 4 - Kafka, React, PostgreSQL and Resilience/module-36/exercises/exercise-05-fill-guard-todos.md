@@ -1,20 +1,45 @@
 # Exercise 4 — Fill Route Guard TODOs
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **D** (after slides 153–157) |
+| **Deliverable** | `notes/lab36-todos.md` |
+| **Fixtures** | CUS-1001 / CUS-1002 · no real secrets |
+
+### What you will learn
+
+List AuthContext, tokenStore, ProtectedRoute, 401 vs 403 TODOs.
+
+### Enterprise context
+
+Attach bearer only to CRM API origin via Lab 35 http helper.
+
+### Predict
+
+Should 403 clear the session the same as 401?
+
+### Debug
+
+Open redirect via returnUrl — fix?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Bearer on every host | Compare apiOrigin before attaching |
+| Flash of protected UI | Add checking/auth loading state |
+
 **Module 36** · Hands-on exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab36-todos.md` — fill TODOs for a RequireAuth wrapper protecting CRM routes.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-36-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-05-fill-guard-todos.md` (this file in the course repo) |
 | Your notes file | `notes/lab36-todos.md` |
 
 ## Worked example (read first)

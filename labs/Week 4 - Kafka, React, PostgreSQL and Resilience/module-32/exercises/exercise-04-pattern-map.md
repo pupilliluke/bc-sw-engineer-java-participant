@@ -1,20 +1,45 @@
 # Exercise 5 — Pattern Map
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **D** (after slides 68–72) |
+| **Deliverable** | `notes/lab32-pattern-map.md` |
+| **Fixtures** | CUS-1001 Account Profile · instance `accountProfile` |
+
+### What you will learn
+
+Map Retry, CircuitBreaker, TimeLimiter, Fallback to AccountProfileService.
+
+### Enterprise context
+
+One outbound find() needs all four coordinated.
+
+### Predict
+
+Order of annotations — which wraps which conceptually?
+
+### Debug
+
+Retrying non-idempotent writes — park that pattern?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Patterns only on Kafka listeners | This lab targets AccountClient HTTP |
+| No instance name | Use accountProfile everywhere |
+
 **Module 32** · Architecture exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab32-pattern-map.md` — assign each pattern to a concrete Northstar outbound behavior.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-32-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-04-pattern-map.md` (this file in the course repo) |
 | Your notes file | `notes/lab32-pattern-map.md` |
 
 ## Worked example (read first)

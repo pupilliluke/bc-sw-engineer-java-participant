@@ -1,20 +1,43 @@
 # Exercise 4 — Fill Kafka Basics TODOs
 
-**Module 30** · Hands-on exercise · [setup + file names](EXERCISES-INDEX.md)
+## Activity card
 
-## Goal
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **B** (after slides 9–14) |
+| **Deliverable** | `notes/lab30-kafka-todos.md` |
+| **Fixtures** | CUS-1001 Amina ACTIVE · CUS-1002 Ravi PROSPECT |
 
-Create `notes/lab30-kafka-todos.md` — complete fill-in blanks for topic, partition, offset, and consumer group.
+### What you will learn
+
+Define broker, topic, partition, offset, consumer group in CRM words.
+
+### Enterprise context
+
+Shared vocabulary before Compose and Java producer.
+
+### Predict
+
+Does offset mean 'message id' globally?
+
+### Debug
+
+Replica count 1 in lab vs prod — what changes?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Offset confusion | Offset is per-partition position, not global id |
+| Group vs topic | Group shares partitions; topic is the channel |
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-30-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-04-fill-kafka-basics.md` (this file in the course repo) |
 | Your notes file | `notes/lab30-kafka-todos.md` |
 
 ## Worked example (read first)

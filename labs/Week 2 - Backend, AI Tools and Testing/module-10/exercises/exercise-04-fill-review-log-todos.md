@@ -1,20 +1,32 @@
 # Exercise 4 — Fill Review-Log TODOs
 
-**Module 10** · Hands-on exercise · [setup + file names](EXERCISES-INDEX.md)
+**Module 10** · Checkpoint C · Exercises 1–6 Pass then Lab 10
 
-## Goal
+## Activity card
 
-Create `notes/lab10-review-log-todos.md` and complete fill-in blanks for a Copilot review log before the timed lab.
+| | |
+| --- | --- |
+| **Objective** | Fill review-log TODOs before accepting Copilot hunks in Lab 10 |
+| **Skills practiced** | Review logging, Accept/Reject/Edit discipline |
+| **Expected outcome** | notes/lab10-review-log-todos.md with blanks filled |
+| **Estimated time** | 10–12 minutes |
+| **File to create** | `examples/module-10-exercises/` → notes/lab10-review-log-todos.md |
+| **Checkpoint** | C (after slides 70–71) |
+
+## What you will learn
+
+- Review logs prove you did not accept AI blindly
+- Fixture checks catch wrong status defaults early
+- Edit is often better than infinite re-prompting
+
+**Enterprise context:** Audit-friendly AI use means recording what you accepted and why.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-10-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-04-fill-review-log-todos.md` (this file in the course repo) |
 | Your notes file (starter) | `notes/lab10-review-log-todos.md` |
 
 ## Worked example (read first)
@@ -67,7 +79,18 @@ Confirm Ravi is PROSPECT and Amina is ACTIVE; fix any swapped blanks.
 
 A completed review-log TODO sheet at `notes/lab10-review-log-todos.md` with correct Northstar statuses.
 
-## If it fails
+
+## Debug / design challenge
+
+Leave Accept/Reject blank — explain why graders fail that entry.
+
+## Predict the Output / Behavior
+
+If phantom annotation found = yes, should Accept still be the default?
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | --- | --- |

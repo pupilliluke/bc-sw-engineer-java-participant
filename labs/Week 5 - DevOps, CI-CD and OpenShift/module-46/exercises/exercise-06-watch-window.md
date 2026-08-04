@@ -1,20 +1,45 @@
 # Exercise 6 — Tie Observability to Release Watch
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 8–10 minutes |
+| **Checkpoint** | **D** (after slides 198–200) |
+| **Deliverable** | `notes/lab46-watch-window.md` |
+| **Fixtures** | CUS-1001/CUS-1002 synthetic · correlation lab-request-001 · no PII in metrics |
+
+### What you will learn
+
+Tie Kafka lag/DLT alerts to Lab 44-style release watch windows.
+
+### Enterprise context
+
+Lab 47 will communicate incidents—keep evidence shareable and secret-free.
+
+### Predict
+
+What Kafka signals belong on a post-promote watch checklist?
+
+### Debug
+
+Starting Module 47 slides during this warmup — park?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Watch with no owner | Name on-call / student owner |
+| PII in dashboard screenshots | Redact names/emails |
+
 **Module 46** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab46-watch-window.md` — connect Lab 44 watch windows to Kafka lag/DLT signals.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-46-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-06-watch-window.md` (this file in the course repo) |
 | Your notes file | `notes/lab46-watch-window.md` |
 
 ## Worked example (read first)

@@ -1,20 +1,45 @@
 # Exercise 6 — Lab 36 Readiness
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 8–10 minutes |
+| **Checkpoint** | **D** (after slides 156–157) |
+| **Deliverable** | `notes/lab36-prep-checklist.md` |
+| **Fixtures** | CUS-1001 / CUS-1002 · no real secrets |
+
+### What you will learn
+
+Confirm Lab 35 http boundary ready; no real secrets; no DB trust.
+
+### Enterprise context
+
+Hard gate before login/guards/XSS proofs.
+
+### Predict
+
+Can UI guards replace Spring Security?
+
+### Debug
+
+Starting Module 37 schema early — park it?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| No Lab 35 API client | Finish http/customersApi first or use starter |
+| Production tokens in git | Never commit; redact screenshots |
+
 **Module 36** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab36-prep-checklist.md` — confirm prior notes exist and you are ready for Lab 36 without finishing it now.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-36-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-06-lab36-readiness.md` (this file in the course repo) |
 | Your notes file | `notes/lab36-prep-checklist.md` |
 
 ## Worked example (read first)

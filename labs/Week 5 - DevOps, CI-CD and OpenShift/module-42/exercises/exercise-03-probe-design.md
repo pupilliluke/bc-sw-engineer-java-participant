@@ -1,20 +1,45 @@
 # Exercise 3 — Design Three Probes
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 12–15 minutes |
+| **Checkpoint** | **B** (after slides 74–77) |
+| **Deliverable** | `notes/lab42-probe-design.md` |
+| **Fixtures** | CUS-1001 smoke · digest-pinned Lab 41 image · no Secret values |
+
+### What you will learn
+
+Design distinct startup, readiness, and liveness probe paths/timings.
+
+### Enterprise context
+
+Wrong liveness kills healthy apps during slow startup.
+
+### Predict
+
+Readiness fail vs liveness fail — traffic impact?
+
+### Debug
+
+Same probe for all three — risk?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| CrashLoop from aggressive liveness | Lengthen startup; separate probes |
+| Health 401 | Permit actuator health in Security |
+
 **Module 42** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab42-probe-design.md` — differentiate startup, readiness, and liveness for CRM pods.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-42-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-03-probe-design.md` (this file in the course repo) |
 | Your notes file | `notes/lab42-probe-design.md` |
 
 ## Worked example (read first)

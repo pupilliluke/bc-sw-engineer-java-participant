@@ -1,20 +1,45 @@
 # Exercise 4 — Fill Dockerfile TODO Skeleton
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 12–15 minutes |
+| **Checkpoint** | **B** (after slides 46–49) |
+| **Deliverable** | `notes/lab41-dockerfile-todos.md` |
+| **Fixtures** | Synthetic CUS-1001 smoke · no secrets in notes |
+
+### What you will learn
+
+Fill FROM/COPY/USER/HEALTHCHECK TODOs for crm-api:lab41.
+
+### Enterprise context
+
+Pom-first COPY order keeps layer cache warm.
+
+### Predict
+
+Jar not found after build — usual cause?
+
+### Debug
+
+Permission denied as non-root — chown missing?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Wrong jar glob | Match spring-boot repackaged jar name |
+| ARG password | Forbidden — inject at run time |
+
 **Module 41** · Hands-on exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab41-dockerfile-todos.md` — complete a skeleton with blanks (do not claim a finished Lab 41 image).
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-41-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-04-dockerfile-todos.md` (this file in the course repo) |
 | Your notes file | `notes/lab41-dockerfile-todos.md` |
 
 ## Worked example (read first)

@@ -1,20 +1,45 @@
 # Exercise 1 — Defense Packet Index
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **A** (after slides 120–126) |
+| **Deliverable** | `notes/lab52-packet-index.md` |
+| **Fixtures** | CUS-1001/CUS-1002 · lab-request-001 · no invented evidence |
+
+### What you will learn
+
+Index defense files: slides, demo script, evidence, Q&A, retro, self-assessment.
+
+### Enterprise context
+
+Panels need a navigable packet—not a lucky slideshow alone.
+
+### Predict
+
+Which Labs 48–51 artifacts must appear in the index?
+
+### Debug
+
+Inventing evidence you do not have — fix?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Empty index | List real paths from Labs 48–51 |
+| Secrets in packet | Scrub; rotate if needed |
+
 **Module 52** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab52-packet-index.md` — list Lab 52 artifacts and their purposes.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-52-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-01-packet-index.md` (this file in the course repo) |
 | Your notes file | `notes/lab52-packet-index.md` |
 
 ## Worked example (read first)

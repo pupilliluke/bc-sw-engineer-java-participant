@@ -1,20 +1,45 @@
 # Exercise 4 — Fill ci.yml TODOs
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 12–15 minutes |
+| **Checkpoint** | **B** (after slides 103–106) |
+| **Deliverable** | `notes/lab43-workflow-todos.md` |
+| **Fixtures** | CUS-1001/CUS-1002 synthetic only · no secrets in Git |
+
+### What you will learn
+
+Fill workflow triggers, jobs, and step TODOs for CRM CI.
+
+### Enterprise context
+
+Workflow file is the reviewable contract for delivery gates.
+
+### Predict
+
+on: only push to feature/* — what feedback do PRs lose?
+
+### Debug
+
+Pipeline cannot find pom.xml — fix?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Wrong working-directory | cd to CRM module path |
+| Secrets hardcoded in YAML | Use GitHub Actions secrets |
+
 **Module 43** · Hands-on exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab43-workflow-todos.md` — complete a workflow skeleton with blanks (do not require a passing remote run).
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-43-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-04-workflow-todos.md` (this file in the course repo) |
 | Your notes file | `notes/lab43-workflow-todos.md` |
 
 ## Worked example (read first)

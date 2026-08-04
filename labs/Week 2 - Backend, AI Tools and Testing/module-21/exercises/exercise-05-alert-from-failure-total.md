@@ -1,20 +1,32 @@
 # Exercise 5 — Alert from create_failure_total
 
-**Module 21** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
+**Module 21** · Checkpoint D · Exercises 1–6 Pass then Lab 21
 
-## Goal
+## Activity card
 
-Create `notes/lab21-alert-runbook.md` — write a mini runbook for a create_failure_total alert.
+| | |
+| --- | --- |
+| **Objective** | Write a mini runbook for a create_failure_total alert |
+| **Skills practiced** | Alert runbooking |
+| **Expected outcome** | notes/lab21-alert-runbook.md |
+| **Estimated time** | 10–12 minutes |
+| **File to create** | `examples/module-21-exercises/` → notes/lab21-alert-runbook.md |
+| **Checkpoint** | D (after slides 264–269) |
+
+## What you will learn
+
+- Signal: failure rate above threshold for N minutes
+- Triage: Actuator health then correlation logs
+- CRM check: recent create paths / fixtures
+
+**Enterprise context:** On-call needs a one-pager — “look around” is not a runbook.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-21-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-05-alert-from-failure-total.md` (this file in the course repo) |
 | Your notes file | `notes/lab21-alert-runbook.md` |
 
 ## Worked example (read first)
@@ -24,20 +36,13 @@ Here is the shape of a complete answer for this exercise. Adapt the content — 
 ```markdown
 # Lab 21 — Alert from create_failure_total
 
-## Step 1 — Signal
-
-Alert when create_failure_total rate exceeds threshold for N minutes.
-
-## Step 2 — Triage
-
-Check Actuator/health, then logs filtered by correlation examples.
-
-## Step 3 — CRM check
-
-Reproduce create for a PROSPECT-shaped payload (Ravi-like) in non-prod.
+Signal: failure rate exceeds threshold for N minutes.
+Triage: /actuator/health then logs by lab-request-001.
+CRM check: create path for recent traffic; confirm not a bad deploy of validation.
+Owner: on-call backend / platform.
 
 ## Scope
-Pre-lab only — do not finish the full graded lab in this exercise.
+Pre-lab only.
 ```
 
 Then follow **Steps** to create your own file.
@@ -53,20 +58,20 @@ From `examples/module-21-exercises/`, create `notes/` if needed, then create `no
 ```markdown
 # Lab 21 — Alert from create_failure_total
 
-## Step 1 — Signal
+## Signal
+_____
 
-Alert when create_failure_total rate exceeds threshold for N minutes.
+## Triage steps
+_____
 
-## Step 2 — Triage
+## CRM check
+_____
 
-Check Actuator/health, then logs filtered by correlation examples.
-
-## Step 3 — CRM check
-
-Reproduce create for a PROSPECT-shaped payload (Ravi-like) in non-prod.
+## Owner
+_____
 
 ## Scope
-Pre-lab only — do not finish the full graded lab in this exercise.
+Pre-lab only.
 ```
 
 ### Step 3 — Self-check
@@ -75,15 +80,25 @@ Confirm fixtures if used: Amina `CUS-1001`/`ACTIVE`, Ravi `CUS-1002`/`PROSPECT`,
 
 ## Expected result
 
-A short alert runbook tied to create_failure_total in `notes/lab21-alert-runbook.md`.
+Alert runbook in `notes/lab21-alert-runbook.md`.
 
-## If it fails
+## Debug / design challenge
+
+If health is UP but failures rise, what do you check next?
+
+## Predict the Output / Behavior
+
+Name one reason paging on a single failure event is a bad default.
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | --- | --- |
 | No file / wrong name | Must be `notes/lab21-alert-runbook.md` |
-| Leaving blanks or skipping steps | Complete every step before claiming Pass |
-| Starting the full lab mid-exercise | Finish pre-lab notes first, then open Lab 21 |
+| No triage steps | Health then logs |
+| No owner | Name a role |
 
 ## Pass criteria
 
@@ -91,6 +106,5 @@ Self-check before marking Pass:
 
 - [ ] File exists at `notes/lab21-alert-runbook.md`
 - [ ] Signal defined
-- [ ] Triage steps listed
-- [ ] Notes saved
-
+- [ ] Triage present
+- [ ] Owner present

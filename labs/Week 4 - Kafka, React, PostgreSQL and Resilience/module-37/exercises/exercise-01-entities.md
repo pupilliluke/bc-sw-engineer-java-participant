@@ -1,20 +1,45 @@
 # Exercise 1 — CRM Entities
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **A** (after slides 162–167) |
+| **Deliverable** | `notes/lab37-design.md` |
+| **Fixtures** | CUS-1001 Amina ACTIVE · CUS-1002 Ravi PROSPECT |
+
+### What you will learn
+
+List CUSTOMER, ACCOUNT, ADDRESS, HISTORY entities and key attributes.
+
+### Enterprise context
+
+Freeze public ids CUS-1001/CUS-1002 before JPA (Lab 39).
+
+### Predict
+
+Should email be UNIQUE? Should status be free text?
+
+### Debug
+
+Storing password hashes in CUSTOMER for this lab — needed?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Jumping to JPA | DDL/ER only — entities come in Lab 39 |
+| Oracle-only types | Use PostgreSQL types (NUMERIC, TIMESTAMPTZ) |
+
 **Module 37** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab37-design.md` — list core tables for customers and accounts in Northstar.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-37-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-01-entities.md` (this file in the course repo) |
 | Your notes file | `notes/lab37-design.md` |
 
 ## Worked example (read first)

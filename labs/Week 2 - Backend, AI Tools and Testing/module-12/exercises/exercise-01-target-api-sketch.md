@@ -1,20 +1,32 @@
 # Exercise 1 — Target API Sketch
 
-**Module 12** · Architecture exercise · [setup + file names](EXERCISES-INDEX.md)
+**Module 12** · Checkpoint A · Exercises 1–6 Pass then Lab 12
 
-## Goal
+## Activity card
 
-Create `notes/lab12-target-api-sketch.md` — sketch a small CustomerService API you want after cleanup.
+| | |
+| --- | --- |
+| **Objective** | Sketch the post-cleanup CustomerService API (create/get/updateStatus) |
+| **Skills practiced** | Naming, method design, target API planning |
+| **Expected outcome** | notes/lab12-target-api-sketch.md |
+| **Estimated time** | 10–12 minutes |
+| **File to create** | `examples/module-12-exercises/` → notes/lab12-target-api-sketch.md |
+| **Checkpoint** | A (after slides 94–99) |
+
+## What you will learn
+
+- Refactor toward intentional method names, not doStuff
+- Sketch the API before rewriting the body
+- Keep SOAP/Spring out of this cleanup lab
+
+**Enterprise context:** CRM refactors start with a named contract so reviews stay comparable.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-12-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-01-target-api-sketch.md` (this file in the course repo) |
 | Your notes file | `notes/lab12-target-api-sketch.md` |
 
 ## Worked example (read first)
@@ -85,7 +97,18 @@ Confirm fixtures if used: Amina `CUS-1001`/`ACTIVE`, Ravi `CUS-1002`/`PROSPECT`,
 
 A minimal target API with honest exclusions in `notes/lab12-target-api-sketch.md`.
 
-## If it fails
+
+## Debug / design challenge
+
+Replace doStuff with createCustomer/getCustomer/updateStatus in your sketch.
+
+## Predict the Output / Behavior
+
+Which method should move Ravi PROSPECT → ACTIVE?
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | --- | --- |

@@ -1,8 +1,6 @@
 # Lab 33: React Components for the CRM Dashboard
 
 **Module:** 33 — React Components for the CRM Dashboard  
-**Lab folder:** `labs/Week 4 - Kafka, React, PostgreSQL and Resilience/module-33/lab33/`  
-**Difficulty:** Intermediate  
 **Duration:** ~45 minutes (timed path with starter) · Full path: 4–5 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
@@ -12,11 +10,38 @@
 | Windows | [LAB-33-WINDOWS.md](LAB-33-WINDOWS.md) |
 | macOS | [LAB-33-MACOS.md](LAB-33-MACOS.md) |
 
-> **Environment reminder:** Complete the [Module 33 pre-lab exercises](../exercises/EXERCISES-INDEX.md) after the slides and before this lab.  Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **Node.js 22+** and **npm**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
+---
+
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | ~45 min timed · full path 4–5 h |
+| **Checkpoint** | **E** (after Ex 1→2→3→4→5→6) |
+| **Must prove** | Amina+Ravi render · key=customerId · RTL by role · build green |
+| **Hard gate** | Pre-lab Pass · Node 22+ · no API fetch required |
+
+### What you will learn
+
+Build typed, accessible presentational CRM components with Vite + Vitest.
+
+### Enterprise context
+
+Freeze UI contracts so Lab 34/35 can add state and fetch without markup rewrites.
+
+### Predict
+
+If list keys use array index and order changes — what UI bug appears?
+
+### Debug
+
+`getByRole` cannot find Save — what is usually missing on the control?
 
 ---
 
 ## 45-minute timed path (use starter)
+
+> **Pacing reminder:** [PACING.md](../PACING.md) checkpoint **E**. Homework: CustomerForm labels + component notes.
 
 In class, use the starter templates so the **core** objectives fit **~45 minutes**. The full Steps below remain for homework / extended depth.
 
@@ -33,20 +58,9 @@ In class, use the starter templates so the **core** objectives fit **~45 minutes
 
 ---
 
-## How to follow this lab
-
-1. **In class:** prefer [`starter/README.md`](starter/README.md) when a timed path exists — fill `// TODO`, run the smoke test (~45 min).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
-3. Work only under your `java-bootcamp/examples/…` folder (not inside this `labs/` clone unless a step says otherwise).
-4. Read **Worked example** once, then for each **Step**: **Why** → **Do this** → confirm **Expected result**.
-5. When stuck, use **Troubleshooting** / **Failure Experiments** before asking for help.
-6. Capture evidence under `notes/screenshots/` (redact secrets). Mark Pass/Fail in your own notes — GitHub does not support clickable checkboxes.
-
----
-
 ## What you'll submit (read this first)
 
-Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+Keep this checklist visible while you work.
 
 | # | Deliverable |
 | - | ----------- |
@@ -67,18 +81,6 @@ Keep this checklist visible while you work. Full detail is under [Expected Deliv
 
 This Module 33 lab introduces the **Customer Management Platform** React client: typed models, accessible presentational components, composition with stable list keys, and React Testing Library behavior tests. You will scaffold with Vite, build `StatusBadge` / `CustomerCard` / `CustomerList` / `CustomerForm`, compose a dashboard shell, and prove visible behavior with Vitest.
 
-**Purpose.** Before state management (Lab 34) and API integration (Lab 35), leadership freezes the UI contract: every customer surface must be typed, composable, and accessible. Color-only status, index keys, and class-name tests are rejected. Presentation components stay props-driven so Lab 34 can lift state without rewriting markup.
-
-**What you build (this lab).** Create `lab33-crm/crm-ui` with Vite React-TS; define `Customer` / `CustomerStatus` / `CustomerDraft`; implement `StatusBadge`, `CustomerCard`, `CustomerList`, empty/loading/error shells, and labeled `CustomerForm`; compose `App` with fixtures `CUS-1001` / `CUS-1002`; write RTL tests that query by role; document a11y and key decisions.
-
-**What success looks like.** Under `~/java-bootcamp/examples/lab33-crm/crm-ui/` the dashboard renders Amina and Ravi, empty state works, form labels are queryable, `npm run test -- --run` and `npm run build` are green, and you can explain why `customerId` is the list key.
-
-**Depends on Labs Setup / Lab 0.** Node 22+ and npm from Week 4 setup. No prior React lab is required; Labs 34–36 copy this tree forward.
-
-**CRM connection.** Fixtures `CUS-1001` (Amina Khan, ACTIVE), `CUS-1002` (Ravi Singh, PROSPECT), correlation `lab-request-001` on any logged edit callback. Lab 34 lifts state; Lab 35 replaces fixture arrays with fetch—keep props shapes stable.
-
----
-
 ## Learning Objectives
 
 After completing this lab, you will be able to:
@@ -88,12 +90,6 @@ After completing this lab, you will be able to:
 * Create accessible `StatusBadge` and `CustomerCard` components
 * Compose `CustomerList` from reusable cards with stable `customerId` keys
 * Create a labeled `CustomerForm` presentation component (controlled by parent later)
-* Build empty, loading, and error presentation shells
-* Compose the CRM dashboard with children and callback props
-* Write behavior-focused React Testing Library tests (role + accessible name)
-* Document a11y and composition decisions for the next lab
-
----
 
 ## Business Scenario
 
@@ -119,7 +115,6 @@ Use these examples consistently:
 ---
 
 ## Architecture Context
-
 ### NOW (this lab)
 
 ```mermaid
@@ -134,35 +129,9 @@ flowchart TB
   Test["Vitest + Testing Library<br/>role/name queries"] -.-> App
 ```
 
-### Lab flow (mermaid)
-
-```mermaid
-flowchart TD
-    A["Vite React-TS scaffold<br/>crm-ui + Vitest"] --> B["Types:<br/>Customer / Status / Draft"]
-    B --> C["StatusBadge<br/>+ CustomerCard"]
-    C --> D["CustomerList<br/>stable keys + empty"]
-    D --> E["CustomerForm<br/>labels + alerts"]
-    E --> F["Compose App<br/>fixtures CUS-1001/1002"]
-    F --> G["RTL behavior tests"]
-    G --> H["npm test + build<br/>+ evidence pack"]
-```
-
-### Architecture NOW vs LATER
-
-| Aspect | Lab 33 (NOW) | Lab 34–35 (LATER) |
-| ------ | ------------ | ----------------- |
-| Data | Fixture array in `App` | `useState` CRUD (34); `fetch` API (35) |
-| Form | Presentation props only | Controlled state + validation (34) |
-| Network | None | Typed client + CORS (35) |
-| Auth | None | Tokens / guards (36) |
-
-**Lab focus:** React TypeScript components, props, composition, stable list keys, semantics, and accessibility.
-
----
-
 ## Prerequisites
 
-Complete [SETUP](../../../SETUP-INSTRUCTIONS.md) and [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Confirm:
+Confirm (Lab 0 tools assumed):
 
 * Node.js 22+; npm; Git
 * Browser (Chrome/Edge) with DevTools
@@ -171,69 +140,9 @@ Complete [SETUP](../../../SETUP-INSTRUCTIONS.md) and [Lab 0](../../../Week%201%2
 ### Pre-flight
 
 ```bash
-node --version
-npm --version
-git --version
-pwd
-ls ~/java-bootcamp/examples
+java -version
+mvn -version
 ```
-
-Expected: Node `v20` or newer. Fix environment failures before scaffolding.
-
----
-
-## Suggested Project Files
-
-```text
-~/java-bootcamp/examples/lab33-crm/
-└── crm-ui/                          (Vite React-TS root)
-    ├── src/
-    │   ├── types/
-    │   │   └── customer.ts
-    │   ├── components/
-    │   │   ├── StatusBadge.tsx
-    │   │   ├── CustomerCard.tsx
-    │   │   ├── CustomerList.tsx
-    │   │   ├── CustomerList.test.tsx
-    │   │   ├── CustomerForm.tsx
-    │   │   ├── CustomerToolbar.tsx
-    │   │   ├── EmptyState.tsx
-    │   │   ├── LoadingState.tsx
-    │   │   ├── ErrorState.tsx
-    │   │   └── AppLayout.tsx
-    │   ├── data/
-    │   │   └── seedCustomers.ts     (CUS-1001 / CUS-1002)
-    │   ├── App.tsx
-    │   ├── App.css
-    │   └── main.tsx
-    ├── docs/
-    │   └── component-notes.md
-    ├── notes/screenshots/
-    ├── index.html
-    ├── package.json
-    ├── vite.config.ts               (+ vitest)
-    ├── tsconfig.json
-    ├── .gitignore
-    └── README.md
-```
-
-Ignore `node_modules/`, `dist/`, IDE metadata, tokens, and passwords.
-
----
-
-## Key ideas (skim — no write-up)
-
-Skim these ideas before coding. **No separate write-up required** (you will apply them in the Steps).
-
-1. Main UI flow (fixtures → list → card → edit callback)
-2. Trust boundary: browser DOM is untrusted display; validation moves up in Lab 34–35
-3. Success/failure contracts: empty vs populated list; build/typecheck must pass
-4. Stable identity: `customerId` as React `key` and edit callback argument
-5. Idempotency of `npm test` (repeatable, no shared mutable DOM fixtures)
-6. Why presentational components before `useState` (Lab 34) and fetch (Lab 35)
-
----
-
 
 ## Worked example (read before you code)
 
@@ -500,7 +409,7 @@ npm run test -- --run
 
 **Why:** Peers and instructors must reproduce green test/build without archaeology.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Capture screenshots under `notes/screenshots/lab-33/`. Document in README / `docs/component-notes.md`:
+**Do this:** Complete Failure Experiments. Capture screenshots under `notes/screenshots/lab-33/`. Document in README / `docs/component-notes.md`:
 
 ```bash
 npm run dev
@@ -564,20 +473,6 @@ _Mark **Pass** or **Fail** in your lab notes._
 
 ## Reference Commands, Configuration, and Code
 
-### Types excerpt
-
-```typescript
-export type CustomerStatus = "PROSPECT" | "ACTIVE" | "SUSPENDED" | "CLOSED";
-export interface Customer {
-  customerId: string;
-  fullName: string;
-  email: string;
-  phone: string;
-  status: CustomerStatus;
-}
-export type CustomerDraft = Omit<Customer, "customerId">;
-```
-
 ### List composition excerpt
 
 ```tsx
@@ -604,86 +499,6 @@ npm run build
 git status
 ```
 
-### Class map
-
-| File | Role |
-| ---- | ---- |
-| `types/customer.ts` | Shared CRM types |
-| `StatusBadge.tsx` | Accessible status label |
-| `CustomerCard.tsx` | One customer article |
-| `CustomerList.tsx` | Grid + empty state |
-| `CustomerForm.tsx` | Labeled presentation form |
-| `CustomerList.test.tsx` | RTL behavior suite |
-| `seedCustomers.ts` | Amina / Ravi fixtures |
-
-### Seed fixtures excerpt
-
-```typescript
-export const seedCustomers: Customer[] = [
-  {
-    customerId: "CUS-1001",
-    fullName: "Amina Khan",
-    email: "amina@example.com",
-    phone: "+1-555-0101",
-    status: "ACTIVE",
-  },
-  {
-    customerId: "CUS-1002",
-    fullName: "Ravi Singh",
-    email: "ravi@example.com",
-    phone: "+1-555-0102",
-    status: "PROSPECT",
-  },
-];
-```
-
-### Vitest config sketch
-
-```typescript
-// vite.config.ts
-export default defineConfig({
-  plugins: [react()],
-  test: {
-    environment: "jsdom",
-    globals: true,
-    setupFiles: "./src/setupTests.ts",
-  },
-});
-```
-
-### Form label pattern
-
-```tsx
-<label htmlFor="fullName">Full name</label>
-<input
-  id="fullName"
-  name="fullName"
-  value={value.fullName}
-  onChange={onChange}
-  aria-describedby="fullName-error"
-/>
-<p id="fullName-error" role="alert">
-  {errors.fullName}
-</p>
-```
-
----
-
-## Manual Verification
-
-1. Vite app titled Customer Management Platform loads at `:5173`.
-2. Amina (`CUS-1001`) and Ravi (`CUS-1002`) cards render with text status labels.
-3. Empty list shows “No customers yet” (force `customers={[]}` briefly).
-4. Form fields found by `getByLabelText`; errors use `role="alert"`.
-5. Exactly one `main` landmark; usable at 375px width.
-6. Edit on Amina invokes callback with `"CUS-1001"`.
-7. RTL suite ≥3 tests green twice consecutively.
-8. `npm run build` succeeds.
-9. No secrets or `node_modules` staged.
-10. You can explain why `customerId` is the React key.
-
----
-
 ## Failure Experiments
 
 | # | Experiment | Observe | Restore |
@@ -706,8 +521,8 @@ export default defineConfig({
 | TS error on status | Non-union string | Use `CustomerStatus` |
 | Blank page | Import path typo | Check relative imports |
 | Horizontal scroll | Fixed widths | Responsive grid / minmax |
-
----
+| Index as React key | Unstable identity | Use `customer.customerId` |
+| Color-only status | A11y / rubric fail | StatusBadge must include text |
 
 ## Security and Production Review
 
@@ -731,14 +546,6 @@ git status
 Do not commit `node_modules/` or `dist/`. Keep notes screenshots.
 
 **Keep `lab33-crm`**—Lab 34 copies it to `lab34-crm` and lifts state into `App`.
-
----
-
-## Expected Deliverables
-
-Same checklist as [What you'll submit](#what-youll-submit-read-this-first) at the top. You are done when those items are complete and the Implementation Checkpoints pass.
-
-Do **not** submit `target/`, secrets, or a verbatim instructor `solution/`.
 
 ---
 
@@ -769,26 +576,3 @@ Write **1–3 sentence** answers (not essays):
 ---
 
 
-## Bonus Challenges
-
-Optional — only after core deliverables pass. Pick at most one if time is short.
-
-
-1. Add `aria-live` polite region for empty→populated transitions.
-2. Storybook (or a small gallery route) for card variants.
-3. Enforce exhaustive `CustomerStatus` switch with `never` check.
-
----
-
-
-## Instructor Notes
-
-* **Live probe:** Ask for the React key on `CustomerCard` and why index is wrong. Open RTL test and confirm selectors use roles. Ask how grayscale status still works.
-* **Assess:** Typed unions, stable keys, labeled form, ≥3 meaningful RTL tests, empty/loading/error shells present.
-* **Continuity:** Prefer `examples/lab33-crm/crm-ui`. Keep fixture IDs. Lab 34 should not rewrite card markup—only lift state.
-* **Common pitfalls:** Wrong Vite template; Vitest not wired; `key={i}`; testing `.className`; missing `htmlFor`; real PII in seeds.
-* **Timing:** Timed path ~45 minutes with starter; full path remains 4–5 hours. Scaffold + Vitest often burn 45 minutes—steer students past create-vite prompts early.
-
----
-
-*End of Lab 33 — React Components for the CRM Dashboard. Keep `lab33-crm` for Lab 34 and portfolio evidence.*

@@ -1,8 +1,6 @@
 # Lab 50: Capstone Frontend and Persistence — Northstar CRM UI→PostgreSQL Journey
 
 **Module:** 50 — Capstone Frontend and Persistence  
-**Lab folder:** `labs/Week 6 - Capstone Project/module-50/lab50/`  
-**Difficulty:** Advanced Capstone  
 **Duration:** ~45 minutes (timed path / session block with starter) · Full path: 6–8 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
@@ -12,11 +10,38 @@
 | Windows | [LAB-50-WINDOWS.md](LAB-50-WINDOWS.md) |
 | macOS | [LAB-50-MACOS.md](LAB-50-MACOS.md) |
 
-> **Environment reminder:** Complete the [Module 50 pre-lab exercises](../exercises/EXERCISES-INDEX.md) after the slides and before this lab.  Finish Labs 0 and 49. Use **IntelliJ IDEA Community** (primary; optional VS Code) with **JDK 21**, **Maven 3.9+**, **Node.js 22+**, and instructor **shared PostgreSQL**. Work under `~/java-bootcamp/examples/customer-management-platform` (Windows: `%USERPROFILE%\java-bootcamp\examples\customer-management-platform`).
+---
+
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | ~45 min session block · full path 6–8 h multi-day |
+| **Checkpoint** | **E** (after Ex 1→4→2→3→5→6) |
+| **Must prove** | Data/API checklist · SQL/Flyway TODOs · journey fixtures · durability SELECT draft |
+| **Hard gate** | Pre-lab Pass · Lab 49 contract known |
+
+### What you will learn
+
+Connect an accessible React agent journey to PostgreSQL with typed API calls and durable proof.
+
+### Enterprise context
+
+Pretty UI without DB restart proof or a11y basics fails the capstone.
+
+### Predict
+
+UI shows success but SQL has no row — first three checks?
+
+### Debug
+
+TypeScript types disagree with Lab 49 DTOs — what do you reconcile?
 
 ---
 
 ## 45-minute timed path (session block — use starter)
+
+> **Pacing reminder:** [PACING.md](../PACING.md) checkpoint **E**. Homework/multi-day: React, a11y, E2E, restart durability, `docs/frontend-persistence-demo.md`.
 
 In class, use the starter data/API + Flyway stubs so the **session block** fits **~45 minutes**. React UI, a11y, E2E, and restart durability remain **multi-day** on the full path.
 
@@ -35,20 +60,9 @@ Policy: [`labs/_STARTER-PATH.md`](../../../_STARTER-PATH.md)
 
 ---
 
-## How to follow this lab
-
-1. **In class:** prefer [`starter/README.md`](starter/README.md) when a timed path exists — fill `// TODO`, run the smoke test (~45 min).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
-3. Work only under your `java-bootcamp/examples/…` folder (not inside this `labs/` clone unless a step says otherwise).
-4. Read **Worked example** once, then for each **Step**: **Why** → **Do this** → confirm **Expected result**.
-5. When stuck, use **Troubleshooting** / **Failure Experiments** before asking for help.
-6. Capture evidence under `notes/screenshots/` (redact secrets). Mark Pass/Fail in your own notes — GitHub does not support clickable checkboxes.
-
----
-
 ## What you'll submit (read this first)
 
-Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+Keep this checklist visible while you work.
 
 | # | Deliverable |
 | - | ----------- |
@@ -69,18 +83,6 @@ Keep this checklist visible while you work. Full detail is under [Expected Deliv
 
 This Module 50 lab completes a usable **React CRM journey** backed by **Spring Data JPA and PostgreSQL**, proving validation, persistence, loading/error states, accessibility, and end-to-end UI→database flow for the same fixtures Labs 48–49 planned and implemented.
 
-**Purpose.** The backend vertical slice exists, but agents still need an accessible search, profile, timeline, and interaction form with durable PostgreSQL storage. A UI that “looks done” without DB proof or a11y basics fails the capstone.
-
-**What you build (this lab).** Choose the end-to-end journey; complete PostgreSQL schema migrations; review JPA mappings; create a typed API client; build accessible forms; handle loading/empty/error/unauthorized states; verify UI→API→DB durability; automate component tests and one Selenium (or agreed E2E) critical path.
-
-**What success looks like.** Under the capstone frontend+backend, an agent can search Amina (`CUS-1001`), open profile/timeline, record an interaction with `lab-request-001`, see it on the timeline, and prove the row in PostgreSQL after restart. Lint/test/build and backend verify are green; a11y basics pass keyboard review.
-
-**Depends on Labs 48–49.** Need CAP story acceptance, DTO/API shapes, and working create-interaction endpoint. Finish Lab 49 if contracts or persistence are missing.
-
-**CRM connection.** Fixtures `CUS-1001` Amina / `CUS-1002` Ravi / `CUS-9999` not-found / correlation `lab-request-001`. Lab 51 secures and deploys; keep client typed against Lab 49 DTOs—do not invent parallel payload shapes.
-
----
-
 ## Learning Objectives
 
 After completing this lab, you will be able to:
@@ -90,13 +92,6 @@ After completing this lab, you will be able to:
 * Complete JPA and PostgreSQL mappings with owned relationships
 * Create repeatable versioned migrations
 * Handle loading, empty, success, invalid, unauthorized, and outage states
-* Verify UI-to-database flow with restart durability
-* Automate component tests and one critical-path E2E journey
-* Keep synthetic fixtures stable across UI and SQL evidence
-* Prevent duplicate submits and stale response races
-* Document reproduction for Lab 52 demo operators
-
----
 
 ## Business Scenario
 
@@ -121,7 +116,6 @@ Use these fixtures consistently:
 ---
 
 ## Architecture Context
-
 ### NOW (this lab)
 
 ```mermaid
@@ -134,36 +128,11 @@ flowchart TB
   Ev["screenshots + SQL evidence"] -.-> PG
 ```
 
-### Lab flow (mermaid)
-
-```mermaid
-flowchart TD
-    A["Choose E2E journey<br/>search / profile / interact"] --> B["PostgreSQL migrations<br/>indexes + constraints"]
-    B --> C["JPA mapping review<br/>fetch / cascade / version"]
-    C --> D["Typed API client<br/>errors + cancel"]
-    D --> E["Accessible UI<br/>labels / focus / alerts"]
-    E --> F["Server state UX<br/>loading / errors / disable submit"]
-    F --> G["UI->DB proof<br/>restart durability"]
-    G --> H["Component + E2E<br/>automation"]
-    H --> I["Evidence pack<br/>for Lab 52"]
-```
-
-### Architecture NOW vs LATER
-
-| Aspect | Lab 50 (NOW) | Lab 51 / 52 (LATER) |
-| ------ | ------------ | ------------------- |
-| Security UX | Show 401/403 states | Harden JWT server + scanners |
-| Data plane | Prove PostgreSQL durability | Deploy with secrets/config |
-| Proof | UI + SQL (+ tests) | Pipeline smoke + defense narrative |
-| A11y | Labels, keyboard, alerts | Optional automated axe scan (bonus) |
-
-**Lab focus:** React journey, JPA/PostgreSQL correctness, accessibility, UI→DB evidence, critical-path automation.
-
----
-
 ## Prerequisites
 
-Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md), [Lab 48](../../module-48/lab48/LAB-48-GUIDE.md), and [Lab 49](../../module-49/lab49/LAB-49-GUIDE.md). Confirm:
+Prior labs: [Lab 48](../../module-48/lab48/LAB-48-GUIDE.md) · [Lab 49](../../module-49/lab49/LAB-49-GUIDE.md).
+
+Confirm (Lab 0 tools assumed):
 
 * Node 22 + npm (React frontend)
 * PostgreSQL reachable **or** instructor-approved local stand-in with honesty note
@@ -176,72 +145,7 @@ Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%
 ```bash
 java -version
 mvn -version
-node --version
-npm --version
-git --version
-pwd
-ls ~/java-bootcamp/examples/customer-management-platform
 ```
-
-Branch and baseline:
-
-```bash
-cd ~/java-bootcamp/examples/customer-management-platform
-git switch -c lab/50-crm 2>/dev/null || git checkout -b lab/50-crm
-./mvnw -B clean verify 2>/dev/null || mvn -B clean verify
-cd frontend && npm ci && npm test -- --run && cd ..
-git status --short
-```
-
-If baseline fails, record command/error; do not hide inherited failure.
-
----
-
-## Suggested Project Files
-
-```text
-~/java-bootcamp/examples/customer-management-platform/
-├── backend/
-│   ├── src/main/resources/db/migration/
-│   │   └── V...__customer_interaction.sql
-│   └── src/main/java/com/northstar/crm/domain/
-├── frontend/
-│   ├── src/
-│   │   ├── api/client.ts
-│   │   ├── api/interactions.ts
-│   │   ├── api/customers.ts
-│   │   ├── components/CustomerSearch.tsx
-│   │   ├── components/CustomerProfile.tsx
-│   │   ├── components/InteractionTimeline.tsx
-│   │   ├── components/InteractionForm.tsx
-│   │   └── App.tsx
-│   ├── tests/ or src/**/*.test.tsx
-│   └── e2e/interaction-journey.spec.ts   # Selenium/Playwright as agreed
-├── docs/
-│   ├── frontend-persistence-demo.md
-│   ├── notes/screenshots/
-│   └── backlog.md
-├── .gitignore
-└── README.md
-```
-
-Ignore `node_modules/`, `dist/`, `target/`, IDE metadata, tokens, and passwords. Instructor may allow `lab50-crm/` parallel tree—keep contracts identical.
-
----
-
-## Key ideas (skim — no write-up)
-
-Skim these ideas before coding. **No separate write-up required** (you will apply them in the Steps).
-
-1. Main flow under UI test (search Amina → record interaction)
-2. Trust boundary: browser validation vs API enforcement
-3. Success/failure contracts shown to the agent (toast vs `role="alert"`)
-4. Stable fixtures vs ephemeral typed IDs without seed data
-5. Idempotency of submit button disable / single in-flight request
-6. Why optimistic locking matters when two agents edit timeline-related data
-
----
-
 
 ## Worked example (read before you code)
 
@@ -479,7 +383,7 @@ cd ..
 
 **Why:** Panel will ask what happens when PostgreSQL or API fails.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Finish `docs/frontend-persistence-demo.md` with commands, seed data, and proof links. Run UI test suite twice for determinism where feasible.
+**Do this:** Complete Failure Experiments. Finish `docs/frontend-persistence-demo.md` with commands, seed data, and proof links. Run UI test suite twice for determinism where feasible.
 
 **Expected result:** ≥3 experiments; peer can reproduce UI→DB proof; no secrets committed.
 
@@ -533,16 +437,6 @@ _Mark **Pass** or **Fail** in your lab notes._
 
 ## Reference Commands, Configuration, and Code
 
-### Typed client excerpt
-
-```typescript
-headers: {
-  "Content-Type": "application/json",
-  "X-Correlation-ID": "lab-request-001",
-  ...authHeaders()
-}
-```
-
 ### Frontend and backend checks
 
 ```bash
@@ -562,20 +456,6 @@ cd frontend && npm ci && npm run build && cd ..
 git status --short
 ```
 
-### Surface map
-
-| Surface | Role |
-| ------- | ---- |
-| `InteractionForm` | Accessible write path |
-| `InteractionTimeline` | Read model after write |
-| `api/interactions.ts` | Typed contract adapter |
-| Flyway/Liquibase SQL | Schema truth |
-| `frontend-persistence-demo.md` | UI→DB reproduction |
-
-### `frontend-persistence-demo.md` outline (minimum)
-
-```markdown
-# Frontend + persistence demo — Lab 50
 ## Tool versions (Node, npm, JDK)
 ## Seed data (CUS-1001 / CUS-1002)
 ## UI happy path steps
@@ -598,23 +478,6 @@ ORDER BY created_at DESC;
 ```
 
 Never paste connection passwords beside the query in evidence files.
-
----
-
-## Manual Verification
-
-1. Search finds Amina (`CUS-1001`) and Ravi (`CUS-1002`).
-2. Profile shows status and timeline region.
-3. Valid interaction appears on timeline within NFR window.
-4. Invalid summary/channel shows accessible error; no DB row.
-5. Unauthorized state visible when token removed (local test).
-6. Outage state visible when API stopped.
-7. SQL confirms row; survives restart.
-8. Correlation header sent as `lab-request-001`.
-9. Component/E2E automation covers critical path.
-10. No sensitive values in screenshots or Git.
-11. Keyboard-only path completes create interaction.
-12. Lab 49 DTO field names match TypeScript interfaces.
 
 ---
 
@@ -644,11 +507,6 @@ Never paste connection passwords beside the query in evidence files.
 | A11y fail on label | Missing `htmlFor` | Associate labels |
 | Stale timeline | No refetch | Invalidate/refetch after POST |
 | Type mismatch | DTO drift vs Lab 49 | Reconcile OpenAPI/DTO |
-| Hydration mismatch | SSR/data race | Prefer client fetch patterns used in course |
-| PostgreSQL timezone skew | TZ mapping | Align TIMESTAMPTZ + Instant |
-| Empty search always | Seed missing | Re-run fixture seed for Amina/Ravi |
-
----
 
 ## Security and Production Review
 
@@ -675,14 +533,6 @@ git status --short
 Remove temporary plaintext env files. Keep sanitized screenshots and demo.md.
 
 **Keep Lab 50 UI + migrations**—Lab 51 deploys them; Lab 52 demos them.
-
----
-
-## Expected Deliverables
-
-Same checklist as [What you'll submit](#what-youll-submit-read-this-first) at the top. You are done when those items are complete and the Implementation Checkpoints pass.
-
-Do **not** submit `target/`, secrets, or a verbatim instructor `solution/`.
 
 ---
 
@@ -713,44 +563,3 @@ Write **1–3 sentence** answers (not essays):
 ---
 
 
-## Bonus Challenges
-
-Optional — only after core deliverables pass. Pick at most one if time is short.
-
-
-1. Add optimistic-lock conflict UI when `@Version` conflicts.
-2. Run an automated accessibility scan (axe) and remediate top issues.
-3. Add pagination to the interaction timeline.
-
----
-
-
-## Instructor Notes
-
-* **Live probe:** Watch search for `CUS-1001`, create interaction, then show SQL. Keyboard-only pass on the form. Ask where correlation is set. Ask what the UI does when the API returns 400 vs when the API is down.
-* **Assess:** A11y basics, UI→DB evidence, state handling, DTO alignment with Lab 49, automation, restart durability.
-* **Continuity:** Prefer `customer-management-platform/{frontend,backend}`. Keep fixtures. Do not accept a mock-only UI without persistence proof unless instructor grants a documented exception.
-* **Common pitfalls:** Placeholder labels; double submit; CORS hacks with `*`; screenshots with JWTs; E2E coupled to CSS classes; silent Open Session in View; TypeScript types drifting from Lab 49 records.
-* **Timing:** 6–8 hours. PostgreSQL access issues often burn 45 minutes—verify connectivity in pre-flight. If E2E environment is unavailable, require stronger component tests + recorded manual critical path with SQL proof.
-* **Parity check:** Confirm Lab 49 `Location`/`InteractionResponse` fields match the typed client before students invent parallel DTOs.
-* **Quality bar:** SQL proof + keyboard checklist + at least one automated UI/component test.
-
----
-
-### Quick peer reproduction card (attach to PR)
-
-```markdown
-Peer name:
-npm build/test result:
-Keyboard form complete? Y/N
-UI create → SQL row for CUS-1001? Y/N
-Invalid path leaves DB unchanged? Y/N
-lab-request-001 sent from client? Y/N
-Secrets absent from screenshots? Y/N
-```
-
-Paste sanitized results into `docs/frontend-persistence-demo.md`.
-
----
-
-*End of Lab 50 — Capstone Frontend and Persistence: Northstar CRM UI→PostgreSQL Journey. Keep frontend and migrations for Labs 51–52 and portfolio evidence.*

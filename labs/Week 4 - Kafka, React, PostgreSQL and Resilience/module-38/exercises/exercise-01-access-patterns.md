@@ -1,20 +1,45 @@
 # Exercise 1 — Access Patterns
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **A** (after slides 183–193) |
+| **Deliverable** | `notes/lab38-perf.md` |
+| **Fixtures** | Preserve CUS-1001 / CUS-1002 · Lab 37 schema |
+
+### What you will learn
+
+List CRM lookups: by email, status, created date, customer→account join.
+
+### Enterprise context
+
+Lab 39 APIs will hit these patterns — tune what you will actually query.
+
+### Predict
+
+Which pattern is hottest for login/email lookup?
+
+### Debug
+
+Indexing every column — write cost risk?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Skipping Lab 37 schema | Need CUSTOMER/ACCOUNT columns from Lab 37 |
+| Only thinking SELECT * | Name concrete filters and join keys |
+
 **Module 38** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab38-perf.md` — list how the CRM will query customers and accounts.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-38-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-01-access-patterns.md` (this file in the course repo) |
 | Your notes file | `notes/lab38-perf.md` |
 
 ## Worked example (read first)

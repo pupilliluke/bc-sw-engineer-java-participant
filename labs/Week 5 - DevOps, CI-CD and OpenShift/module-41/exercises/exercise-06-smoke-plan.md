@@ -1,20 +1,45 @@
 # Exercise 6 — Plan Container Smoke
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 8–10 minutes |
+| **Checkpoint** | **D** (after slides 55–56) |
+| **Deliverable** | `notes/lab41-smoke-plan.md` |
+| **Fixtures** | Synthetic CUS-1001 smoke · no secrets in notes |
+
+### What you will learn
+
+Plan build/run/readiness/CUS-1001 smoke + graceful stop checks.
+
+### Enterprise context
+
+Hard gate evidence before k3s deploy.
+
+### Predict
+
+Bad DB URL at runtime — what should you observe?
+
+### Debug
+
+Starting Lab 43 Actions package job early — park it?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| No Lab 39/40 app | Need bootable JAR + health first |
+| Fixtures with real PII | Synthetic Amina/Ravi only |
+
 **Module 41** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab41-smoke-plan.md` — plan a post-start smoke that uses synthetic customers only.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-41-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-06-smoke-plan.md` (this file in the course repo) |
 | Your notes file | `notes/lab41-smoke-plan.md` |
 
 ## Worked example (read first)

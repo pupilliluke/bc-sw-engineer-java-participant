@@ -1,20 +1,43 @@
 # Exercise 5 — Producer Checklist
 
-**Module 30** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
+## Activity card
 
-## Goal
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **C** (after slides 15–19) |
+| **Deliverable** | `notes/lab30-producer-checklist.md` |
+| **Fixtures** | CUS-1001 Amina ACTIVE · CUS-1002 Ravi PROSPECT |
 
-Create `notes/lab30-producer-checklist.md` — list Lab 30 producer settings you will verify later (acks, idempotence, key).
+### What you will learn
+
+List acks=all, idempotence, keying, and retries for Lab 30 producer.
+
+### Enterprise context
+
+CRM cannot silently drop CustomerCreated.
+
+### Predict
+
+acks=0 vs acks=all under broker restart?
+
+### Debug
+
+Idempotence without key — still ordered?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Skipped acks | Lab requires acks=all + enable.idempotence |
+| Bootstrap wrong | localhost:9092 host; kafka:9092 in Compose network |
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-30-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-05-producer-checklist.md` (this file in the course repo) |
 | Your notes file | `notes/lab30-producer-checklist.md` |
 
 ## Worked example (read first)

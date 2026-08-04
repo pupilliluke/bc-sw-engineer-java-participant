@@ -1,8 +1,20 @@
 # Lab 29: Validation and Exception Handling — Northstar CRM Error Contracts
 
+> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 29 [pre-lab exercises 1–6](../exercises/EXERCISES-INDEX.md) (Pass in your notes; order **1 → 2 → 3 → 4 → 6 → 5**). Then open **one** OS how-to ([Windows](LAB-29-WINDOWS.md) · [macOS](LAB-29-MACOS.md)). In class, prefer the **45-minute timed path** with [`starter/`](starter/README.md); the **full path** is every Step below (homework / extended). Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
+
+## Activity card
+
+| | |
+| --- | --- |
+| **Objective** | Ship Bean Validation + GlobalExceptionHandler + stable ErrorResponse for CRM REST |
+| **Skills practiced** | @Valid DTOs, @RestControllerAdvice, 400/404/409 envelopes, MockMvc body asserts |
+| **Expected outcome** | Invalid → 400 · CUS-9999 → 404 · duplicate → 409 · happy GET · tests green |
+| **Estimated time** | Timed path ~45 min · Full path 4–5 hours |
+| **Prerequisites** | Lab 0 · Labs 14/16 concepts · Labs 25–28 preferred · Exercises 1–6 Pass · JDK 21 · Maven 3.9+ |
+| **Expected files** | `examples/lab29-crm/` — DTOs, advice, ErrorResponse, tests, error-contract notes |
+| **Validation checkpoints** | Starter smoke · GUIDE Implementation Checkpoints |
+
 **Module:** 29 — Validation and Exception Handling  
-**Lab folder:** `labs/Week 3 - Spring Framework and Enterprise Patterns/module-29/lab29/`  
-**Difficulty:** Intermediate  
 **Duration:** ~45 minutes (timed path with starter) · Full path: 4–5 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
@@ -12,9 +24,11 @@
 | Windows | [LAB-29-WINDOWS.md](LAB-29-WINDOWS.md) |
 | macOS | [LAB-29-MACOS.md](LAB-29-MACOS.md) |
 
-> **Environment reminder:** Complete the [Module 29 pre-lab exercises](../exercises/EXERCISES-INDEX.md) after the slides and before this lab.  Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Incremental build:** DTO constraints → handler TODOs → envelope → status map → MockMvc body plan → readiness → Lab 29.
 
----
+> **Classroom pacing:** [`../PACING.md`](../PACING.md) (Checkpoints A–D).
+
+> **Critical scope:** **`@Valid` + ErrorResponse**. Map **400/404/409**. Keep **`lab-request-001`**. Assert status **and** body. **No stack-trace HTML**. Keep Lab 28 security. Optional Week 3 review slides 215–220 after Kahoot.
 
 ## 45-minute timed path (use starter)
 
@@ -33,20 +47,9 @@ In class, use the starter templates so the **core** objectives fit **~45 minutes
 
 ---
 
-## How to follow this lab
-
-1. **In class:** prefer [`starter/README.md`](starter/README.md) when a timed path exists — fill `// TODO`, run the smoke test (~45 min).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
-3. Work only under your `java-bootcamp/examples/…` folder (not inside this `labs/` clone unless a step says otherwise).
-4. Read **Worked example** once, then for each **Step**: **Why** → **Do this** → confirm **Expected result**.
-5. When stuck, use **Troubleshooting** / **Failure Experiments** before asking for help.
-6. Capture evidence under `notes/screenshots/` (redact secrets). Mark Pass/Fail in your own notes — GitHub does not support clickable checkboxes.
-
----
-
 ## What you'll submit (read this first)
 
-Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+Keep this checklist visible while you work.
 
 | # | Deliverable |
 | - | ----------- |
@@ -66,18 +69,6 @@ Keep this checklist visible while you work. Full detail is under [Expected Deliv
 
 This Module 29 lab unifies **Bean Validation** on request DTOs with a global `@RestControllerAdvice` that returns a consistent **`ErrorResponse`** for REST failures. Patterns from Lab 14 (DTO/validation concepts) and Lab 16 (exception hierarchy / handler ideas) become the Spring Boot contract every client — React SPA, integration test, or partner — relies on.
 
-**Purpose.** Invalid payloads must fail at the API boundary with clear messages — never as stack-trace HTML. Missing customers such as a typo of `CUS-1001` must return a not-found envelope React can render. Duplicate creates and illegal lifecycle transitions use domain exceptions handled globally with predictable HTTP statuses.
-
-**What you build (this lab).** Copy to `lab29-crm`; add `spring-boot-starter-validation`; define `ErrorResponse` (+ field violations); annotate `CustomerRequest` / `StatusUpdateRequest`; enable `@Valid` on controllers; implement `GlobalExceptionHandler` for validation, not-found, duplicate, illegal transition, and safe 500 fallback; prove with curl using `lab-request-001`; write MockMvc tests asserting status **and** body shape; optionally note SOAP/WS fault alignment.
-
-**What success looks like.** Under `~/java-bootcamp/examples/lab29-crm/` invalid POSTs return 400 with violations, `CUS-9999` returns 404 envelopes, duplicate `CUS-1001` returns 409, happy GETs for Amina/Ravi still 200, and `mvn test` stays green twice.
-
-**Depends on Labs 14, 16, 25–28.** Recreate Lab 14/16 ideas here if those labs were stubs. Prefer Lab 28 so Security and validation coexist.
-
-**CRM connection.** Fixtures `CUS-1001` Amina / `CUS-1002` Ravi / `CUS-9999` not-found / correlation `lab-request-001` on every error envelope.
-
----
-
 ## Learning Objectives
 
 After completing this lab, you will be able to:
@@ -87,12 +78,6 @@ After completing this lab, you will be able to:
 * Map field and object-level violations into a stable `ErrorResponse`
 * Centralize exception handling with `@RestControllerAdvice` / `@ExceptionHandler`
 * Align HTTP status codes with business exceptions (404, 409, 400/422)
-* Preserve correlation IDs such as `lab-request-001` in error responses
-* Unify Lab 14 and Lab 16 patterns inside Boot (and optionally SOAP fault mapping notes)
-* Write tests that assert both status and error body shape
-* Keep 500 fallbacks safe for clients while logging detail server-side
-
----
 
 ## Business Scenario
 
@@ -117,7 +102,6 @@ Use these examples consistently:
 ---
 
 ## Architecture Context
-
 ### NOW (this lab)
 
 ```mermaid
@@ -129,35 +113,11 @@ flowchart TB
   GEH --> Err["ErrorResponse JSON"]
 ```
 
-### Lab flow (mermaid)
-
-```mermaid
-flowchart TD
-    A["Copy lab28 -> lab29<br/>+ validation starter"] --> B["ErrorResponse<br/>+ FieldViolation"]
-    B --> C["Annotate DTOs<br/>CustomerRequest / Status"]
-    C --> D["@Valid on controllers"]
-    D --> E["curl invalid POST<br/>observe default then custom"]
-    E --> F["GlobalExceptionHandler<br/>validation + domain"]
-    F --> G["404 / 409 / transition<br/>+ safe 500 fallback"]
-    G --> H["MockMvc jsonPath<br/>+ Lab 14/16 unify note"]
-```
-
-### Architecture NOW vs LATER
-
-| Aspect | Lab 29 (NOW) | Later / production |
-| ------ | ------------ | ------------------ |
-| Validation | Bean Validation on request DTOs | Same + shared problem+json profile |
-| Errors | Custom `ErrorResponse` | Optional RFC 7807 `ProblemDetail` |
-| Domain | Lab 16-style exception types in Boot | Same codes across REST and SOAP |
-| Security coexistence | JSON errors under JWT (Lab 28) | Same |
-
-**Lab focus:** enterprise validation + `@ControllerAdvice` `ErrorResponse`; unify Lab 14/16 patterns in Boot (and WS context notes).
-
----
-
 ## Prerequisites
 
-Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md), and Labs [14](../../../Week%202%20-%20Backend,%20AI%20Tools%20and%20Testing/module-14/lab14/LAB-14-GUIDE.md), [16](../../../Week%202%20-%20Backend,%20AI%20Tools%20and%20Testing/module-16/lab16/LAB-16-GUIDE.md), [25](../../module-25/lab25/LAB-25-GUIDE.md)–[28](../../module-28/lab28/LAB-28-GUIDE.md) as available. Confirm:
+Prior labs: [14](../../../Week%202%20-%20Backend,%20AI%20Tools%20and%20Testing/module-14/lab14/LAB-14-GUIDE.md) · [16](../../../Week%202%20-%20Backend,%20AI%20Tools%20and%20Testing/module-16/lab16/LAB-16-GUIDE.md) · [25](../../module-25/lab25/LAB-25-GUIDE.md) · [28](../../module-28/lab28/LAB-28-GUIDE.md).
+
+Confirm (Lab 0 tools assumed):
 
 * JDK 21; Maven; Spring Boot 3.x web app with Customer API
 * `spring-boot-starter-validation` on the classpath
@@ -170,74 +130,7 @@ Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%
 ```bash
 java -version
 mvn -version
-git --version
-pwd
-ls ~/java-bootcamp/examples
 ```
-
-If Lab 28 is active, confirm you can obtain a lab JWT before curling protected endpoints.
-
----
-
-## Suggested Project Files
-
-```text
-~/java-bootcamp/examples/lab29-crm/
-├── src/
-│   ├── main/
-│   │   ├── java/com/northstar/crm/
-│   │   │   ├── CrmApplication.java
-│   │   │   ├── controller/
-│   │   │   │   └── CustomerController.java
-│   │   │   ├── dto/
-│   │   │   │   ├── CustomerRequest.java
-│   │   │   │   ├── StatusUpdateRequest.java
-│   │   │   │   ├── CustomerResponse.java
-│   │   │   │   └── ErrorResponse.java
-│   │   │   ├── service/
-│   │   │   │   └── CustomerService.java
-│   │   │   ├── repository/
-│   │   │   │   └── CustomerRepository.java
-│   │   │   ├── exception/
-│   │   │   │   ├── BusinessException.java
-│   │   │   │   ├── CustomerNotFoundException.java
-│   │   │   │   ├── DuplicateCustomerException.java
-│   │   │   │   ├── InvalidStatusTransitionException.java
-│   │   │   │   └── GlobalExceptionHandler.java
-│   │   │   └── entity/
-│   │   │       ├── Customer.java
-│   │   │       └── CustomerStatus.java
-│   │   └── resources/
-│   │       └── application.yml
-│   └── test/
-│       └── java/com/northstar/crm/
-│           ├── controller/CustomerValidationTest.java
-│           └── exception/GlobalExceptionHandlerTest.java
-├── docs/
-│   └── error-contract-notes.md
-├── notes/screenshots/
-├── pom.xml
-├── .gitignore
-└── README.md
-```
-
-Ignore `target/`, IDE metadata, tokens, and passwords.
-
----
-
-## Key ideas (skim — no write-up)
-
-Skim these ideas before coding. **No separate write-up required** (you will apply them in the Steps).
-
-1. Main flow when validation fails versus when a domain exception is thrown
-2. Trust boundary: DTO vs service vs database constraints
-3. Success/failure contracts (`ErrorResponse` fields and HTTP statuses)
-4. Stable identity (`CUS-1001`) in error payloads for support
-5. Retry implications for 400/404/409 vs transient 500/503
-6. Local shortcut versus production (localization, problem+json)
-
----
-
 
 ## Worked example (read before you code)
 
@@ -548,7 +441,7 @@ mvn -q test
 
 **Why:** Document that Boot is the unification point for earlier course patterns.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Write a short paragraph in `docs/error-contract-notes.md` stating how Lab 14 DTO constraints and Lab 16 handlers are now one Boot contract. Capture before/after curl bodies under `notes/screenshots/lab-29/`.
+**Do this:** Complete Failure Experiments. Write a short paragraph in `docs/error-contract-notes.md` stating how Lab 14 DTO constraints and Lab 16 handlers are now one Boot contract. Capture before/after curl bodies under `notes/screenshots/lab-29/`.
 
 **Expected result:** ≥3 experiments; unify note present; evidence saved; `git status` clean of `target/`.
 
@@ -602,22 +495,6 @@ _Mark **Pass** or **Fail** in your lab notes._
 
 ## Reference Commands, Configuration, and Code
 
-### ErrorResponse shape
-
-```json
-{
-  "timestamp": "2026-07-14T12:00:00Z",
-  "status": 400,
-  "error": "Bad Request",
-  "message": "Validation failed",
-  "path": "/api/customers",
-  "correlationId": "lab-request-001",
-  "violations": [
-    {"field": "email", "message": "must be a well-formed email address", "rejectedValue": "bad"}
-  ]
-}
-```
-
 ### GlobalExceptionHandler (pattern)
 
 ```java
@@ -648,33 +525,6 @@ mvn -q test
 git status
 ```
 
-### Class map
-
-| Class | Role |
-| ----- | ---- |
-| `CustomerRequest` | Bean Validation contract |
-| `ErrorResponse` | Stable client error envelope |
-| `GlobalExceptionHandler` | Status + body mapping |
-| `CustomerValidationTest` | MockMvc validation proofs |
-| `error-contract-notes.md` | Lab 14/16 unify + SOAP note |
-
----
-
-## Manual Verification
-
-1. Valid GET Amina (`CUS-1001`) / Ravi (`CUS-1002`) still succeed.
-2. Invalid create returns 400 `ErrorResponse` with violations.
-3. `CUS-9999` returns 404 envelope with correlation ID.
-4. Duplicate `CUS-1001` returns 409.
-5. Illegal status transition returns mapped 400/422 (not 500).
-6. Fallback 500 does not leak stack traces to clients.
-7. Correlation `lab-request-001` present on error bodies when header sent.
-8. MockMvc covers validation and not-found.
-9. Two consecutive `mvn test` runs match.
-10. Lab 14/16 unify note documented; no secrets committed.
-
----
-
 ## Failure Experiments
 
 | # | Experiment | Observe | Restore |
@@ -697,8 +547,8 @@ git status
 | Violation order flake | Unsorted field errors | Sort in handler or loosen asserts |
 | Duplicate returns 200 | Unique check missing / after side effects | Enforce after validation, before persist |
 | 500 for not-found | Exception type not handled | Map `CustomerNotFoundException` → 404 |
-
----
+| Working in `module-29-exercises` for the lab | Wrong project | Lab lives in `examples/lab29-crm` |
+| Stack trace in JSON body | Unsafe 500 handler | Return generic message only |
 
 ## Security and Production Review
 
@@ -723,14 +573,6 @@ git status
 Keep screenshots/excerpts. Do not commit `target/`.
 
 **Keep `lab29-crm`**—Labs 30–31 add Kafka on a CRM that already speaks a stable error contract.
-
----
-
-## Expected Deliverables
-
-Same checklist as [What you'll submit](#what-youll-submit-read-this-first) at the top. You are done when those items are complete and the Implementation Checkpoints pass.
-
-Do **not** submit `target/`, secrets, or a verbatim instructor `solution/`.
 
 ---
 
@@ -761,26 +603,3 @@ Write **1–3 sentence** answers (not essays):
 ---
 
 
-## Bonus Challenges
-
-Optional — only after core deliverables pass. Pick at most one if time is short.
-
-
-1. RFC 7807 `application/problem+json` while keeping field violations.
-2. Container-backed integration test for the error envelope.
-3. Readiness separate from liveness.
-
----
-
-
-## Instructor Notes
-
-* **Live probe:** Ask the student to omit `@Valid` temporarily, show that bad emails pass into the service, then restore `@Valid` and reinterpret the handler output.
-* **Assess:** Error contract and status-code mapping, not annotations alone. Correlation ID on bodies. Safe 500. Lab 14/16 unify note present.
-* **Continuity:** Prefer `examples/lab29-crm`. Keep fixtures. Labs 30+ should not invent a second error dialect for HTTP.
-* **Common pitfalls:** Missing validation starter; forgetting `@Valid`; advice outside scan base; Security HTML; unsorted violation asserts; leaking SQL text in 500 bodies.
-* **Timing:** Timed path ~45 minutes with starter; full path remains 4–5 hours. Keep starter TODOs as the in-class core; remaining GUIDE steps are homework/extended depth.
-
----
-
-*End of Lab 29 — Validation and Exception Handling: Northstar CRM Error Contracts. Keep `lab29-crm` for Lab 30 and portfolio evidence.*

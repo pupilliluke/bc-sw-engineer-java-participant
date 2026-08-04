@@ -1,20 +1,45 @@
 # Exercise 3 — Constraints Checklist
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **C** (after slides 172–175) |
+| **Deliverable** | `notes/lab37-constraints.md` |
+| **Fixtures** | CUS-1001 Amina ACTIVE · CUS-1002 Ravi PROSPECT |
+
+### What you will learn
+
+Plan NOT NULL, UNIQUE, CHECK(status), and FK referential rules.
+
+### Enterprise context
+
+Invalid status / duplicate email / orphan FK must fail in Lab 37.
+
+### Predict
+
+What SQLSTATE/error do you expect on bad status?
+
+### Debug
+
+Unnamed constraints — why name them?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Plaintext password column | Never — out of scope / forbidden |
+| No CHECK on status | Constrain ACTIVE/PROSPECT (and allowed set) |
+
 **Module 37** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab37-constraints.md` — list PK/UK/FK/CHECK constraints before writing DDL.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-37-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-03-constraints.md` (this file in the course repo) |
 | Your notes file | `notes/lab37-constraints.md` |
 
 ## Worked example (read first)

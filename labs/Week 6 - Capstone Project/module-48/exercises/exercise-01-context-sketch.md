@@ -1,20 +1,45 @@
 # Exercise 1 — Sketch Context Diagram
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 12–15 minutes |
+| **Checkpoint** | **B** (after slides 9–14) |
+| **Deliverable** | `notes/lab48-context-sketch.md` |
+| **Fixtures** | CUS-1001/CUS-1002 · lab-request-001 · no secrets in ADRs |
+
+### What you will learn
+
+Sketch C4 context: actors, CRM containers, trust boundaries for the capstone.
+
+### Enterprise context
+
+Peers must see React, Spring, PostgreSQL, Kafka, IdP without Slack archaeology.
+
+### Predict
+
+What sits outside the system boundary vs inside?
+
+### Debug
+
+Diagram with only 'the cloud' — rewrite?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| No trust boundaries | Mark browser/API/IdP edges |
+| Coding Spring now | Planning only; Lab 49 implements |
+
 **Module 48** · Architecture exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab48-context-sketch.md` — identify users, external systems, and trust boundaries for Northstar CRM.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-48-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-01-context-sketch.md` (this file in the course repo) |
 | Your notes file | `notes/lab48-context-sketch.md` |
 
 ## Worked example (read first)

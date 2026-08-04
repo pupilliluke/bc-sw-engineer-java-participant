@@ -1,20 +1,32 @@
 # Exercise 4 — Contract-First Mindset
 
-**Module 13** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
+**Module 13** · Checkpoint C · Exercises 1–6 Pass then Lab 13
 
-## Goal
+## Activity card
 
-Create `notes/lab13-contract-first.md` — explain why Northstar SOAP should start from contract, not Java classes.
+| | |
+| --- | --- |
+| **Objective** | Explain contract-first mindset vs code-first for this CRM SOAP API |
+| **Skills practiced** | Contract-first design judgment |
+| **Expected outcome** | notes/lab13-contract-first.md |
+| **Estimated time** | 10–12 minutes |
+| **File to create** | `examples/module-13-exercises/` → notes/lab13-contract-first.md |
+| **Checkpoint** | C (after slides 124–126) |
+
+## What you will learn
+
+- Contract-first designs XSD/WSDL before hosting code
+- Request/response flows must match the contract
+- Lab 13 delivers contracts + samples — not a live server
+
+**Enterprise context:** Regulated integrations prefer frozen contracts over ad-hoc Java DTOs.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-13-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-04-contract-first.md` (this file in the course repo) |
 | Your notes file | `notes/lab13-contract-first.md` |
 
 ## Worked example (read first)
@@ -77,7 +89,18 @@ Confirm fixtures if used: Amina `CUS-1001`/`ACTIVE`, Ravi `CUS-1002`/`PROSPECT`,
 
 A contract-first rationale with two CRM operations named in `notes/lab13-contract-first.md`.
 
-## If it fails
+
+## Debug / design challenge
+
+Rewrite a code-first claim ('generate WSDL from classes later') into contract-first steps.
+
+## Predict the Output / Behavior
+
+Should Spring-WS hosting happen before or after the WSDL exists in this course?
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | --- | --- |

@@ -1,8 +1,20 @@
 # Lab 23: Spring Boot Setup and Auto-Configuration — Northstar CRM First Boot App
 
+> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 23 [pre-lab exercises 1–6](../exercises/EXERCISES-INDEX.md) (Pass in your notes; order **1 → 2 → 3 → 4 → 5 → 6**). Then open **one** OS how-to ([Windows](LAB-23-WINDOWS.md) · [macOS](LAB-23-MACOS.md)). In class, prefer the **45-minute timed path** with [`starter/`](starter/README.md); the **full path** is every Step below (homework / extended). Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
+
+## Activity card
+
+| | |
+| --- | --- |
+| **Objective** | Ship an Initializr-style Boot CRM app with REST customers + Actuator health |
+| **Skills practiced** | Starters, CrmApplication, application.yml, embedded server, health smoke |
+| **Expected outcome** | App on 8080 · health UP · CUS-1001/CUS-1002 evidence · autoconfig notes |
+| **Estimated time** | Timed path ~45 min · Full path 4–5 hours |
+| **Prerequisites** | Lab 0 · Lab 22 preferred · Exercises 1–6 Pass · JDK 21 · Maven 3.9+ |
+| **Expected files** | `examples/lab23-crm/` — pom, YAML, API, tests, ownership notes |
+| **Validation checkpoints** | Starter smoke · GUIDE Implementation Checkpoints |
+
 **Module:** 23 — Spring Boot Setup and Auto-Configuration  
-**Lab folder:** `labs/Week 3 - Spring Framework and Enterprise Patterns/module-23/lab23/`  
-**Difficulty:** Intermediate  
 **Duration:** ~45 minutes (timed path with starter) · Full path: 4–5 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
@@ -12,9 +24,11 @@
 | Windows | [LAB-23-WINDOWS.md](LAB-23-WINDOWS.md) |
 | macOS | [LAB-23-MACOS.md](LAB-23-MACOS.md) |
 
-> **Environment reminder:** Complete the [Module 23 pre-lab exercises](../exercises/EXERCISES-INDEX.md) after the slides and before this lab.  Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+** (Spring Boot 3.x via Maven). Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Incremental build:** Ownership → starters → CrmApplication stub → YAML → smoke plan → Lab 23.
 
----
+> **Classroom pacing:** [`../PACING.md`](../PACING.md) (Checkpoints A–E).
+
+> **Critical scope:** Starters **web + actuator + test**. Document **auto-config gifts vs ownership**. Profiles = **teaser** (Lab 26). Health smoke — do not rebuild Lab 21 metrics. SOAP/Security later.
 
 ## 45-minute timed path (use starter)
 
@@ -33,20 +47,9 @@ In class, use the starter templates so the **core** objectives fit **~45 minutes
 
 ---
 
-## How to follow this lab
-
-1. **In class:** prefer [`starter/README.md`](starter/README.md) when a timed path exists — fill `// TODO`, run the smoke test (~45 min).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
-3. Work only under your `java-bootcamp/examples/…` folder (not inside this `labs/` clone unless a step says otherwise).
-4. Read **Worked example** once, then for each **Step**: **Why** → **Do this** → confirm **Expected result**.
-5. When stuck, use **Troubleshooting** / **Failure Experiments** before asking for help.
-6. Capture evidence under `notes/screenshots/` (redact secrets). Mark Pass/Fail in your own notes — GitHub does not support clickable checkboxes.
-
----
-
 ## What you'll submit (read this first)
 
-Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+Keep this checklist visible while you work.
 
 | # | Deliverable |
 | - | ----------- |
@@ -67,18 +70,6 @@ Keep this checklist visible while you work. Full detail is under [Expected Deliv
 
 This Module 23 lab builds the first **Customer Management Platform** Spring Boot application in the Initializr style: starters, `application.yml`, an embedded server, REST `/api/customers`, Actuator health, and a `CrmApplication` entry point. You see how auto-configuration reduces boilerplate while you still own domain rules, validation, and exposure policy.
 
-**Purpose.** Leadership needs a single Boot process that peers can start with `mvn spring-boot:run`, hit create/get for Amina and Ravi, and smoke-check with `/actuator/health`. Profiles appear only as a teaser; Lab 26 deepens environment-specific config and secrets.
-
-**What you build (this lab).** Scaffold `lab23-crm` (Initializr or hand-authored parent); pin `web` + `actuator` + `test`; write `CrmApplication` and YAML; implement in-memory customer create/get with correlation `lab-request-001`; verify health; add `dev`/`prod` profile teasers; automate context-load and HTTP IT; document what Boot auto-configured versus what you still design.
-
-**What success looks like.** Under `~/java-bootcamp/examples/lab23-crm/` the app starts on 8080, `POST`/`GET` work for `CUS-1001`/`CUS-1002`, health returns `UP`, `mvn test` is green twice, and you can name three auto-config gifts and three ownership items.
-
-**Depends on Labs 0, 22 (+ domain from earlier CRM labs).** Need JDK/Maven fluency and constructor-injection discipline. Finish Lab 22 first if `new` wiring is still your only DI story.
-
-**CRM connection.** Fixtures `CUS-1001` / `CUS-1002` / `CUS-MISSING`, correlation `lab-request-001`. Lab 24 adds SOAP beside this REST slice; Lab 25 hardens Controller → Service → Repository.
-
----
-
 ## Learning Objectives
 
 After completing this lab, you will be able to:
@@ -88,12 +79,6 @@ After completing this lab, you will be able to:
 * Configure `application.yml` for server port, application name, and basic logging
 * Implement a first REST API for customers using Boot auto-configured MVC
 * Run the embedded Tomcat (or chosen) server via `spring-boot:run`
-* Verify Actuator health as a smoke check for a live process
-* Introduce `dev` / `prod` profiles as a teaser without over-building config
-* Explain what auto-configuration did for you and what you still own
-* Keep fictional CRM fixtures and correlation IDs consistent for peer review
-
----
 
 ## Business Scenario
 
@@ -118,7 +103,6 @@ Use these examples consistently:
 ---
 
 ## Architecture Context
-
 ### NOW (this lab)
 
 ```mermaid
@@ -129,35 +113,11 @@ flowchart TB
   Svc --> Features["JSON + X-Correlation-Id<br/>health / info / profile yml"]
 ```
 
-### Lab flow (mermaid)
-
-```mermaid
-flowchart TD
-    A["Initializr / parent POM<br/>web + actuator + test"] --> B["CrmApplication<br/>spring-boot:run"]
-    B --> C["application.yml<br/>name + port + Actuator"]
-    C --> D["Model + CustomerService<br/>in-memory store"]
-    D --> E["CustomerController<br/>POST/GET /api/customers"]
-    E --> F["Health + info curls<br/>CUS-1001 / CUS-1002"]
-    F --> G["dev/prod profile teaser"]
-    G --> H["CrmApplicationTests + IT<br/>mvn test ×2"]
-```
-
-### Architecture NOW vs LATER
-
-| Aspect | Lab 23 (NOW) | Lab 24–26 (LATER) |
-| ------ | ------------ | ----------------- |
-| Protocol | REST JSON only | SOAP Spring-WS beside REST |
-| Layers | Thin service + map | Explicit Controller → Service → Repository |
-| Config | YAML + profile teaser | Full `dev`/`test`/`prod` + `@ConfigurationProperties` |
-| Persistence | In-memory | Still in-memory until JPA/transactions (Lab 27) |
-
-**Lab focus:** Initializr-style Boot app; starters; `application.yml`; first REST endpoint; Actuator; profiles teaser; auto-config literacy.
-
----
-
 ## Prerequisites
 
-Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md), and preferably [Lab 22](../../module-22/lab22/LAB-22-GUIDE.md). Confirm:
+Prior labs: [Lab 22](../../module-22/lab22/LAB-22-GUIDE.md).
+
+Confirm (Lab 0 tools assumed):
 
 * JDK 21; Maven; Git
 * Network access to start.spring.io **or** ability to hand-author `spring-boot-starter-parent` 3.3.x
@@ -169,59 +129,7 @@ Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%
 ```bash
 java -version
 mvn -version
-git --version
-pwd
-ls ~/java-bootcamp/examples
 ```
-
-Confirm port 8080 is free (or choose another port in YAML before starting).
-
----
-
-## Suggested Project Files
-
-```text
-~/java-bootcamp/examples/lab23-crm/
-├── src/
-│   ├── main/
-│   │   ├── java/com/northstar/crm/
-│   │   │   ├── CrmApplication.java
-│   │   │   ├── api/CustomerController.java
-│   │   │   ├── service/CustomerService.java
-│   │   │   └── model/Customer.java
-│   │   └── resources/
-│   │       ├── application.yml
-│   │       ├── application-dev.yml
-│   │       └── application-prod.yml
-│   └── test/
-│       └── java/com/northstar/crm/
-│           ├── CrmApplicationTests.java
-│           └── api/CustomerControllerIT.java
-├── docs/
-│   └── autoconfig-notes.md
-├── notes/screenshots/
-├── pom.xml
-├── .gitignore
-└── README.md
-```
-
-Ignore `target/`, IDE metadata, tokens, and passwords.
-
----
-
-## Key ideas (skim — no write-up)
-
-Skim these ideas before coding. **No separate write-up required** (you will apply them in the Steps).
-
-1. Main flow: HTTP → Boot MVC → service map → JSON response
-2. Trust boundary: `@Valid` / `@NotBlank` at the controller before store put
-3. Success/failure contracts: 201/200 vs 404; correlation echoed on create
-4. Stable fixtures (`CUS-1001`) vs random IDs in demos
-5. Idempotency: GET safe; POST create may overwrite map key today — document honesty
-6. Why embedded Tomcat is a local shortcut vs reverse-proxy + hardened Actuator in prod
-
----
-
 
 ## Worked example (read before you code)
 
@@ -568,7 +476,7 @@ mvn -q test
 
 **Why:** Auto-config literacy includes knowing how Boot fails and how 404/validation appear.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Capture startup, health, and curl excerpts under `notes/screenshots/lab-23/`. Finish `docs/autoconfig-notes.md` (three auto-config items, three ownership items). Ensure `git status` clean of `target/`.
+**Do this:** Complete Failure Experiments. Capture startup, health, and curl excerpts under `notes/screenshots/lab-23/`. Finish `docs/autoconfig-notes.md` (three auto-config items, three ownership items). Ensure `git status` clean of `target/`.
 
 **Expected result:** ≥3 experiments recorded; dual green `mvn test`; evidence saved; no secrets staged.
 
@@ -622,14 +530,6 @@ _Mark **Pass** or **Fail** in your lab notes._
 
 ## Reference Commands, Configuration, and Code
 
-### Optional Initializr CLI shape
-
-```bash
-# Conceptual: start.spring.io with bootVersion=3.3.x, javaVersion=21,
-# packageName=com.northstar.crm, dependencies=web,actuator,validation
-# Prefer downloading into ~/java-bootcamp/examples/lab23-crm and aligning artifact id.
-```
-
 ### YAML excerpt (`application.yml`)
 
 ```yaml
@@ -653,35 +553,6 @@ info:
   app:
     name: northstar-crm
     description: Lab 23 Spring Boot CRM slice
-```
-
-### POM starters (excerpt)
-
-```xml
-<parent>
-  <groupId>org.springframework.boot</groupId>
-  <artifactId>spring-boot-starter-parent</artifactId>
-  <version>3.3.x</version>
-</parent>
-<dependencies>
-  <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-web</artifactId>
-  </dependency>
-  <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-actuator</artifactId>
-  </dependency>
-  <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-validation</artifactId>
-  </dependency>
-  <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-test</artifactId>
-    <scope>test</scope>
-  </dependency>
-</dependencies>
 ```
 
 ### Auto-config reminder
@@ -711,49 +582,6 @@ mvn -q test
 git status
 ```
 
-### Evidence checklist (paste into notes)
-
-```text
-[ ] Startup banner: Started CrmApplication / port 8080
-[ ] POST CUS-1001 201 + correlation lab-request-001
-[ ] POST CUS-1002 201
-[ ] GET CUS-1001 200 ACTIVE
-[ ] GET CUS-MISSING 404
-[ ] /actuator/health UP
-[ ] Profile banner shows (dev) when activated
-[ ] mvn test twice identical
-[ ] Autoconfig vs ownership three + three written
-```
-
-### Class map
-
-| Class | Role |
-| ----- | ---- |
-| `CrmApplication` | Boot entry / auto-config trigger |
-| `CustomerController` | REST `/api/customers` |
-| `CustomerService` | In-memory create/find |
-| `Customer` | Request/response model (record OK) |
-| `CrmApplicationTests` | Context-load smoke |
-| `CustomerControllerIT` | HTTP create/get gate |
-| `application.yml` | Shared port/name/Actuator |
-| `application-dev.yml` / `application-prod.yml` | Profile teasers |
----
-
-## Manual Verification
-
-1. `mvn spring-boot:run` prints `Started CrmApplication` on 8080.
-2. POST create returns 201 for `CUS-1001` and `CUS-1002` with correlation.
-3. GET `/api/customers/CUS-1001` returns Amina / ACTIVE.
-4. GET missing ID returns 404.
-5. Invalid/blank body is rejected (400) when validation is enabled.
-6. `/actuator/health` is UP; info optional but documented.
-7. `dev` profile changes log/detail behavior versus `prod` file intent.
-8. Two consecutive `mvn test` runs match.
-9. README documents run/cleanup and auto-config ownership notes.
-10. No sensitive values in YAML or Git.
-
----
-
 ## Failure Experiments
 
 | # | Experiment | Observe | Restore |
@@ -776,8 +604,8 @@ git status
 | YAML ignored | Indent/typo / no restart | Fix YAML; restart |
 | Bean not found | Wrong package scan | Keep types under `com.northstar.crm` |
 | Validation never fires | Missing starter-validation | Add dependency; `@Valid` on body |
-
----
+| Working in `module-23-exercises` for the lab | Wrong project | Lab lives in `examples/lab23-crm` |
+| App starts but no REST mapping | Missing `@RestController` / wrong path | Confirm `/api/customers` mapping |
 
 ## Security and Production Review
 
@@ -802,14 +630,6 @@ git status
 Do not commit `target/`. Keep curl transcripts and notes.
 
 **Keep `lab23-crm`**—Lab 24 copies it into `lab24-crm` for Spring-WS.
-
----
-
-## Expected Deliverables
-
-Same checklist as [What you'll submit](#what-youll-submit-read-this-first) at the top. You are done when those items are complete and the Implementation Checkpoints pass.
-
-Do **not** submit `target/`, secrets, or a verbatim instructor `solution/`.
 
 ---
 
@@ -840,26 +660,3 @@ Write **1–3 sentence** answers (not essays):
 ---
 
 
-## Bonus Challenges
-
-Optional — only after core deliverables pass. Pick at most one if time is short.
-
-
-1. Structured logging of `customerId` + correlation without PII.
-2. Separate readiness vs liveness notes on top of basic health.
-3. Metrics counter for create/get success/failure.
-
----
-
-
-## Instructor Notes
-
-* **Live probe:** Ask the student to name three things Boot auto-configured and three things they still own, then curl health and GET `CUS-1001`.
-* **Assess:** Real HTTP evidence for both fixtures + correlation; honest Actuator warning; green IT with `RANDOM_PORT`.
-* **Continuity:** Prefer `examples/lab23-crm`. Keep fixture IDs. Lab 24 copies this tree — do not invent a second domain model.
-* **Common pitfalls:** fixed-port test flakes; over-building full prod secrets (save for Lab 26); forgetting validation starter.
-* **Timing:** Timed path ~45 minutes with starter; full path remains 4–5 hours. Keep starter TODOs as the in-class core; remaining GUIDE steps are homework/extended depth.
-
----
-
-*End of Lab 23 — Spring Boot Setup and Auto-Configuration: Northstar CRM First Boot App. Keep `lab23-crm` for Lab 24 and portfolio evidence.*

@@ -1,20 +1,45 @@
 # Exercise 6 — Plan Staging Smoke
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 8–10 minutes |
+| **Checkpoint** | **D** (after slides 139–143) |
+| **Deliverable** | `notes/lab44-staging-smoke-plan.md` |
+| **Fixtures** | CUS-1001/CUS-1002 synthetic · Lab 43 digest · no secrets in artifact |
+
+### What you will learn
+
+Plan staging smoke with synthetic CUS-1001/CUS-1002 and correlation id only.
+
+### Enterprise context
+
+Non-prod smoke must not use real customer data; evidence is redacted.
+
+### Predict
+
+Smoke 401 after promote — config drift or artifact change?
+
+### Debug
+
+Smoke green but agents still fail — expand smoke?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Real PII in smoke | Use synthetic fixtures only |
+| No correlation id | Include lab-request-001 style id |
+
 **Module 44** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab44-staging-smoke-plan.md` — plan staging checks using Amina/Ravi fixtures only.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-44-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-06-staging-smoke-plan.md` (this file in the course repo) |
 | Your notes file | `notes/lab44-staging-smoke-plan.md` |
 
 ## Worked example (read first)

@@ -1,8 +1,20 @@
 # Lab 21: Observability and Monitoring — Northstar CRM Actuator & Metrics
 
+> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 21 [pre-lab exercises 1–6](../exercises/EXERCISES-INDEX.md) (Pass in your notes; order **1 → 2 → 3 → 4 → 5 → 6**). Then open **one** OS how-to ([Windows](LAB-21-WINDOWS.md) · [macOS](LAB-21-MACOS.md)). In class, prefer the **45-minute timed path** with [`starter/`](starter/README.md); the **full path** is every Step below (homework / extended). Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
+
+## Activity card
+
+| | |
+| --- | --- |
+| **Objective** | Ship Actuator probes + CrmReadinessIndicator + low-cardinality create/get metrics |
+| **Skills practiced** | Actuator exposure, liveness/readiness, Micrometer counters, ActuatorIT |
+| **Expected outcome** | Green `ActuatorIT` · readiness toggle · metrics after traffic · monitoring-report.md |
+| **Estimated time** | Timed path ~45 min · Full path 3–4 hours |
+| **Prerequisites** | Lab 0 · Lab 20 preferred · Exercises 1–6 Pass · JDK 21 · Maven 3.9+ |
+| **Expected files** | `examples/lab21-crm/` — probes, metrics, IT, monitoring-report |
+| **Validation checkpoints** | Starter smoke `ActuatorIT` · GUIDE Implementation Checkpoints |
+
 **Module:** 21 — Observability and Monitoring  
-**Lab folder:** `labs/Week 2 - Backend, AI Tools and Testing/module-21/lab21/`  
-**Difficulty:** Intermediate  
 **Duration:** ~45 minutes (timed path with starter) · Full path: 3–4 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
@@ -12,9 +24,11 @@
 | Windows | [LAB-21-WINDOWS.md](LAB-21-WINDOWS.md) |
 | macOS | [LAB-21-MACOS.md](LAB-21-MACOS.md) |
 
-> **Environment reminder:** Complete the [Module 21 pre-lab exercises](../exercises/EXERCISES-INDEX.md) after the slides and before this lab.  Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Incremental build:** Cardinality → allow-list → probes → metric/alert sketches → Lab 21.
 
----
+> **Classroom pacing:** [`../PACING.md`](../PACING.md) (Checkpoints A–E).
+
+> **Critical scope:** **Low-cardinality** tags only. **Liveness ≠ readiness**. Document that **lab Actuator exposure is not production**. Full tracing stacks are awareness-only.
 
 ## 45-minute timed path (use starter)
 
@@ -32,20 +46,9 @@ In class, use the starter templates so the **core** objectives fit **~45 minutes
 | **Full (extended)** | see Duration | Every Step in this GUIDE |
 
 
-## How to follow this lab
-
-1. **In class:** prefer [`starter/README.md`](starter/README.md) when a timed path exists — fill `// TODO`, run the smoke test (~45 min).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
-3. Work only under your `java-bootcamp/examples/…` folder (not inside this `labs/` clone unless a step says otherwise).
-4. Read **Worked example** once, then for each **Step**: **Why** → **Do this** → confirm **Expected result**.
-5. When stuck, use **Troubleshooting** / **Failure Experiments** before asking for help.
-6. Capture evidence under `notes/screenshots/` (redact secrets). Mark Pass/Fail in your own notes — GitHub does not support clickable checkboxes.
-
----
-
 ## What you'll submit (read this first)
 
-Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+Keep this checklist visible while you work.
 
 | # | Deliverable |
 | - | ----------- |
@@ -66,18 +69,6 @@ Keep this checklist visible while you work. Full detail is under [Expected Deliv
 
 This Module 21 lab extends the **Customer Management Platform** with **Spring Boot Actuator** health and **Micrometer** metrics. You expose health endpoints, separate **readiness** from **liveness**, and add counters/timers for CRM create/get so operators can see whether the service is alive, ready for traffic, and processing customer operations.
 
-**Purpose.** Structured logs (Lab 20) explain individual requests; operators also need aggregates and probe semantics. Leadership freezes: liveness ≠ readiness; create/get metrics move when `CUS-1001` / `CUS-1002` traffic runs; **never** tag metrics with customer names or correlation IDs (cardinality); local Actuator exposure is **not** a production recommendation.
-
-**What you build (this lab).** Copy to `lab21-crm`; add Actuator; configure health/metrics exposure for local lab; curl liveness/readiness; add `CrmReadinessIndicator` with a lab-only toggle; register `CustomerMetrics`; drive traffic with `lab-request-001`; automate `ActuatorIT`; write `docs/monitoring-report.md`.
-
-**What success looks like.** Under `~/java-bootcamp/examples/lab21-crm/` readiness can go OUT_OF_SERVICE while liveness stays UP; create success counters increase after POST; monitoring report lists metrics, alert idea, and production exposure restrictions.
-
-**Depends on Lab 20.** Structured logging strongly recommended so the same traffic shows `corr=lab-request-001` in logs while metrics stay aggregate-only. Create/get API from Lab 19 required.
-
-**CRM connection.** Fixtures `CUS-1001` / `CUS-1002`, correlation `lab-request-001` in HTTP/logs. Metrics use operation/result tags only. Lab 22 will rewire collaborators via Spring IoC—keep metric hooks injectable.
-
----
-
 ## Learning Objectives
 
 After completing this lab, you will be able to:
@@ -87,12 +78,6 @@ After completing this lab, you will be able to:
 * Explain readiness versus liveness and when each should fail
 * Configure health groups or indicators relevant to CRM dependencies
 * Register Micrometer counters/timers for customer create and get
-* Observe metric changes after CRM API calls with correlation `lab-request-001`
-* Avoid high-cardinality tags (`customerId`, names, correlation) on metrics
-* Produce a short monitoring report for support handoff
-* Identify which Actuator endpoints must not be public in production
-
----
 
 ## Business Scenario
 
@@ -116,7 +101,6 @@ Use these examples consistently:
 ---
 
 ## Architecture Context
-
 ### NOW (this lab)
 
 ```mermaid
@@ -129,34 +113,11 @@ flowchart TB
   Micro -.-> Svc["CustomerMetrics from service"]
 ```
 
-### Lab flow (mermaid)
-
-```mermaid
-flowchart TD
-    A["Copy lab20 -> lab21<br/>+ Actuator dep"] --> B["Expose health/metrics<br/>local YAML"]
-    B --> C["curl liveness<br/>vs readiness"]
-    C --> D["CrmReadinessIndicator<br/>lab toggle"]
-    D --> E["CustomerMetrics<br/>counters/timers"]
-    E --> F["Drive CUS-1001/1002<br/>before/after metrics"]
-    F --> G["ActuatorIT<br/>smoke tests"]
-    G --> H["monitoring-report.md<br/>+ prod restrictions"]
-```
-
-### Architecture NOW vs LATER
-
-| Aspect | Lab 20 (was) | Lab 21 (NOW) | Lab 22 / prod |
-| ------ | ------------ | ------------ | ------------- |
-| Signal | Per-request logs | Probes + aggregates | Bean graph + tighter Actuator security |
-| Correlation | MDC / header | Logs only (not tags) | Same discipline |
-| Failure mode | WARN/ERROR lines | Readiness DOWN vs process dead | LB drain vs restart |
-
-**Lab focus:** Spring Boot Actuator health/metrics; readiness ≠ liveness; sample metrics for CRM create/get.
-
----
-
 ## Prerequisites
 
-Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md), and Labs [19](../../module-19/lab19/LAB-19-GUIDE.md)–[20](../../module-20/lab20/LAB-20-GUIDE.md). Confirm:
+Prior labs: [19](../../module-19/lab19/LAB-19-GUIDE.md) · [20](../../module-20/lab20/LAB-20-GUIDE.md).
+
+Confirm (Lab 0 tools assumed):
 
 * JDK 21; Maven; Git
 * Spring Boot 3.x CRM module with customer create/get
@@ -168,55 +129,7 @@ Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%
 ```bash
 java -version
 mvn -version
-git --version
-pwd
-ls ~/java-bootcamp/examples
 ```
-
----
-
-## Suggested Project Files
-
-```text
-~/java-bootcamp/examples/lab21-crm/
-├── src/
-│   ├── main/
-│   │   ├── java/com/northstar/crm/
-│   │   │   ├── api/CustomerController.java
-│   │   │   ├── service/CustomerService.java
-│   │   │   ├── metrics/CustomerMetrics.java
-│   │   │   └── health/CrmReadinessIndicator.java
-│   │   └── resources/
-│   │       ├── application.yml
-│   │       └── logback-spring.xml
-│   └── test/
-│       └── java/com/northstar/crm/
-│           └── actuator/ActuatorIT.java
-├── docs/
-│   └── monitoring-report.md
-├── notes/screenshots/
-├── pom.xml
-├── .gitignore
-└── README.md
-```
-
-Ignore build output, tokens, and passwords.
-
----
-
-## Key ideas (skim — no write-up)
-
-Skim these ideas before coding. **No separate write-up required** (you will apply them in the Steps).
-
-1. Main flow: traffic → service → metrics registry → Actuator scrape
-2. Trust boundary: which Actuator endpoints are sensitive
-3. Success/failure contracts: UP vs OUT_OF_SERVICE vs DOWN
-4. Stable aggregate tags (`operation`, `result`) vs high-cardinality IDs
-5. Idempotent GET vs create counter growth semantics
-6. Local exposure vs production allow-list / auth
-
----
-
 
 ## Worked example (read before you code)
 
@@ -511,7 +424,7 @@ mvn -q -Dtest=ActuatorIT test
 - Cards: IDs in logs (Lab 20); aggregates in metrics (this lab)
 ```
 
-Complete [Failure Experiments](#failure-experiments). Capture before/after JSON. Run tests twice.
+Complete Failure Experiments. Capture before/after JSON. Run tests twice.
 
 **Expected result:** Report committed with readiness discussion + alert idea + production restrictions; experiments recorded; suite deterministic.
 
@@ -579,13 +492,6 @@ management:
         enabled: true
 ```
 
-### Metric registration
-
-```java
-registry.counter("crm.customer.create", "result", "success").increment();
-registry.timer("crm.customer.get.latency").record(duration);
-```
-
 ### Commands
 
 ```bash
@@ -599,33 +505,6 @@ mvn -q clean verify
 git status
 ```
 
-### Class map
-
-| Class | Role |
-| ----- | ---- |
-| `CrmReadinessIndicator` | Custom readiness contribution |
-| `CustomerMetrics` | Micrometer counters/timers |
-| `ActuatorIT` | Health + metric smoke tests |
-| `application.yml` | Exposure + probes (lab) |
-| `monitoring-report.md` | Operator handoff |
-
-### Probe decision matrix (commit to report)
-
-| Signal | Meaning | Typical operator action |
-| ------ | ------- | ----------------------- |
-| Liveness DOWN | Process unhealthy / stuck | Restart pod/process |
-| Readiness DOWN, liveness UP | Not safe for traffic yet | Remove from load balancer; do **not** thrash-restart |
-| Both UP | Accept traffic | Keep in rotation |
-| Create failure ratio rising | Business/dependency degradation | Alert; correlate with Lab 20 `corr=` logs |
-
-### Cardinality rules (non-negotiable)
-
-Allowed tag keys (examples): `application`, `result` (`success`/`failure`), `operation` (`create`/`get`).
-
-Forbidden tag keys for this CRM lab: `customerId`, `fullName`, `email`, `correlationId`, free-text reason messages.
-
-IDs and correlation stay in **logs** (Lab 20). Metrics stay **aggregates** (this lab). Mixing them “to make dashboards nicer” will fail review.
-
 ### Sample alert sketch (documentation only)
 
 ```text
@@ -637,21 +516,6 @@ Action: page on-call; search logs for op=customer.create level=ERROR|WARN
 ```
 
 Metric name spelling in Prometheus may differ from Actuator JSON (`crm.customer.create` → `crm_customer_create_*`). Document the scrape mapping if you enable Prometheus.
-
----
-
-## Manual Verification
-
-1. Actuator dependency resolves on the classpath.
-2. `/actuator/health` returns UP when the app is healthy.
-3. `/liveness` and `/readiness` are reachable with probes enabled.
-4. Readiness can fail while liveness stays UP (controlled experiment).
-5. `crm.customer.create` appears under `/actuator/metrics`.
-6. POST `CUS-1001` increases create success (or documented failure increment).
-7. GET increments get latency/success metrics.
-8. Logs still carry `lab-request-001` without putting it in metric tags.
-9. `ActuatorIT` passes.
-10. Monitoring report forbids unrestricted public Actuator in production.
 
 ---
 
@@ -678,8 +542,7 @@ Metric name spelling in Prometheus may differ from Actuator JSON (`crm.customer.
 | Config ignored | Wrong profile / YAML indent | Validate YAML; active profile |
 | High cardinality | ID/name tags | Use result/operation tags only |
 | Cannot connect | Port / process down | Check 8080 and health first |
-
----
+| Liveness DOWN when only readiness toggled | Wrong probe wiring | Keep liveness independent of CrmReadinessIndicator |
 
 ## Security and Production Review
 
@@ -703,14 +566,6 @@ git status
 ```
 
 **Keep `lab21-crm`**—Lab 22 replaces remaining `new` wiring with Spring IoC across the CRM graph.
-
----
-
-## Expected Deliverables
-
-Same checklist as [What you'll submit](#what-youll-submit-read-this-first) at the top. You are done when those items are complete and the Implementation Checkpoints pass.
-
-Do **not** submit `target/`, secrets, or a verbatim instructor `solution/`.
 
 ---
 
@@ -741,27 +596,3 @@ Write **1–3 sentence** answers (not essays):
 ---
 
 
-## Bonus Challenges
-
-Optional — only after core deliverables pass. Pick at most one if time is short.
-
-
-1. Keep Lab 20 correlation logs aligned with metric-generating traffic.
-2. IT that waits on readiness before exercising create.
-3. Real `DataSource` health check contributing to readiness.
-
----
-
-
-## Instructor Notes
-
-* **Live probe:** Make readiness fail while liveness stays UP; ask which operator action each implies. Require metric names for create/get and evidence tied to `CUS-1001` with correlation in companion logs.
-* **Assess:** Probe semantics, low-cardinality metrics, IT quality, monitoring report honesty about exposure.
-* **Continuity:** Prefer `examples/lab21-crm`. Keep fixture IDs. Lab 22 should inject `CustomerMetrics` via constructors—not static lookups.
-* **Common pitfalls:** Tagging `customerId`; claiming public Actuator is fine; liveness/readiness identical forever; curling wrong metric names; leaving lab toggles undocumented.
-* **Timing:** Timed path ~45 minutes with starter; full path remains 3–4 hours. Keep starter TODOs as the in-class core; remaining GUIDE steps are homework/extended depth. Probe group wiring often burns 30–40 minutes—demo readiness toggle early.
-* **Exit interview:** Student must state in one sentence: “Readiness DOWN means remove from LB; liveness DOWN means restart,” and show the JSON bodies that proved the split.
-
----
-
-*End of Lab 21 — Observability and Monitoring: Northstar CRM Actuator & Metrics. Keep `lab21-crm` for Lab 22 and portfolio evidence.*

@@ -1,20 +1,32 @@
 # Exercise 2 — SOLID Apply vs Defer
 
-**Module 12** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
+**Module 12** · Checkpoint A · Exercises 1–6 Pass then Lab 12
 
-## Goal
+## Activity card
 
-Create `notes/lab12-solid-scope.md` — choose one SOLID apply-now item and two defer items before SOAP/Spring labs.
+| | |
+| --- | --- |
+| **Objective** | Decide which SOLID ideas to apply now vs defer |
+| **Skills practiced** | Scoped design judgment |
+| **Expected outcome** | notes/lab12-solid-scope.md |
+| **Estimated time** | 10–12 minutes |
+| **File to create** | `examples/module-12-exercises/` → notes/lab12-solid-scope.md |
+| **Checkpoint** | A (after slides 94–99) |
+
+## What you will learn
+
+- Not every SOLID letter is mandatory in one lab
+- Document deferred items so they are not forgotten
+- SRP-style extract (validation helpers) is in scope
+
+**Enterprise context:** Teams ship incremental cleanups with an explicit defer list.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-12-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-02-solid-apply-defer.md` (this file in the course repo) |
 | Your notes file | `notes/lab12-solid-scope.md` |
 
 ## Worked example (read first)
@@ -77,7 +89,18 @@ Confirm fixtures if used: Amina `CUS-1001`/`ACTIVE`, Ravi `CUS-1002`/`PROSPECT`,
 
 An apply/defer SOLID note with Week 2 honesty in `notes/lab12-solid-scope.md`.
 
-## If it fails
+
+## Debug / design challenge
+
+If you marked all five SOLID letters as apply-now, trim to what Lab 12 can prove.
+
+## Predict the Output / Behavior
+
+Is introducing a full DI framework required for Module 12?
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | --- | --- |

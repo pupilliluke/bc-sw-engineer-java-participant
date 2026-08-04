@@ -1,20 +1,32 @@
 # Exercise 3 — Page Object Sketch
 
-**Module 19** · Architecture exercise · [setup + file names](EXERCISES-INDEX.md)
+**Module 19** · Checkpoint C · Classroom order **1 → 2 → 3 → 4 → 6 → 5** then Lab 19
 
-## Goal
+## Activity card
 
-Create `notes/lab19-page-object.md` — sketch a CustomerStatusPage object with actions and queries.
+| | |
+| --- | --- |
+| **Objective** | Sketch a CustomerForm/Status Page Object with actions and queries |
+| **Skills practiced** | Page Object pattern |
+| **Expected outcome** | notes/lab19-page-object.md |
+| **Estimated time** | 10–12 minutes |
+| **File to create** | `examples/module-19-exercises/` → notes/lab19-page-object.md |
+| **Checkpoint** | C (after slides 230–231) |
+
+## What you will learn
+
+- Class with WebDriver field
+- Actions: open, fill, submit/activate; queries: readStatus
+- Prefer asserts in tests; page returns data
+
+**Enterprise context:** Duplicated driver.findElement calls across tests make locator fixes a copy-paste tax.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-19-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-03-page-object.md` (this file in the course repo) |
 | Your notes file | `notes/lab19-page-object.md` |
 
 ## Worked example (read first)
@@ -24,24 +36,13 @@ Here is the shape of a complete answer for this exercise. Adapt the content — 
 ```markdown
 # Lab 19 — Page Object Sketch
 
-## Step 1 — Class
-
-Paper class `CustomerStatusPage` with driver field.
-
-## Step 2 — Actions
-
-Methods: open(customerId), readStatus(), clickActivate().
-
-## Step 3 — No asserts in page?
-
-Prefer assertions in tests; page returns data (status text).
-
-## Step 4 — Prep boundary
-
-Write: *Prepare for Lab 19; do not complete full Selenium suite now.*
+Class CustomerFormPage / CustomerStatusPage with driver.
+Methods: open(), fillName(...), submit(), readStatus().
+Assertions in tests; page returns status text.
+Prepare for Lab 19; do not complete full suite now.
 
 ## Scope
-Pre-lab only — do not finish the full graded lab in this exercise.
+Pre-lab only.
 ```
 
 Then follow **Steps** to create your own file.
@@ -57,24 +58,20 @@ From `examples/module-19-exercises/`, create `notes/` if needed, then create `no
 ```markdown
 # Lab 19 — Page Object Sketch
 
-## Step 1 — Class
+## Class name
+_____
 
-Paper class `CustomerStatusPage` with driver field.
+## Actions
+_____
 
-## Step 2 — Actions
+## Queries
+_____
 
-Methods: open(customerId), readStatus(), clickActivate().
-
-## Step 3 — No asserts in page?
-
-Prefer assertions in tests; page returns data (status text).
-
-## Step 4 — Prep boundary
-
-Write: *Prepare for Lab 19; do not complete full Selenium suite now.*
+## Asserts live in
+_____
 
 ## Scope
-Pre-lab only — do not finish the full graded lab in this exercise.
+Pre-lab only.
 ```
 
 ### Step 3 — Self-check
@@ -83,22 +80,31 @@ Confirm fixtures if used: Amina `CUS-1001`/`ACTIVE`, Ravi `CUS-1002`/`PROSPECT`,
 
 ## Expected result
 
-A Page Object sketch with clear responsibilities in `notes/lab19-page-object.md`.
+Page Object sketch in `notes/lab19-page-object.md`.
 
-## If it fails
+## Debug / design challenge
+
+Should clickActivate() contain assertEquals(ACTIVE)? Why/why not?
+
+## Predict the Output / Behavior
+
+Where do data-testid strings live — page object or raw test?
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | --- | --- |
 | No file / wrong name | Must be `notes/lab19-page-object.md` |
-| Leaving blanks or skipping steps | Complete every step before claiming Pass |
-| Starting the full lab mid-exercise | Finish pre-lab notes first, then open Lab 19 |
+| Putting all asserts in the page | Move asserts to tests |
+| No action methods | List open/fill/submit/read |
 
 ## Pass criteria
 
 Self-check before marking Pass:
 
 - [ ] File exists at `notes/lab19-page-object.md`
-- [ ] Class and methods sketched
+- [ ] Class named
+- [ ] Actions listed
 - [ ] Assert placement noted
-- [ ] Pre-lab boundary present
-

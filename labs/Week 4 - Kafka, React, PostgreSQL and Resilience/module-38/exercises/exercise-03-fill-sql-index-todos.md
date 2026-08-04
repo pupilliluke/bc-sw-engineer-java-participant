@@ -1,20 +1,45 @@
 # Exercise 4 — Fill SQL/Index TODOs
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **C** (after slides 198–200) |
+| **Deliverable** | `notes/lab38-sql-index-todos.md` |
+| **Fixtures** | Preserve CUS-1001 / CUS-1002 · Lab 37 schema |
+
+### What you will learn
+
+Draft index DDL TODOs and baseline vs optimized query notes.
+
+### Enterprise context
+
+Scripts 01–05 structure the lab experiment cycle.
+
+### Predict
+
+What goes in report.md for each experiment id?
+
+### Debug
+
+Deep OFFSET for page 5000 — better alternative?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Forgetting keyset paging | Order by stable key + seek predicate |
+| Wiping CUS-1001 on load | Preserve/re-seed fixtures after bulk load |
+
 **Module 38** · Hands-on exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab38-sql-index-todos.md` — fill TODOs in baseline vs optimized SQL and index DDL (on paper).
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-38-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-03-fill-sql-index-todos.md` (this file in the course repo) |
 | Your notes file | `notes/lab38-sql-index-todos.md` |
 
 ## Worked example (read first)

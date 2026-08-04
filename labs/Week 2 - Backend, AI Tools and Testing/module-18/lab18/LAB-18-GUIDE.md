@@ -1,8 +1,20 @@
 # Lab 18: Mockito and Mocking with AI Assistance — Northstar CRM Isolation Tests
 
+> **Participants:** Module sequence is in [`../README.md`](../README.md). **Do not start this guide until** you have finished Module 18 [pre-lab exercises 1–6](../exercises/EXERCISES-INDEX.md) (Pass in your notes; order **1 → 2 → 3 → 4 → 5 → 6**). Then open **one** OS how-to ([Windows](LAB-18-WINDOWS.md) · [macOS](LAB-18-MACOS.md)). In class, prefer the **45-minute timed path** with [`starter/`](starter/README.md); the **full path** is every Step below (homework / extended). Skip `solution/` unless your instructor says otherwise. See [Which file do I open?](../../../_PARTICIPANT-FILE-GUIDE.md).
+
+## Activity card
+
+| | |
+| --- | --- |
+| **Objective** | Ship Mockito + BDDMockito isolation suites with stub/verify/never/ArgumentCaptor |
+| **Skills practiced** | @Mock repo, real validator, verify/never, ArgumentCaptor, BDDMockito syntax |
+| **Expected outcome** | Green Mockito + BDD suites · not-found never saves · isolation-policy.md |
+| **Estimated time** | Timed path ~45 min · Full path 3–4 hours |
+| **Prerequisites** | Lab 0 · Lab 17 preferred · Exercises 1–6 Pass · JDK 21 · Maven 3.9+ |
+| **Expected files** | `examples/lab18-crm/` — mock suites, POM Mockito deps, isolation-policy |
+| **Validation checkpoints** | Starter smoke `mvn -B clean test` (run twice) · GUIDE Implementation Checkpoints |
+
 **Module:** 18 — Mockito for Test Isolation  
-**Lab folder:** `labs/Week 2 - Backend, AI Tools and Testing/module-18/lab18/`  
-**Difficulty:** Intermediate  
 **Duration:** ~45 minutes (timed path with starter) · Full path: 3–4 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
@@ -12,9 +24,11 @@
 | Windows | [LAB-18-WINDOWS.md](LAB-18-WINDOWS.md) |
 | macOS | [LAB-18-MACOS.md](LAB-18-MACOS.md) |
 
-> **Environment reminder:** Complete the [Module 18 pre-lab exercises](../exercises/EXERCISES-INDEX.md) after the slides and before this lab.  Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md). Use **IntelliJ IDEA Community** (primary; optional VS Code) on your laptop with **JDK 21** and **Maven 3.9+**. Work under `~/java-bootcamp` (Windows: `%USERPROFILE%\java-bootcamp`).
+> **Incremental build:** Real-validator policy → stub/verify → captor → activate sequence → anti-patterns → Lab 18.
 
----
+> **Classroom pacing:** [`../PACING.md`](../PACING.md) (Checkpoints A–E).
+
+> **Critical scope:** Mock **repository** (+ notifier); keep **validator** real. Never mock the SUT. `never().save` on not-found. Selenium is **Lab 19**. Review AI drafts.
 
 ## 45-minute timed path (use starter)
 
@@ -32,20 +46,9 @@ In class, use the starter templates so the **core** objectives fit **~45 minutes
 | **Full (extended)** | see Duration | Every Step in this GUIDE |
 
 
-## How to follow this lab
-
-1. **In class:** prefer [`starter/README.md`](starter/README.md) when a timed path exists — fill `// TODO`, run the smoke test (~45 min).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
-3. Work only under your `java-bootcamp/examples/…` folder (not inside this `labs/` clone unless a step says otherwise).
-4. Read **Worked example** once, then for each **Step**: **Why** → **Do this** → confirm **Expected result**.
-5. When stuck, use **Troubleshooting** / **Failure Experiments** before asking for help.
-6. Capture evidence under `notes/screenshots/` (redact secrets). Mark Pass/Fail in your own notes — GitHub does not support clickable checkboxes.
-
----
-
 ## What you'll submit (read this first)
 
-Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+Keep this checklist visible while you work.
 
 | # | Deliverable |
 | - | ----------- |
@@ -65,18 +68,6 @@ Keep this checklist visible while you work. Full detail is under [Expected Deliv
 
 This Module 18 lab isolates **Customer Management Platform** service unit tests with **Mockito**: mock `CustomerRepository` (and optionally collaborator services), **verify interactions**, and use **ArgumentCaptor** / **BDDMockito** style stubs. You keep JUnit 5 from Lab 17 and stop relying on the real in-memory map for service-layer unit tests.
 
-**Purpose.** Lab 17 proved `DefaultCustomerService` behavior against a real `InMemoryCustomerRepository`. That couples “service rule” failures to HashMap details. Leadership now wants **true unit tests**: stub the repository, verify `find`/`save`/`exists` interactions, and prove not-found and illegal paths never call `save`. Optional Copilot may draft mock setups—every stub and verification must be human-reviewed.
-
-**What you build (this lab).** Copy to `lab18-crm`; add Mockito test-scoped deps; write `CustomerServiceMockitoTest` with stubs, `verify`, `never()`, and `ArgumentCaptor`; add `CustomerServiceBddMockTest` with BDDMockito `given`/`then`/`should`; keep Lab 17 real-repo tests if useful; document the isolation policy; run `mvn clean test` green twice.
-
-**What success looks like.** Under `~/java-bootcamp/examples/lab18-crm/` you can show activate-Ravi with a stubbed repo, prove `CUS-9999` never saves, capture Amina’s entity on add, explain BDD style as syntax not magic, and state which suites use mocks vs real in-memory.
-
-**Depends on Lab 17.** Need `DefaultCustomerService`, `CustomerValidator`, JUnit 5 suite, and preferably JaCoCo still green on the service package. Finish Lab 17 first if coverage/fixtures are missing.
-
-**CRM connection.** Fixtures `CUS-1001` / `CUS-1002` / `CUS-9999`, correlation `lab-request-001`. Lab 19 adds HTTP/UI boundaries—keep service constructors injectable so mocks and Spring can both wire them later.
-
----
-
 ## Learning Objectives
 
 After completing this lab, you will be able to:
@@ -86,22 +77,12 @@ After completing this lab, you will be able to:
 * Stub repository responses with `when(...).thenReturn(...)` or BDD `given(...).willReturn(...)`
 * `verify` save/find interactions and argument values for `CUS-1001` / `CUS-1002`
 * Use `ArgumentCaptor` to inspect the `Customer` passed to `save`
-* Prove not-found and illegal-transition paths with `verify(..., never()).save(...)`
-* Explain why mocking the repository isolates the service unit under test
-* Avoid common mistakes: over-mocking, unnecessary stubbing, mocking the class under test
-* Review optional Copilot mock drafts and reject false-confidence stubs
-
----
 
 ## Business Scenario
 
 Lab 17 tests use a real `InMemoryCustomerRepository`. Fine for early confidence; insufficient for true unit isolation. Your lead freezes:
 
 **Service-layer unit tests must mock `CustomerRepository`. Verifications prove interaction contracts. Failures in repository wiring must not require a database or HashMap.**
-
-You own that isolation for Labs 15–17 behavior: Amina (`CUS-1001` ACTIVE), Ravi (`CUS-1002` PROSPECT→ACTIVE), illegal transitions, duplicates, not-found.
-
-Use these examples consistently:
 
 | ID | Name | Notes |
 | -- | ---- | ----- |
@@ -113,12 +94,7 @@ Use these examples consistently:
 
 **Policy choice to document.** Validator may stay **real** (rules are the subject) or be **mocked** for pure interaction tests. Prefer real validator + shared mock repo so uniqueness rules that call `existsById` / `existsByEmail` still exercise production validation.
 
-**Security note for evidence.** Use fictional emails only (`amina.khan@example.com`, `ravi.singh@example.com`). Never commit secrets or leave debug `Mockito.mockingDetails` prints in submitted code.
-
----
-
 ## Architecture Context
-
 ### NOW (this lab)
 
 ```mermaid
@@ -130,34 +106,11 @@ flowchart TB
   Verify["verify / ArgumentCaptor / never"] -.-> Repo
 ```
 
-### Lab flow (mermaid)
-
-```mermaid
-flowchart TD
-    A["Copy lab17 -> lab18<br/>+ Mockito deps"] --> B["MockitoTest skeleton<br/>shared mock repo"]
-    B --> C["Stub activate Ravi<br/>verify find+save"]
-    C --> D["Not-found CUS-9999<br/>never save"]
-    D --> E["ArgumentCaptor<br/>add Amina"]
-    E --> F["BDDMockito<br/>CustomerServiceBddMockTest"]
-    F --> G["Optional Copilot<br/>+ review log"]
-    G --> H["Full mvn test<br/>+ isolation policy README"]
-```
-
-### Architecture NOW vs LATER
-
-| Aspect | Lab 17 (was) | Lab 18 (NOW) | Lab 19 / Spring |
-| ------ | ------------ | ------------ | --------------- |
-| Collaborators | Real in-memory repo | Mockito mocks | HTTP/UI + later `@MockBean` |
-| Gate focus | JaCoCo ≥80% service | Interaction verify + isolation | Regression IT / Selenium |
-| AI | Optional JUnit draft | Optional mock draft + review | Same discipline |
-
-**Lab focus:** Mock repository collaborators, verify interactions, isolate service unit tests (Argue/`argThat`/BDDMockito style OK). Do not mock `DefaultCustomerService` itself.
-
----
-
 ## Prerequisites
 
-Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md), and Labs [15](../../module-15/lab15/LAB-15-GUIDE.md)–[17](../../module-17/lab17/LAB-17-GUIDE.md). Confirm:
+Prior labs: [15](../../module-15/lab15/LAB-15-GUIDE.md) · [17](../../module-17/lab17/LAB-17-GUIDE.md).
+
+Confirm (Lab 0 tools assumed):
 
 * JDK 21; Maven; Git
 * Lab 17 suite on `lab17-crm/` → copy to `lab18-crm/`
@@ -169,56 +122,7 @@ Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%
 ```bash
 java -version
 mvn -version
-git --version
-pwd
-ls ~/java-bootcamp/examples
 ```
-
-If using Copilot: Command Palette → `GitHub Copilot: Check Status` → signed in / active.
-
----
-
-## Suggested Project Files
-
-```text
-~/java-bootcamp/examples/lab18-crm/
-├── src/
-│   ├── main/java/com/northstar/crm/...
-│   └── test/java/com/northstar/crm/
-│       ├── service/
-│       │   ├── CustomerServiceTests.java           (keep Lab 17; may coexist)
-│       │   ├── CustomerServiceMockitoTest.java     (new)
-│       │   ├── CustomerServiceBddMockTest.java     (new — BDDMockito)
-│       │   └── CustomerValidatorParameterizedTest.java
-│       └── exception/
-│           └── GlobalExceptionHandlerTest.java
-├── copilot-notes/
-│   └── ai-mockito-review.md
-├── docs/
-│   └── isolation-policy.md
-├── notes/screenshots/
-├── pom.xml                         (Mockito + existing Surefire/JaCoCo)
-├── .gitignore
-└── README.md
-```
-
-Ignore `target/`, IDE metadata, tokens, and passwords.
-
----
-
-## Key ideas (skim — no write-up)
-
-Skim these ideas before coding. **No separate write-up required** (you will apply them in the Steps).
-
-1. Main flow under test (service use cases with stubbed repo, not HTTP)
-2. Trust boundary: what mocks prove vs what they assume about repository contracts
-3. Success/failure contracts encoded as asserts **and** `verify` / `never`
-4. Stable fixtures (`CUS-1001`) vs random data in stubs
-5. Idempotency of `mvn test` and fresh mocks per `@BeforeEach`
-6. Why unit mocks coexist with Lab 17 real in-memory suite
-
----
-
 
 ## Worked example (read before you code)
 
@@ -581,7 +485,7 @@ Document in README / `docs/isolation-policy.md`:
 * Correlation ID expectations on exception paths
 * Why both styles can coexist
 
-Complete [Failure Experiments](#failure-experiments). Capture Surefire excerpts under `notes/screenshots/lab-18/`. Run `mvn -q test` twice for determinism.
+Complete Failure Experiments. Capture Surefire excerpts under `notes/screenshots/lab-18/`. Run `mvn -q test` twice for determinism.
 
 **Expected result:** All Lab 17 + Lab 18 tests green twice; README states isolation policy; evidence saved; `git status` clean of `target/`.
 
@@ -644,21 +548,6 @@ when(repository.findById("CUS-1002")).thenReturn(Optional.of(ravi));
 verify(repository, never()).save(any());
 ```
 
-### BDDMockito
-
-```java
-given(repository.findById("CUS-1002")).willReturn(Optional.of(ravi));
-then(repository).should().findById("CUS-1002");
-```
-
-### ArgumentCaptor
-
-```java
-ArgumentCaptor<Customer> captor = ArgumentCaptor.forClass(Customer.class);
-verify(repository).save(captor.capture());
-assertEquals("CUS-1001", captor.getValue().getCustomerId());
-```
-
 ### Commands
 
 ```bash
@@ -669,33 +558,6 @@ mvn -q test -Dtest=CustomerServiceBddMockTest
 mvn -q test -Dtest=CustomerServiceMockitoTest,CustomerServiceBddMockTest
 git status
 ```
-
-### Class map
-
-| Class | Role |
-| ----- | ---- |
-| `CustomerServiceMockitoTest` | Classic when/verify/captor suite |
-| `CustomerServiceBddMockTest` | BDDMockito style isolation |
-| `CustomerServiceTests` | Lab 17 real in-memory (optional coexist) |
-| `ai-mockito-review.md` | AI acceptance audit |
-| `isolation-policy.md` | Unit vs integration test policy |
-
----
-
-## Manual Verification
-
-1. `CustomerServiceMockitoTest` isolates `DefaultCustomerService` from the real Map.
-2. Activate-Ravi stubs find/save and asserts ACTIVE with `lab-request-001`.
-3. Unknown ID verifies `never().save`.
-4. ArgumentCaptor asserts Amina’s ID/name/status on save.
-5. BDDMockito test demonstrates equivalent semantics.
-6. Lab 17 tests still pass (or intentionally migrated with notes).
-7. Illegal transition stub path never saves (optional but recommended).
-8. No sensitive values in tests or Git.
-9. Two consecutive `mvn test` runs match.
-10. README documents which suites are mocked vs real-repo.
-
----
 
 ## Failure Experiments
 
@@ -720,8 +582,7 @@ git status
 | Flaky verifies | Shared static mocks | Recreate in `@BeforeEach` |
 | Lab 17 suite broken | Accidental production change | Diff only test POM + mock tests |
 | Copilot mocks service | Underspecified prompt | Reject; restate collaborator-only mocks |
-
----
+| Captor status still PROSPECT | Activate did not mutate / wrong stub | Stub PROSPECT Ravi; assert after activate |
 
 ## Security and Production Review
 
@@ -745,14 +606,6 @@ git status
 Do not commit `target/`. Keep review notes and isolation policy.
 
 **Keep `lab18-crm`**—Lab 19 builds integration/UI regression on CRM create/get seams you just isolated.
-
----
-
-## Expected Deliverables
-
-Same checklist as [What you'll submit](#what-youll-submit-read-this-first) at the top. You are done when those items are complete and the Implementation Checkpoints pass.
-
-Do **not** submit `target/`, secrets, or a verbatim instructor `solution/`.
 
 ---
 
@@ -783,26 +636,3 @@ Write **1–3 sentence** answers (not essays):
 ---
 
 
-## Bonus Challenges
-
-Optional — only after core deliverables pass. Pick at most one if time is short.
-
-
-1. Assert `BusinessException` code + correlation on every mocked failure path.
-2. Mock a second collaborator (notifier from earlier labs) and verify ordering with `inOrder`.
-3. Add a strict stubbing demo that fails on unused stubs, then fix it.
-
----
-
-
-## Instructor Notes
-
-* **Live probe:** Break a `verify(repository).save(...)` expectation on purpose and have the student interpret the Mockito failure. Ask why mocking `DefaultCustomerService` would not test production code.
-* **Assess:** Shared mock for validator+service, meaningful `never().save`, captor multi-field asserts, BDD as style, isolation policy quality.
-* **Continuity:** Prefer `examples/lab18-crm`. Keep fixture IDs. Lab 19 should reuse create/get contracts—not rewrite CRM IDs.
-* **Common pitfalls:** `@InjectMocks` with mismatched validator repo; `verifyNoMoreInteractions` ignoring exists* calls; sleeping “waiting for mock”; Copilot inventing Spring annotations; committing `target/`.
-* **Timing:** Timed path ~45 minutes with starter; full path remains 3–4 hours. Keep starter TODOs as the in-class core; remaining GUIDE steps are homework/extended depth. Wiring + unnecessary stubbing often burns 40 minutes—steer students to shared mock construction early.
-
----
-
-*End of Lab 18 — Mockito and Mocking with AI Assistance: Northstar CRM Isolation Tests. Keep `lab18-crm` for Lab 19 and portfolio evidence.*

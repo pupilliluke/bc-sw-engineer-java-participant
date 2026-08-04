@@ -1,20 +1,45 @@
 # Exercise 3 — Error and DLT Notes
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 12–15 minutes |
+| **Checkpoint** | **D** (after slides 41–46) |
+| **Deliverable** | `notes/lab31-error-dlt-notes.md` |
+| **Fixtures** | CUS-1001 Amina · CUS-1002 Ravi · `crm.customer-events.v1` |
+
+### What you will learn
+
+Plan retries vs non-retryable errors and DLT recoverer naming.
+
+### Enterprise context
+
+Poison CRM payloads must not block the partition forever.
+
+### Predict
+
+Validation error — retry forever or DLT?
+
+### Debug
+
+DLT empty after failures — recoverer not on factory?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Infinite retries | Classify contract errors as non-retryable |
+| DLT topic name unclear | Document Spring default vs Lab 30 .dlq |
+
 **Module 31** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab31-error-dlt-notes.md` — describe when a listener should retry vs send to DLT.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-31-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-04-error-dlt-notes.md` (this file in the course repo) |
 | Your notes file | `notes/lab31-error-dlt-notes.md` |
 
 ## Worked example (read first)

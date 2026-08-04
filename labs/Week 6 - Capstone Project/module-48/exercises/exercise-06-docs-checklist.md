@@ -1,20 +1,45 @@
 # Exercise 6 — Planning Docs Checklist
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 8–10 minutes |
+| **Checkpoint** | **D** (after slides 21–30) |
+| **Deliverable** | `notes/lab48-docs-checklist.md` |
+| **Fixtures** | CUS-1001/CUS-1002 · lab-request-001 · no secrets in ADRs |
+
+### What you will learn
+
+Checklist docs/ paths Lab 48 must produce before coding Labs 49–52.
+
+### Enterprise context
+
+“We’ll document later” is not an option—docs gate implementation.
+
+### Predict
+
+Name the core docs folders/files for the planning packet.
+
+### Debug
+
+Starting Lab 49 UI without backlog/ADRs — stop?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Docs deferred | Finish checklist before code |
+| Redoing Weeks 1–5 instead | Plan the capstone; reuse evidence |
+
 **Module 48** · Analysis exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab48-docs-checklist.md` — build a Pass/Fail checklist mirroring Week 6 planning portfolio items.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-48-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-06-docs-checklist.md` (this file in the course repo) |
 | Your notes file | `notes/lab48-docs-checklist.md` |
 
 ## Worked example (read first)

@@ -1,20 +1,32 @@
 # Exercise 6 — Lab 13 Prep Checklist
 
-**Module 13** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
+**Module 13** · Checkpoint D · Exercises 1–6 Pass then Lab 13
 
-## Goal
+## Activity card
 
-Create `notes/lab13-prep-checklist.md` — confirm prior notes exist and you are ready for Lab 13 without finishing it now.
+| | |
+| --- | --- |
+| **Objective** | Complete Lab 13 prep checklist (contracts, samples, docs paths) |
+| **Skills practiced** | Lab readiness |
+| **Expected outcome** | notes/lab13-prep-checklist.md |
+| **Estimated time** | 8–10 minutes |
+| **File to create** | `examples/module-13-exercises/` → notes/lab13-prep-checklist.md |
+| **Checkpoint** | D (after slides 127–128) |
+
+## What you will learn
+
+- Lab folder is contracts + samples + docs — no Java server
+- Well-formedness checks beat pretending to call /ws
+- Namespace http://northstar.com/crm/customer must stay consistent
+
+**Enterprise context:** Handoff checklists keep contract packs reviewable by integration teams.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-13-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-06-lab13-prep-checklist.md` (this file in the course repo) |
 | Your notes file | `notes/lab13-prep-checklist.md` |
 
 ## Worked example (read first)
@@ -91,7 +103,18 @@ Confirm fixtures if used: Amina `CUS-1001`/`ACTIVE`, Ravi `CUS-1002`/`PROSPECT`,
 
 Readiness with design-only scope before Lab 24 hosting in `notes/lab13-prep-checklist.md`.
 
-## If it fails
+
+## Debug / design challenge
+
+Add schemaLocation=customer.xsd beside WSDL to the checklist.
+
+## Predict the Output / Behavior
+
+Where do operation-matrix.md and soap-design-notes.md live in the lab?
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | --- | --- |

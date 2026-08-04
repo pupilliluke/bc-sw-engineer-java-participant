@@ -1,20 +1,45 @@
 # Exercise 5 — A11y Checklist
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 10–12 minutes |
+| **Checkpoint** | **D** (after slides 90–94) |
+| **Deliverable** | `notes/lab33-a11y-checklist.md` |
+| **Fixtures** | CUS-1001 Amina ACTIVE · CUS-1002 Ravi PROSPECT |
+
+### What you will learn
+
+Checklist: labels, roles, status text, keyboard-friendly buttons.
+
+### Enterprise context
+
+RTL tests query by role — UI must be accessible to pass.
+
+### Predict
+
+getByRole('button', { name: /save/i }) fails — what to fix?
+
+### Debug
+
+Status shown only as green/red circle — a11y fail?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| No form labels | htmlFor / aria-label on inputs |
+| Testing class names | Prefer role + name queries |
+
 **Module 33** · Documentation exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab33-a11y-checklist.md` — list accessibility checks before coding the dashboard.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-33-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-05-a11y-checklist.md` (this file in the course repo) |
 | Your notes file | `notes/lab33-a11y-checklist.md` |
 
 ## Worked example (read first)

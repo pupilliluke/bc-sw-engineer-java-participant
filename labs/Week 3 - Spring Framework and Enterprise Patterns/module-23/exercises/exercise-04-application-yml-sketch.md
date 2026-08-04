@@ -1,20 +1,32 @@
-# Exercise 3 — application.yml Sketch
+# Exercise 4 — application.yml Sketch
 
-**Module 23** · Architecture exercise · [setup + file names](EXERCISES-INDEX.md)
+**Module 23** · Checkpoint C · Exercises 1–6 Pass then Lab 23
 
-## Goal
+## Activity card
 
-Create `notes/lab23-application-yml-sketch.md` — sketch YAML keys Lab 23 will use without committing secrets.
+| | |
+| --- | --- |
+| **Objective** | Sketch base YAML plus light dev/prod profile teasers |
+| **Skills practiced** | Boot YAML sketching |
+| **Expected outcome** | notes/lab23-application-yml-sketch.md |
+| **Estimated time** | 10–12 minutes |
+| **File to create** | `examples/module-23-exercises/` → notes/lab23-application-yml-sketch.md |
+| **Checkpoint** | C (after slides 53–59) |
+
+## What you will learn
+
+- server.port and spring.application.name
+- Actuator exposure include health
+- dev/prod teasers — no secret dumps
+
+**Enterprise context:** Ops peers need a predictable port and health exposure before any cloud profile work.
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-23-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-04-application-yml-sketch.md` (this file in the course repo) |
 | Your notes file | `notes/lab23-application-yml-sketch.md` |
 
 ## Worked example (read first)
@@ -24,32 +36,24 @@ Here is the shape of a complete answer for this exercise. Adapt the content — 
 ```markdown
 # Lab 23 — application.yml Sketch
 
-## Reference
+```yaml
+spring:
+  application:
+    name: lab23-crm
+server:
+  port: 8080
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+```
 
-| Key | Example |
-| --- | --- |
-| `spring.application.name` | `northstar-crm` |
-| `server.port` | `8080` |
-| `logging.level.root` | `INFO` |
-
-## Step 1 — Draft YAML
-
-Create `notes/application-yml-sketch.yml` with `spring.application.name`, `server.port`, and a logging level. No passwords.
-
-## Step 2 — Check the reference
-
-Confirm keys match the reference table style.
-
-## Step 3 — Profile teaser
-
-Add a commented line mentioning `spring.profiles.active` — Lab 26 deepens this; do not invent prod secrets.
-
-## Step 4 — Security hygiene
-
-Write: real DB passwords never go in committed YAML.
+dev teaser: logging.level.root=DEBUG
+prod teaser: logging.level.root=INFO (no secrets)
 
 ## Scope
-Pre-lab only — do not finish the full graded lab in this exercise.
+Pre-lab only.
 ```
 
 Then follow **Steps** to create your own file.
@@ -65,32 +69,20 @@ From `examples/module-23-exercises/`, create `notes/` if needed, then create `no
 ```markdown
 # Lab 23 — application.yml Sketch
 
-## Reference
+## Base keys
+application name: _____
+server.port: _____
+management exposure: _____
 
-| Key | Example |
-| --- | --- |
-| `spring.application.name` | `northstar-crm` |
-| `server.port` | `8080` |
-| `logging.level.root` | `INFO` |
+## dev teaser
+_____
 
-## Step 1 — Draft YAML
-
-Create `notes/application-yml-sketch.yml` with `spring.application.name`, `server.port`, and a logging level. No passwords.
-
-## Step 2 — Check the reference
-
-Confirm keys match the reference table style.
-
-## Step 3 — Profile teaser
-
-Add a commented line mentioning `spring.profiles.active` — Lab 26 deepens this; do not invent prod secrets.
-
-## Step 4 — Security hygiene
-
-Write: real DB passwords never go in committed YAML.
+## prod teaser
+_____
 
 ## Scope
-Pre-lab only — do not finish the full graded lab in this exercise.
+Pre-lab only. No real passwords.
+
 ```
 
 ### Step 3 — Self-check
@@ -99,22 +91,31 @@ Confirm fixtures if used: Amina `CUS-1001`/`ACTIVE`, Ravi `CUS-1002`/`PROSPECT`,
 
 ## Expected result
 
-Safe YAML sketch exists with no secrets in `notes/lab23-application-yml-sketch.md`.
+YAML sketch in `notes/lab23-application-yml-sketch.md`.
 
-## If it fails
+## Debug / design challenge
+
+Should prod teaser include a hard-coded database password?
+
+## Predict the Output / Behavior
+
+What happens if exposure.include omits health?
+
+## Troubleshooting
+
+### If it fails
 
 | Problem | Fix |
 | --- | --- |
 | No file / wrong name | Must be `notes/lab23-application-yml-sketch.md` |
-| Leaving blanks or skipping steps | Complete every step before claiming Pass |
-| Starting the full lab mid-exercise | Finish pre-lab notes first, then open Lab 23 |
+| Putting secrets in notes | Teasers only — no passwords |
+| Exposing env/beans casually | Include health for lab smoke |
 
 ## Pass criteria
 
 Self-check before marking Pass:
 
 - [ ] File exists at `notes/lab23-application-yml-sketch.md`
-- [ ] Name and port present
-- [ ] No secret values committed
-- [ ] Profile called out as Lab 26 topic
-
+- [ ] Port + name
+- [ ] Health exposure
+- [ ] Profile teasers without secrets

@@ -1,8 +1,6 @@
 # Lab 49: Capstone Backend and Messaging — Northstar CRM Interaction Slice
 
 **Module:** 49 — Capstone Backend and Messaging  
-**Lab folder:** `labs/Week 6 - Capstone Project/module-49/lab49/`  
-**Difficulty:** Advanced Capstone  
 **Duration:** ~45 minutes (timed path / session block with starter) · Full path: 6–8 Hours
 
 **Primary IDE:** IntelliJ IDEA Community Edition · **Optional IDE:** VS Code
@@ -12,11 +10,38 @@
 | Windows | [LAB-49-WINDOWS.md](LAB-49-WINDOWS.md) |
 | macOS | [LAB-49-MACOS.md](LAB-49-MACOS.md) |
 
-> **Environment reminder:** Complete the [Module 49 pre-lab exercises](../exercises/EXERCISES-INDEX.md) after the slides and before this lab.  Finish [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md) and Lab 48 planning. Use **IntelliJ IDEA Community** (primary; optional VS Code) with **JDK 21**, **Maven 3.9+**, and instructor **shared Kafka**. Work under `~/java-bootcamp/examples/customer-management-platform` (Windows: `%USERPROFILE%\java-bootcamp\examples\customer-management-platform`).
+---
+
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | ~45 min session block · full path 6–8 h multi-day |
+| **Checkpoint** | **E** (after Ex 1→2→3→4→5→6) |
+| **Must prove** | Service TODOs · compile · fixture IDs · event V1 sketch |
+| **Hard gate** | Pre-lab Pass · Lab 48 story selected · docs before claiming done |
+
+### What you will learn
+
+Implement a CRM interaction vertical slice: validated API, persistence, versioned Kafka event, tests, demo runbook.
+
+### Enterprise context
+
+A green demo without tests, correlation, or failure-path evidence does not pass capstone quality.
+
+### Predict
+
+Should the publisher run before the DB transaction commits?
+
+### Debug
+
+Entity returned as JSON from the controller — what is missing?
 
 ---
 
 ## 45-minute timed path (session block — use starter)
+
+> **Pacing reminder:** [PACING.md](../PACING.md) checkpoint **E**. Homework/multi-day: Flyway, Kafka IT, consumer/DLT, verify twice, `docs/backend-demo.md`.
 
 In class, use the starter service stub so the **session block** fits **~45 minutes**. Backend + messaging depth (Flyway, Kafka IT, consumer/DLT, full verify) remains **multi-day** on the full path.
 
@@ -35,20 +60,9 @@ Policy: [`labs/_STARTER-PATH.md`](../../../_STARTER-PATH.md)
 
 ---
 
-## How to follow this lab
-
-1. **In class:** prefer [`starter/README.md`](starter/README.md) when a timed path exists — fill `// TODO`, run the smoke test (~45 min).
-2. Open the **Windows** or **macOS** how-to (links above) in a second tab for OS-specific commands.
-3. Work only under your `java-bootcamp/examples/…` folder (not inside this `labs/` clone unless a step says otherwise).
-4. Read **Worked example** once, then for each **Step**: **Why** → **Do this** → confirm **Expected result**.
-5. When stuck, use **Troubleshooting** / **Failure Experiments** before asking for help.
-6. Capture evidence under `notes/screenshots/` (redact secrets). Mark Pass/Fail in your own notes — GitHub does not support clickable checkboxes.
-
----
-
 ## What you'll submit (read this first)
 
-Keep this checklist visible while you work. Full detail is under [Expected Deliverables](#expected-deliverables) at the end.
+Keep this checklist visible while you work.
 
 | # | Deliverable |
 | - | ----------- |
@@ -69,18 +83,6 @@ Keep this checklist visible while you work. Full detail is under [Expected Deliv
 
 This Module 49 lab implements or extends the CRM **Spring Boot + Kafka vertical slice** for recording customer interactions: validated REST APIs, transaction-safe persistence, versioned events, resilient consumption, and automated tests—producing `docs/backend-demo.md` evidence for the defense.
 
-**Purpose.** Service agents must record interactions that persist reliably, return a clear API contract, publish a traceable event, and tolerate duplicate or failed consumption. A green demo without tests, correlation IDs, or failure-path evidence does not pass capstone quality.
-
-**What you build (this lab).** Select a Lab 48 backlog story (e.g. CAP-12); create domain/DTOs with Bean Validation; JPA persistence + migration; transactional application service; REST endpoint with Problem Details; Kafka publisher with versioned event; resilient consumer (dedupe, retries, DLT); unit/MVC/JPA/Kafka tests; document the demo runbook.
-
-**What success looks like.** Under the capstone backend, `./mvnw -B clean verify` (or `mvn`) is green twice; `POST` interaction for `CUS-1001` with `lab-request-001` returns 201; row exists; event appears on the topic; negatives return Problem Details; `docs/backend-demo.md` lets a peer reproduce the slice.
-
-**Depends on Lab 48.** Need backlog acceptance criteria, contract sketches, and ADRs (PostgreSQL, Kafka, consistency, JWT if already decided). Finish Lab 48 if CAP-12 (or equivalent) is missing.
-
-**CRM connection.** Fixtures `CUS-1001` Amina / `CUS-1002` Ravi / `CUS-9999` not-found / correlation `lab-request-001`. Lab 50 attaches React UI and proves UI→PostgreSQL; Lab 51 hardens JWT and deploy; keep publishers/consumers injectable for tests.
-
----
-
 ## Learning Objectives
 
 After completing this lab, you will be able to:
@@ -90,13 +92,6 @@ After completing this lab, you will be able to:
 * Use transactions deliberately around persist + publish strategy
 * Publish versioned Kafka events with correlation and actor metadata
 * Consume idempotently with bounded retries and DLT
-* Test HTTP, persistence, and messaging with failure paths
-* Document a reproducible backend demo with synthetic fixtures
-* Trace a single request from API → DB → event with `lab-request-001`
-* Reject false-confidence tests that never assert domain outcomes
-* Preserve Lab 48 ADR decisions in working code
-
----
 
 ## Business Scenario
 
@@ -121,7 +116,6 @@ Use these fixtures consistently:
 ---
 
 ## Architecture Context
-
 ### NOW (this lab)
 
 ```mermaid
@@ -134,36 +128,11 @@ flowchart TB
   Kafka --> Cons["consumers / handlers"]
 ```
 
-### Lab flow (mermaid)
-
-```mermaid
-flowchart TD
-    A["Select CAP story<br/>from Lab 48"] --> B["Domain + DTOs<br/>Bean Validation"]
-    B --> C["Migration + repository<br/>PostgreSQL-compatible"]
-    C --> D["Transactional service<br/>rules + correlation"]
-    D --> E["REST endpoint<br/>201 + Problem Details"]
-    E --> F["Publish versioned<br/>Kafka event"]
-    F --> G["Resilient consumer<br/>dedupe / DLT"]
-    G --> H["Tests + verify<br/>API / DB / event"]
-    H --> I["docs/backend-demo.md<br/>+ evidence pack"]
-```
-
-### Architecture NOW vs LATER
-
-| Aspect | Lab 49 (NOW) | Lab 50 / 51 (LATER) |
-| ------ | ------------ | ------------------- |
-| UI | API-only evidence via curl/MockMvc | React journey + a11y |
-| Auth | Role annotations / tests stubs OK | Full JWT harden + scanners |
-| Consistency | Per Lab 48 ADR | Same strategy under load/deploy |
-| Proof | verify + demo.md | UI→DB + pipeline smoke |
-
-**Lab focus:** Spring Boot vertical slice, Kafka publish/consume, transactional boundaries, automated tests, backend demo documentation.
-
----
-
 ## Prerequisites
 
-Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%20Java%20and%20JVM%20Foundations/module-00/lab0/LAB-0-GUIDE.md), and [Lab 48](../../module-48/lab48/LAB-48-GUIDE.md). Confirm:
+Prior labs: [Lab 48](../../module-48/lab48/LAB-48-GUIDE.md).
+
+Confirm (Lab 0 tools assumed):
 
 * Java 21 + Maven + Spring Boot backend present or scaffolded
 * shared Kafka (instructor bootstrap; local Compose optional if allowed) (or instructor broker)
@@ -176,85 +145,7 @@ Complete [SETUP](../../../SETUP-INSTRUCTIONS.md), [Lab 0](../../../Week%201%20-%
 ```bash
 java -version
 mvn -version
-docker --version
-docker compose version
-git --version
-pwd
-ls ~/java-bootcamp/examples
 ```
-
-Confirm Lab 48 artifacts exist before coding:
-
-```bash
-ls ~/java-bootcamp/examples/customer-management-platform/docs/backlog.md
-ls ~/java-bootcamp/examples/customer-management-platform/docs/adrs
-```
-
-Create branch and baseline:
-
-```bash
-cd ~/java-bootcamp/examples/customer-management-platform
-git switch -c lab/49-crm 2>/dev/null || git checkout -b lab/49-crm
-./mvnw -B clean verify 2>/dev/null || mvn -B clean verify
-docker compose ps 2>/dev/null || true
-git status --short
-```
-
-If baseline fails, save the exact command and error; agree whether pre-existing. Do not hide inherited failure by skipping tests.
-
----
-
-## Suggested Project Files
-
-```text
-~/java-bootcamp/examples/customer-management-platform/
-├── backend/
-│   ├── src/main/java/com/northstar/crm/
-│   │   ├── api/InteractionController.java
-│   │   ├── api/dto/CreateInteractionRequest.java
-│   │   ├── api/dto/InteractionResponse.java
-│   │   ├── domain/Interaction.java
-│   │   ├── domain/Customer.java
-│   │   ├── service/InteractionService.java
-│   │   ├── repo/InteractionRepository.java
-│   │   ├── messaging/InteractionEventPublisher.java
-│   │   ├── messaging/CustomerInteractionRecordedV1.java
-│   │   ├── messaging/InteractionEventConsumer.java
-│   │   └── web/ProblemDetailsAdvice.java
-│   ├── src/main/resources/
-│   │   ├── application.yml
-│   │   └── db/migration/V...__customer_interaction.sql
-│   └── src/test/java/com/northstar/crm/
-│       ├── api/InteractionControllerTest.java
-│       ├── service/InteractionServiceTest.java
-│       ├── repo/InteractionRepositoryTest.java
-│       └── messaging/InteractionMessagingIT.java
-├── docs/
-│   ├── backend-demo.md
-│   ├── backlog.md                    # from Lab 48
-│   └── notes/screenshots/
-├── docker-compose.yml                # Kafka (+ maybe DB)
-├── .gitignore
-└── README.md
-```
-
-Ignore `target/`, IDE metadata, tokens, and passwords. If using `lab49-crm/` alone, mirror the same package layout under `~/java-bootcamp/examples/customer-management-platform/`.
-
----
-
-## Key ideas (skim — no write-up)
-
-Skim these ideas before coding. **No separate write-up required** (you will apply them in the Steps).
-
-1. Main flow under test (create interaction for `CUS-1001`, not UI)
-2. Trust boundary: what API validation proves vs what JWT Lab 51 will enforce
-3. Success/failure contracts (201 + body vs Problem Details; event vs DLT)
-4. Stable fixtures vs random UUIDs without seed customers
-5. Idempotency of consumer on duplicate `eventId`
-6. Why publish strategy must match Lab 48 ADR-003 (or equivalent)
-
----
-
 
 ## Worked example (read before you code)
 
@@ -467,7 +358,7 @@ curl -i -X POST "http://localhost:8080/api/customers/$CUSTOMER_ID/interactions" 
 
 **Why:** Capstone credibility is failure-path literacy, not curl-once luck.
 
-**Do this:** Complete [Failure Experiments](#failure-experiments). Fill `docs/backend-demo.md` with exact commands, topic name, migration id, and screenshots/excerpts under `~/java-bootcamp/notes/screenshots/lab-49/`. Run verify twice for determinism.
+**Do this:** Complete Failure Experiments. Fill `docs/backend-demo.md` with exact commands, topic name, migration id, and screenshots/excerpts under `~/java-bootcamp/notes/screenshots/lab-49/`. Run verify twice for determinism.
 
 **Expected result:** ≥3 experiments; identical consecutive verifies; peer can follow demo.md; no secrets committed.
 
@@ -554,20 +445,6 @@ cd backend
 git status --short
 ```
 
-### Class map
-
-| Class | Role |
-| ----- | ---- |
-| `InteractionController` | HTTP contract |
-| `InteractionService` | Transaction + rules |
-| `CustomerInteractionRecordedV1` | Versioned event |
-| `InteractionEventConsumer` | Idempotent side effects |
-| `docs/backend-demo.md` | Reproduction runbook |
-
-### `backend-demo.md` outline (minimum)
-
-```markdown
-# Backend demo — Lab 49
 ## Prerequisites (JDK, Compose, profiles)
 ## Seed customers (CUS-1001 Amina, CUS-1002 Ravi)
 ## Happy path curl (lab-request-001)
@@ -592,23 +469,6 @@ git status --short
 ```
 
 Adapt field names to your Problem Details implementation; keep status semantics stable for Lab 50.
-
----
-
-## Manual Verification
-
-1. Create interaction for seeded Amina (`CUS-1001`) returns 201 + Location.
-2. Invalid channel/summary returns Problem Details and does not persist.
-3. Not-found customer (`CUS-9999`) returns 404 Problem Details.
-4. Correlation `lab-request-001` appears in logs/event metadata (not note body).
-5. Kafka event version and type match contract; partition key is customer.
-6. Duplicate event consumption does not double-apply side effects.
-7. Unit + MVC + persistence + messaging tests pass.
-8. Two consecutive `mvn clean verify` runs match.
-9. `docs/backend-demo.md` lists commands a peer can run.
-10. No sensitive values in tests, logs samples, or Git.
-11. Entity types are not returned directly from controllers.
-12. Publish behavior matches Lab 48 consistency ADR (no silent divergence).
 
 ---
 
@@ -638,11 +498,6 @@ Adapt field names to your Problem Details implementation; keep status semantics 
 | 401/403 surprises | Security auto-config | Add test security config; Lab 51 hardens |
 | Correlation null | Header not read | Bind `X-Correlation-ID` |
 | Entity in JSON | Mapper skipped | Return DTO records only |
-| DLT never fills | Retry infinite / wrong error type | Bound retries; classify poison |
-| Topic exists locally only | CI broker missing | Testcontainers or skip-IT profile documented |
-| Customer id mismatch UI | UUID vs string drift | Freeze contract in demo.md |
-
----
 
 ## Security and Production Review
 
@@ -667,14 +522,6 @@ git status --short
 Do not commit `target/` or broker data directories. Keep `docs/backend-demo.md` and sanitized screenshots.
 
 **Keep the Lab 49 backend slice**—Lab 50 builds UI and PostgreSQL proof on these contracts; Lab 51 secures and deploys them.
-
----
-
-## Expected Deliverables
-
-Same checklist as [What you'll submit](#what-youll-submit-read-this-first) at the top. You are done when those items are complete and the Implementation Checkpoints pass.
-
-Do **not** submit `target/`, secrets, or a verbatim instructor `solution/`.
 
 ---
 
@@ -705,45 +552,3 @@ Write **1–3 sentence** answers (not essays):
 ---
 
 
-## Bonus Challenges
-
-Optional — only after core deliverables pass. Pick at most one if time is short.
-
-
-1. Implement a transactional outbox and compare to after-commit publish.
-2. Add consumer contract tests (schema/example payload).
-3. Automate duplicate event delivery assertion in IT.
-
----
-
-
-## Instructor Notes
-
-* **Live probe:** Have the student create an interaction for Amina with `lab-request-001`, then show matching DB row and Kafka payload. Ask where publish sits relative to commit. Ask what happens on duplicate `eventId`.
-* **Assess:** DTO boundary, migration quality, verify green, consumer idempotency, honest limitations, correlation evidence.
-* **Continuity:** Prefer `customer-management-platform/backend`. Keep fixture IDs. Lab 50 must not invent a new API shape. Lab 51 should not need to redesign the event envelope.
-* **Common pitfalls:** Entity JSON; missing Problem Details; no correlation; flaky Kafka tests; publishing on 400; committed secrets; after-commit vs outbox undocumented drift from Lab 48 ADR.
-* **Timing:** 6–8 hours. Messaging ITs often burn 60–90 minutes—encourage early Testcontainers/Compose health checks. Cap “perfect consumer” once happy path + dedupe + one DLT/retry story is evidenced.
-* **Parity check:** If students use `lab49-crm/` instead of the shared platform tree, require a README pointer so Lab 50 finds contracts.
-* **Quality bar:** Two consecutive green verifies beat a single local happy curl.
-
----
-
-### Quick peer reproduction card (attach to PR)
-
-```markdown
-Peer name:
-Directory used:
-mvn clean verify result:
-Curl 201 for CUS-1001? Y/N
-Event seen with lab-request-001? Y/N
-Negative 400 evidenced? Y/N
-Secrets absent from diff? Y/N
-Blocked questions:
-```
-
-Use this card during Checkpoint D; paste sanitized results into `docs/backend-demo.md`.
-
----
-
-*End of Lab 49 — Capstone Backend and Messaging: Northstar CRM Interaction Slice. Keep the backend for Labs 50–52 and portfolio evidence.*

@@ -1,20 +1,45 @@
 # Exercise 4 — Fill Deployment YAML TODOs
 
+## Activity card
+
+| | |
+| --- | --- |
+| **Time** | 12–15 minutes |
+| **Checkpoint** | **B** (after slides 74–77) |
+| **Deliverable** | `notes/lab42-yaml-todos.md` |
+| **Fixtures** | CUS-1001 smoke · digest-pinned Lab 41 image · no Secret values |
+
+### What you will learn
+
+Fill image digest, resources, securityContext, probes, labels TODOs.
+
+### Enterprise context
+
+Non-root + requests/limits required for training PSA.
+
+### Predict
+
+Selector labels mismatch Service — symptom?
+
+### Debug
+
+ImagePullBackOff — checklist?
+
+### Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Floating :latest only | Pin digest from Lab 41 |
+| Missing resources | Set CPU/memory requests and limits |
+
 **Module 42** · Hands-on exercise · [setup + file names](EXERCISES-INDEX.md)
-
-## Goal
-
-Create `notes/lab42-yaml-todos.md` — complete a Deployment skeleton with blanks (pre-lab only).
 
 ## Deliverable
 
-**Submit only** the file(s) in the table below (not the full graded lab).
-
-**Submit only** the file(s) in the table below (not the full graded lab).
+**Submit only** the file(s) below (not the graded lab).
 
 | Item | Path (under `examples/module-42-exercises/`) |
 | ---- | --------------------------------------------- |
-| Guide | `exercises/exercise-04-yaml-todos.md` (this file in the course repo) |
 | Your notes file | `notes/lab42-yaml-todos.md` |
 
 ## Worked example (read first)
