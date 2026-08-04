@@ -1,0 +1,23 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        # lab-only. production must not expose this set on a public path.
+        # health only out front, the rest behind management.server.port.
+        include: health,metrics,info,prometheus   # starter lab-only set (prometheus optional)
+  endpoint:
+    health:
+      # lab-only. returns the diskSpace path and free bytes to any caller.
+      # production uses when-authorized.
+      show-details: always
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: readinessState,crmReadinessIndicator
+  metrics:
+    tags:
+      application: northstar-crm
+
+server:
+  port: 8080

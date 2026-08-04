@@ -1,0 +1,83 @@
+Lab 20 manual API traces, captured 2026-08-04
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab20-crm
+
+App started with mvn -B spring-boot:run on port 8081 rather than the guide's
+8080. A CrmApplication left running from the lab 19 capture on 2026-08-03 still
+held 8080; the port is the only deviation and nothing in the pattern, the MDC
+or the filter depends on it. Requests issued with curl.exe, app stopped after
+the capture.
+
+
+REQUESTS
+
+A, GET /api/customers/CUS-1001, X-Correlation-Id: lab-request-001
+
+  HTTP/1.1 200
+  X-Correlation-Id: lab-request-001
+  {"customerId":"CUS-1001","fullName":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"}
+
+B, POST /api/customers, X-Correlation-Id: lab-request-001, CUS-1005 ACTIVE
+
+  HTTP/1.1 201
+  X-Correlation-Id: lab-request-001
+  {"customerId":"CUS-1005","fullName":"Sam Okafor","email":"sam.okafor@example.com","status":"ACTIVE"}
+
+C, GET /api/customers/CUS-1002, X-Correlation-Id: lab-request-002
+
+  HTTP/1.1 200
+  X-Correlation-Id: lab-request-002
+  {"customerId":"CUS-1002","fullName":"Ravi Singh","email":"ravi.singh@example.com","status":"PROSPECT"}
+
+D, POST /api/customers, X-Correlation-Id: lab-request-003, CUS-1001 again
+
+  HTTP/1.1 409
+  X-Correlation-Id: lab-request-003
+  {"error":"Duplicate customerId: CUS-1001"}
+
+E, POST /api/customers, X-Correlation-Id: lab-request-004, CUS-1002 blank name
+
+  HTTP/1.1 400
+  X-Correlation-Id: lab-request-004
+  {"error":"fullName required"}
+
+F, GET /api/customers/CUS-1002, no correlation header sent
+
+  HTTP/1.1 200
+  X-Correlation-Id: lab-request-001
+  {"customerId":"CUS-1002","fullName":"Ravi Singh","email":"ravi.singh@example.com","status":"PROSPECT"}
+
+
+CONSOLE FOR THE SAME SIX REQUESTS
+
+  INFO  [http-nio-8081-exec-3] c.n.crm.service.CustomerService corr=lab-request-001 cust=CUS-1001 op=customer.get - Loading customer
+  INFO  [http-nio-8081-exec-6] c.n.crm.service.CustomerService corr=lab-request-001 cust=CUS-1005 op=customer.create - Creating customer
+  INFO  [http-nio-8081-exec-6] c.n.crm.service.CustomerService corr=lab-request-001 cust=CUS-1005 op=customer.create - Customer created status=ACTIVE durationMs=0
+  INFO  [http-nio-8081-exec-7] c.n.crm.service.CustomerService corr=lab-request-002 cust=CUS-1002 op=customer.get - Loading customer
+  WARN  [http-nio-8081-exec-8] c.n.crm.service.CustomerService corr=lab-request-003 cust=CUS-1001 op=customer.create - Create rejected reason=duplicate
+  WARN  [http-nio-8081-exec-10] c.n.crm.api.CustomerController corr=lab-request-004 cust= op= - Rejecting create reason=missing_full_name customerId=CUS-1002
+  INFO  [http-nio-8081-exec-2] c.n.crm.service.CustomerService corr=lab-request-001 cust=CUS-1002 op=customer.get - Loading customer
+
+Timestamps trimmed to keep the lines readable; the full run keeps them.
+
+Request F sends no header and still logs corr=lab-request-001. That is the
+filter's default for a missing header, not a leak from request A; the filter
+puts a value on every request and clears in finally. Experiment 5 in
+03-failure-experiments.txt shows what an actual leak looks like.
+
+The controller WARN on request E has cust= and op= empty. The rejection happens
+at the API edge before the service opens its MDC scope, so only correlationId
+is set; the customer id travels in the message instead.
+
+No line carries Amina, Ravi, Sam or an address. cust= is the customer id and
+nothing else.
+
+FORBIDDEN-FIELD GREP
+
+  grep -nE "Amina|Ravi|@example\.com|password|Bearer " notes/screenshots/lab-20/*.txt
+
+Five hits in this file, all of them inside the HTTP response bodies above. The
+API returns fullName and email by design; the rule is that they never reach a
+log line. The same grep over the console lines only is clean:
+
+  grep -nE "c\.n\.crm" notes/screenshots/lab-20/*.txt | grep -nE "Amina|Ravi|Sam|Dana|@example\.com"
+  PII grep clean on log lines

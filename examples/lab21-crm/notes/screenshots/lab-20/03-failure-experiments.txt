@@ -1,0 +1,92 @@
+Lab 20 failure experiments, captured 2026-08-04
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab20-crm
+
+The guide's five. Every temporary edit is restored; the suite is green at 8 in
+01-mvn-clean-verify.txt, captured after all of them. App on port 8081, see the
+note in 02-api-manual.txt.
+
+
+1, BREAK THE REPOSITORY SO CREATE THROWS
+
+InMemoryCustomerRepository.save changed to throw IllegalStateException
+("repository unavailable") before the put. POST CUS-1005 with
+X-Correlation-Id: lab-request-005.
+
+  INFO  [http-nio-8081-exec-5] c.n.crm.service.CustomerService corr=lab-request-005 cust=CUS-1005 op=customer.create - Creating customer
+  ERROR [http-nio-8081-exec-5] c.n.crm.service.CustomerService corr=lab-request-005 cust=CUS-1005 op=customer.create - Create failed
+  java.lang.IllegalStateException: repository unavailable
+      at com.northstar.crm.repository.InMemoryCustomerRepository.save(InMemoryCustomerRepository.java:20)
+      at com.northstar.crm.service.CustomerService.create(CustomerService.java:33)
+
+  HTTP 500
+
+The ERROR carries the same corr, cust and op as the INFO above it, so the
+failed request is searchable by the id the caller sent. The stack names classes
+and line numbers only, no payload and no secrets. save restored.
+
+
+2, POST MISSING FULL NAME
+
+Kept as a permanent path rather than an edit. CUS-1002 posted with an empty
+fullName.
+
+  WARN  [http-nio-8081-exec-10] c.n.crm.api.CustomerController corr=lab-request-004 cust= op= - Rejecting create reason=missing_full_name customerId=CUS-1002
+  HTTP 400 {"error":"fullName required"}
+
+WARN not ERROR, and no stack trace: the request was rejected on purpose. The
+message names the reason code and the customer id, never the submitted name.
+blankFullNameReturns400 in CustomerApiIT holds this path.
+
+
+3, REPEAT CREATE CUS-1001
+
+CUS-1001 is seeded in the repository constructor, so the first POST of it is
+already a repeat.
+
+  WARN  [http-nio-8081-exec-8] c.n.crm.service.CustomerService corr=lab-request-003 cust=CUS-1001 op=customer.create - Create rejected reason=duplicate
+  HTTP 409 {"error":"Duplicate customerId: CUS-1001"}
+
+Uniqueness: this lab adds the rule that lab 19 did not have. In lab19-crm save
+is a bare put, so a repeat create returned 201 and silently overwrote the
+record, which is recorded in that lab's experiment 3. Here the service checks
+findById before saving and throws DuplicateCustomerException, and the
+controller maps it to 409. Each request in 02-api-manual.txt carries its own
+correlation id, so the lines separate cleanly by it.
+
+
+4, DURATION AT INFO
+
+Added to the create success line and kept, as the guide asks.
+
+  INFO  [http-nio-8081-exec-6] c.n.crm.service.CustomerService corr=lab-request-001 cust=CUS-1005 op=customer.create - Customer created status=ACTIVE durationMs=0
+
+Measured with System.nanoTime around the save and reported in milliseconds.
+Zero against an in-memory map, which is the honest number here. The line adds a
+duration and a status, not the payload.
+
+
+5, OMIT MDC.clear()
+
+Two passes.
+
+First, the clear alone was commented out and three gets were issued, one with
+X-Correlation-Id: leaked-request-A and two without. No leak appeared. The
+filter puts a correlation id on every request, defaulting to lab-request-001
+when the header is missing, so the next request on a reused thread overwrites
+the stale key before anything logs.
+
+Second, the put was made conditional on the header being present, which is the
+shape the leak needs, with the clear still commented out. One request with the
+header, then fourteen without.
+
+  INFO  [http-nio-8081-exec-9] c.n.crm.service.CustomerService corr=leaked-request-A cust=CUS-1001 op=customer.get - Loading customer
+  INFO  [http-nio-8081-exec-5] c.n.crm.service.CustomerService corr= cust=CUS-1002 op=customer.get - Loading customer
+  INFO  [http-nio-8081-exec-9] c.n.crm.service.CustomerService corr=leaked-request-A cust=CUS-1002 op=customer.get - Loading customer
+
+exec-9 is the leak. The third line is a request that sent no correlation header
+at all, landed on the thread that had served leaked-request-A and inherited its
+id; exec-5 above it shows what a clean thread prints. Fourteen requests were
+needed before the pool handed exec-9 back.
+
+The finally clear still matters under an unconditional put, because the put
+only covers requests that reach this filter. Both edits restored.

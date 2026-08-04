@@ -1,0 +1,33 @@
+Lab 21 determinism, captured 2026-08-04
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab21-crm
+
+Three consecutive mvn -B clean verify runs, 11 tests each, no failures and no
+flakes. The third is the transcript in 01-mvn-clean-verify.txt.
+
+  run 1  Tests run: 11, Failures: 0, Errors: 0, Skipped: 0  BUILD SUCCESS
+  run 2  Tests run: 11, Failures: 0, Errors: 0, Skipped: 0  BUILD SUCCESS
+  run 3  Tests run: 11, Failures: 0, Errors: 0, Skipped: 0  BUILD SUCCESS
+
+Two things in ActuatorIT would not survive a repeat run if they were written
+the obvious way, both because of the shared context.
+
+All four IT classes declare the same @SpringBootTest(RANDOM_PORT), so Spring
+builds one context and caches it across the whole run. The readiness indicator
+and the meter registry are therefore the same objects in every class.
+
+readinessCanGoDownWhileLivenessStaysUp restores the flag in a finally rather
+than after the assertions. Without the finally a failed assertion leaves
+readiness OUT_OF_SERVICE for whatever runs next, and healthAndProbesAreUp would
+fail depending only on method order. The test re-reads readiness after the
+finally to confirm the restore took.
+
+createMetricAppearsAfterTraffic asserts that the meter exists and carries a
+COUNT and a result tag, not that COUNT equals 1. The registry accumulates
+across every class in the run, so CUS-2101 from this test is not the only
+create the counter has seen by then. An equality assertion passes when the
+class runs alone and fails inside the suite, which is the flake shape from lab
+19 experiment 4.
+
+CUS-2101 is used only by ActuatorIT. The other suites keep to CUS-1005,
+CUS-1006 and CUS-2001, so no test creates an id another test expects to be
+absent.

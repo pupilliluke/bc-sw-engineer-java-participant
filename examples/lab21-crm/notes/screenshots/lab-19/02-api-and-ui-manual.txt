@@ -1,0 +1,40 @@
+Lab 19 manual API and UI checks, captured 2026-08-03
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab19-crm
+
+App started with mvn -q spring-boot:run on port 8080 and stopped after
+the capture. The repeat create in the middle is failure experiment 3.
+
+ http://localhost:8080/api/customers/CUS-1001
+HTTP/1.1 200 
+{"customerId":"CUS-1001","fullName":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"}
+
+POST http://localhost:8080/api/customers -H "Content-Type: application/json" -H "X-Correlation-Id: lab-request-001" -d "{\"customerId\":\"CUS-1001\",\"fullName\":\"Amina K. Khan\",\"email\":\"amina.khan@example.com\",\"status\":\"ACTIVE\"}"
+HTTP/1.1 201 
+X-Correlation-Id: lab-request-001
+{"customerId":"CUS-1001","fullName":"Amina K. Khan","email":"amina.khan@example.com","status":"ACTIVE"}
+
+http://localhost:8080/api/customers/CUS-1001
+{"customerId":"CUS-1001","fullName":"Amina K. Khan","email":"amina.khan@example.com","status":"ACTIVE"}
+
+  restore: POST the original Amina back
+HTTP/1.1 201 
+{"customerId":"CUS-1001","fullName":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"}
+
+http://localhost:8080/api/customers/CUS-9999
+HTTP/1.1 404 
+
+POST ... -d "{\"customerId\":\"CUS-1002\",\"fullName\":\"\",...}"
+HTTP/1.1 400 
+{"error":"fullName required [lab-request-001]"}
+
+http://localhost:8080/api/customers/CUS-1002
+{"customerId":"CUS-1002","fullName":"Ravi Singh","email":"ravi.singh@example.com","status":"PROSPECT"}
+
+MANUAL UI SUBMIT
+
+customers.html filled through the browser with Ravi CUS-1002, PROSPECT,
+and submitted once:
+
+  status 201
+  X-Correlation-Id echoed: lab-request-001
+  result region: {"customerId":"CUS-1002","fullName":"Ravi Singh","email":"ravi.singh@example.com","status":"PROSPECT"}

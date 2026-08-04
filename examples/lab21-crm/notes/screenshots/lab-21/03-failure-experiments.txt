@@ -1,0 +1,136 @@
+Lab 21 failure experiments, captured 2026-08-04
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab21-crm
+
+The guide's five. Every temporary edit is restored; the suite is green at 11 in
+01-mvn-clean-verify.txt, captured after all of them. App on port 8080.
+
+
+1, FLIP READINESS OFF
+
+CrmReadinessIndicator.setReady is reachable from ActuatorIT but not over HTTP,
+so a lab-only POST /lab/readiness endpoint was added for this capture and
+deleted afterwards. The permanent hook is the test.
+
+  before
+
+  readiness {"status":"UP","components":{"crmReadinessIndicator":{"status":"UP","details":{"crm":"ready"}},"readinessState":{"status":"UP"}}} HTTP 200
+  liveness  {"status":"UP"} HTTP 200
+
+  POST /lab/readiness?ready=false
+
+  readiness {"status":"OUT_OF_SERVICE","components":{"crmReadinessIndicator":{"status":"OUT_OF_SERVICE","details":{"crm":"not-ready","reason":"dependency-unavailable"}},"readinessState":{"status":"UP"}}} HTTP 503
+  liveness  {"status":"UP"} HTTP 200
+  GET /api/customers/CUS-1001 HTTP 200
+
+Readiness reports OUT_OF_SERVICE and 503 while liveness stays UP and 200. The
+orchestrator reads those two differently: 503 on readiness drains the instance
+from the load balancer, 200 on liveness means do not restart it. The API still
+answers CUS-1001 during the outage, which is the point of the split; the
+instance is capable of serving, the signal says stop sending it new work.
+
+readinessState inside the group stays UP throughout. It is Boot's own lifecycle
+state and knows nothing about the CRM dependency; the group aggregates to the
+worst member, so crmReadinessIndicator alone takes the group down. Overall
+health also went to OUT_OF_SERVICE and 503 for the same reason. Restored with
+ready=true and the endpoint removed.
+
+
+2, INVALID CREATE, BLANK FULL NAME
+
+Kept as a permanent path rather than an edit, as in lab 20.
+
+  before  {"name":"crm.customer.create","measurements":[{"statistic":"COUNT","value":1.0}],"availableTags":[{"tag":"result","values":["success"]},...]}
+
+  POST CUS-2102 with an empty fullName
+
+  {"error":"fullName required"} HTTP 400
+
+  after   {"name":"crm.customer.create","measurements":[{"statistic":"COUNT","value":2.0}],"availableTags":[{"tag":"result","values":["success","failure"]},...]}
+
+The counter moves and the failure tag value appears for the first time. The
+increment does not come from CustomerService: the controller rejects a blank
+fullName at the edge and throws before create is called, so the count is made
+in the IllegalArgumentException handler, which is the one place all three
+validation rejections pass through. Counting in the branches as well would
+double every rejection. The lab 20 WARN with reason=missing_full_name still
+prints alongside, so the metric says how many and the log says which.
+
+
+3, REPEAT CREATE AND GET CUS-1001
+
+  result=failure before  1.0
+
+  POST CUS-1001  {"error":"Duplicate customerId: CUS-1001"} HTTP 409
+  POST CUS-1001  {"error":"Duplicate customerId: CUS-1001"} HTTP 409
+
+  result=failure after   3.0
+
+  result=success on get before  1.0
+  three more GET CUS-1001
+  result=success on get after   4.0
+
+  GET CUS-1001 {"customerId":"CUS-1001","fullName":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"}
+
+Counter growth against business idempotency. The two repeat creates changed
+nothing: CUS-1001 is seeded, the service rejects on findById and the record
+still reads Amina Khan afterwards, so the operation is idempotent in the
+business sense. The counter is not idempotent and should not be, because it
+counts requests, not records. Two rejected attempts is a real signal about a
+caller retrying, and flattening it would hide that. The same holds for the
+three reads: nothing changed, the count went to four.
+
+The consequence for the alert is that duplicates land in result=failure
+alongside genuine faults, so a client hammering a duplicate id can push the
+failure ratio past 5 percent without anything being wrong with the service. A
+separate result value for duplicates would separate them; the starter tags both
+as failure and the alert in docs/monitoring-report.md is written against that,
+with the caveat recorded there.
+
+
+4, INDUCE LATENCY
+
+Thread.sleep(150) added to InMemoryCustomerRepository.findById.
+
+  after 1 get   {"name":"crm.customer.get.latency","baseUnit":"seconds","measurements":[{"statistic":"COUNT","value":1.0},{"statistic":"TOTAL_TIME","value":0.1591854},{"statistic":"MAX","value":0.1591854}],...}
+
+  after 5 gets  {"name":"crm.customer.get.latency","baseUnit":"seconds","measurements":[{"statistic":"COUNT","value":5.0},{"statistic":"TOTAL_TIME","value":0.7999341},{"statistic":"MAX","value":0.1643129}],...}
+
+COUNT tracks calls, TOTAL_TIME accumulates, MAX holds the slowest single call.
+0.159 seconds against 0.00056 in 02-api-and-actuator-manual.txt, so the timer
+carries the injected 150 milliseconds and about 9 more from the surrounding
+work. TOTAL_TIME alone says nothing about a single request; TOTAL_TIME over
+COUNT is the mean, 0.16 seconds here, and MAX is what catches one slow call
+that a mean would bury. The counter next to it did not change shape at all,
+which is the difference between the two instrument types: the counter answers
+how many, the timer answers how long. Sleep removed.
+
+
+5, TEMPORARY customerId TAG
+
+A second counter crm.customer.get.bad was added tagged with both result and
+customerId, incremented beside the correct one so the same eight requests feed
+both. Two seeded ids and six that do not exist.
+
+  correct  crm_customer_get_total{application="northstar-crm",result="not_found"} 6.0
+           crm_customer_get_total{application="northstar-crm",result="success"} 2.0
+
+  tagged   crm_customer_get_bad_total{application="northstar-crm",customerId="CUS-1001",result="success"} 1.0
+           crm_customer_get_bad_total{application="northstar-crm",customerId="CUS-1002",result="success"} 1.0
+           crm_customer_get_bad_total{application="northstar-crm",customerId="CUS-9001",result="not_found"} 1.0
+           crm_customer_get_bad_total{application="northstar-crm",customerId="CUS-9002",result="not_found"} 1.0
+           crm_customer_get_bad_total{application="northstar-crm",customerId="CUS-9003",result="not_found"} 1.0
+           crm_customer_get_bad_total{application="northstar-crm",customerId="CUS-9004",result="not_found"} 1.0
+           crm_customer_get_bad_total{application="northstar-crm",customerId="CUS-9005",result="not_found"} 1.0
+           crm_customer_get_bad_total{application="northstar-crm",customerId="CUS-9006",result="not_found"} 1.0
+
+Eight requests, two series on the correct counter and eight on the tagged one.
+The correct counter stays at two series no matter how much traffic arrives,
+because result has two values. The tagged one adds a series per distinct id and
+never gives one back, so its series count is the number of customers ever read,
+which for a CRM is the whole customer base. Every series is separately stored
+and indexed by the backend.
+
+The eight rows also carry no more information than the logs already hold:
+02-api-and-actuator-manual.txt has cust= on every line from lab 20, and that is
+where a specific id belongs. Metrics aggregate, logs identify. Both the extra
+counter and its call site were removed.

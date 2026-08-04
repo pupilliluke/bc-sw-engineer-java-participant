@@ -1,0 +1,93 @@
+Lab 21 actuator and API manual session, captured 2026-08-04
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab21-crm
+
+App on port 8080. A CrmApplication left running from the lab 20 session held
+8080 and answered /actuator/** with 404 because it predates the actuator
+dependency; it was stopped before this capture. Every request below carries
+X-Correlation-Id: lab-request-001.
+
+  mvn -q spring-boot:run
+
+
+1, PROBES BEFORE ANY TRAFFIC
+
+  curl -s http://localhost:8080/actuator/health
+
+  {"status":"UP","components":{"crmReadinessIndicator":{"status":"UP","details":{"crm":"ready"}},"diskSpace":{"status":"UP","details":{"total":999343255552,"free":349536215040,"threshold":10485760,"path":"C:\Users\lukel\java-bootcamp\examples\lab21-crm\.","exists":true}},"livenessState":{"status":"UP"},"ping":{"status":"UP"},"readinessState":{"status":"UP"}},"groups":["liveness","readiness"]}
+
+  curl -s http://localhost:8080/actuator/health/liveness
+
+  {"status":"UP"}
+
+  curl -s http://localhost:8080/actuator/health/readiness
+
+  {"status":"UP","components":{"crmReadinessIndicator":{"status":"UP","details":{"crm":"ready"}},"readinessState":{"status":"UP"}}}
+
+crmReadinessIndicator appears in the overall blob and in the readiness group,
+not in liveness. groups lists both, which is what application.yml asks for. The
+diskSpace details are the reason show-details: always is marked lab-only: the
+absolute project path and the free bytes go to any caller.
+
+
+2, COUNTERS BEFORE ANY TRAFFIC
+
+  curl -s http://localhost:8080/actuator/metrics/crm.customer.create
+
+  HTTP 404
+
+  curl -s http://localhost:8080/actuator/metrics/crm.customer.get
+
+  HTTP 404
+
+Micrometer registers a counter when Counter.builder(...).register(registry)
+first runs, which is inside recordCreate and recordGet. Before any traffic
+neither has been called, so the meter does not exist and the endpoint 404s
+rather than reporting zero. 404 here is the correct baseline, not a fault.
+
+
+3, TRAFFIC
+
+  POST /api/customers {"customerId":"CUS-2101","fullName":"Metric User","email":"metric@example.com","status":"PROSPECT"}
+
+  HTTP 201
+
+  GET /api/customers/CUS-1001
+
+  HTTP 200
+
+
+4, COUNTERS AFTER TRAFFIC
+
+  curl -s http://localhost:8080/actuator/metrics/crm.customer.create
+
+  {"name":"crm.customer.create","measurements":[{"statistic":"COUNT","value":1.0}],"availableTags":[{"tag":"result","values":["success"]},{"tag":"application","values":["northstar-crm"]}]}
+
+  curl -s http://localhost:8080/actuator/metrics/crm.customer.get
+
+  {"name":"crm.customer.get","measurements":[{"statistic":"COUNT","value":1.0}],"availableTags":[{"tag":"result","values":["success"]},{"tag":"application","values":["northstar-crm"]}]}
+
+  curl -s http://localhost:8080/actuator/metrics/crm.customer.get.latency
+
+  {"name":"crm.customer.get.latency","baseUnit":"seconds","measurements":[{"statistic":"COUNT","value":1.0},{"statistic":"TOTAL_TIME","value":5.633E-4},{"statistic":"MAX","value":5.633E-4}],"availableTags":[{"tag":"application","values":["northstar-crm"]}]}
+
+One POST and one GET, one increment each. availableTags carries result and
+application and nothing else; application comes from management.metrics.tags
+and is one fixed value. 0.56 milliseconds against an in-memory map, which is
+the honest number here, and the figure experiment 4 moves.
+
+
+5, PROMETHEUS VIEW OF THE SAME COUNTERS
+
+  curl -s http://localhost:8080/actuator/prometheus | grep "^crm_customer"
+
+  crm_customer_create_total{application="northstar-crm",result="failure"} 2.0
+  crm_customer_create_total{application="northstar-crm",result="success"} 1.0
+  crm_customer_get_total{application="northstar-crm",result="not_found"} 1.0
+  crm_customer_get_total{application="northstar-crm",result="success"} 1.0
+
+Captured after the failure paths in 03-failure-experiments.txt, so the counts
+are higher than section 4. The names differ from the Actuator JSON: dots become
+underscores and counters gain a _total suffix, so crm.customer.create is
+crm_customer_create_total on the scrape. The alert in docs/monitoring-report.md
+uses the scrape spelling. micrometer-registry-prometheus is the bonus from step
+1 and the endpoint is in exposure.include, both lab-only.
