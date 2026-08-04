@@ -1,0 +1,99 @@
+Lab 19 mvn clean verify, captured 2026-08-03
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab19-crm
+
+  mvn -B clean verify
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.northstar:lab19-crm >-----------------------
+[INFO] Building lab19-crm 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ lab19-crm ---
+[INFO] Deleting C:\Users\lukel\java-bootcamp\examples\lab19-crm\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ lab19-crm ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ lab19-crm ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 6 source files with javac [debug parameters release 21] to target\classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ lab19-crm ---
+[INFO] skip non existing resourceDirectory C:\Users\lukel\java-bootcamp\examples\lab19-crm\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ lab19-crm ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 3 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ lab19-crm ---
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ lab19-crm ---
+[INFO] Building jar: C:\Users\lukel\java-bootcamp\examples\lab19-crm\target\lab19-crm-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.3.5:repackage (repackage) @ lab19-crm ---
+[INFO] Replacing main artifact C:\Users\lukel\java-bootcamp\examples\lab19-crm\target\lab19-crm-0.0.1-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to C:\Users\lukel\java-bootcamp\examples\lab19-crm\target\lab19-crm-0.0.1-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- failsafe:3.2.5:integration-test (default) @ lab19-crm ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.northstar.crm.integration.CustomerApiIT
+20:16:48.964 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.northstar.crm.integration.CustomerApiIT]: CustomerApiIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+20:16:49.051 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.northstar.crm.CrmApplication for test class com.northstar.crm.integration.CustomerApiIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.5)
+
+2026-08-03T20:16:49.508-04:00  INFO 7520 --- [lab19-crm] [           main] c.n.crm.integration.CustomerApiIT        : Starting CustomerApiIT using Java 21.0.4 with PID 7520 (started by lukel in C:\Users\lukel\java-bootcamp\examples\lab19-crm)
+2026-08-03T20:16:49.508-04:00  INFO 7520 --- [lab19-crm] [           main] c.n.crm.integration.CustomerApiIT        : No active profile set, falling back to 1 default profile: "default"
+2026-08-03T20:16:50.716-04:00  INFO 7520 --- [lab19-crm] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2026-08-03T20:16:50.732-04:00  INFO 7520 --- [lab19-crm] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-08-03T20:16:50.732-04:00  INFO 7520 --- [lab19-crm] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.31]
+2026-08-03T20:16:50.806-04:00  INFO 7520 --- [lab19-crm] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-08-03T20:16:50.808-04:00  INFO 7520 --- [lab19-crm] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1274 ms
+2026-08-03T20:16:51.492-04:00  INFO 7520 --- [lab19-crm] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 51698 (http) with context path '/'
+2026-08-03T20:16:51.501-04:00  INFO 7520 --- [lab19-crm] [           main] c.n.crm.integration.CustomerApiIT        : Started CustomerApiIT in 2.337 seconds (process running for 3.187)
+WARNING: A Java agent has been loaded dynamically (C:\Users\lukel\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.19\byte-buddy-agent-1.14.19.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+2026-08-03T20:16:52.457-04:00  INFO 7520 --- [lab19-crm] [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-03T20:16:52.457-04:00  INFO 7520 --- [lab19-crm] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-08-03T20:16:52.457-04:00  INFO 7520 --- [lab19-crm] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.855 s -- in com.northstar.crm.integration.CustomerApiIT
+[INFO] Running com.northstar.crm.ui.CustomerUiIT
+2026-08-03T20:16:52.676-04:00  INFO 7520 --- [lab19-crm] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.northstar.crm.ui.CustomerUiIT]: CustomerUiIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-08-03T20:16:52.688-04:00  INFO 7520 --- [lab19-crm] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.northstar.crm.CrmApplication for test class com.northstar.crm.ui.CustomerUiIT
+2026-08-03T20:16:52.804-04:00  INFO 7520 --- [lab19-crm] [           main] i.g.bonigarcia.wdm.WebDriverManager      : Using chromedriver 150.0.7871.124 (resolved driver for Chrome 150)
+2026-08-03T20:16:52.821-04:00  INFO 7520 --- [lab19-crm] [           main] i.g.bonigarcia.wdm.WebDriverManager      : Exporting webdriver.chrome.driver as C:\Users\lukel\.cache\selenium\chromedriver\win64\150.0.7871.124\chromedriver.exe
+2026-08-03T20:16:53.789-04:00  WARN 7520 --- [lab19-crm] [           main] o.o.selenium.devtools.CdpVersionFinder   : Unable to find CDP implementation matching 150
+2026-08-03T20:16:53.789-04:00  WARN 7520 --- [lab19-crm] [           main] o.o.selenium.chromium.ChromiumDriver     : Unable to find version of CDP to use for 150.0.7871.187. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.19.1` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's.
+2026-08-03T20:16:55.882-04:00  WARN 7520 --- [lab19-crm] [           main] o.o.selenium.devtools.CdpVersionFinder   : Unable to find CDP implementation matching 150
+2026-08-03T20:16:55.882-04:00  WARN 7520 --- [lab19-crm] [           main] o.o.selenium.chromium.ChromiumDriver     : Unable to find version of CDP to use for 150.0.7871.187. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.19.1` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's.
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.930 s -- in com.northstar.crm.ui.CustomerUiIT
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- failsafe:3.2.5:verify (default) @ lab19-crm ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  13.411 s
+[INFO] Finished at: 2026-08-03T20:16:57-04:00
+[INFO] ------------------------------------------------------------------------
