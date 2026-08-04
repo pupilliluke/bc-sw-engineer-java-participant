@@ -1,0 +1,81 @@
+Lab 19 failure experiments, captured 2026-08-03
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab19-crm
+
+The guide's five, plus the step 8 trivial-edit regression run. Every edit is
+restored; the suite is green at six in 01-mvn-clean-verify.txt, captured after
+all of them.
+
+
+1, WRONG PORT
+
+baseUrl() changed to port + 1, UI happy path run alone.
+
+  [ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 10.56 s <<< FAILURE! -- in com.northstar.crm.ui.CustomerUiIT
+  [ERROR]   CustomerUiIT.createCustomerViaUi:56 : WebDriver unknown error: net::ERR_CONNECTION_REFUSED
+
+The report shows ERR_CONNECTION_REFUSED rather than a locator error, so a
+dead app and a broken page fail differently. baseUrl restored.
+
+
+2, BLANK FULL NAME, UI AND API
+
+Kept as permanent tests rather than an edit. blankNameShowsValidationMessage
+submits CUS-1002 with an empty name and asserts the error text names
+fullName; blankFullNameReturns400 posts the same body over HTTP and asserts
+400 plus that the stored Ravi is unchanged. The transcript of the API case is
+in 02-api-and-ui-manual.txt.
+
+
+3, REPEAT CREATE CUS-1001
+
+POST CUS-1001 twice against the running app, second body carrying the name
+Amina K. Khan.
+
+  HTTP/1.1 201
+  {"customerId":"CUS-1001","fullName":"Amina K. Khan", ...}
+
+Both creates return 201. save is a put, so the second create silently
+overwrites the first; this service has no duplicate-id rule. That is a
+documented difference from lab16-crm through lab18-crm, where the validator
+returns 409 BUSINESS_CONFLICT for a duplicate id. Restored by posting the
+original Amina back; full transcript in 02-api-and-ui-manual.txt.
+
+
+4, DELAYED API UNDER AN EXPLICIT WAIT
+
+Thread.sleep(2000) added inside the controller's create, UI happy path run
+alone. No change to the test.
+
+  [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.335 s -- in com.northstar.crm.ui.CustomerUiIT
+
+Green, elapsed up from 3.7 s to 8.3 s. resultText waits until the result
+region is non-blank, so the two seconds are absorbed without a sleep in the
+test. Sleep removed.
+
+
+5, BROKEN DATA-TESTID LOCATOR
+
+RESULT in CustomerFormPage changed to [data-testid='create-result-broken'].
+
+  [ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 16.51 s <<< FAILURE! -- in com.northstar.crm.ui.CustomerUiIT
+  org.openqa.selenium.TimeoutException: Expected condition failed: waiting for ... (tried for 10 second(s) with 500 milliseconds interval)
+  Caused by: org.openqa.selenium.NoSuchElementException: no such element: Unable to locate element: {"method":"css selector","selector":"[data-testid='create-result-broken']"}
+
+The failure prints the selector it could not find, and the catch around
+resultText wrote target\ui-failure.png before the test failed; the capture is
+kept as ui-failure.png next to this file. The capture shows the CUS-2001
+result rendered in the real create-result region, so the create worked and
+the locator was the failure, which is also what CustomerApiIT staying green
+says. Locator restored.
+
+
+6, TRIVIAL NON-FUNCTIONAL EDIT
+
+customers.html title changed to Northstar CRM - Customer records, both IT
+classes run.
+
+  [INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.integration.CustomerApiIT
+  [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.ui.CustomerUiIT
+
+Green across the edit. The locators are data-testid attributes, not page
+text, so a copy change does not touch them. Title restored.

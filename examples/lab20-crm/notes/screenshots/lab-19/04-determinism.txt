@@ -1,0 +1,23 @@
+Lab 19 determinism evidence, captured 2026-08-03
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab19-crm
+
+Three full mvn -B clean verify runs, the first cold with dependency and
+chromedriver downloads, the second immediately after, the third after the
+failure experiments were restored. Same counts every time; elapsed times are
+the only numbers that differ.
+
+  run 1   Tests run: 4 ... CustomerApiIT    Tests run: 2 ... CustomerUiIT    Tests run: 6, Failures: 0, Errors: 0, Skipped: 0    BUILD SUCCESS    Total time: 45.225 s
+  run 2   Tests run: 4 ... CustomerApiIT    Tests run: 2 ... CustomerUiIT    Tests run: 6, Failures: 0, Errors: 0, Skipped: 0    BUILD SUCCESS
+  run 3   Tests run: 4 ... CustomerApiIT    Tests run: 2 ... CustomerUiIT    Tests run: 6, Failures: 0, Errors: 0, Skipped: 0    BUILD SUCCESS
+
+Run 1 spent 15.39 s in CustomerUiIT resolving chromedriver 150.0.7871.124;
+runs 2 and 3 hold it in the WebDriverManager cache and finish the class in
+under 4 s.
+
+Each test method gets its own headless Chrome from @BeforeEach and quit in
+@AfterEach. The two IT classes share one cached Spring context and one
+Tomcat port, 51698 in the 01 transcript, so the store is shared across the
+whole run; the UI create uses CUS-2001 and the API create CUS-1005, away
+from the seeds, which is what keeps the runs identical. Implicit wait is
+pinned to zero; the only waits are the explicit conditions in
+CustomerFormPage.
