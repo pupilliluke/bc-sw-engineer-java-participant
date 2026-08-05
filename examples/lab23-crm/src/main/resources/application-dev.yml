@@ -1,0 +1,10 @@
+# Lab-only teaser. Do not put real secrets here (Lab 26 deepens profiles).
+server:
+  port: 8080
+logging:
+  level:
+    com.northstar.crm: DEBUG
+management:
+  endpoint:
+    health:
+      show-details: always

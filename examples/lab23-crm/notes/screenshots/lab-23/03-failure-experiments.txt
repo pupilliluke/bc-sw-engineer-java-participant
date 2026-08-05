@@ -1,0 +1,92 @@
+Lab 23 failure experiments, captured 2026-08-05
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab23-crm
+
+The guide's five. The pom edit in 1 is restored and byte-identical to the
+starter; the suite is green at 2 on two runs in 01-mvn-test.txt.
+
+
+1, REMOVE THE WEB STARTER
+
+  <!--
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+      </dependency>
+  -->
+
+  mvn -B clean compile
+
+  [ERROR] COMPILATION ERROR :
+  [ERROR] .../api/CustomerController.java:[5,32] package org.springframework.http does not exist
+  [ERROR] .../api/CustomerController.java:[6,1] package org.springframework.web.bind.annotation does not exist
+  [ERROR] .../api/CustomerController.java:[8,2] cannot find symbol
+  [ERROR] .../api/CustomerController.java:[17,4] cannot find symbol
+
+It never reaches a context or a missing embedded server: spring-web and
+spring-webmvc arrive only through starter-web, so @RestController,
+@RequestMapping and HttpStatus stop resolving at javac. Actuator stays on the
+classpath and does not bring them. Starter restored.
+
+
+2, POST A BLANK NAME
+
+  POST /api/customers  {"id":"CUS-2002","name":"","email":"blank.name@example.com","status":"PROSPECT"}
+
+  {"id":"CUS-2002","name":"","email":"blank.name@example.com","status":"PROSPECT"} HTTP 201
+
+  2026-08-05T17:34:14.982-04:00  INFO 5836 --- [northstar-crm] [nio-8080-exec-7] c.northstar.crm.service.CustomerService  : customer.created id=CUS-2002 status=PROSPECT correlationId=lab-request-002
+
+Accepted. This build has no validation starter and no @Valid, so a blank name
+is stored. The one rule the service does hold is the id:
+
+  POST /api/customers  {"id":"","name":"No Id","email":"no.id@example.com","status":"PROSPECT"}
+
+  {"timestamp":"2026-08-05T21:34:15.321+00:00","status":500,"error":"Internal Server Error","path":"/api/customers"} HTTP 500
+
+
+3, CREATE CUS-1001 TWICE
+
+  POST CUS-1001 again with email amina.k@example.com
+
+  {"id":"CUS-1001","name":"Amina Khan","email":"amina.k@example.com","status":"ACTIVE"} HTTP 201
+
+  GET CUS-1001
+  {"id":"CUS-1001","name":"Amina Khan","email":"amina.k@example.com","status":"ACTIVE"} HTTP 200
+
+  2026-08-05T17:34:15.096-04:00  INFO 5836 --- [northstar-crm] [nio-8080-exec-9] c.northstar.crm.service.CustomerService  : customer.created id=CUS-1001 status=ACTIVE correlationId=lab-request-002
+
+Overwrite, second 201, same key in the map, new email on the read. Map.put has
+no uniqueness rule. Lab 21's duplicate rule is not in this project.
+
+
+4, PORT ALREADY IN USE
+
+  java -jar target\lab23-crm-0.0.1-SNAPSHOT.jar   (with spring-boot:run still on 8080)
+
+  ***************************
+  APPLICATION FAILED TO START
+  ***************************
+
+  Description:
+
+  Web server failed to start. Port 8080 was already in use.
+
+  Action:
+
+  Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+Boot's failure analyzer turns the BindException into the port message and the
+action line. Fixed 8080 comes from application.yml, which is why the HTTP test
+uses RANDOM_PORT.
+
+
+5, HEALTH WITH THE APP STOPPED
+
+  curl -sv http://localhost:8080/actuator/health
+
+  * connect to ::1 port 8080 from :: port 50417 failed: Connection refused
+  * connect to 127.0.0.1 port 8080 from 0.0.0.0 port 50418 failed: Connection refused
+  * Failed to connect to localhost port 8080 after 2252 ms: Could not connect to server
+
+No HTTP status, no body. Health reports on a process that is up; a stopped
+process refuses the connection instead.

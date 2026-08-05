@@ -1,0 +1,55 @@
+Lab 23 boot, health and API smoke, captured 2026-08-05
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab23-crm
+
+App under mvn -B spring-boot:run, default profile, then the guide curls in a
+second terminal. Dev profile teaser run at the end.
+
+  mvn -B spring-boot:run
+
+  2026-08-05T17:33:37.077-04:00  INFO 5836 --- [northstar-crm] [           main] com.northstar.crm.CrmApplication         : No active profile set, falling back to 1 default profile: "default"
+  2026-08-05T17:33:38.457-04:00  INFO 5836 --- [northstar-crm] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+  2026-08-05T17:33:39.448-04:00  INFO 5836 --- [northstar-crm] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+  2026-08-05T17:33:39.470-04:00  INFO 5836 --- [northstar-crm] [           main] com.northstar.crm.CrmApplication         : Started CrmApplication in 2.883 seconds (process running for 3.283)
+
+  curl -s http://localhost:8080/actuator/health
+  {"status":"UP"}
+
+  curl -s http://localhost:8080/actuator/info
+  {"app":{"name":"northstar-crm","description":"Lab 23 Spring Boot CRM slice"}}
+
+  POST /api/customers CUS-1001 (X-Correlation-Id: lab-request-001)
+  {"id":"CUS-1001","name":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"}
+  HTTP 201
+
+  POST /api/customers CUS-1002 (X-Correlation-Id: lab-request-001)
+  {"id":"CUS-1002","name":"Ravi Singh","email":"ravi.singh@example.com","status":"PROSPECT"}
+  HTTP 201
+
+  GET /api/customers/CUS-1001
+  {"id":"CUS-1001","name":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"}
+  HTTP 200
+
+  GET /api/customers/CUS-1002
+  {"id":"CUS-1002","name":"Ravi Singh","email":"ravi.singh@example.com","status":"PROSPECT"}
+  HTTP 200
+
+  GET /api/customers/CUS-MISSING
+  HTTP 500
+
+The 500 is the Boot default for the service IllegalArgumentException; no
+@ControllerAdvice in this build. The header is read, not echoed. Service log
+lines for the creates:
+
+  2026-08-05T17:33:48.071-04:00  INFO 5836 --- [northstar-crm] [nio-8080-exec-8] c.northstar.crm.service.CustomerService  : customer.created id=CUS-1001 status=ACTIVE correlationId=lab-request-001
+  2026-08-05T17:33:48.216-04:00  INFO 5836 --- [northstar-crm] [io-8080-exec-10] c.northstar.crm.service.CustomerService  : customer.created id=CUS-1002 status=PROSPECT correlationId=lab-request-001
+
+  mvn -B spring-boot:run "-Dspring-boot.run.profiles=dev"
+
+  2026-08-05T17:36:36.003-04:00  INFO 3888 --- [northstar-crm] [           main] com.northstar.crm.CrmApplication         : The following 1 profile is active: "dev"
+  2026-08-05T17:36:36.001-04:00 DEBUG 3888 --- [northstar-crm] [           main] com.northstar.crm.CrmApplication         : Running with Spring Boot v3.3.5, Spring v6.1.14
+
+  curl -s http://localhost:8080/actuator/health
+  {"status":"UP","components":{"diskSpace":{"status":"UP","details":{"total":999343255552,"free":340794880000,"threshold":10485760,"path":"C:\\Users\\lukel\\java-bootcamp\\examples\\lab23-crm\\.","exists":true}},"ping":{"status":"UP"}}}
+
+Dev shows components because application-dev.yml sets show-details always; the
+default profile answers the bare {"status":"UP"} under when_authorized.

@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: northstar-crm
+server:
+  port: 8080
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when_authorized
+  info:
+    env:
+      enabled: true
+logging:
+  level:
+    com.northstar.crm: INFO
+info:
+  app:
+    name: northstar-crm
+    description: Lab 23 Spring Boot CRM slice

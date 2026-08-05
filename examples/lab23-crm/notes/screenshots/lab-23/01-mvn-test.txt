@@ -1,0 +1,36 @@
+Lab 23 mvn -B test, captured 2026-08-05
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab23-crm
+
+Two runs back to back, both green at 2. CrmApplicationTests is the starter
+smoke; CustomerControllerHttpTest is the step 8 full-path addition.
+
+  mvn -B test
+
+  [INFO] Building lab23-crm 0.0.1-SNAPSHOT
+
+  [INFO] -------------------------------------------------------
+  [INFO]  T E S T S
+  [INFO] -------------------------------------------------------
+  [INFO] Running com.northstar.crm.api.CustomerControllerHttpTest
+  2026-08-05T17:38:15.361-04:00  INFO 40764 --- [northstar-crm] [o-auto-1-exec-1] c.northstar.crm.service.CustomerService  : customer.created id=CUS-1001 status=ACTIVE correlationId=lab-request-001
+  [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.969 s -- in com.northstar.crm.api.CustomerControllerHttpTest
+  [INFO] Running com.northstar.crm.CrmApplicationTests
+  2026-08-05T17:38:16.491-04:00  INFO 40764 --- [northstar-crm] [           main] com.northstar.crm.CrmApplicationTests    : Started CrmApplicationTests in 0.924 seconds (process running for 9.713)
+  [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.030 s -- in com.northstar.crm.CrmApplicationTests
+  [INFO]
+  [INFO] Results:
+  [INFO]
+  [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+  [INFO]
+  [INFO] BUILD SUCCESS
+  [INFO] Total time:  15.520 s
+
+  mvn -B test   (second run)
+
+  [INFO] Running com.northstar.crm.api.CustomerControllerHttpTest
+  [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.159 s -- in com.northstar.crm.api.CustomerControllerHttpTest
+  [INFO] Running com.northstar.crm.CrmApplicationTests
+  [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.643 s -- in com.northstar.crm.CrmApplicationTests
+  [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+  [INFO] BUILD SUCCESS
+  [INFO] Total time:  12.467 s
