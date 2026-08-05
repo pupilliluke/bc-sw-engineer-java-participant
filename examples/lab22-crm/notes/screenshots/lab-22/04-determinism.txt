@@ -1,0 +1,22 @@
+Lab 22 determinism, captured 2026-08-05
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab22-crm
+
+Three consecutive mvn -B clean verify runs, 2 surefire and 11 failsafe each,
+no failures and no flakes. The third is the transcript in
+01-mvn-clean-verify.txt.
+
+  run 1  Tests run: 2  Tests run: 11  BUILD SUCCESS
+  run 2  Tests run: 2  Tests run: 11  BUILD SUCCESS
+  run 3  Tests run: 2  Tests run: 11  BUILD SUCCESS
+
+The two new tests write into the same in-memory store the guide's
+troubleshooting table warns about, so both use ids that are not seeded and not
+used by any other class. CustomerServiceTest builds its own
+InMemoryCustomerRepository with new and gets a fresh map per run.
+CustomerServiceSpringTest shares the singleton, so CUS-2202 stays in the map
+for the rest of that context; it is created once and read once in the same
+method and nothing else looks for it.
+
+CustomerServiceSpringTest is @SpringBootTest with no webEnvironment, so its
+context is cached separately from the four RANDOM_PORT IT classes. That is why
+CustomerService ready appears twice across a full verify and once per context.

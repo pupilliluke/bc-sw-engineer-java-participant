@@ -1,0 +1,110 @@
+Lab 22 failure experiments, captured 2026-08-05
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab22-crm
+
+The guide's five. Every temporary edit is restored; the suite is green at 2 and
+11 in 01-mvn-clean-verify.txt, captured after all of them.
+
+
+1, COMMENT OUT @Repository
+
+  //@Repository
+  public class InMemoryCustomerRepository implements CustomerRepository {
+
+  mvn -B -Dtest=CustomerServiceSpringTest test
+
+  Parameter 0 of constructor in com.northstar.crm.service.CustomerService required a bean of type 'com.northstar.crm.repository.CustomerRepository' that could not be found.
+
+  Action:
+
+  Consider defining a bean of type 'com.northstar.crm.repository.CustomerRepository' in your configuration.
+
+  Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'customerController' ... Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'customerService' ... Unsatisfied dependency expressed through constructor parameter 0: No qualifying bean of type 'com.northstar.crm.repository.CustomerRepository' available
+  Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'com.northstar.crm.repository.CustomerRepository' available: expected at least 1 bean which qualifies as autowire candidate
+
+The failure is at context refresh, not at the first request. The chain names
+customerController first and customerService second, so the report reads
+backwards from the consumer down to the missing bean. Annotation restored.
+
+
+2, INVALID CREATE PAYLOAD
+
+Kept as a permanent path rather than an edit, as in lab 20.
+
+  POST CUS-2002 with an empty name
+
+  {"error":"fullName required"} HTTP 400
+
+  2026-08-05 17:08:40,850 WARN  [http-nio-8080-exec-9] c.n.crm.api.CustomerController corr=lab-request-001 cust= op= - Rejecting create reason=missing_full_name customerId=CUS-2002
+
+Validation is at the boundary. The WARN comes from CustomerController and there
+is no matching CustomerService line, so the request stopped before the service.
+DI changed the wiring and left the validation position alone.
+
+
+3, REPEAT CREATE CUS-1001
+
+  POST CUS-1001  {"error":"Duplicate customerId: CUS-1001"} HTTP 409
+
+  2026-08-05 17:08:40,778 WARN  [http-nio-8080-exec-7] c.n.crm.service.CustomerService corr=lab-request-001 cust=CUS-1001 op=customer.create - Create rejected reason=duplicate
+
+  GET CUS-1001  {"id":"CUS-1001","name":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"} HTTP 200
+
+Duplicate rather than overwrite. The repository's save is a plain map put and
+would overwrite, but CustomerService.create checks findById first and throws
+DuplicateCustomerException, which is lab 19 behavior carried forward. The
+record still reads Amina Khan after the rejection.
+
+The store is the singleton's ConcurrentHashMap, so the seeded CUS-1001 and
+CUS-1002 outlive every request and the rule applies from the first POST
+onwards. This is why CustomerServiceTest creates CUS-2001 and
+CustomerServiceSpringTest creates CUS-2202 instead of the guide's Amina.
+
+
+4, DELAY NotificationService
+
+  Thread.sleep(300) added to NotificationService.notifyCreated.
+
+  before  Customer created status=PROSPECT durationMs=1     POST total=0.02s
+
+  after
+
+  2026-08-05 17:18:07,234 INFO  [http-nio-8080-exec-2] c.n.crm.service.CustomerService corr=lab-request-001 cust=CUS-3001 op=customer.create - Customer created status=ACTIVE durationMs=317
+  2026-08-05 17:18:07,669 INFO  [http-nio-8080-exec-4] c.n.crm.service.CustomerService corr=lab-request-001 cust=CUS-3002 op=customer.create - Customer created status=ACTIVE durationMs=311
+
+  POST CUS-3001  HTTP 201 total=0.441643s
+  POST CUS-3002  HTTP 201 total=0.323737s
+  GET  CUS-1001  HTTP 200 total=0.017240s
+
+durationMs goes from 1 to 317 and the caller waits for all of it, because
+notifyCreated is called on the request thread between the save and the return.
+The get path is untouched at 0.017s, so the cost sits on create only. In
+production the notifier goes async or onto a queue and create returns as soon
+as the record is saved. Sleep removed.
+
+
+5, new INSIDE THE SERVICE
+
+  this.repository = new com.northstar.crm.repository.InMemoryCustomerRepository();
+
+  mvn -B clean verify
+
+  Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+  Tests run: 11, Failures: 0, Errors: 0, Skipped: 0
+  BUILD SUCCESS
+
+The suite does not notice. Every test reaches the store through
+CustomerService, and the discarded bean and the new instance seed the same two
+fixtures, so nothing observable changes.
+
+A temporary probe made the two stores visible: save through the injected
+CustomerRepository bean, then read the same id through the service.
+
+  with the new         injected.findById = true   service.findById = false
+  with the injection   injected.findById = true   service.findById = true
+
+Two maps, one of them unreachable from anything but the service. The
+constructor parameter is still there and still satisfied, so startup is clean
+and the graph in dependency-graph.md would still describe the code correctly
+while being wrong about the runtime. The probe class was deleted; the
+permanent guard is that nothing in the service body says new. Injection
+restored.

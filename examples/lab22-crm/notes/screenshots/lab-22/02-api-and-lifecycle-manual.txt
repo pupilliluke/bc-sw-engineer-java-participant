@@ -1,0 +1,78 @@
+Lab 22 API and lifecycle manual session, captured 2026-08-05
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab22-crm
+
+App on port 8080. Every request carries X-Correlation-Id: lab-request-001.
+Started with spring-boot:start and stopped with spring-boot:stop rather than
+Ctrl+C, because the plugin forks the JVM and a console signal does not reach
+it from a background shell. Both go through the same graceful context close.
+
+  mvn -B spring-boot:start
+
+
+1, STARTUP
+
+  2026-08-05 17:08:19,347 INFO  [main] c.n.crm.service.CustomerService corr= cust= op= - CustomerService ready
+  2026-08-05 17:08:20,514 INFO  [main] com.northstar.crm.CrmApplication corr= cust= op= - Started CrmApplication in 4.649 seconds (process running for 5.613)
+
+One CustomerService ready line, from c.n.crm.service.CustomerService. No
+missing-bean errors, so the constructor parameters were all satisfied by scan.
+
+
+2, CREATE AND GET
+
+  curl -H "X-Correlation-Id: lab-request-001" -H "Content-Type: application/json" -d '{"id":"CUS-2001","name":"Priya Patel","email":"priya.patel@example.com","status":"PROSPECT"}' http://localhost:8080/api/customers
+
+  {"id":"CUS-2001","name":"Priya Patel","email":"priya.patel@example.com","status":"PROSPECT"} HTTP 201
+
+  curl -s http://localhost:8080/api/customers/CUS-1001
+
+  {"id":"CUS-1001","name":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"} HTTP 200
+
+  curl -s http://localhost:8080/api/customers/CUS-1002
+
+  {"id":"CUS-1002","name":"Ravi Singh","email":"ravi.singh@example.com","status":"PROSPECT"} HTTP 200
+
+  2026-08-05 17:08:40,530 INFO  [http-nio-8080-exec-1] c.n.crm.service.CustomerService corr=lab-request-001 cust=CUS-2001 op=customer.create - Creating customer
+  2026-08-05 17:08:40,530 INFO  [http-nio-8080-exec-1] c.n.crm.service.NotificationService corr=lab-request-001 cust=CUS-2001 op=customer.create - customer.created id=CUS-2001 correlationId=lab-request-001
+  2026-08-05 17:08:40,531 INFO  [http-nio-8080-exec-1] c.n.crm.service.CustomerService corr=lab-request-001 cust=CUS-2001 op=customer.create - Customer created status=PROSPECT durationMs=1
+  2026-08-05 17:08:40,628 INFO  [http-nio-8080-exec-3] c.n.crm.service.CustomerService corr=lab-request-001 cust=CUS-1001 op=customer.get - Loading customer
+  2026-08-05 17:08:40,698 INFO  [http-nio-8080-exec-5] c.n.crm.service.CustomerService corr=lab-request-001 cust=CUS-1002 op=customer.get - Loading customer
+
+The notification line carries the id and the correlation id and nothing else.
+CUS-1001 and CUS-1002 are seeded by the repository constructor, so the guide's
+POST of Amina lands as a duplicate; it is in section 3 and in experiment 3.
+
+
+3, REJECTIONS
+
+  POST CUS-1001 again
+
+  {"error":"Duplicate customerId: CUS-1001"} HTTP 409
+
+  POST CUS-2002 with an empty name
+
+  {"error":"fullName required"} HTTP 400
+
+  GET CUS-9999
+
+  HTTP 404
+
+  2026-08-05 17:08:40,778 WARN  [http-nio-8080-exec-7] c.n.crm.service.CustomerService corr=lab-request-001 cust=CUS-1001 op=customer.create - Create rejected reason=duplicate
+  2026-08-05 17:08:40,850 WARN  [http-nio-8080-exec-9] c.n.crm.api.CustomerController corr=lab-request-001 cust= op= - Rejecting create reason=missing_full_name customerId=CUS-2002
+  2026-08-05 17:08:40,916 INFO  [http-nio-8080-exec-10] c.n.crm.service.CustomerService corr=lab-request-001 cust=CUS-9999 op=customer.get - Loading customer
+
+Validation is still at the controller edge, so the blank-name POST never
+reaches CustomerService and the WARN comes from CustomerController. The error
+strings still say customerId and fullName; those are lab 20 reason codes in
+docs/logging.md and are not the JSON field names.
+
+
+4, SHUTDOWN
+
+  mvn -B spring-boot:stop
+
+  2026-08-05 17:08:45,360 INFO  [RMI TCP Connection(4)-127.0.0.1] c.n.crm.service.CustomerService corr= cust= op= - CustomerService shutting down
+
+One @PreDestroy line on the graceful stop. The singleton is one instance for
+the whole context, so the store and the two counters are shared across every
+request thread above.

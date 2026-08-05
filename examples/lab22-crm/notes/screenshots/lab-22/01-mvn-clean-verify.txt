@@ -1,0 +1,54 @@
+Lab 22 mvn -B clean verify, captured 2026-08-05
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab22-crm
+
+Surefire 2, Failsafe 11. The two surefire tests are new in this lab.
+
+  mvn -B clean verify
+
+  [INFO] Building lab22-crm 0.0.1-SNAPSHOT
+
+  [INFO] -------------------------------------------------------
+  [INFO]  T E S T S
+  [INFO] -------------------------------------------------------
+  [INFO] Running com.northstar.crm.service.CustomerServiceSpringTest
+  2026-08-05 17:21:47,956 INFO  [main] c.n.crm.service.CustomerService corr= cust= op= - CustomerService ready
+  2026-08-05 17:21:54,235 INFO  [main] c.n.crm.service.CustomerService corr= cust=CUS-1001 op=customer.get - Loading customer
+  2026-08-05 17:21:54,247 INFO  [main] c.n.crm.service.CustomerService corr= cust=CUS-2202 op=customer.create - Creating customer
+  2026-08-05 17:21:54,247 INFO  [main] c.n.crm.service.NotificationService corr= cust=CUS-2202 op=customer.create - customer.created id=CUS-2202 correlationId=lab-request-001
+  2026-08-05 17:21:54,250 INFO  [main] c.n.crm.service.CustomerService corr= cust=CUS-2202 op=customer.create - Customer created status=PROSPECT durationMs=3
+  2026-08-05 17:21:54,261 INFO  [main] c.n.crm.service.CustomerService corr= cust=CUS-2202 op=customer.get - Loading customer
+  2026-08-05 17:21:54,268 WARN  [main] c.n.crm.service.CustomerService corr= cust=CUS-1002 op=customer.create - Create rejected reason=duplicate
+  2026-08-05 17:21:54,269 INFO  [main] c.n.crm.service.CustomerService corr= cust=CUS-1002 op=customer.get - Loading customer
+  [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.90 s -- in com.northstar.crm.service.CustomerServiceSpringTest
+  [INFO] Running com.northstar.crm.service.CustomerServiceTest
+  2026-08-05 17:21:54,372 INFO  [main] c.n.crm.service.CustomerService corr= cust=CUS-2001 op=customer.create - Creating customer
+  2026-08-05 17:21:54,373 INFO  [main] c.n.crm.service.NotificationService corr= cust=CUS-2001 op=customer.create - customer.created id=CUS-2001 correlationId=lab-request-001
+  2026-08-05 17:21:54,374 INFO  [main] c.n.crm.service.CustomerService corr= cust=CUS-2001 op=customer.create - Customer created status=PROSPECT durationMs=1
+  2026-08-05 17:21:54,375 INFO  [main] c.n.crm.service.CustomerService corr= cust=CUS-2001 op=customer.get - Loading customer
+  2026-08-05 17:21:54,377 INFO  [main] c.n.crm.service.CustomerService corr= cust=CUS-1001 op=customer.get - Loading customer
+  [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s -- in com.northstar.crm.service.CustomerServiceTest
+  [INFO]
+  [INFO] Results:
+  [INFO]
+  [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+
+  [INFO] --- failsafe:3.2.5:integration-test (integration-test) @ lab22-crm ---
+  [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.66 s -- in com.northstar.crm.actuator.ActuatorIT
+  [INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.225 s -- in com.northstar.crm.integration.CustomerApiIT
+  [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.274 s -- in com.northstar.crm.logging.CustomerLoggingIT
+  [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.909 s -- in com.northstar.crm.ui.CustomerUiIT
+  [INFO]
+  [INFO] Results:
+  [INFO]
+  [INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0
+
+  [INFO] BUILD SUCCESS
+  [INFO] Total time:  56.605 s
+
+CustomerService ready prints once per context. CustomerServiceSpringTest runs
+its own context, the four IT classes share a second one.
+
+The guide's two commands:
+
+  mvn -B -Dtest=CustomerServiceTest test                            Tests run: 1
+  mvn -B -Dtest=CustomerServiceTest,CustomerServiceSpringTest test  Tests run: 2
