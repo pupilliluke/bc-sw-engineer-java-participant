@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: northstar-crm
+  profiles:
+    default: dev
+server:
+  port: 8080
+northstar:
+  integration:
+    api-base-url: http://localhost:9090
+    connect-timeout-ms: 2000

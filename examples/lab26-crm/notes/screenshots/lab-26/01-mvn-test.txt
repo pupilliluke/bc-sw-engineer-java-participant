@@ -1,0 +1,26 @@
+Lab 26 mvn -B test, captured 2026-08-07
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab26-crm
+
+The starter ships ProfileBindingTest as a fail("TODO") stub. One test after step
+8, green on two consecutive runs.
+
+  mvn -B test -Dspring.profiles.active=test
+
+  2026-08-07T12:23:24.752-04:00  INFO 21972 --- [northstar-crm] [main] com.northstar.crm.CrmApplication : profiles=[test] apiBaseUrl=http://localhost:9090 connectTimeoutMs=100 apiKeySet=false
+  [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.61 s -- in com.northstar.crm.ProfileBindingTest
+  [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+  [INFO] BUILD SUCCESS
+
+ProfileBindingTest is @SpringBootTest with @ActiveProfiles("test"). It asserts
+connectTimeoutMs 100 and apiBaseUrl http://localhost:9090 off the bound
+NorthstarIntegrationProperties, then reads CUS-1001 Amina Khan from
+CustomerService.
+
+The @ActiveProfiles annotation is what forces the test profile. Without it the
+suite would pick up spring.profiles.default and bind 2000 from the base file
+instead of 100.
+
+The log line comes from an ApplicationRunner in CrmApplication. It prints the
+active profiles, apiBaseUrl and connectTimeoutMs, and a boolean for whether the
+api key is set rather than the key itself. It is how the override ladder in
+03-failure-experiments.txt was measured.

@@ -1,0 +1,67 @@
+Lab 26 profile activation and dev smoke, captured 2026-08-07
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab26-crm, correlation lab-request-001
+
+Steps 3, 5 and 8. The jar runs use --spring.main.web-application-type=none so
+the app binds config, logs the startup line and exits without holding 8080.
+
+
+ACTIVATION VIA -D
+
+  mvn -B spring-boot:run -Dspring-boot.run.profiles=dev
+
+  The following 1 profile is active: "dev"
+  Started CrmApplication in 4.72 seconds (process running for 5.239)
+  profiles=[dev] apiBaseUrl=http://localhost:9090 connectTimeoutMs=2000 apiKeySet=false
+
+Packaged form of the same dial:
+
+  java -Dspring.profiles.active=dev -jar target/lab26-crm-0.0.1-SNAPSHOT.jar
+
+  The following 1 profile is active: "dev"
+
+
+ACTIVATION VIA ENV
+
+  SPRING_PROFILES_ACTIVE=test java -jar target/lab26-crm-0.0.1-SNAPSHOT.jar
+
+  The following 1 profile is active: "test"
+  profiles=[test] apiBaseUrl=http://localhost:9090 connectTimeoutMs=100 apiKeySet=false
+
+connectTimeoutMs moves from 2000 to 100 with the profile, which is the
+application-test.yml value.
+
+PowerShell form: $env:SPRING_PROFILES_ACTIVE="test", then
+Remove-Item Env:SPRING_PROFILES_ACTIVE to clear it.
+
+
+DEV SMOKE
+
+  curl -s -H "X-Correlation-Id: lab-request-001" http://localhost:8080/api/customers/CUS-1001
+
+  {"id":"CUS-1001","name":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"} HTTP 200
+
+  curl -s -H "X-Correlation-Id: lab-request-001" http://localhost:8080/api/customers/CUS-1002
+
+  {"id":"CUS-1002","name":"Ravi Singh","email":"ravi.singh@example.com","status":"PROSPECT"} HTTP 200
+
+The seeds live in the CustomerService map and do not come from the datasource,
+so both answer the same under any profile. The profile decides the H2 URL, the
+log level and the timeout, not the fixtures.
+
+
+PROD WITH THE ENV VARS SET
+
+  DB_USERNAME=crm DB_PASSWORD=change-me NORTHSTAR_API_KEY=lab-only-key java -jar target/lab26-crm-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+
+  Started CrmApplication in 4.194 seconds
+  profiles=[prod] apiBaseUrl=http://localhost:9090 connectTimeoutMs=2000 apiKeySet=true
+
+Values are the .env.example placeholders, not real credentials. No datasource
+override: org.postgresql:postgresql runtime is in the pom, so the declared
+postgres URL binds as written. The same command fails in experiment 1 without
+the three variables.
+
+db.example.internal does not resolve and startup does not care. Hikari opens the
+pool on first use and nothing in this app queries, so a bad host is a runtime
+problem rather than a startup one. The prod checks here are about the config
+being present, not about the database being reachable.
