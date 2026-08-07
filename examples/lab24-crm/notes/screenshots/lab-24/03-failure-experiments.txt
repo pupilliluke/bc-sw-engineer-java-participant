@@ -1,0 +1,59 @@
+Lab 24 failure experiments, captured 2026-08-06
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab24-crm
+
+Four of the guide's five. Experiment 4 is full path only. The suite is green at
+2 in 01-mvn-test.txt, captured after these.
+
+
+1, APP STOPPED, POST SOAP
+
+  curl -sS -X POST http://localhost:8080/ws -H "Content-Type: text/xml; charset=utf-8" --data @requests/get-customer.xml
+
+  curl: (7) Failed to connect to localhost port 8080 after 2243 ms: Could not connect to server
+
+  curl -sS http://localhost:8080/api/customers/CUS-1001
+
+  curl: (7) Failed to connect to localhost port 8080 after 2244 ms: Could not connect to server
+
+Both protocols fail the same way and neither produces a SOAP fault, because
+there is no message to carry one. Partner backoff has to handle transport
+errors separately from faults.
+
+
+2, GET CUS-9999
+
+  curl -s -X POST http://localhost:8080/ws -H "Content-Type: text/xml; charset=utf-8" --data @requests/get-customer-not-found.xml
+
+  <SOAP-ENV:Fault><faultcode>SOAP-ENV:Server</faultcode><faultstring xml:lang="en">Customer not found: CUS-9999</faultstring></SOAP-ENV:Fault>
+
+The envelope parsed and the endpoint ran, so this is a real fault rather than a
+transport error. faultcode is Server because IllegalArgumentException is
+unmapped, which tells the partner to retry a call that cannot succeed. Mapping
+it to Client is full-path step 5. No stack trace or class name in the body.
+
+
+3, MALFORMED XML
+
+  Closing tag </cus:GetCustomerRequest> removed.
+
+  curl -s -o resp -w "HTTP %{http_code}" -X POST http://localhost:8080/ws ...
+
+  HTTP 400, empty body
+
+  ERROR com.sun.xml.messaging.saaj.soap : SAAJ0511: Unable to create envelope from given source
+
+Different failure class from experiment 2. The envelope never parsed, so
+routing never ran and there is no fault element at all, only a bare 400. File
+restored.
+
+
+5, GET WITHOUT SECURITY
+
+  requests/get-customer.xml carries <soapenv:Header/> with no wsse:Security block.
+
+  Succeeds, returns CUS-1001 Amina Khan ACTIVE.
+
+Timed path behaviour. spring-ws-security is not on the dependency tree and no
+Wss4jSecurityInterceptor is registered, so there is nothing to reject the
+request. On the full path this is the experiment that produces a security fault
+before the endpoint method is reached.

@@ -1,0 +1,44 @@
+Lab 24 mvn -B test, captured 2026-08-06
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab24-crm
+
+The starter ships both tests as fail("TODO") stubs, so the suite is red at 0
+until step 8 replaces them. Three consecutive runs at 2.
+
+  mvn -B test
+
+  [INFO] Building lab24-crm 0.0.1-SNAPSHOT
+
+  [INFO] -------------------------------------------------------
+  [INFO]  T E S T S
+  [INFO] -------------------------------------------------------
+  [INFO] Running com.northstar.crm.CrmApplicationTests
+  [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.01 s -- in com.northstar.crm.CrmApplicationTests
+  [INFO] Running com.northstar.crm.CustomerEndpointTest
+  [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.296 s -- in com.northstar.crm.CustomerEndpointTest
+  [INFO]
+  [INFO] Results:
+  [INFO]
+  [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+  [INFO]
+  [INFO] ------------------------------------------------------------------------
+  [INFO] BUILD SUCCESS
+  [INFO] ------------------------------------------------------------------------
+  [INFO] Total time:  16.518 s
+
+CrmApplicationTests.contextLoadsAndRestSeedVisible autowires CustomerService and
+reads the seeded CUS-1001.
+
+CustomerEndpointTest.getCustomerReturnsCus1001 uses MockWebServiceClient, which
+drives the real endpoint mapping in process with no socket and no servlet
+container.
+
+Dependency check for step 1:
+
+  mvn -Dincludes=org.springframework.ws:*,wsdl4j:* dependency:tree
+
+  [INFO] +- org.springframework.boot:spring-boot-starter-web-services:jar:3.3.5:compile
+  [INFO] |  \- org.springframework.ws:spring-ws-core:jar:4.0.11:compile
+  [INFO] +- wsdl4j:wsdl4j:jar:1.6.3:compile
+  [INFO] \- org.springframework.ws:spring-ws-test:jar:4.0.11:test
+
+spring-ws-security is absent, which is the timed path scope.

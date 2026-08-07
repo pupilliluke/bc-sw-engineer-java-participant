@@ -1,0 +1,58 @@
+Lab 24 WSDL, SOAP and REST smoke, captured 2026-08-06
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab24-crm, evidence id lab24-001
+
+App on 8080 with both protocols. Steps 3, 4 and 7.
+
+  mvn -B spring-boot:run
+
+  Tomcat started on port 8080 (http) with context path '/'
+  Started CrmApplication in 4.641 seconds (process running for 5.336)
+
+
+WSDL
+
+  curl -s http://localhost:8080/ws/customers.wsdl
+
+  <wsdl:definitions ... targetNamespace="http://northstar.com/crm/customers">
+  <wsdl:portType name="CustomersPort">
+    <wsdl:operation name="GetCustomer">
+  <soap:address location="http://localhost:8080/ws"/>
+
+The operation name GetCustomer is not written anywhere. DefaultWsdl11Definition
+pairs GetCustomerRequest with GetCustomerResponse from the xsd and strips the
+suffixes. soap:address shows the real host because setTransformWsdlLocations is
+true.
+
+
+SOAP getCustomer CUS-1001
+
+  curl -s -X POST http://localhost:8080/ws -H "Content-Type: text/xml; charset=utf-8" --data @requests/get-customer.xml
+
+  <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><SOAP-ENV:Body><GetCustomerResponse xmlns="http://northstar.com/crm/customers"><customerId>CUS-1001</customerId><name>Amina Khan</name><email>amina.khan@example.com</email><status>ACTIVE</status></GetCustomerResponse></SOAP-ENV:Body></SOAP-ENV:Envelope>
+
+No Security header on the request and it still succeeds. UsernameToken is not
+wired on the timed path.
+
+
+REST GET CUS-1001
+
+  curl -s http://localhost:8080/api/customers/CUS-1001
+
+  {"id":"CUS-1001","name":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"}
+
+Same customer, same service. The wire names differ: customerId in the xsd, id in
+the Java domain. CustomerSoapMapper is what bridges them.
+
+
+SHARED SERVICE, REST WRITE AND SOAP READ
+
+  curl -s -H "X-Correlation-Id: lab-request-001" -H "Content-Type: application/json" -d "{\"id\":\"CUS-2401\",...}" http://localhost:8080/api/customers
+
+  {"id":"CUS-2401","name":"Test Partner","email":"partner@example.com","status":"PROSPECT"}
+
+  curl -s -X POST http://localhost:8080/ws ... customerId CUS-2401
+
+  <GetCustomerResponse xmlns="http://northstar.com/crm/customers"><customerId>CUS-2401</customerId><name>Test Partner</name><email>partner@example.com</email><status>PROSPECT</status></GetCustomerResponse>
+
+CUS-2401 was never created over SOAP. Two stores would have faulted not-found
+here.
