@@ -1,0 +1,86 @@
+Lab 25 failure experiments, captured 2026-08-06
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab25-crm
+
+All five. Experiment 2 needed updateStatus, which the full path adds. Every
+temporary edit is restored and the suite is green at 6 in 01-mvn-test.txt,
+captured after these.
+
+
+1, REPO STUB THROWS ON SAVE
+
+A temporary ExperimentOneTest built CustomerService over an anonymous
+CustomerRepository whose save throws IllegalStateException("repository
+unavailable").
+
+  mvn -B test -Dtest=ExperimentOneTest
+
+  [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0 -- in com.northstar.crm.ExperimentOneTest
+
+create propagated the repository failure with its message intact instead of
+turning it into a duplicate or swallowing it. The service adds a rule on top of
+the repository and does not catch what the repository throws. Test file deleted
+after the run.
+
+
+2, ILLEGAL STATUS TRANSITION
+
+  curl -s -X PATCH http://localhost:8080/api/customers/CUS-1001/status -H "Content-Type: application/json" -H "X-Correlation-Id: lab-request-001" -d "{\"status\":\"PROSPECT\"}"
+
+  {"timestamp":"2026-08-06T21:37:54.661+00:00","status":500,"error":"Internal Server Error","path":"/api/customers/CUS-1001/status"} HTTP 500
+
+  server log: illegal status transition ACTIVE -> PROSPECT [lab-request-001]
+
+  curl -s http://localhost:8080/api/customers/CUS-1001
+
+  {"id":"CUS-1001","name":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"}
+
+Rejected and unchanged. The check runs before setStatus, so nothing was written
+and the read after it still says ACTIVE.
+
+CLOSED is terminal on the same table.
+
+  CUS-1002 ACTIVE -> CLOSED   HTTP 200
+  CUS-1002 CLOSED -> ACTIVE   HTTP 500
+  server log: illegal status transition CLOSED -> ACTIVE [lab-request-001]
+
+  {"id":"CUS-1002","name":"Ravi Singh","email":"ravi.singh@example.com","status":"CLOSED"}
+
+The 500 body carries no message. The from, the to and the correlation id are in
+the exception and reach the log only, so the caller cannot tell this apart from
+the CUS-9999 not-found without reading the server side. Lab 29 is where that
+becomes a 409 with a body.
+
+
+3, REPEAT GET CUS-1001
+
+  curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/customers/CUS-1001
+
+  attempt 1  200
+  attempt 2  200
+  attempt 3  200
+
+Same body each time. get only reads through findById, so nothing accumulates.
+
+
+4, REPEAT POST CUS-1003
+
+  Second POST of the same payload.
+
+  {"timestamp":"2026-08-06T21:21:24.602+00:00","status":500,"error":"Internal Server Error","path":"/api/customers"} HTTP 500
+
+The existsById check rejected it. Without that check the map would have taken
+the put and answered 201 twice, and the overwrite would be invisible. 500 rather
+than 409 because IllegalStateException is unmapped.
+
+
+5, ACCEPT AI ResponseEntity IN THE SERVICE, THEN REVERT
+
+CustomerService.get was changed to return ResponseEntity<Customer>.
+
+  mvn -B -q -DskipTests compile
+
+  [ERROR] .../api/CustomerController.java:[27,31] incompatible types: org.springframework.http.ResponseEntity<com.northstar.crm.model.Customer> cannot be converted to com.northstar.crm.model.Customer
+
+The leak did not fail in the service, it failed in the controller, which had
+been returning Customer and now receives a wrapper. Reverted, recompiled, suite
+back to 3. Recorded as a reject in docs/lab25-001.md.

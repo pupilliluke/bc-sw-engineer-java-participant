@@ -1,0 +1,53 @@
+Lab 25 mvn -B test, captured 2026-08-06
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab25-crm
+
+The starter ships CustomerServiceTest as two fail("TODO") stubs. Six tests after
+the full path, green on two consecutive runs.
+
+  mvn -B test -Dtest=CustomerServiceTest
+
+  [INFO] Running com.northstar.crm.CustomerServiceTest
+  [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.093 s -- in com.northstar.crm.CustomerServiceTest
+
+That run is the guide's timed pair, getSeededCus1001 and
+duplicateCreateRejected, before the other four were added.
+
+  mvn -B test
+
+  [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.086 s -- in com.northstar.crm.CustomerServiceTest
+  [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+  [INFO] BUILD SUCCESS
+
+  mvn -B clean test
+
+  [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+  [INFO] BUILD SUCCESS
+
+THE SIX
+
+getSeededCus1001 asserts id, name and status on CUS-1001.
+duplicateCreateRejected constructs the service over a fresh
+InMemoryCustomerRepository, so CUS-1001 is already seeded and the first create
+is the duplicate.
+listReturnsSeedsAndCreated reads 2 seeds, creates CUS-1003, reads 3.
+activateRaviFromProspect moves CUS-1002 PROSPECT to ACTIVE and reads it back.
+illegalTransitionRejectedAndStatusUnchanged asks CUS-1001 for ACTIVE to
+PROSPECT, catches IllegalStateException, then asserts the status is still
+ACTIVE.
+closedIsTerminal moves CUS-1002 to CLOSED, then asks for ACTIVE and gets the
+same exception.
+
+Each test builds its own repository, so a create or a status change in one
+cannot change what the next one sees.
+
+No @SpringBootTest anywhere in this suite. CustomerService takes the repository
+through its constructor, so the rules test without a container.
+
+LAYERING GATE
+
+  grep -c "crm.repository" api/CustomerController.java      0
+  grep -c "springframework.web|springframework.http" service/CustomerService.java      0
+
+Controller imports are model.Customer, service.CustomerService, HttpStatus,
+web.bind.annotation and java.util.List. Service imports are model.Customer,
+repository.CustomerRepository, stereotype.Service, java.util.List, Map and Set.
