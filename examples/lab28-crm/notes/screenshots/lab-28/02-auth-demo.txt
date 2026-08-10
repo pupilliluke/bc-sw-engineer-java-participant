@@ -1,0 +1,99 @@
+Lab 28 login and role demo, captured 2026-08-10
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab28-crm, correlation lab-request-001
+
+Steps 5, 6 and 7 on live Tomcat. Tokens are shown in full. The signature is
+Integer.toHexString of the hashCode of lab-only-change-me, which is already the
+default in application.yml, so nothing here leaks a secret that is not in the
+repo. A real secret would be redacted.
+
+  mvn -B spring-boot:run
+
+  Tomcat started on port 8080 (http) with context path '/'
+  Started CrmApplication in 5.011 seconds (process running for 5.437)
+
+
+LOGIN AS agent1
+
+  curl -s -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d "{\"username\":\"agent1\",\"password\":\"agent1\"}"
+
+  {"accessToken":"lab.agent1.AGENT.f5784034","tokenType":"Bearer"}
+
+Four segments, lab.<subject>.<role>.<sig>. No username field in the response,
+the subject is inside the token.
+
+
+BEARER GET CUS-1001
+
+  curl -s -i http://localhost:8080/api/customers/CUS-1001 -H "Authorization: Bearer lab.agent1.AGENT.f5784034" -H "X-Correlation-Id: lab-request-001"
+
+  HTTP/1.1 200
+  {"id":"CUS-1001","name":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"}
+
+Amina Khan and ACTIVE, the fixture from the guide. The correlation header is
+passed through and ignored by the filter chain, it is not a credential.
+
+
+SAME ROUTE WITH NO HEADER
+
+  curl -s -i http://localhost:8080/api/customers/CUS-1001
+
+  HTTP/1.1 401
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+
+No WWW-Authenticate header and no body. httpBasic and formLogin are disabled and
+the entry point is HttpStatusEntryPoint(UNAUTHORIZED), so this is a bare status
+for an API client instead of a browser challenge.
+
+
+agent1 ON THE ADMIN ROUTE
+
+  curl -s -i http://localhost:8080/api/admin/ping -H "Authorization: Bearer lab.agent1.AGENT.f5784034"
+
+  HTTP/1.1 403
+  Content-Type: application/json
+  {"timestamp":"2026-08-10T21:04:11.474+00:00","status":403,"error":"Forbidden","path":"/api/admin/ping"}
+
+403 and not 401 on live Tomcat. The token parsed, so the request is
+authenticated as agent1 with ROLE_AGENT and the /api/admin/** matcher refuses it.
+The body comes from the Boot error dispatch, which is why /error has to be
+permitAll. With /error authenticated this response is 401 and the 403 is lost.
+
+
+LOGIN AS admin1 AND THE SAME ROUTE
+
+  curl -s -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d "{\"username\":\"admin1\",\"password\":\"admin1\"}"
+
+  {"accessToken":"lab.admin1.ADMIN.f5784034","tokenType":"Bearer"}
+
+  curl -s -i http://localhost:8080/api/admin/ping -H "Authorization: Bearer lab.admin1.ADMIN.f5784034"
+
+  HTTP/1.1 200
+  {"ok":"true","role":"ADMIN"}
+
+Same signature segment as the agent token. The signature covers the secret and
+nothing else, so it does not bind the subject or the role to the token.
+
+
+ADMIN READS CUS-1002
+
+  curl -s http://localhost:8080/api/customers/CUS-1002 -H "Authorization: Bearer lab.admin1.ADMIN.f5784034" -H "X-Correlation-Id: lab-request-001"
+
+  {"id":"CUS-1002","name":"Ravi Singh","email":"ravi.singh@example.com","status":"PROSPECT"}
+
+ADMIN passes hasAnyRole(AGENT, ADMIN), so the customer routes are open to both
+roles and only /api/admin/** separates them.
+
+
+HEALTH WITH NO TOKEN
+
+  curl -s -i http://localhost:8080/actuator/health
+
+  HTTP/1.1 200
+  {"status":"UP"}
+
+Still anonymous. /actuator/health is in the permitAll line with /api/auth/login
+and /error.

@@ -1,0 +1,42 @@
+Lab 28 mvn -B test, captured 2026-08-10
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab28-crm
+
+The starter ships SecurityPathTest with three fail("TODO") stubs, so mvn test is
+red at 3 failures before step 8. Three tests after step 8, green on two
+consecutive clean runs.
+
+  mvn -B clean test
+
+  [INFO] Running com.northstar.crm.SecurityPathTest
+  [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.90 s -- in com.northstar.crm.SecurityPathTest
+  [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+  [INFO] BUILD SUCCESS
+  [INFO] Total time:  18.029 s
+
+  second run: Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.89 s
+
+THE THREE
+
+missingTokenIs401 calls GET /api/customers/CUS-1001 with no Authorization header
+and then again with Bearer lab.agent1.ADMIN.deadbeef. Both are 401. The second
+is a well formed token with a role that would pass the matcher, refused on the
+signature.
+
+agentCanReadCustomerButNotAdmin posts agent1/agent1 to /api/auth/login, pulls
+accessToken out of the response, reads CUS-1001 with the Bearer header and
+asserts Amina Khan and ACTIVE, then calls /api/admin/ping with the same token and
+asserts 403.
+
+adminCanPing does the same login as admin1/admin1 and asserts 200 with role
+ADMIN on /api/admin/ping.
+
+All three go through /api/auth/login rather than @WithMockUser. That covers the
+token format, AuthController and JwtAuthenticationFilter as well as the matchers.
+@WithMockUser would put the authority straight into the SecurityContext and skip
+all of it, and the stub token would never be parsed.
+
+MOCKMVC AND 403
+
+MockMvc reports the 403 directly. It does not run the Boot error dispatch, so
+the /error permitAll rule is not exercised here and the agent to admin case has
+to be checked on live Tomcat as well. That run is in 02-auth-demo.txt.

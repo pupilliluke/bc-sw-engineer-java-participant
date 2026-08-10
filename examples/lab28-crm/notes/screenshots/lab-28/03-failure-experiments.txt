@@ -1,0 +1,141 @@
+Lab 28 failure experiments, captured 2026-08-10
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab28-crm
+
+Experiments 1 to 4 from the GUIDE table. 5 is the optional HS256 swap and was
+not done. Every temporary change is restored and the suite is green at 3 in
+01-mvn-test.txt, captured after these.
+
+
+1, MISMATCHED SECRET BETWEEN ISSUER AND FILTER
+
+Token minted under the default secret, then the app restarted with a different
+one. The secret is an environment variable, so nothing on disk changed.
+
+  JWT_SECRET=rotated-lab-secret mvn -B spring-boot:run
+
+  curl -s -i http://localhost:8080/api/customers/CUS-1001 -H "Authorization: Bearer lab.agent1.AGENT.f5784034"
+
+  HTTP/1.1 401
+
+  curl -s -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d "{\"username\":\"agent1\",\"password\":\"agent1\"}"
+
+  {"tokenType":"Bearer","accessToken":"lab.agent1.AGENT.7c3360d4"}
+
+  curl -s -i http://localhost:8080/api/customers/CUS-1001 -H "Authorization: Bearer lab.agent1.AGENT.7c3360d4" -H "X-Correlation-Id: lab-request-001"
+
+  HTTP/1.1 200
+  {"id":"CUS-1001","name":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"}
+
+f5784034 to 7c3360d4. Only the signature segment changed, subject and role are
+still readable in the token. Rotating the secret invalidates every token issued
+under the old one. There is no per token revocation here, so a rotation logs
+everybody out. Restarted without JWT_SECRET to restore.
+
+
+2, WRONG PASSWORD AND MALFORMED BEARER
+
+  curl -s -i -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d "{\"username\":\"agent1\",\"password\":\"wrong\"}"
+
+  HTTP/1.1 401
+  {"timestamp":"2026-08-10T21:04:12.293+00:00","status":401,"error":"Unauthorized","path":"/api/auth/login"}
+
+  curl -s -i -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d "{\"username\":\"nobody\",\"password\":\"x\"}"
+
+  HTTP/1.1 401
+
+  curl -s -i http://localhost:8080/api/customers/CUS-1001 -H "Authorization: Bearer not-a-token"
+
+  HTTP/1.1 401
+
+Wrong password and unknown username are both 401 and neither body names which
+one failed, so the endpoint does not enumerate users. They take different paths
+to the same status. The wrong password hits the ResponseStatusException in
+AuthController. The unknown username throws UsernameNotFoundException out of
+CrmUserDetailsService, and nothing in AuthController catches it, so
+ExceptionTranslationFilter catches it as an AuthenticationException and calls the
+entry point. That is why it is a 401 and not a 500, and it is also why its body
+is empty while the wrong password has the Boot error body.
+
+The malformed bearer never reaches a user lookup. It does not start with lab.,
+so validateAndParseParts throws before anything else runs.
+
+
+3, AGENT ON THE ADMIN API
+
+Full transcript in 02-auth-demo.txt. 403 with the Boot error body, on live
+Tomcat and not only in MockMvc.
+
+MockMvc reports the 403 straight from the filter chain. Live Tomcat runs
+sendError(403) through /error, so /error has to be in the permitAll line or the
+second pass is unauthenticated and rewrites the status to 401. The two have to
+be checked separately.
+
+
+4, TAMPERED SIGNATURE
+
+  curl -s -i http://localhost:8080/api/admin/ping -H "Authorization: Bearer lab.agent1.ADMIN.deadbeef"
+
+  HTTP/1.1 401
+
+Four segments, a subject and a role that would pass the admin matcher, refused on
+the signature alone. Kept as the second case in missingTokenIs401.
+
+Then the same escalation with the real signature left in place:
+
+  curl -s -i http://localhost:8080/api/admin/ping -H "Authorization: Bearer lab.agent1.ADMIN.f5784034"
+
+  HTTP/1.1 200
+  {"ok":"true","role":"ADMIN"}
+
+agent1 reaches the admin route as ADMIN. The signature is a hash of the secret
+and covers nothing else, so the role can be rewritten and the token still
+verifies. A real HS256 JWT signs the claims, which is the gap between the stub
+and the real thing. Documented in docs/security-notes.md, not fixed, the stub is
+the timed contract.
+
+
+5, REAL HS256 SWAP
+
+Not done. Optional and full path, the pom keeps jjwt commented out and the stub
+is what the timed path and the tests expect.
+
+
+WHAT DISABLING HTTPBASIC EXPOSED
+
+Step 2 says to disable httpBasic and formLogin for API style 401s. Removing
+httpBasic on its own turned every unauthenticated request into a 403.
+
+  SecurityConfig without the exceptionHandling line
+
+  mvn -B test -Dtest=SecurityPathTest
+
+  SecurityPathTest.missingTokenIs401:34 Status expected:<401> but was:<403>
+  Tests run: 3, Failures: 1, Errors: 0, Skipped: 0
+
+BasicAuthenticationEntryPoint was returning the 401. With no entry point
+registered Spring Security defaults to Http403ForbiddenEntryPoint, so a missing
+token and a wrong role both become 403 and the distinction this lab is about
+disappears.
+
+  .exceptionHandling(ex -> ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+
+Restored with that line, suite green at 3.
+
+
+OTHER OBSERVATIONS
+
+  curl -s -i "http://localhost:8080/api/customers/CUS-1001?access_token=lab.agent1.AGENT.f5784034"
+
+  HTTP/1.1 401
+
+The filter reads the Authorization header only. A token in the query string is
+not accepted, which is the answer written in the exercise 3 note.
+
+  curl -s -i http://localhost:8080/api/customers/CUS-9999 -H "Authorization: Bearer lab.agent1.AGENT.f5784034"
+
+  HTTP/1.1 500
+  {"timestamp":"2026-08-10T21:04:12.812+00:00","status":500,"error":"Internal Server Error","path":"/api/customers/CUS-9999"}
+
+Authorization passes and CustomerService.get throws IllegalArgumentException for
+an id that is not seeded. 500 rather than 404, same as lab 27. Lab 29 is the
+validation and ErrorResponse pass.
