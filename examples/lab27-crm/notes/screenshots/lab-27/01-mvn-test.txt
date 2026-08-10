@@ -1,0 +1,30 @@
+Lab 27 mvn -B test, captured 2026-08-07
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab27-crm
+
+The starter ships forceFailRollsBack with the assertion commented as a TODO and
+no happy path test. Two tests after step 8, green on two consecutive clean runs.
+
+  mvn -B clean test
+
+  [INFO] Running com.northstar.crm.TransferServiceTest
+  [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 22.91 s -- in com.northstar.crm.TransferServiceTest
+  [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+  [INFO] BUILD SUCCESS
+
+  second run: Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 23.27 s
+
+THE TWO
+
+forceFailRollsBack reads the MAIN balance and logs.count(), calls transfer to
+ACC-FORCE-FAIL, asserts the throw, then asserts the balance compares equal to
+before and the log count is unchanged.
+
+happyPathMovesFunds reads both balances and the log count, transfers 5.00
+MAIN to LOYALTY, then asserts MAIN down 5.00, LOYALTY up 5.00 and one more row.
+
+Both read their before values instead of hard-coding 1000.00 and 50.00, so
+neither depends on running first. BigDecimal is compared with compareTo rather
+than equals, since 950.00 and 950.0 are equal in value and not in scale.
+
+The whole suite shares one H2 database and AccountSeed runs once, so absolute
+assertions would have coupled the two tests to their order.

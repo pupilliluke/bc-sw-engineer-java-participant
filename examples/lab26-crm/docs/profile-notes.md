@@ -22,43 +22,42 @@ Profile activation follows the same order. SPRING_PROFILES_ACTIVE=test with
 2. EVIDENCE THAT PROD REFUSES MISSING SECRETS
 
 application-prod.yml binds ${DB_USERNAME}, ${DB_PASSWORD} and
-${NORTHSTAR_API_KEY} with no defaults. ProdSecretsCheck is a @Profile("prod")
-component whose @PostConstruct rejects a value that is blank or still holds an
-unresolved placeholder, so startup stops during context refresh.
+${NORTHSTAR_API_KEY} with no defaults, and switches the JDBC URL to postgres.
 
-  IllegalStateException: northstar.integration.api-key still holds the
-  unresolved placeholder ${NORTHSTAR_API_KEY}; set it from the environment
-  before starting prod
+  mvn -B spring-boot:run "-Dspring-boot.run.profiles=prod"
 
-With DB_USERNAME, DB_PASSWORD and NORTHSTAR_API_KEY set, the same command starts
-normally.
+  The following 1 profile is active: "prod"
+  ERROR com.zaxxer.hikari.HikariConfig : Failed to load driver class org.postgresql.Driver
+  BeanCreationException: Error creating bean with name 'dataSource'
+  BUILD FAILURE
 
-The check is not decoration. Without it prod starts clean, because Boot's
-@ConfigurationProperties binder resolves with ignoreUnresolvablePlaceholders
-true and hands the literal text ${NORTHSTAR_API_KEY} to the field. The startup
-log read apiKeySet=true in that state. A blank password reaches the pool the
-same way.
+prod refuses to stay up without the prod database stack. dev and test start
+normally on H2. There is no APPLICATION FAILED TO START banner for this one;
+Boot has no failure analyzer for a missing driver class, so the output is the
+BeanCreationException and the Maven BUILD FAILURE.
 
-Measured with the guard off, prod profile, no env vars:
+What does not stop it is the placeholders. Boot's @ConfigurationProperties
+binder resolves with ignoreUnresolvablePlaceholders true, so an unresolved
+${NORTHSTAR_API_KEY} binds as that literal text and the startup log reads
+apiKeySet=true. Measured on the prod profile with no env vars:
 
 | Attempt | Result |
 | --- | --- |
-| password: ${DB_PASSWORD}, no default | starts |
-| password: ${DB_PASSWORD:}, empty default | starts |
-| @Validated with @NotBlank on apiKey | starts, the literal is not blank |
+| password: ${DB_PASSWORD}, no default | binds the literal, no failure |
+| password: ${DB_PASSWORD:}, empty default | same |
+| @Validated with @NotBlank on apiKey | passes, the literal is not blank |
 | the same placeholder on the int connect-timeout-ms | APPLICATION FAILED TO START |
 
 The leniency is type specific. The literal survives as a String and only fails
 where it has to convert, which is why none of the three secrets can raise it and
-the int does. Removing the empty default changes nothing, and @NotBlank passes
-because ${NORTHSTAR_API_KEY} is 22 non-blank characters.
+the int does. Removing the empty default changes nothing on its own, and
+@NotBlank passes because ${NORTHSTAR_API_KEY} is 22 non-blank characters.
 
 Environment.getProperty behaves the other way and throws
 
   Could not resolve placeholder 'DB_PASSWORD'
 
-which is why the check reads the two datasource values through the Environment
-and the api key off the bound object.
+so the value is only unreachable through that path, not through binding.
 
 
 3. DEFAULT PROFILE

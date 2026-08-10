@@ -1,0 +1,59 @@
+Lab 27 transfer smoke, captured 2026-08-07
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab27-crm, correlation lab-request-001
+
+Steps 5 and 6. Seeds are ACC-MAIN-1001 MAIN 1000.00 and ACC-LOYALTY-1001
+LOYALTY 50.00.
+
+  mvn -B spring-boot:run
+
+  Started CrmApplication in 12.362 seconds (process running for 12.901)
+
+
+HAPPY PATH, 50.00 MAIN TO LOYALTY
+
+  curl -s -X POST http://localhost:8080/api/transfers -H "Content-Type: application/json" -H "X-Correlation-Id: lab-request-001" -d "{\"fromAccountId\":\"ACC-MAIN-1001\",\"toAccountId\":\"ACC-LOYALTY-1001\",\"amount\":\"50.00\"}"
+
+  {"status":"OK"}
+  HTTP 200
+
+MAIN 950.00 and LOYALTY 100.00 after this call. 200 with a body, not 204.
+
+
+FORCED FAILURE, MAIN TO ACC-FORCE-FAIL
+
+  curl -s -X POST http://localhost:8080/api/transfers -H "Content-Type: application/json" -H "X-Correlation-Id: lab-request-001" -d "{\"fromAccountId\":\"ACC-MAIN-1001\",\"toAccountId\":\"ACC-FORCE-FAIL\",\"amount\":\"10.00\"}"
+
+  {"timestamp":"2026-08-07T21:02:44.255+00:00","status":500,"error":"Internal Server Error","path":"/api/transfers"}
+  HTTP 500
+
+  server log: Forced transfer failure for rollback demo
+
+500 is the Boot default for the unhandled IllegalStateException. This lab adds
+no @ExceptionHandler, so there is no 409 and the body carries no message.
+
+
+WHAT THE DATABASE SAW
+
+show-sql is on. The happy path:
+
+  Hibernate: select a1_0.id,a1_0.balance,a1_0.customer_id,a1_0.type from account a1_0 where a1_0.id=?
+  Hibernate: select a1_0.id,a1_0.balance,a1_0.customer_id,a1_0.type from account a1_0 where a1_0.id=?
+  Hibernate: insert into transaction_log (amount,created_at,from_account_id,to_account_id,id) values (?,?,?,?,default)
+  Hibernate: update account set balance=?,customer_id=?,type=? where id=?
+  Hibernate: update account set balance=?,customer_id=?,type=? where id=?
+
+The forced failure:
+
+  Hibernate: select a1_0.id,a1_0.balance,a1_0.customer_id,a1_0.type from account a1_0 where a1_0.id=?
+
+One select and nothing else. No update was ever sent. Hibernate flushes at
+commit, the transaction rolled back first, so the debit never reached the
+database at all. accountRepository.save on a managed entity does not issue SQL
+where it is called.
+
+insert into transaction_log appears once for the happy path and not for the
+failed attempt.
+
+The balances themselves are asserted in TransferServiceTest rather than curled.
+The starter exposes POST /api/transfers only, with no read route, so there is no
+HTTP way to display a balance in this build.

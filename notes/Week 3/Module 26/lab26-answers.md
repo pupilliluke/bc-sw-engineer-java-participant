@@ -20,19 +20,20 @@ what lets a config mistake look healthy.
 
 2. What evidence proves prod cannot start with blank credentials?
 
-experiment 1, in two halves. before ProdSecretsCheck, prod started with
-apiKeySet=true because the binder had put the literal ${NORTHSTAR_API_KEY} in
-the field. after it, the same command exits 1 on IllegalStateException naming
-the unresolved placeholder, and starts normally once DB_USERNAME, DB_PASSWORD
-and NORTHSTAR_API_KEY are set.
+experiment 1. the banner confirms prod is active, then the dataSource bean
+fails on the missing postgres driver and maven reports BUILD FAILURE, so prod
+will not run on a laptop that has none of the prod stack. worth being precise
+about what does not prove it: the placeholders bind as literal text either way,
+and with a postgres driver on the classpath prod starts with apiKeySet=true and
+no env vars at all.
 
 3. Which failure was hardest (missing prop, wrong profile, override confusion)?
 
 none of those, because they all announce themselves. experiment 3 was the hard
-one, and experiment 1 before the check for the same reason. both bind a wrong or
-missing value silently and start clean, so the app is only wrong later and
-somewhere else. an override that surprises you at least shows a number you can
-read.
+one. renaming connect-timeout-ms binds nothing, falls back to the base 2000 and
+starts clean, so the app is only wrong later and somewhere else. the unresolved
+placeholder is the same shape of problem, which is why prod stopping on the
+driver is luck rather than a check.
 
 
 CHECKPOINTS
@@ -47,7 +48,7 @@ CHECKPOINTS
 | B3 | dev CRM smoke for CUS-1001 works | Pass, 200 Amina Khan ACTIVE, CUS-1002 also 200 |
 | C1 | Activation via -D and via env evidenced | Pass, both banners in 02-activation-and-smoke.txt |
 | C2 | docs/profile-notes.md present | Pass |
-| C3 | @ConfigurationProperties class + fail-fast on prod | Pass, and the fail-fast needed ProdSecretsCheck to be real |
+| C3 | @ConfigurationProperties class + fail-fast on prod | Pass, prod stops on the dataSource bean, H2-only classpath |
 | D1 | ProfileBindingTest Tests run: 1 under test | Pass, two consecutive runs |
 | D2 | .env.example only, no secrets staged | Pass, experiment 4 planted and reverted hunter2 |
 | D3 | README / notes runbook complete | Pass |

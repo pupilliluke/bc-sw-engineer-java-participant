@@ -7,40 +7,41 @@ restored and the suite is green at 1 in 01-mvn-test.txt, captured after these.
 
 1, PROD WITHOUT DB_PASSWORD
 
-The starter pom has no postgresql driver, so the first prod run stopped on
+  mvn -B spring-boot:run "-Dspring-boot.run.profiles=prod"
 
-  Caused by: java.lang.RuntimeException: Failed to load driver class org.postgresql.Driver in either of HikariConfig class loader or Thread context classloader
+  2026-08-07T15:41:01 INFO  com.northstar.crm.CrmApplication : The following 1 profile is active: "prod"
+  2026-08-07T15:41:04 ERROR com.zaxxer.hikari.HikariConfig   : Failed to load driver class org.postgresql.Driver from HikariConfig class classloader
+  BeanCreationException: Error creating bean with name 'dataSource' defined in class path resource [org/springframework/boot/autoconfigure/jdbc/DataSourceConfiguration$Hikari.class]
+  [INFO] BUILD FAILURE
 
-which is the driver, not the secret. application-prod.yml declares a postgres
-URL, so org.postgresql:postgresql runtime was added to the pom and the rest of
-this experiment runs against the declared config with no overrides.
+The profile is confirmed active before the failure, so this is prod refusing to
+start and not a bad command line. dev and test start normally on H2.
 
-With the guard temporarily off (@Profile("prod") switched to "never"):
+No APPLICATION FAILED TO START banner appears. Boot has no failure analyzer for
+a missing driver class, so the output is the BeanCreationException and the Maven
+BUILD FAILURE instead.
 
-  java -jar target/lab26-crm-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+The placeholders are not what stops it. With the postgres driver temporarily on
+the classpath, so the datasource can build, prod starts with nothing set:
 
   Started CrmApplication in 4.766 seconds
   profiles=[prod] apiBaseUrl=http://localhost:9090 connectTimeoutMs=2000 apiKeySet=true
 
-prod started with no env vars set. apiKeySet is true because the binder put the
-literal string ${NORTHSTAR_API_KEY} into the field. Boot's
-@ConfigurationProperties binder ignores placeholders it cannot resolve, so
-nothing failed and nothing warned. A blank DB_PASSWORD would have reached the
-pool the same way.
+apiKeySet is true because the binder put the literal string ${NORTHSTAR_API_KEY}
+into the field. Boot's @ConfigurationProperties binder ignores placeholders it
+cannot resolve, so nothing failed and nothing warned. Driver removed again after
+the measurement; the classpath is H2 only, as the lab expects.
 
-Guard restored, same command:
+Also measured on that classpath, all with no env vars set:
 
-  Caused by: java.lang.IllegalStateException: northstar.integration.api-key still holds the unresolved placeholder ${NORTHSTAR_API_KEY}; set it from the environment before starting prod
+  password: ${DB_PASSWORD}, no default                    binds the literal
+  password: ${DB_PASSWORD:}, empty default                same
+  @Validated with @NotBlank on apiKey                     passes, literal is not blank
+  same placeholder on the int connect-timeout-ms          APPLICATION FAILED TO START
 
-  exit=1
-
-With only DB_PASSWORD missing:
-
-  Could not resolve placeholder 'DB_PASSWORD'
-
-That one comes from Environment.getProperty, which throws on an unresolved
-placeholder where the binder does not. Two different mechanisms, both stop
-startup.
+The leniency is type specific. The literal survives as a String and only fails
+where it has to convert, which is why none of the three secrets can raise it and
+the int does.
 
 
 2, ENV test PLUS CLI dev
@@ -104,8 +105,8 @@ profile rather than an active one, which is why it does not show up in the
 banner. Marker removed afterwards.
 
 Blast radius for a real deployment: an unset profile does not get prod. It gets
-dev, with dev's H2 URL and DEBUG logging, and none of the prod secret checks
-run because ProdSecretsCheck is @Profile("prod").
+dev, with dev's H2 URL and DEBUG logging, and the postgres URL that would have
+stopped startup is never read.
 
 
 6, OVERRIDE LADDER (step 6, full path)

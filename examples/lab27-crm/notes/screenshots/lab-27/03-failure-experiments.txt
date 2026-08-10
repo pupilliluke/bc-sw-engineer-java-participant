@@ -1,0 +1,89 @@
+Lab 27 failure experiments, captured 2026-08-07
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab27-crm
+
+All five. Every temporary edit is restored and the suite is green at 2 in
+01-mvn-test.txt, captured after these.
+
+
+1, WRONG JDBC URL
+
+  application.yml: jdbc:h2:mem:lab27  ->  jdbc:h2:mem:WRONG;IFEXISTS=TRUE
+
+  mvn -B test -Dtest=TransferServiceTest
+
+  Database "mem:WRONG" not found, and IFEXISTS=true, so we cant auto-create it [90146-224]
+  Tests run: 2, Failures: 0, Errors: 2, Skipped: 0 <<< FAILURE!
+
+Both tests error rather than fail. The context cannot build a datasource, so
+nothing reaches an assertion. IFEXISTS=TRUE is what makes this visible; without
+it H2 creates an empty database called WRONG and the failure becomes a missing
+seed instead, which reads as a different bug. URL restored.
+
+
+2, FORCE FAIL TO ACC-FORCE-FAIL
+
+  HTTP 500, MAIN unchanged, no transaction_log row.
+
+Full transcript and the SQL in 02-transfer-manual.txt. Kept, this is the lab.
+
+
+3, REPEAT TRANSFER WITH NO IDEMPOTENCY KEY
+
+  Same request posted twice, 25.00 MAIN to LOYALTY:
+
+  {"status":"OK"} HTTP 200
+  {"status":"OK"} HTTP 200
+
+  insert into transaction_log count went from 1 to 3
+
+Both succeed and 50.00 moves. Nothing in the request identifies it as the same
+transfer, so a retried or double-clicked request is indistinguishable from a
+second genuine one. The fix is a caller-supplied idempotency key stored with a
+unique constraint, so the second insert loses and the transfer is rejected as a
+duplicate. X-Correlation-Id does not do this; it is the same value on both calls
+here and nothing reads it.
+
+
+4, SLEEP INSIDE THE TRANSACTION
+
+  Thread.sleep(3000) added between the debit and the force-fail check.
+
+  Tests run: 2, BUILD SUCCESS
+  wall clock 46s, against 26s without the sleep
+
+The transaction stays open for the whole sleep and so does everything it holds.
+On H2 in-memory with one caller at a time nothing blocks, which is exactly why
+this is a discussion and not a measurement: on a real database the row written
+by the debit is locked for those three seconds and every other transfer touching
+that account waits. Anything slow and external, an HTTP call to a partner or a
+report, belongs outside the boundary. Sleep removed.
+
+
+5, SELF-INVOKED TRANSFER
+
+A public method with no annotation, calling the transactional one on this:
+
+  public void selfInvokedTransfer(String from, String to, BigDecimal amount) {
+    this.transfer(from, to, amount);
+  }
+
+Called with ACC-FORCE-FAIL from a temporary test that read the balance either
+side:
+
+  EXPERIMENT5 before=1000.00 after=990.00 lost=10.00
+
+The debit committed and stayed committed. 10.00 left MAIN and never arrived
+anywhere, which is the debit without a credit the scenario calls an incident.
+
+Two things had to line up. this.transfer does not cross the proxy, so its
+@Transactional does nothing and no transaction is started. Spring Data's
+SimpleJpaRepository.save is itself annotated, so with no surrounding transaction
+each save committed on its own. By the time IllegalStateException was thrown
+there was nothing left to roll back.
+
+The same failure happens if transfer is made private, for the same reason. CGLIB
+cannot override a private method, so there is no interception point, and the
+only way to call it is from inside the class, which is this experiment again.
+
+Method and temporary test both removed. TransferService.transfer is public and
+called through the injected bean from TransferController.

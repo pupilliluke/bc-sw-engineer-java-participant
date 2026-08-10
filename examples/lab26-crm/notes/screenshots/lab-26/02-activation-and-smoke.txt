@@ -49,19 +49,20 @@ so both answer the same under any profile. The profile decides the H2 URL, the
 log level and the timeout, not the fixtures.
 
 
-PROD WITH THE ENV VARS SET
+PROD
 
-  DB_USERNAME=crm DB_PASSWORD=change-me NORTHSTAR_API_KEY=lab-only-key java -jar target/lab26-crm-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+  mvn -B spring-boot:run "-Dspring-boot.run.profiles=prod"
 
-  Started CrmApplication in 4.194 seconds
-  profiles=[prod] apiBaseUrl=http://localhost:9090 connectTimeoutMs=2000 apiKeySet=true
+  The following 1 profile is active: "prod"
+  ERROR com.zaxxer.hikari.HikariConfig : Failed to load driver class org.postgresql.Driver
+  [INFO] BUILD FAILURE
 
-Values are the .env.example placeholders, not real credentials. No datasource
-override: org.postgresql:postgresql runtime is in the pom, so the declared
-postgres URL binds as written. The same command fails in experiment 1 without
-the three variables.
+prod does not start on this classpath. The profile activates, the JDBC URL
+becomes postgres and the dataSource bean cannot be built with H2 alone. Detail
+and the placeholder measurements are experiment 1 in
+03-failure-experiments.txt.
 
-db.example.internal does not resolve and startup does not care. Hikari opens the
-pool on first use and nothing in this app queries, so a bad host is a runtime
-problem rather than a startup one. The prod checks here are about the config
-being present, not about the database being reachable.
+Quoting matters here. Unquoted in PowerShell,
+-Dspring-boot.run.profiles=prod is read as a lifecycle phase and Maven stops
+with Unknown lifecycle phase ".run.profiles=prod" before the app starts at all,
+which looks like a different failure than it is.
