@@ -1,0 +1,76 @@
+Lab 29 failure experiments, captured 2026-08-10
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab29-crm
+
+All five from the GUIDE table. Every temporary edit is restored and the suite is
+green at 4 in 01-mvn-test.txt, captured after these.
+
+
+1, OMIT @Valid
+
+  CustomerController.create: @Valid @RequestBody  ->  @RequestBody
+
+  curl -s -i -X POST http://localhost:8080/api/customers -H "Content-Type: application/json" -H "X-Correlation-Id: lab-request-001" -H "Authorization: Bearer $TOKEN" -d '{"id":"CUS-1006","name":"","email":"not-an-email","status":"ACTIVE"}'
+
+  HTTP/1.1 201
+  {"id":"CUS-1006","name":"","email":"not-an-email","status":"ACTIVE"}
+
+  curl -s http://localhost:8080/api/customers/CUS-1006 -H "Authorization: Bearer $TOKEN"
+
+  {"id":"CUS-1006","name":"","email":"not-an-email","status":"ACTIVE"}
+
+201, and the bad row is in the store and readable afterwards. The annotations on
+CustomerRequest did not change, nothing throws, and there is no 400 to handle.
+The constraint is a declaration and @Valid is what runs it. Restored.
+
+
+2, BLANK NAME AND BAD EMAIL
+
+  HTTP/1.1 400, three violations for id, name and email.
+
+Full body in 02-error-envelopes.txt. Constraints kept.
+
+
+3, UNKNOWN CUS-9999 AND DUPLICATE CUS-1001
+
+  GET CUS-9999   -> HTTP/1.1 404  Customer not found: CUS-9999
+  POST CUS-1001  -> HTTP/1.1 409  Duplicate customer: CUS-1001
+
+Bodies in 02-error-envelopes.txt. Both come from plain JDK exceptions the
+starter service already threw, IllegalArgumentException and
+IllegalStateException, mapped in the advice rather than by a new exception
+hierarchy. Mappings kept.
+
+
+4, NO BEARER
+
+  curl -s -i http://localhost:8080/api/customers/CUS-1001
+
+  HTTP/1.1 401
+
+No envelope at all. The lab 28 entry point answers from the filter chain, which
+runs before the DispatcherServlet, so GlobalExceptionHandler is never involved.
+401 and 403 have a different shape from 400, 404, 409 and 500 for that reason.
+Security kept.
+
+
+5, UNHANDLED EXCEPTION
+
+A truncated JSON body, cut off after "status":
+
+  curl -s -i -X POST http://localhost:8080/api/customers -H "Content-Type: application/json" -H "X-Correlation-Id: lab-request-001" -H "Authorization: Bearer $TOKEN" -d @malformed.json
+
+  HTTP/1.1 500
+  {"timestamp":"2026-08-10T21:51:25.028289500Z","status":500,"error":"Internal Server Error","message":"Unexpected error","correlationId":"lab-request-001","violations":[]}
+
+  log: ERROR c.n.crm.api.GlobalExceptionHandler : Unhandled exception, correlationId=lab-request-001
+       org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Unexpected end-of-input in VALUE_STRING
+       at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.readJavaType(...)
+
+Fixed message in the body, class name and stack in the log only. Fallback kept.
+
+The exception is HttpMessageNotReadableException, which Boot answers with 400 on
+its own. @ExceptionHandler(Exception.class) is wider than unhandled and takes it
+first, so a malformed body reads as a server fault to the client. The GUIDE's
+timed map is MethodArgumentNotValid 400, IllegalArgument 404, IllegalState 409
+and Exception 500, and it is left as written. A handler for that type is what
+would move the case back to 400.

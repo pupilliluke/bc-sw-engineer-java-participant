@@ -1,0 +1,41 @@
+Lab 29 mvn -B test, captured 2026-08-10
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab29-crm
+
+The starter ships ErrorEnvelopeTest with four fail("TODO") stubs. Four tests
+after step 8, green on two consecutive clean runs.
+
+  mvn -B clean test
+
+  [INFO] Running com.northstar.crm.ErrorEnvelopeTest
+  [INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.24 s -- in com.northstar.crm.ErrorEnvelopeTest
+  [INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
+  [INFO] BUILD SUCCESS
+  [INFO] Total time:  24.778 s
+
+  second run: Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.60 s
+
+THE FOUR
+
+validationReturns400Envelope posts an empty id, an empty name and not-an-email
+with X-Correlation-Id: lab-request-001, and asserts 400, error Bad Request,
+message Validation failed, correlationId lab-request-001, violations is an array
+of at least 3 and contains the field email.
+
+missingCustomerReturns404Envelope gets CUS-9999 and asserts 404, error Not
+Found, and that the message contains CUS-9999.
+
+duplicateReturns409Envelope posts CUS-1001 again with a valid body and asserts
+409, error Conflict, and that the message contains CUS-1001.
+
+securityStillRequiresToken gets CUS-1001 with no Authorization header and
+asserts 401.
+
+The first three call POST /api/auth/login as agent1 and send the token. Security
+stays on for all four.
+
+VIOLATIONS ARE ASSERTED WITHOUT AN INDEX
+
+The assert is violations[*].field contains email and length at least 3, not
+violations[0].field equals email. Bean Validation does not promise an order for
+field errors. The handler sorts them by field name, and the test does not depend
+on that sort holding.

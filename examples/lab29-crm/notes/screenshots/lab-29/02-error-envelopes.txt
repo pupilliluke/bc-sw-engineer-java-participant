@@ -1,0 +1,83 @@
+Lab 29 envelope capture, captured 2026-08-10
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab29-crm, correlation lab-request-001
+
+Steps 4, 6 and 7 on live Tomcat. Every call carries a Bearer token from
+POST /api/auth/login as agent1.
+
+  mvn -B spring-boot:run
+
+  Tomcat started on port 8080 (http) with context path '/'
+  Started CrmApplication in 4.239 seconds (process running for 4.617)
+
+  TOKEN=$(curl -s -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d '{"username":"agent1","password":"agent1"}' | jq -r .accessToken)
+
+  lab.agent1.AGENT.f5784034
+
+
+400 VALIDATION
+
+  curl -s -i -X POST http://localhost:8080/api/customers -H "Content-Type: application/json" -H "X-Correlation-Id: lab-request-001" -H "Authorization: Bearer $TOKEN" -d '{"id":"","name":"","email":"not-an-email","status":"ACTIVE"}'
+
+  HTTP/1.1 400
+  {"timestamp":"2026-08-10T21:50:13.682333800Z","status":400,"error":"Bad Request","message":"Validation failed","correlationId":"lab-request-001","violations":[{"field":"email","message":"must be a well-formed email address"},{"field":"id","message":"must not be blank"},{"field":"name","message":"must not be blank"}]}
+
+Three violations for three broken fields, sorted by field name. status is ACTIVE
+and passes @NotBlank, so it is absent from the list. The messages are the Bean
+Validation defaults and neither one echoes the rejected value.
+
+
+404 NOT FOUND
+
+  curl -s -i http://localhost:8080/api/customers/CUS-9999 -H "X-Correlation-Id: lab-request-001" -H "Authorization: Bearer $TOKEN"
+
+  HTTP/1.1 404
+  {"timestamp":"2026-08-10T21:50:13.822174300Z","status":404,"error":"Not Found","message":"Customer not found: CUS-9999","correlationId":"lab-request-001","violations":[]}
+
+The message is the one CustomerService.get throws. violations is an empty array
+rather than null, so a client reads the same shape on every status.
+
+
+409 DUPLICATE
+
+  curl -s -i -X POST http://localhost:8080/api/customers -H "Content-Type: application/json" -H "X-Correlation-Id: lab-request-001" -H "Authorization: Bearer $TOKEN" -d @dup.json
+
+  HTTP/1.1 409
+  {"timestamp":"2026-08-10T21:50:59.363206Z","status":409,"error":"Conflict","message":"Duplicate customer: CUS-1001","correlationId":"lab-request-001","violations":[]}
+
+dup.json is a valid CUS-1001 body, so validation passes and the service is what
+rejects it. 400 and 409 are two different boundaries on the same POST.
+
+
+201 HAPPY CREATE
+
+  curl -s -i -X POST http://localhost:8080/api/customers -H "Content-Type: application/json" -H "X-Correlation-Id: lab-request-001" -H "Authorization: Bearer $TOKEN" -d '{"id":"CUS-1005","name":"Maya Chen","email":"maya.chen@example.com","status":"PROSPECT"}'
+
+  HTTP/1.1 201
+  {"id":"CUS-1005","name":"Maya Chen","email":"maya.chen@example.com","status":"PROSPECT"}
+
+201 and the Customer, not an envelope. The envelope is only on the error paths.
+
+
+200 HAPPY GETS
+
+  curl -s -i http://localhost:8080/api/customers/CUS-1001 -H "X-Correlation-Id: lab-request-001" -H "Authorization: Bearer $TOKEN"
+
+  HTTP/1.1 200
+  {"id":"CUS-1001","name":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"}
+
+  curl -s http://localhost:8080/api/customers/CUS-1002 -H "X-Correlation-Id: lab-request-001" -H "Authorization: Bearer $TOKEN"
+
+  {"id":"CUS-1002","name":"Ravi Singh","email":"ravi.singh@example.com","status":"PROSPECT"}
+
+Both fixtures still 200 after the handlers exist.
+
+
+CORRELATION DEFAULT
+
+Same invalid POST with no X-Correlation-Id header:
+
+  {"timestamp":"2026-08-10T21:51:25.207351600Z","status":400,"error":"Bad Request","message":"Validation failed","correlationId":"lab-request-001","violations":[...]}
+
+correlationId is lab-request-001 either way. The handler echoes the header when
+it is sent and falls back to lab-request-001 when it is not, so no error goes
+out without an id on it.
