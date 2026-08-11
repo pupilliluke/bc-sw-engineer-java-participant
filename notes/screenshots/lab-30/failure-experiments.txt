@@ -1,0 +1,85 @@
+Lab 30 failure experiments, captured 2026-08-11
+Windows, Docker 27.3.1, apache/kafka 3.9.1, examples\lab30-crm
+
+All five from the GUIDE table. The broker is back up and the topics are intact
+at the end, verified in 01-broker-and-topics.txt.
+
+
+1, STOP KAFKA THEN PRODUCE
+
+  docker compose stop
+  mvn -B exec:java "-Dexec.mainClass=com.northstar.crm.event.CustomerEventProducer"
+
+  org.apache.kafka.common.errors.TimeoutException: Topic crm.customer-events.v1
+  not present in metadata after 60000 ms.
+
+It blocked for a full 60 seconds before failing, not immediately. send() is
+asynchronous but .get() waits, and the producer does not give up until
+max.block.ms, which defaults to 60000. A service doing this on a request thread
+holds that thread for a minute per call. Restored with docker compose start,
+producer succeeded again at partition=0 offset=17.
+
+
+2, PUBLISH WITH NO KEY
+
+  docker exec -i crm-kafka /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic crm.customer-events.v1
+
+  Partition:0  null  {"eventId":"e1",...}
+  Partition:0  null  {"eventId":"e2",...}
+  Partition:0  null  {"eventId":"e3",...}
+  Partition:0  null  {"eventId":"e4",...}
+
+The key prints as null and the four landed together on partition 0. Repeating
+it as four separate producer sessions, e5 to e8, also put all four on partition
+0. That is the sticky partitioner keeping a batch on one partition, not a
+guarantee. The run looks like the opposite of the lesson. With no key nothing
+ties these records to the partition holding the rest of CUS-1001, so their
+order against the keyed events is not guaranteed even though this run happened
+to keep them together.
+
+
+3, REPLAY WITH --from-beginning
+
+  docker exec crm-kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic crm.customer-events.v1 --group crm-replay-demo --from-beginning
+
+  27 records
+
+A new group id with no committed offsets reads the whole log from offset 0.
+Every one of those 27 had already been delivered to crm-notifications and
+crm-audit. Reading does not consume, so replay is free and duplicates are the
+consumer's problem. --from-beginning is a lab tool. Production replay needs a
+policy for which group and which offsets, and consumers that are idempotent on
+eventId, which is lab 31.
+
+
+4, STOP CONSUMER, PUBLISH, DESCRIBE LAG
+
+  LAG 1 on each of the three partitions with crm-audit stopped, 0 on all three
+  after restarting it. Full output in 03-groups-and-lag.txt.
+
+
+5, TYPO TOPIC NAME ON PRODUCE
+
+  docker exec -i crm-kafka /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic crm.customer-event.v1 --property parse.key=true --property key.separator=:
+
+  WARN ... {crm.customer-event.v1=UNKNOWN_TOPIC_OR_PARTITION}
+
+  docker exec crm-kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
+
+  crm.customer-event.v1
+  crm.customer-events.v1
+  crm.customer-events.v1.dlq
+
+  Topic: crm.customer-event.v1   PartitionCount: 1   ReplicationFactor: 1
+
+events singular. One warning, then the broker created the topic and accepted
+the record. The primary topic never saw it and no consumer group was subscribed
+to the new name, so the event is on the cluster and invisible. The auto created
+topic has one partition, the broker default, not the three the real topic has,
+so any keying guarantee would be silently gone. Deleted after the experiment.
+
+The same failure arrived by accident earlier. Deleting and recreating
+crm.customer-events.v1 raced with asynchronous deletion and it came back at
+PartitionCount 1. Fixed with --alter --partitions 3 and confirmed by describe
+before any of the runs above. Production turns auto.create.topics.enable off
+for exactly this.

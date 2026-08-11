@@ -1,0 +1,58 @@
+Lab 30 produce and consume, captured 2026-08-11
+examples\lab30-crm
+
+Three envelopes from events/ published with the key before the first colon,
+then the java producer. Payloads truncated in this file.
+
+
+CONSOLE PRODUCER
+
+  docker exec -it crm-kafka /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic crm.customer-events.v1 --property parse.key=true --property key.separator=:
+
+  CUS-1001:{"eventId":"...98491","eventType":"CustomerCreated",...}
+  CUS-1001:{"eventId":"...98494","eventType":"CustomerStatusChanged",...}
+  CUS-1002:{"eventId":"...98493","eventType":"CustomerCreated",...}
+
+Ctrl+C at the > prompt. Pressing Enter on an empty line first throws
+KafkaException: No key separator found on line number 4: '' because parse.key
+requires the separator on every line.
+
+
+CONSUME ONE PARTITION
+
+  docker exec crm-kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic crm.customer-events.v1 --partition 0 --offset 0 --property print.key=true --property print.partition=true --property print.offset=true --max-messages 3
+
+  Partition:0  Offset:0  CUS-1001  {"eventId":"...98491","eventType":"CustomerCreated",...}
+  Partition:0  Offset:1  CUS-1001  {"eventId":"...98494","eventType":"CustomerStatusChanged",...}
+  Partition:0  Offset:2  CUS-1002  {"eventId":"...98493","eventType":"CustomerCreated",...}
+
+CUS-1001 created then status changed, offsets 0 and 1 on the same partition.
+That is the ordering the key buys. CUS-1002 is also on partition 0, so this run
+does not show two keys on two partitions. Same key means same partition,
+different keys do not mean different partitions.
+
+
+CONSUME FROM THE START
+
+  docker exec crm-kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic crm.customer-events.v1 --from-beginning --property print.key=true --property print.partition=true --property print.offset=true --max-messages 4
+
+  Partition:1  Offset:0  CUS-1003  {"eventId":"...0003","eventType":"CustomerCreated",...}
+  Partition:1  Offset:1  CUS-1003  {"eventId":"...0004","eventType":"CustomerStatusChanged",...}
+  Partition:1  Offset:2  CUS-1003  {"eventId":"...0012","eventType":"CustomerStatusChanged",...}
+  Partition:1  Offset:3  CUS-1003  {"eventId":"...0014","eventType":"CustomerStatusChanged",...}
+
+CUS-1003 hashes to partition 1 and every one of its events is there in send
+order, across two separate producer sessions.
+
+
+JAVA PRODUCER
+
+  mvn -B -q -DskipTests package
+  mvn -B exec:java "-Dexec.mainClass=com.northstar.crm.event.CustomerEventProducer"
+
+  topic=crm.customer-events.v1 partition=0 offset=3
+
+acks=all and enable.idempotence=true are set explicitly. The values come back
+from RecordMetadata, so send().get() returned only after the in-sync replica
+acknowledged the write. The key is CUS-1001, the same value the envelope
+carries as customerId.

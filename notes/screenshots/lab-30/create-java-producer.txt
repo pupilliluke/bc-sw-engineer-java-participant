@@ -1,0 +1,20 @@
+
+PS C:\Users\lukel\java-bootcamp\examples\lab30-crm> mvn -q -DskipTests package
+PS C:\Users\lukel\java-bootcamp\examples\lab30-crm> mvn -B exec:java "-Dexec.mainClass=com.northstar.crm.event.CustomerEventProducer"
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ----------------------< com.northstar:lab30-crm >-----------------------
+[INFO] Building lab30-crm 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- exec:3.5.0:java (default-cli) @ lab30-crm ---
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+topic=crm.customer-events.v1 partition=0 offset=4
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.934 s
+[INFO] Finished at: 2026-08-11T15:38:09-04:00

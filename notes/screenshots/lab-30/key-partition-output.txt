@@ -1,0 +1,6 @@
+PS C:\Users\lukel\java-bootcamp\examples\lab30-crm> docker exec crm-kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic crm.customer-events.v1 --from-beginning --property print.key=true --property print.partition=true --property print.offset=true --property print.timestamp=true --max-messages 3
+CreateTime:1786475254077        Partition:0     Offset:0        CUS-1001        {"eventType":"CustomerCreated","eventVersion":1,"customerId":"CUS-1001","correlationId":"lab-request-001","data":{"fullName":"Amina Khan","status":"ACTIVE"}}
+CreateTime:1786475257509        Partition:0     Offset:1        CUS-1001        {"eventType":"CustomerStatusChanged","eventVersion":1,"customerId":"CUS-1001","correlationId":"lab-request-001","data":{"status":"ACTIVE"}}
+CreateTime:1786475259936        Partition:0     Offset:2        CUS-1002        {"eventType":"CustomerCreated","eventVersion":1,"customerId":"CUS-1002","correlationId":"lab-request-001","data":{"fullName":"Ravi Singh","status":"PROSPECT"}}
+Processed a total of 3 messages
+PS C:\Users\lukel\java-bootcamp\examples\lab30-crm>

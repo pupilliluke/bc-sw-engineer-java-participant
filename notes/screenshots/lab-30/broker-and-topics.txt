@@ -1,0 +1,29 @@
+Lab 30 broker and topics, captured 2026-08-11
+Windows, Docker 27.3.1, Compose v2.30.3-desktop.1, apache/kafka 3.9.1,
+Temurin JDK 21, Maven 3.9.9, examples\lab30-crm
+
+One KRaft node, broker and controller in the same process, PLAINTEXT on 9092.
+
+
+  docker compose ps
+
+  NAME        IMAGE                SERVICE   STATUS          PORTS
+  crm-kafka   apache/kafka:3.9.1   kafka     Up 13 seconds   0.0.0.0:9092->9092/tcp
+
+
+  docker exec crm-kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic crm.customer-events.v1
+
+  Topic: crm.customer-events.v1   PartitionCount: 3   ReplicationFactor: 1
+      Partition: 0   Leader: 1   Replicas: 1   Isr: 1
+      Partition: 1   Leader: 1   Replicas: 1   Isr: 1
+      Partition: 2   Leader: 1   Replicas: 1   Isr: 1
+
+
+  docker exec crm-kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic crm.customer-events.v1.dlq
+
+  Topic: crm.customer-events.v1.dlq   PartitionCount: 1   ReplicationFactor: 1
+      Partition: 0   Leader: 1   Replicas: 1   Isr: 1
+
+Replication factor 1 is lab only. One replica means the partition has no
+follower to elect if the broker is lost, and acks=all waits on a single
+in-sync replica.

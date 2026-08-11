@@ -1,0 +1,61 @@
+Lab 30 consumer groups and lag, captured 2026-08-11
+examples\lab30-crm
+
+crm-notifications competing, crm-audit independent, on the same topic.
+
+
+ASSIGNMENT, TWO MEMBERS IN crm-notifications
+
+  docker exec crm-kafka /opt/kafka/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group crm-notifications --members
+
+  GROUP              CONSUMER-ID              #PARTITIONS
+  crm-notifications  console-consumer-0211db  2
+  crm-notifications  console-consumer-111e16  1
+
+Three partitions across two members, 2 and 1, no partition assigned twice.
+Adding the second member triggered a rebalance and the first gave one up.
+
+
+COMPETING VS INDEPENDENT, SIX RECORDS PUBLISHED
+
+  keys CUS-1001 and CUS-1002 to partition 0, CUS-1003 twice to 1,
+  CUS-1005 twice to 2
+
+  member holding partition 2         received   2 records
+  member holding partitions 0 and 1  received   4 records
+  crm-audit                          received  12 records
+
+The six split across the two crm-notifications members with no overlap.
+crm-audit is a different group with its own offsets, so it read every record on
+the topic including the ones crm-notifications had already consumed.
+
+
+LAG WITH THE CONSUMER STOPPED
+
+  three more records published while crm-audit had no members
+
+  docker exec crm-kafka /opt/kafka/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group crm-audit
+
+  Consumer group 'crm-audit' has no active members.
+  GROUP      PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG
+  crm-audit  1          4               5               1
+  crm-audit  2          4               5               1
+  crm-audit  0          8               9               1
+
+
+AFTER RESTARTING THE CONSUMER
+
+  Partition:1  CUS-1003  {"eventId":"d0f4a5b2-...0022",...}
+  Partition:2  CUS-1005  {"eventId":"d0f4a5b2-...0023",...}
+  Partition:0  CUS-1001  {"eventId":"d0f4a5b2-...0021",...}
+  Processed a total of 3 messages
+
+  GROUP      PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG
+  crm-audit  1          5               5               0
+  crm-audit  2          5               5               0
+  crm-audit  0          9               9               0
+
+Lag is log end offset minus committed offset, per partition and per group.
+Nothing was lost while the consumer was down, the records sat on the log and
+the group resumed from its committed position. Retention is the deadline on
+that, not the group.
