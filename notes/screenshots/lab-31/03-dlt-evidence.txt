@@ -1,0 +1,53 @@
+Lab 31 dead letter topic, captured 2026-08-12
+examples\lab31-crm
+
+Failure experiment 2, key does not match data.customerId.
+
+
+SETUP
+
+The publisher cannot produce this record, it always keys by customerId, so the
+test sends through KafkaTemplate directly.
+
+  template.send("crm.customer-events.v1", "CUS-9999", event);   // event.customerId = CUS-1001
+
+
+RESULT
+
+  test keyMismatchGoesToDeadLetterTopic   PASSED
+
+  record on crm.customer-events.v1.dlq
+
+  key                          CUS-9999
+  kafka_dlt-original-topic     crm.customer-events.v1
+  kafka_dlt-original-partition present
+  kafka_dlt-original-offset    present
+  kafka_dlt-exception-fqcn     org.springframework.kafka.listener.ListenerExecutionFailedException
+  kafka_dlt-exception-cause-fqcn  com.northstar.crm.event.InvalidCustomerEventException
+
+  listener.events() does not contain the rejected eventId
+
+Spring wraps a listener throw, so the top level exception header names
+ListenerExecutionFailedException and the cause header is the one naming the
+contract exception. Asserting on the top level header alone fails, which is how
+this was found.
+
+
+CONFIGURATION THAT MAKES IT WORK
+
+  DeadLetterPublishingRecoverer with a destination resolver returning
+  new TopicPartition(record.topic() + ".dlq", -1)
+
+Two deliberate choices there. The topic is the lab 30 name and not Spring's
+default of source topic plus .DLT, so a consumer watching .dlq sees the records.
+The partition is -1 so the broker chooses. The default is the source partition
+number, and the source topic has 3 partitions against 1 on the DLQ, so a record
+failing on partition 1 or 2 would fail to dead letter at all.
+
+  DefaultErrorHandler(recoverer, new FixedBackOff(1000L, 2L))
+  addNotRetryableExceptions(InvalidCustomerEventException,
+                            UnsupportedEventVersionException,
+                            DeserializationException)
+
+A key mismatch is a property of the record, so retrying it three times only
+delays the partition. Anything not listed stays retryable.

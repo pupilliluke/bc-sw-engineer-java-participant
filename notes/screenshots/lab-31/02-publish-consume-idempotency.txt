@@ -1,0 +1,45 @@
+Lab 31 publish, consume and idempotency, captured 2026-08-12
+examples\lab31-crm
+
+PUBLISH
+
+CustomerEventPublisher.publish sends with key = event.customerId(), so CUS-1001
+keeps the partition affinity from lab 30. KafkaTemplate.send returns a future and
+the callback logs on completion.
+
+  customer_event_published id=<eventId> correlationId=lab-request-001 partition=<n> offset=<n>
+  customer_event_publish_failed id=<eventId> correlationId=lab-request-001
+
+Both lines carry correlationId, so a publish that never landed is still findable
+from a support ticket.
+
+
+CONSUME
+
+  @KafkaListener(topics = "${crm.kafka.customer-events-topic}")
+
+The listener rejects a record whose key is null or does not equal
+data.customerId, then calls ProcessedEventStore.markIfNew before any side effect,
+then logs correlationId and customerId.
+
+
+IDEMPOTENCY
+
+  test ignoresDuplicateEventId
+
+  publisher.publish(created);   // eventId 22222222-2222-4222-8222-222222222222
+  publisher.publish(created);   // same event, second delivery
+
+  assertThat(listener.events())
+      .filteredOn(e -> e.eventId().equals(created.eventId()))
+      .hasSize(1);
+
+  PASSED
+
+Two publishes of the same eventId, one entry in events(). The second delivery
+logs duplicate_event_ignored and returns before the side effect.
+
+markIfNew is Set.add, which is the check and the mark in one atomic operation.
+Asserting on ProcessedEventStore alone would not prove this, it returns false on
+the second call whether the listener ran or not, which is why the listener
+exposes events().

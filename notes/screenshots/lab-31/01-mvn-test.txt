@@ -1,0 +1,28 @@
+Lab 31 integration tests, captured 2026-08-12
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, Spring Boot 3.3.5, spring-kafka 3.2.4,
+examples\lab31-crm
+
+EmbeddedKafka, no Docker broker needed for the suite.
+
+
+  mvn -B test
+
+  Tests run: 1, Failures: 0, Errors: 0, Skipped: 0 -- CustomerEventDltTest
+  Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- CustomerEventIntegrationTest
+  Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+  BUILD SUCCESS
+
+  mvn -B test
+
+  Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+  BUILD SUCCESS
+
+Two consecutive runs, same result. The tests are:
+
+  publishesAndConsumesCustomerCreated   publish Amina, await the listener
+  ignoresDuplicateEventId               publish the same eventId twice, handled once
+  keyMismatchGoesToDeadLetterTopic      key not equal to data.customerId, lands on the DLQ
+
+No Thread.sleep. Awaitility awaits a specific eventId in
+CustomerEventListener.events(), so a slow listener extends the wait instead of
+turning into a flaky pass.

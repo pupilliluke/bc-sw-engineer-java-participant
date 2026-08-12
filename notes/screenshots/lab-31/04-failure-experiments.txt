@@ -1,0 +1,73 @@
+Lab 31 failure experiments, captured 2026-08-12
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab31-crm
+
+Four of the five from the GUIDE table. Every temporary edit is restored and the
+suite is green at 3 in 01-mvn-test.txt, captured after these.
+
+
+1, STOP BROKER, ATTEMPT PUBLISH
+
+  temporary test, bootstrap-servers localhost:9099 with nothing listening,
+  max.block.ms 4000
+
+  EXPERIMENT_1_BLOCKED_MS=4263
+  EXPERIMENT_1_ERROR=org.apache.kafka.common.errors.TimeoutException:
+      Topic crm.customer-events.v1 not present in metadata after 4000 ms.
+
+The error did not arrive through the whenComplete callback. send() resolves
+metadata on the calling thread, so with no broker it blocks for max.block.ms and
+throws there, before the future exists. The first attempt at this test caught
+only ExecutionException from get() and errored, which is how that was found.
+
+KafkaTemplate.send is not unconditionally non-blocking. The default max.block.ms
+is 60000, which matches the 60 seconds the lab 30 raw producer blocked for
+against a stopped broker. Restored, temporary test deleted.
+
+
+2, PUBLISH KEY NOT EQUAL TO customerId
+
+  Non-retryable, dead lettered with headers. Full output in 03-dlt-evidence.txt.
+  Kept as a committed test rather than restored, it is the Checkpoint C3
+  evidence.
+
+
+3, RE-DELIVER SAME eventId
+
+  Handled once, second delivery logs duplicate_event_ignored. Full output in
+  02-publish-consume-idempotency.txt.
+
+
+5, RESTRICT TRUSTED PACKAGES TOO TIGHTLY
+
+  spring.json.trusted.packages: com.northstar.crm.event -> com.example.nowhere
+
+  mvn -B test -Dtest=CustomerEventIntegrationTest
+  Tests run: 2, Failures: 0, Errors: 0
+
+Still green, which is not what the GUIDE expects. The cause is
+spring.json.value.default.type, which tells JsonDeserializer what to build and
+stops it consulting the type header, so the trusted package list is never
+checked on this path.
+
+Removing that line as well reproduced the failure:
+
+  Tests run: 2, Failures: 0, Errors: 2
+  listener.events() empty, both awaits timed out with ConditionTimeoutException
+
+The record never reached the listener. Deserialization fails first and the
+listener is not invoked, so the symptom is silence rather than an error inside
+the handler. Both lines restored and the suite is green again.
+
+The lesson is which setting actually protects the consumer. Trusting the type
+header and restricting packages is one design, pinning the target type is
+another, and this project does the second, which is also what stops the
+consumer depending on the producer's package names.
+
+
+4, THROW RETRYABLE ONCE THEN SUCCEED
+
+  Not run. Reproducing it needs a listener that fails on the first delivery and
+  succeeds on the second, which means a test only fault injection point in
+  CustomerEventListener. The backoff is configured and bounded at
+  FixedBackOff(1000L, 2L) and the non-retryable list is asserted by experiment 2,
+  but the retry-then-succeed path itself is not evidenced here.
