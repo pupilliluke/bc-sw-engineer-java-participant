@@ -1,0 +1,69 @@
+Lab 32 failure experiments, captured 2026-08-12
+Windows, Temurin JDK 21.0.4, examples\lab32-crm
+
+The GUIDE table. Every temporary edit is restored and the suite is green at 5 in
+01-mvn-test.txt, captured after these.
+
+
+1, PERMANENT 503 FROM WIREMOCK
+
+  stub 503, repeated calls to find()
+
+  breaker CLOSED -> OPEN after 5 calls, every response available=false
+
+Observed but not as the GUIDE describes it. The row says retries then OPEN, and
+there were no retries. Five calls to find() produced five HTTP requests and five
+breaker records, not fifteen. @Retry is configured with maxAttempts 3 and it
+never fired.
+
+The cause is the annotation composition. fallbackMethod is on @CircuitBreaker,
+so a failure is converted into a successful return, and @Retry as the outer
+aspect sees success and has nothing to retry. The retry config is correct and
+inert. Moving fallbackMethod to @Retry would restore retries at the cost of the
+breaker no longer seeing per-attempt outcomes. Left as the GUIDE writes it and
+documented in docs/resilience-notes.md.
+
+
+2, 3000MS DELAY STUB
+
+  Run with a 4000ms fixed delay against a 1500ms budget. Fallback returned
+  available=false and the call was bounded well under the stub delay. Full
+  output in 03-circuit-and-fallback.txt.
+
+
+3, CALLS WHILE OPEN
+
+  serve events unchanged across the call, elapsed under 500ms, response
+  available=false. Asserted against the WireMock journal, so no call left the
+  CRM. Full output in 03-circuit-and-fallback.txt.
+
+
+4, RETRY A NON-IDEMPOTENT WRITE
+
+  Thought experiment, deliberately not demonstrated.
+
+A retried write is not safe because a call that times out may still have
+succeeded on the server. The CRM cannot distinguish no answer from a lost
+answer, so retrying a create produces a second customer, one per attempt. This
+is the same argument as the consumer side in lab 31, where a redelivered event
+would run the side effect twice and eventId is what makes it safe. There is no
+equivalent key on an HTTP create unless the caller supplies an idempotency key,
+so retry stays on reads.
+
+Not demonstrated because demonstrating it means writing a knowingly unsafe
+endpoint, so the policy is documented instead.
+
+
+5, FALLBACK RETURNS SUCCESS WITHOUT available=false
+
+  AccountSummary.unavailable temporarily changed to
+  new AccountSummary(customerId, true, "")
+
+  test healthyCall_returnsAvailable          PASSED
+  test openCircuit_failsFastWithoutHittingStub  FAILED, expected false but was true
+  test timeout_returnsUnavailableFallback    FAILED, expected false but was true
+
+The two degraded tests fail on the available flag. Nothing about the response
+shape changes, the HTTP status is the same, the body still parses. Only the flag distinguishes a real answer from a fabricated one, and
+without it the UI renders a customer with no accounts rather than a customer
+whose accounts could not be read. Restored.

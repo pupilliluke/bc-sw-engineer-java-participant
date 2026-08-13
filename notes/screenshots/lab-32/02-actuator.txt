@@ -1,0 +1,61 @@
+Lab 32 actuator observation, captured 2026-08-13
+examples\lab32-crm
+
+The starter has no controller, so a property-guarded runner drives the calls.
+AccountDemoRunner runs only with --lab.demo=true. It makes 5 calls to find()
+against the default base-url http://localhost:8089 with nothing listening
+there, waits 2.5s, then makes 2 more.
+
+  mvn -B spring-boot:run "-Dspring-boot.run.arguments=--server.port=8092 --lab.demo=true"
+
+
+  curl -s http://localhost:8092/actuator/health
+
+  {"status":"UP","components":{"circuitBreakers":{"status":"UNKNOWN","details":{
+    "accountProfile":{"status":"CIRCUIT_OPEN","details":{
+      "failureRate":"100.0%","failureRateThreshold":"50.0%",
+      "bufferedCalls":2,"failedCalls":2,"state":"OPEN"}}}},
+    "diskSpace":{"status":"UP"},"ping":{"status":"UP"}}}
+
+The breaker state is in health via registerHealthIndicator: true plus
+management.health.circuitbreakers.enabled: true. The overall status stays UP,
+CIRCUIT_OPEN is reported on the component rather than failing the whole app.
+
+
+  curl -s http://localhost:8092/actuator/circuitbreakers
+
+  {"circuitBreakers":{"accountProfile":{
+    "failureRate":"100.0%","slowCallRate":"0.0%",
+    "failureRateThreshold":"50.0%","slowCallRateThreshold":"100.0%",
+    "bufferedCalls":2,"failedCalls":2,"slowCalls":0,"slowFailedCalls":0,
+    "notPermittedCalls":0,"state":"OPEN"}}}
+
+failureRateThreshold is 50.0%, the value from application.yml rather than a
+default, which is the check for an instance name in the annotation that
+matches nothing in the config. bufferedCalls is 2 rather than 6 because the
+window resets on the transition to HALF_OPEN, the 2 calls are the failed
+probes.
+
+
+  curl -s http://localhost:8092/actuator/circuitbreakerevents
+
+  10:30:53.096  ERROR             TemporaryAccountException, 176ms
+  10:30:53.114  ERROR             6ms
+  10:30:53.122  ERROR             6ms
+  10:30:53.130  ERROR             6ms
+  10:30:53.131  FAILURE_RATE_EXCEEDED
+  10:30:53.138  STATE_TRANSITION  CLOSED_TO_OPEN
+  10:30:53.141  NOT_PERMITTED
+  10:30:55.657  STATE_TRANSITION  OPEN_TO_HALF_OPEN
+  10:30:55.662  ERROR             4ms
+  10:30:55.669  ERROR             5ms
+  10:30:55.669  STATE_TRANSITION  HALF_OPEN_TO_OPEN
+
+Four errors open the breaker, not five. minimumNumberOfCalls is 4, so the rate
+is computed at the fourth call, 100% crosses the 50% threshold, and the fifth
+call is NOT_PERMITTED. After waitDurationInOpenState 2s the next call moves
+the breaker to HALF_OPEN, both probes fail against the dead port and it goes
+back to OPEN.
+
+The successful recovery, HALF_OPEN to CLOSED, is asserted in
+halfOpen_successfulProbesCloseTheBreaker, see 01-mvn-test.txt.

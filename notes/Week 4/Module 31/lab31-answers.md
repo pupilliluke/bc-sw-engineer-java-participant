@@ -4,7 +4,7 @@ built under examples\lab31-crm from the lab 31 starter, timed path. the starter
 ships the Boot baseline, CustomerEvent, the publisher, the listener, the store,
 KafkaErrorConfig and an EmbeddedKafka test with the bodies as TODOs, so the work
 was the record guards, the send, the listener checks, markIfNew, the error
-handler and the tests. 3 tests green on two consecutive runs, no Docker broker
+handler and the tests. 4 tests green on two consecutive runs, no Docker broker
 needed for the suite. four of the five experiments run.
 
 
@@ -50,12 +50,12 @@ CHECKPOINTS
 | A2 | spring-kafka and test jar present | Pass, 3.2.4 both, versions from the Boot 3.3.5 parent |
 | A3 | bootstrap, group, trusted packages, topic externalized | Pass, all in application.yml, bootstrap has an env override |
 | B1 | CustomerEvent v1 with null and version guards | Pass, compact constructor, requireNonNull on eventId and customerId, throws on version not 1 |
-| B2 | KafkaTemplate publish keyed by CUS-1001 / CUS-1002 | Pass, key is event.customerId() |
+| B2 | KafkaTemplate publish keyed by CUS-1001 / CUS-1002 | Pass, key is event.customerId(), both fixtures evidenced, Amina by publishesAndConsumesCustomerCreated and Ravi by publishesAndConsumesRaviKeyedSeparately |
 | B3 | @KafkaListener validates key against customerId | Pass, throws InvalidCustomerEventException on null or mismatch |
 | C1 | ProcessedEventStore ignores duplicate eventId | Pass, markIfNew is Set.add, asserted by ignoresDuplicateEventId |
 | C2 | retry backoff and non-retryable exceptions | Pass, FixedBackOff(1000, 2) and three non-retryable types |
 | C3 | dead-letter publication observed | Pass, keyMismatchGoesToDeadLetterTopic asserts the record and its headers |
-| D1 | EmbeddedKafka flow test green twice | Pass, 3 tests, two consecutive runs |
+| D1 | EmbeddedKafka flow test green twice | Pass, 4 tests, two consecutive runs |
 | D2 | correlation ids in logs and events, no PII dumps | Pass, publisher and listener log correlationId, no payload dumps |
 | D3 | runbook and DLT naming documented | Pass, docs/spring-kafka-notes.md |
 

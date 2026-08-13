@@ -50,6 +50,30 @@ class CustomerEventIntegrationTest {
   }
 
   @Test
+  void publishesAndConsumesRaviKeyedSeparately() {
+    CustomerEvent created = new CustomerEvent(
+        "44444444-4444-4444-8444-444444444444",
+        "CustomerCreated",
+        1,
+        Instant.parse("2026-07-13T06:10:00Z"),
+        "CUS-1002",
+        "lab-request-001",
+        "customer-service",
+        new CustomerEvent.CustomerData("Ravi Singh", "PROSPECT", null, null));
+
+    publisher.publish(created);
+
+    await().atMost(Duration.ofSeconds(10)).untilAsserted(() ->
+        assertThat(listener.events())
+            .filteredOn(e -> e.eventId().equals(created.eventId()))
+            .singleElement()
+            .satisfies(e -> {
+              assertThat(e.customerId()).isEqualTo("CUS-1002");
+              assertThat(e.data().fullName()).isEqualTo("Ravi Singh");
+            }));
+  }
+
+  @Test
   void ignoresDuplicateEventId() {
     CustomerEvent created = aminaCreated("22222222-2222-4222-8222-222222222222");
 

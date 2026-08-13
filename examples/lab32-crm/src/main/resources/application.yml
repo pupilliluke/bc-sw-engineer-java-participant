@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: lab32-crm
+
+account:
+  api:
+    base-url: ${ACCOUNT_API_BASE_URL:http://localhost:8089}
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      accountProfile:
+        slidingWindowSize: 6
+        minimumNumberOfCalls: 4
+        failureRateThreshold: 50
+        waitDurationInOpenState: 2s
+        permittedNumberOfCallsInHalfOpenState: 2
+        registerHealthIndicator: true
+  retry:
+    instances:
+      accountProfile:
+        maxAttempts: 3
+        waitDuration: 200ms
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+        retryExceptions:
+          - java.io.IOException
+          - com.northstar.crm.account.TemporaryAccountException
+  timelimiter:
+    instances:
+      accountProfile:
+        timeoutDuration: 1500ms   # starter had 1.5s, which Spring cannot bind to a Duration
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,circuitbreakers,circuitbreakerevents
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true

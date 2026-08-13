@@ -8,18 +8,20 @@ EmbeddedKafka, no Docker broker needed for the suite.
   mvn -B test
 
   Tests run: 1, Failures: 0, Errors: 0, Skipped: 0 -- CustomerEventDltTest
-  Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 -- CustomerEventIntegrationTest
-  Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+  Tests run: 3, Failures: 0, Errors: 0, Skipped: 0 -- CustomerEventIntegrationTest
+  Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
   BUILD SUCCESS
 
   mvn -B test
 
-  Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+  Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
   BUILD SUCCESS
 
 Two consecutive runs, same result. The tests are:
 
-  publishesAndConsumesCustomerCreated   publish Amina, await the listener
+  publishesAndConsumesCustomerCreated   publish Amina CUS-1001, await the listener
+  publishesAndConsumesRaviKeyedSeparately  publish Ravi CUS-1002, assert customerId
+                                        and fullName on the handled event
   ignoresDuplicateEventId               publish the same eventId twice, handled once
   keyMismatchGoesToDeadLetterTopic      key not equal to data.customerId, lands on the DLQ
 

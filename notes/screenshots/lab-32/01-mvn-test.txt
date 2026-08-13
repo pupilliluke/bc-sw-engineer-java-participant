@@ -1,0 +1,35 @@
+Lab 32 resilience tests, captured 2026-08-13
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, Spring Boot 3.3.5,
+resilience4j-spring-boot3, WireMock standalone, examples\lab32-crm
+
+WireMock on a dynamic port. No Account Profile service and no Docker needed.
+
+
+  mvn -B test
+
+  Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 -- AccountProfileResilienceTest
+  BUILD SUCCESS
+
+  mvn -B test
+
+  Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+  BUILD SUCCESS
+
+Two consecutive runs, same result. The tests are:
+
+  healthyCall_returnsAvailable              200 stub, available=true, breaker CLOSED
+  openCircuit_failsFastWithoutHittingStub   503 stub, breaker OPEN, no further HTTP
+  retryRecovery_secondAttemptSucceeds       503 then 200 scenario, 2 journal entries
+  halfOpen_successfulProbesCloseTheBreaker  OPEN, wait, probe twice, CLOSED
+  timeout_returnsUnavailableFallback        4s delayed stub, fallback inside the budget
+
+The open-circuit test asserts against the WireMock journal, so it proves no
+call left the CRM rather than timing how long nothing took. The half-open test
+has the one wall clock wait in the suite, a sleep past waitDurationInOpenState,
+because the breaker only leaves OPEN when a call is attempted after the wait.
+The states themselves are asserted, OPEN then HALF_OPEN then CLOSED.
+
+retryRecovery goes through the retry instance decorating the client directly,
+because on find() the fallback on @CircuitBreaker makes @Retry inert, see
+docs/resilience-notes.md. 503 then 200 on a scenario stub, the second attempt
+succeeds and the journal shows two requests.

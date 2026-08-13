@@ -1,7 +1,7 @@
 Northstar CRM Spring Kafka (Lab 31)
 
   mvn -B test
-  # expect Tests run: 3, Failures: 0, Errors: 0
+  # expect Tests run: 4, Failures: 0, Errors: 0
 
 The suite runs on EmbeddedKafka and needs no broker. Everything below needs the
 lab 30 broker.

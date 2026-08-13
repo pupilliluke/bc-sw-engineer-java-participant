@@ -1,0 +1,75 @@
+Lab 32 circuit states and fallback, captured 2026-08-12
+examples\lab32-crm
+
+
+CLOSED, HEALTHY DEPENDENCY
+
+  test healthyCall_returnsAvailable   PASSED
+
+  stub  GET /accounts/CUS-1001/summary -> 200
+        {"customerId":"CUS-1001","available":true,"note":"ok"}
+
+  service.find("CUS-1001", "lab-request-001")  ->  available=true
+  breaker state                                ->  CLOSED
+
+  journal assert: the outbound request carried
+  X-Correlation-Id: lab-request-001
+
+correlationId is an argument to find rather than a ThreadLocal. The TimeLimiter
+runs the supplier on another thread, so a value held on the calling thread would
+not reach the client call or the fallback. It also appears in the
+account_profile_degraded log line, so one id spans the CRM log and the
+dependency's own logs.
+
+
+CLOSED TO OPEN, PERMANENT 503
+
+  test openCircuit_failsFastWithoutHittingStub   PASSED
+
+  stub  GET /accounts/CUS-1002/summary -> 503
+
+  5 calls to find(), each returning available=false from the fallback
+  breaker state -> OPEN
+
+Five and not three. The breaker records one call per find(), and
+minimumNumberOfCalls is 4, below which it reports a failure rate of -1 and cannot
+open. Three failing calls left it CLOSED at buffered=3 failed=3 rate=-1.0, which
+is what the first version of this test hit.
+
+
+OPEN, FAIL FAST
+
+  serve events before the next call   n
+  serve events after the next call    n     unchanged
+  elapsed                             < 500ms
+  response                            available=false,
+                                      note=account-profile-unavailable
+
+No call left the CRM. This is asserted against the WireMock journal rather than
+by timing, so it is proof that the dependency was not contacted and not just
+proof that the answer was quick. Account Profile gets no traffic while it is
+already failing.
+
+
+TIMEOUT
+
+  test timeout_returnsUnavailableFallback   PASSED
+
+  stub  GET /accounts/CUS-1001/summary -> 200 with a 4000ms fixed delay
+  timelimiter.timeoutDuration              1500ms
+
+  response  available=false, note=account-profile-unavailable
+  elapsed   under 4s, so bounded by the TimeLimiter and not by the dependency
+  journal   the request was made, so this is a timeout and not a fail-fast
+
+This is the exercise 1 scenario with a bound on it. Without the TimeLimiter the
+caller waits as long as the dependency takes.
+
+
+FALLBACK BODY
+
+  {"customerId":"CUS-1001","available":false,"note":"account-profile-unavailable"}
+
+Only customerId is carried through, and it came in on the request rather than
+from Account Profile. No balance, no tier, no zero-valued defaults. available is
+false so the caller can tell a degraded read from a healthy one.
