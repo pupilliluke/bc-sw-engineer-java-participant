@@ -1,0 +1,37 @@
+Lab 33 React component tests and build, captured 2026-08-13
+Windows, Node v20.18.0, npm 10.8.2, Vite 5.4.21, Vitest 2.1.9,
+examples\lab33-crm\crm-ui
+
+Vitest on jsdom.
+
+
+  npm run test -- --run
+
+  Test Files  1 passed (1)
+       Tests  4 passed (4)
+
+  npm run test -- --run
+
+  Test Files  1 passed (1)
+       Tests  4 passed (4)
+
+Two consecutive runs, same result. The tests are:
+
+  renders fixture customers by name    Amina and Ravi visible, 2 articles
+  shows the empty state for no customers  [] renders No customers yet, no articles
+  reports the selected customer        Edit inside card-CUS-1001, onEdit("CUS-1001")
+  associates labels with inputs        getByLabelText Full name, Email, Status
+
+The Edit test scopes the button query with within(card-CUS-1001), because both
+cards render a button named Edit and an unscoped getByRole would match two.
+
+
+  npm run build
+
+  dist/index.html                  0.43 kB
+  dist/assets/index-CnYhscLn.css   0.34 kB
+  dist/assets/index-BlgIFQis.js  144.95 kB
+  built in 1.42s
+
+The GUIDE hard gate names Node 22+. This machine runs Node 20.18.0 and every
+command above works, Vite 5 requires 18+. Recorded as found.

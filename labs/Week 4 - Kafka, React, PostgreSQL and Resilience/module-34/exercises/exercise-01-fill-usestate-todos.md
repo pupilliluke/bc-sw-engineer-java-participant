@@ -72,18 +72,18 @@ From `examples/module-34-exercises/`, create `notes/` if needed, then create `no
 Create `notes/lab34-todos.md`:
 
 ```tsx
-const [name, setName] = useState(_____);
-const [status, setStatus] = useState<_____>(_____);
+const [name, setName] = useState("");
+const [status, setStatus] = useState<'ACTIVE' | 'SUSPENDED'>("ACTIVE");
 const [error, setError] = useState<string | null>(null);
 
 function onSubmit(e: FormEvent) {
   e.preventDefault();
-  if (!name.trim()) { setError(_____); return; }
+  if (!name.trim()) { setError("Name is required"); return; }
   // TODO Lab 35: POST to API
   console.log({ name, status, correlation: "lab-request-001" });
 }
 
-<input value={name} onChange={(e) => _____(e.target.value)} />
+<input value={name} onChange={(e) => setName(e.target.value)} />
 ```
 
 ## Step 2 — Fill
@@ -100,7 +100,7 @@ Add TODO: selectedCustomerId lives in parent list container.
 
 ## Scope
 Pre-lab only — do not finish the full graded lab in this exercise.
-```
+
 
 ### Step 3 — Self-check
 
@@ -122,8 +122,8 @@ Filled useState/onChange snippet with validation and Lab 35 deferral in `notes/l
 
 Self-check before marking Pass:
 
-- [ ] File exists at `notes/lab34-todos.md`
-- [ ] Blanks filled
-- [ ] preventDefault path clear
-- [ ] Lift-state TODO present
+- [ x ] File exists at `notes/lab34-todos.md`
+- [ x ] Blanks filled
+- [ x ] preventDefault path clear
+- [ x ] Lift-state TODO present
 

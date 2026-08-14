@@ -1,0 +1,72 @@
+Lab 33 failure experiments, captured 2026-08-13
+Windows, Node v20.18.0, examples\lab33-crm\crm-ui
+
+The GUIDE table. Every temporary edit is restored and the suite is green at 4
+in 01-npm-test.txt, captured after these.
+
+
+1, KEY=INDEX THEN SORT
+
+  CustomerList key temporarily changed to key={index}. The dashboard has no
+  sort control, so a scratch test focused the first card's Edit button and
+  rerendered the list with a reversed copy.
+
+  key={index}                focused card before: card-CUS-1001  after: card-CUS-1002
+  key={customer.customerId}  focused card before: card-CUS-1001  after: card-CUS-1001
+
+With index keys React matched children by position, the focused button kept
+its DOM node while the card around it became Ravi's, so focus started on
+CUS-1001 and ended on CUS-1002 without the user moving it. With customerId
+keys React moved the DOM node together with its data and focus stayed on
+Amina's card at its new position. Restored, scratch test deleted.
+
+
+2, REMOVE STATUS TEXT, KEEP COLOR ONLY
+
+  StatusBadge temporarily changed to render the classed span with no text.
+
+  npm run test -- --run    Tests  4 passed (4)
+  npx tsc --noEmit         TS6133: 'labels' is declared but its value is never read
+
+The suite stayed green because no test asserts the badge text, so this
+regression ships silently past the tests. Only the compiler objected, and only
+indirectly, the labels record became unused. In grayscale the three statuses
+now render identically, which is what the visible text exists to prevent.
+Restored.
+
+
+3, BREAK THE htmlFor / id PAIRING
+
+  input id temporarily changed from fullName to fullname
+
+  npm run test -- --run
+
+  x CustomerForm > associates labels with inputs
+    TestingLibraryElementError: Found a label with the text of: Full name,
+    however no form control was found associated to that label. Make sure
+    you're using the "for" attribute or "aria-labelledby" attribute correctly.
+
+  Tests  1 failed | 3 passed (4)
+
+One character of case difference breaks the association. getByLabelText fails
+with the exact fix in the error message, and the same broken pairing is what a
+screen reader user gets, a label that reads as attached to nothing. Restored.
+
+
+4, PASS customers={[]}
+
+  Asserted permanently by the suite rather than run as a temporary edit.
+
+shows the empty state for no customers renders the list with [] and asserts
+No customers yet is visible and no article is in the tree. The section and
+heading never render on the empty branch, so there is no ghost grid in the
+accessibility tree.
+
+
+5, RUN THE SUITE TWICE
+
+  Run 1  Tests  4 passed (4)
+  Run 2  Tests  4 passed (4)
+
+Identical results, full output in 01-npm-test.txt. The fixtures are module
+constants and every test renders fresh, nothing carries state between runs.
