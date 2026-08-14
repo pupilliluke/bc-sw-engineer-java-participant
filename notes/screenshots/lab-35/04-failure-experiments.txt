@@ -1,0 +1,41 @@
+Lab 35 failure experiments, captured 2026-08-14
+examples\lab35-crm, run against the live crm-api + Vite dev server.
+
+1. Stop Spring, reload SPA
+
+   Killed the crm-api process and reloaded http://localhost:5173. The list
+   is replaced by a role=alert region reading "Cannot reach the CRM
+   service" with a Retry button, tab title CRM (0). No stack trace, no raw
+   TypeError text. Restarted Spring, clicked Retry, the list came back
+   with the seeds. Note the in-memory store resets on restart, a customer
+   created before the kill is gone after it, expected for this backend.
+
+2. POST invalid email
+
+   curl POST with name "" and email "bad" returns
+   400 {"fieldErrors":{"name":"Name is required","email":"Enter a valid
+   email"},"message":"Validation failed"}. In the UI the same shape lands
+   beside the fields through mapApiFieldErrors, covered by the RTL test
+   "maps a backend 400 fieldErrors body onto the form" (client validation
+   is bypassed there by mocking the POST to return 400, the client rules
+   otherwise catch the same input first).
+
+3. Abort on unmount / re-run
+
+   Observed live in the network tab, StrictMode mounts the effect twice in
+   dev and the first GET /api/customers shows as net::ERR_ABORTED, the
+   second completes 200. That aborted first request is the AbortController
+   cleanup firing, no setState warning in the console. Also covered by the
+   unit test converting AbortError to ApiError kind abort.
+
+4. Double-click Save
+
+   The Save button gets disabled={saving} and saving flips true before the
+   await. The browser create flow produced exactly one POST in the network
+   log. If a double POST ever got through, the server would reject the
+   duplicate id with a 409.
+
+5. Evil Origin curl
+
+   403 Invalid CORS request, no ACAO header, full transcript in
+   03-cors-evidence.txt.

@@ -1,0 +1,64 @@
+Lab 35 step 1, API contract inspection, captured 2026-08-14
+Backend: examples\lab25-crm (in-memory, port 8080, no auth), started with
+mvn spring-boot:run. SPA tree copied examples\lab34-crm -> examples\lab35-crm
+(node_modules and dist excluded, npm install pending).
+
+
+  curl -i http://localhost:8080/api/customers
+
+  HTTP/1.1 200
+  Content-Type: application/json
+
+  [{"id":"CUS-1002","name":"Ravi Singh","email":"ravi.singh@example.com","status":"PROSPECT"},
+   {"id":"CUS-1001","name":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"}]
+
+Both fixtures seed on boot from InMemoryCustomerRepository. List order is
+map order, not insertion order.
+
+
+  curl -i -X POST http://localhost:8080/api/customers
+    -H "Content-Type: application/json"
+    -H "X-Correlation-Id: lab-request-001"
+    -d {"id":"CUS-2001","name":"Lena Cho","email":"lena.cho@example.com","status":"PROSPECT"}
+
+  HTTP/1.1 201
+  {"id":"CUS-2001","name":"Lena Cho","email":"lena.cho@example.com","status":"PROSPECT"}
+
+Create echoes the stored customer. The CLIENT supplies the id, the service
+only rejects duplicates. Rows created this way live until the server
+restarts, the store is in-memory.
+
+
+  curl -i http://localhost:8080/api/customers/CUS-1001
+
+  HTTP/1.1 200
+  {"id":"CUS-1001","name":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"}
+
+
+  curl -i http://localhost:8080/api/customers/CUS-9999
+
+  HTTP/1.1 500
+  {"timestamp":"...","status":500,"error":"Internal Server Error","path":"/api/customers/CUS-9999"}
+
+Unknown id is a 500, NOT a 404. CustomerService.get throws
+IllegalArgumentException and lab25 has no exception mapping, so Spring's
+default error JSON comes back, timestamp/status/error/path with no detail
+field. A malformed request body returns the same default shape with 400.
+The typed client has to treat these as the error shape, or the backend
+grows a handler later in the lab.
+
+
+CONTRACT SUMMARY
+
+  GET  /api/customers          200 -> [{id, name, email, status}]
+  GET  /api/customers/{id}     200 -> {id, name, email, status}, unknown id 500 (no handler)
+  POST /api/customers          201 -> created customer, client supplies id, duplicate throws
+  PATCH /api/customers/{id}/status  transitions per ALLOWED map (PROSPECT->ACTIVE|CLOSED etc)
+  error body (Spring default)  {timestamp, status, error, path}
+
+Field names are id and name. The React types from lab 34 use customerId
+and fullName, and the GUIDE's worked example posts fullName/phone, neither
+matches this backend. The typed client in the later steps maps id -> the
+UI's customerId and name -> fullName (or the UI types change), decided
+when src/api/customers.ts is written. Browser needs JSON only, no SOAP
+bridge in this backend.

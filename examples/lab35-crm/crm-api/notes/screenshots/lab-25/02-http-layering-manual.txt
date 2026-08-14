@@ -1,0 +1,63 @@
+Lab 25 HTTP smoke, captured 2026-08-06
+Windows, Temurin JDK 21.0.4, Maven 3.9.9, examples\lab25-crm
+
+Steps 5 and 6. App on 8080, correlation lab-request-001 on every call.
+
+  mvn -B spring-boot:run
+
+  Tomcat started on port 8080 (http) with context path '/'
+  Started CrmApplication in 5.34 seconds (process running for 5.852)
+
+
+SEEDED GETS
+
+  curl -s -H "X-Correlation-Id: lab-request-001" http://localhost:8080/api/customers/CUS-1001
+
+  {"id":"CUS-1001","name":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"} HTTP 200
+
+  curl -s -H "X-Correlation-Id: lab-request-001" http://localhost:8080/api/customers/CUS-1002
+
+  {"id":"CUS-1002","name":"Ravi Singh","email":"ravi.singh@example.com","status":"PROSPECT"} HTTP 200
+
+Neither id was created over HTTP. Both come from the
+InMemoryCustomerRepository constructor.
+
+
+CREATE CUS-1003
+
+  curl -s -X POST http://localhost:8080/api/customers -H "Content-Type: application/json" -H "X-Correlation-Id: lab-request-001" -d "{\"id\":\"CUS-1003\",\"name\":\"Maya Chen\",\"email\":\"maya@example.com\",\"status\":\"PROSPECT\"}"
+
+  {"id":"CUS-1003","name":"Maya Chen","email":"maya@example.com","status":"PROSPECT"} HTTP 201
+
+
+NOT FOUND
+
+  curl -s http://localhost:8080/api/customers/CUS-9999
+
+  HTTP 500
+
+IllegalArgumentException from the service, unmapped. A 404 needs the advice that
+lab 29 adds.
+
+
+LIST
+
+The starter has no GET /api/customers. On the timed path list() is read through
+CustomerServiceTest.listReturnsSeedsAndCreated: 2 seeds, create CUS-1003, 3.
+The full path adds the route.
+
+  curl -s -H "X-Correlation-Id: lab-request-001" http://localhost:8080/api/customers
+
+  [{"id":"CUS-1002","name":"Ravi Singh","email":"ravi.singh@example.com","status":"PROSPECT"},{"id":"CUS-1001","name":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"}] HTTP 200
+
+Order comes from ConcurrentHashMap, not from insertion, so CUS-1002 lands first.
+
+
+FULL PATH, ACTIVATE CUS-1002
+
+  curl -s -X PATCH http://localhost:8080/api/customers/CUS-1002/status -H "Content-Type: application/json" -H "X-Correlation-Id: lab-request-001" -d "{\"status\":\"ACTIVE\"}"
+
+  {"id":"CUS-1002","name":"Ravi Singh","email":"ravi.singh@example.com","status":"ACTIVE"} HTTP 200
+
+PROSPECT to ACTIVE is in the allowed column of the lab 15 table. The rejections
+are experiment 2 in 03-failure-experiments.txt.

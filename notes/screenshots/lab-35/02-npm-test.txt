@@ -1,0 +1,50 @@
+Lab 35 SPA tests and build, captured 2026-08-14
+Windows, Node v20.18.0, npm 10.8.2, Vite 5.4.21, Vitest 2.1.9,
+examples\lab35-crm\crm-ui
+
+Vitest on jsdom, fetch stubbed with vi.stubGlobal, no live API needed.
+
+
+  npm run test -- --run
+
+  Test Files  2 passed (2)
+       Tests  16 passed (16)
+
+  npm run test -- --run
+
+  Test Files  2 passed (2)
+       Tests  16 passed (16)
+
+Two consecutive runs, same result.
+
+src/api/customers.test.ts, the response classes:
+
+  200 list maps api fields to ui fields      id/name become customerId/fullName
+  201 create sends correlation header        X-Correlation-Id lab-request-001 asserted on the request
+  400 becomes ApiError http with fieldErrors {email: Enter a valid email}
+  500 becomes ApiError http                  server message surfaced, no HTML dump
+  network failure becomes ApiError network   Cannot reach the CRM service
+  abort becomes ApiError abort               AbortError converted at the boundary
+
+src/App.test.tsx, the flows against a mocked server:
+
+  loads seed customers from the api          role=status while loading, then Amina and Ravi
+  empty state when the api returns []        No customers yet
+  error state with retry when the load fails alert + Retry, retry refetches and recovers
+  search amina leaves one card
+  search miss shows the not-found empty state
+  creates a valid customer exactly once via POST
+  client validation blocks an invalid create fetch call count unchanged, no POST
+  maps a backend 400 fieldErrors body onto the form
+  edits Ravi through PUT and shows the updated name
+  cancel discards a typed draft
+
+
+  npm run build
+
+  dist/index.html                  0.35 kB
+  dist/assets/index-DoYHURJ2.js  148.45 kB
+  built in 1.85s
+
+tsc -b exits 0. The GUIDE hard gate names Node 22+, this machine runs Node
+20.18.0 and every command works, recorded as found.

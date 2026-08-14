@@ -1,0 +1,30 @@
+Lab 35 CORS evidence, captured 2026-08-14
+Backend: examples\lab35-crm\crm-api, WebConfig allowlist http://localhost:5173
+
+
+  curl -s -D - -H "Origin: http://localhost:5173" http://localhost:8080/api/customers
+
+  HTTP/1.1 200
+  Vary: Origin
+  Access-Control-Allow-Origin: http://localhost:5173
+  Content-Type: application/json
+
+Allowed origin gets the ACAO header echoing exactly the allowlisted origin.
+
+
+  curl -i -H "Origin: https://evil.example" http://localhost:8080/api/customers
+
+  HTTP/1.1 403
+  Vary: Origin
+
+  Invalid CORS request
+
+Evil origin gets 403 and no Access-Control-Allow-Origin header at all.
+Spring MVC's CORS filter rejects before the controller runs, stricter than
+the minimum the GUIDE asks for (which is only that no ACAO echo appears).
+
+In the browser network tab the SPA's GET and POST are preceded by OPTIONS
+preflights answered 200, then the real request. The allowlist names the
+Vite origin exactly, port included, methods GET POST PUT PATCH DELETE,
+headers Content-Type Authorization X-Correlation-Id (Authorization is
+unused until lab 36, allowed now so the helper stays injectable).
