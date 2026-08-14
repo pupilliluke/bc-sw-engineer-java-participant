@@ -1,0 +1,41 @@
+Lab 34 failure experiments, captured 2026-08-14
+examples\lab34-crm\crm-ui, each break was made, observed, then restored.
+
+1. customers.push(newRow) instead of functional spread
+
+   Replaced the create branch with a push inside the updater that returns
+   prev. The RTL create test STILL PASSED, the other setState calls in
+   handleSubmit force a re-render and the mutated array already holds the
+   row, so the suite masks this bug. In the browser under StrictMode the
+   same create rendered Lena Cho TWICE and the title jumped to CRM (4),
+   StrictMode invokes the updater twice and both invocations pushed into
+   the same array. Restored [...prev, row] and the browser adds one row.
+   The lesson is that the immutability rule is enforced by StrictMode in
+   dev, not by the tests.
+
+2. Filtered list stored in useState, synced by useEffect
+
+   Added const [filtered, setFiltered] = useState([]) and an effect with no
+   dependency array that setFiltered(customers.filter(...)). A single test
+   run hung past the 180 second timeout and had to be killed, every render
+   allocates a new array, setState schedules another render, the loop never
+   settles. Removed the state and the effect, visible stays a render-time
+   computation.
+
+3. Submit blank name
+
+   Blank submit in the browser shows Name is required and Enter a valid
+   email as role=alert regions and the list keeps 2 rows. Same behavior
+   asserted in the invalid-create test. Validation returns before any
+   setCustomers call, so the store cannot take a bad row.
+
+4. Cancel after typing
+
+   Typed Temp Person into a create draft and cancelled. Draft and errors
+   reset, mode returns to list, the form unmounts, seeds intact. Covered by
+   the cancel test and repeated in the browser.
+
+5. Run tests twice
+
+   7 passed and 7 passed on consecutive runs, output identical, no shared
+   state between tests, evidence in 01-npm-test.txt.

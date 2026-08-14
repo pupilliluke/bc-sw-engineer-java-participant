@@ -1,0 +1,45 @@
+Lab 34 React state tests and build, captured 2026-08-14
+Windows, Node v20.18.0, npm 10.8.2, Vite 5.4.x, Vitest 2.1.9,
+examples\lab34-crm\crm-ui
+
+Vitest on jsdom.
+
+
+  npm run test -- --run
+
+  Test Files  1 passed (1)
+       Tests  7 passed (7)
+
+  npm run test -- --run
+
+  Test Files  1 passed (1)
+       Tests  7 passed (7)
+
+Two consecutive runs, same result. The tests are:
+
+  shows seed customers                    Amina and Ravi visible
+  search amina leaves one card            Ravi absent after typing amina
+  search miss shows the empty state       missing renders No customers found
+  creates a valid customer exactly once   Lena Cho appears once, form closes
+  invalid create shows field errors       Name is required, Enter a valid email, 2 listitems
+  edits Ravi and saves the updated name   form pre-filled Ravi Singh, saves Ravi Kumar, Amina untouched
+  cancel discards a typed draft           Temp Person gone, 2 listitems
+
+The create, update and cancel handlers log lab-request-001, visible in the
+test stdout and in the browser console.
+
+
+  npm run build
+
+  dist/index.html                  0.35 kB
+  dist/assets/index-BCFf_AZZ.js  145.74 kB
+  built in 1.28s
+
+tsc -b exits 0. Browser pass against npm run dev on StrictMode: blank submit
+shows both alerts and typing in Full name clears only that field's message,
+create adds one Lena Cho row and the tab title goes CRM (2) to CRM (3),
+editing Ravi to ACTIVE persists on reopen, cancel closes the form with
+records intact, search amina leaves one card and the title reads CRM (1).
+
+The GUIDE hard gate names Node 22+. This machine runs Node 20.18.0 and every
+command above works, Vite 5 requires 18+. Recorded as found.
