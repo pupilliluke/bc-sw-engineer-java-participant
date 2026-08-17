@@ -1,0 +1,58 @@
+Lab 36 auth transcripts, captured 2026-08-17
+Backend: examples\lab36-crm\crm-api on http://localhost:8080
+Bearer values are redacted, the demo logins are agent1/agent1 and
+admin1/admin1 from CrmUserDetailsService.
+
+
+1. Anonymous read is rejected
+
+  curl -s -i http://localhost:8080/api/customers
+
+  HTTP/1.1 401
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Content-Security-Policy: default-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'
+  Referrer-Policy: no-referrer
+
+No ProtectedRoute involved, the API answers 401 on its own.
+
+
+2. Login issues a token
+
+  curl -s -i -X POST http://localhost:8080/api/auth/login \
+    -H "Content-Type: application/json" \
+    -d '{"username":"agent1","password":"agent1"}'
+
+  HTTP/1.1 200
+  {"accessToken":"lab.agent1.AGENT.<redacted>","tokenType":"Bearer","role":"AGENT","username":"agent1"}
+
+
+3. Wrong password and unknown user answer the same way
+
+  curl POST /api/auth/login agent1 / wrong    status=401
+  curl POST /api/auth/login nobody / nobody   status=401
+
+Same status, same body, no way to tell an existing account from a missing
+one. The UI shows one string for both, "Invalid username or password".
+
+
+4. Agent token reads customers
+
+  curl -s -H "Authorization: Bearer <agent token>" \
+    -H "X-Correlation-Id: lab-request-001" \
+    http://localhost:8080/api/customers
+
+  HTTP/1.1 200
+  [{"id":"CUS-1002","name":"Ravi Singh","email":"ravi.singh@example.com","status":"PROSPECT"},
+   {"id":"CUS-1001","name":"Amina Khan","email":"amina.khan@example.com","status":"ACTIVE"}]
+
+
+5. 401 and 403 are different responses
+
+  GET /api/admin/ping with the agent token    status=403
+  GET /api/admin/ping with the admin token    status=200 {"role":"ADMIN","ok":"true"}
+  GET /api/customers with a garbage signature status=401
+
+403 means the token is good and the role is not. 401 means there is no
+usable identity. The UI splits them, 401 clears the token and returns to
+sign in, 403 keeps the session and shows a forbidden message.

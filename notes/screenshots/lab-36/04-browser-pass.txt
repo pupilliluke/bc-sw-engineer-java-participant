@@ -1,0 +1,94 @@
+Lab 36 browser pass, captured 2026-08-17
+examples\lab36-crm, live crm-api on 8080 and Vite on 5173.
+
+
+1. Anonymous visit
+
+http://localhost:5173 renders "Sign in to Northstar CRM" with the username
+and password fields. No customer data in the DOM, the workspace never
+mounts.
+
+
+2. Open redirect probe
+
+  http://localhost:5173/?returnUrl=https://evil.example.com/steal
+
+location.href still carries the parameter, the page reads "You will return
+to / after signing in." safeReturnPath dropped the external value and fell
+back to /. Same for //evil.example.com, /\evil.example.com and
+javascript:alert(1), covered in security.test.tsx.
+
+Deep link, http://localhost:5173/customers/CUS-1002 while signed out, the
+page reads "You will return to /customers/CUS-1002 after signing in." The
+same path with ?returnUrl=https://evil.example.com/steal appended reads
+"You will return to / after signing in.", the blocked path is kept and the
+attacker's parameter is discarded.
+
+
+3. Wrong password
+
+Submitting agent1 with a wrong password shows one role=alert reading
+"Invalid username or password". Nothing about which half was wrong.
+
+
+4. Sign in
+
+agent1 / agent1 renders "Signed in as agent1 (AGENT)" with the two seeds,
+tab title CRM (2). Network panel:
+
+  OPTIONS /api/auth/login   200
+  POST    /api/auth/login   401     (the wrong-password attempt)
+  OPTIONS /api/auth/login   200
+  POST    /api/auth/login   200
+  OPTIONS /api/customers    200
+  GET     /api/customers    net::ERR_ABORTED
+  GET     /api/customers    200
+
+The aborted GET is StrictMode's double mount and the AbortController
+cleanup, same as lab 35. The Authorization header rides on the second GET,
+redacted here.
+
+
+5. Storage after login
+
+  localStorage.length        0
+  sessionStorage.length      0
+  document.cookie            (empty)
+
+The token is in a module variable and nowhere else. Application tab shows
+nothing under Local Storage, Session Storage or Cookies.
+
+
+6. XSS probe through the real stack
+
+Created a customer named
+
+  <img onerror=alert(1)> Amina <b>Khan</b>
+
+through the form, so the string went to Spring, was stored, and came back
+on the next render. In the DOM:
+
+  document.querySelectorAll('img').length   0
+  document.querySelectorAll('b').length     0
+  main script nodes                         0
+  list item text  "<img onerror=alert(1)> Amina <b>Khan</b> ... PROSPECT Edit"
+
+No alert fired. The payload is text in a span, angle brackets visible.
+
+
+7. Sign out
+
+Body text drops to the sign-in page, no Amina, no Ravi, no CUS-100 ids
+anywhere in the DOM, storage still empty. Browser back returns to / and
+still renders the sign-in page, no cached PII view.
+
+
+8. localStorage failure experiment
+
+  localStorage.setItem('accessToken','lab-token-001')
+  Object.entries(localStorage)  ->  accessToken=lab-token-001
+  localStorage.removeItem('accessToken')
+
+Any script on the page reads it in one line, no XSS needed to demonstrate
+the read. Nothing in this UI writes a token to web storage. Removed
+immediately after.

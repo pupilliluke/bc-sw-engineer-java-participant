@@ -1,0 +1,53 @@
+Lab 36 token forgery finding and fix, captured 2026-08-17
+Backend: examples\lab36-crm\crm-api, JwtService
+
+Found while running the lab's own abuse probes against the token format
+carried over from lab 29. Recorded because it changed the code.
+
+
+BEFORE
+
+lab 29's JwtService built the token as
+
+  "lab." + subject + "." + role + "." + Integer.toHexString(secret.hashCode())
+
+The fourth segment is derived from the secret alone, so it is the same
+string in every token the server ever issues and it says nothing about who
+the token is for. Any user who signs in once can edit the role segment of
+their own token and keep the signature.
+
+  agent token: lab.agent1.AGENT.<sig>
+  edited     : lab.agent1.ADMIN.<same sig>
+
+  curl -s -o /dev/null -w "%{http_code}" \
+    -H "Authorization: Bearer lab.agent1.ADMIN.<same sig>" \
+    http://localhost:8080/api/admin/ping
+
+  200
+
+An AGENT reached the ADMIN endpoint by editing a request it already
+controls, no XSS and no stolen token involved.
+
+
+AFTER
+
+The signature now covers the claims, HmacSHA256 over subject + "." + role
+with the configured secret, base64url, compared with
+MessageDigest.isEqual.
+
+  GET /api/admin/ping  with lab.agent1.ADMIN.<agent sig>   status=401
+  GET /api/customers   with lab.agent1.ADMIN.<agent sig>   status=401
+  GET /api/customers   with the real agent token            status=200
+  GET /api/admin/ping  with the real agent token            status=403
+
+Regression test: SecurityRulesTest.roleEscalatedTokenIsRejected takes a
+freshly issued agent token, swaps the role segment, keeps the signature and
+expects 401.
+
+
+STILL A LAB STUB
+
+No exp claim, so the token does not expire server-side, and the header and
+payload are not real JWT JSON. The 401 expiry path is proven in the UI
+tests instead of by a clock. A production build would use a real JWT
+library with exp, iss and aud validated on every request.

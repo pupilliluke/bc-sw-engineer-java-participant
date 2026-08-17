@@ -1,0 +1,54 @@
+Lab 36 test and build runs, captured 2026-08-17
+
+
+FRONTEND, examples\lab36-crm\crm-ui
+
+  npm run test -- --run     (run 1)
+  Test Files  4 passed (4)
+       Tests  30 passed (30)
+
+  npm run test -- --run     (run 2)
+  Test Files  4 passed (4)
+       Tests  30 passed (30)
+
+  npm run build
+  tsc -b && vite build
+  dist/assets/index-*.js  152 kB, built in 867ms, no type errors
+
+The 30 are 6 response-class tests and 10 flow tests carried from lab 35,
+3 XSS proofs and 11 security tests added here. No API is running during the
+suite, fetch is mocked, the token fixture is lab-token-001.
+
+The 11 security tests:
+
+  token stays out of local and session storage
+  bearer and correlation id ride on CRM API calls
+  no bearer on another origin
+  401 clears the token and returns to sign in
+  403 keeps the session and shows a forbidden message
+  bad credentials give one generic message
+  submit disabled while the login request is in flight
+  sign out clears the token and the rendered customer data
+  external returnUrl rejected, internal paths kept
+  blocked deep link kept, external returnUrl on it dropped
+  the sign-in screen shows the blocked deep link
+
+
+BACKEND, examples\lab36-crm\crm-api
+
+  mvn test     (both runs)
+  CustomerServiceTest   Tests run: 6,  Failures: 0
+  SecurityRulesTest     Tests run: 8,  Failures: 0
+  Total                 Tests run: 14, Failures: 0
+  BUILD SUCCESS
+
+The 8 security rules:
+
+  anonymous list is 401
+  agent token lists customers
+  agent token on the admin endpoint is 403
+  tampered signature is 401
+  role-escalated token with a valid signature is 401
+  bad credentials are 401
+  login issues a token for the demo agent
+  CSP, nosniff, referrer-policy and frame-options are on the response

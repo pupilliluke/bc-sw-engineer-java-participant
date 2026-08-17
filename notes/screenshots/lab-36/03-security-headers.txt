@@ -1,0 +1,63 @@
+Lab 36 security headers and CORS evidence, captured 2026-08-17
+Backend: examples\lab36-crm\crm-api, SecurityConfig headers block
+
+
+1. GUIDE step 11 capture
+
+  curl -I http://localhost:8080
+
+  HTTP/1.1 401
+  Vary: Origin
+  Vary: Access-Control-Request-Method
+  Vary: Access-Control-Request-Headers
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+  X-Frame-Options: DENY
+  Content-Security-Policy: default-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'
+  Referrer-Policy: no-referrer
+  Content-Type: application/json
+
+The three the GUIDE asks for are all present, CSP with frame-ancestors
+'none', nosniff and no-referrer. X-Frame-Options: DENY and the no-store
+cache headers are Spring Security defaults left in place. X-XSS-Protection:
+0 is also a default and is correct, the old browser auditor it disables
+introduced its own bugs, CSP is the replacement.
+
+The same headers come back on an authenticated 200, so they are on every
+API response and not only on errors.
+
+
+2. HSTS is absent on purpose
+
+Spring Security only emits Strict-Transport-Security on HTTPS requests and
+this lab runs on plain http://localhost. Production needs HTTPS with HSTS
+at the API and at the SPA host, noted in docs/security-decisions.md.
+
+
+3. CORS allowlist still holds with Authorization in play
+
+  curl -H "Origin: http://localhost:5173" ... /api/customers
+  HTTP/1.1 200
+  Access-Control-Allow-Origin: http://localhost:5173
+
+  curl -H "Origin: https://evil.example" ... /api/customers
+  HTTP/1.1 403
+  (no Access-Control-Allow-Origin header)
+
+  curl -X OPTIONS -H "Origin: http://localhost:5173" \
+    -H "Access-Control-Request-Method: GET" \
+    -H "Access-Control-Request-Headers: authorization,x-correlation-id" \
+    /api/customers
+  HTTP/1.1 200
+  Access-Control-Allow-Origin: http://localhost:5173
+  Access-Control-Allow-Methods: GET,POST,PUT,PATCH,DELETE,OPTIONS
+  Access-Control-Allow-Headers: authorization, x-correlation-id
+
+The preflight now matters, a request carrying Authorization is never
+simple. The allowlist moved from WebMvcConfigurer.addCorsMappings to a
+CorsConfigurationSource bean so Spring Security's CorsFilter owns it, the
+lab 35 mapping would have left MVC and the security chain both writing
+these headers.
