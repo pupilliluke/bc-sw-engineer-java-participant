@@ -1,0 +1,90 @@
+Lab 37 negative tests and failure experiments, captured 2026-08-17
+examples\lab37-crm, run as crm_app with \set VERBOSITY verbose so the
+five-digit SQLSTATE appears beside every error.
+
+The GUIDE names Oracle codes (ORA-02290, ORA-00001, ORA-02291). This is a
+PostgreSQL lab, so what follows are the SQLSTATE equivalents. Mapping
+table in database\design-decisions.md.
+
+
+NEGATIVE TESTS, each inside a SAVEPOINT, rolled back
+
+1. invalid status
+   INSERT ... status 'UNKNOWN'
+   ERROR:  23514: new row for relation "customer" violates check
+           constraint "ck_customer_status"
+
+2. duplicate email
+   INSERT ... email_normalized 'amina@example.com'
+   ERROR:  23505: duplicate key value violates unique constraint
+           "uk_customer_email"
+   DETAIL: Key (email_normalized)=(amina@example.com) already exists.
+
+3. orphan account
+   INSERT INTO account ... customer_id 999999
+   ERROR:  23503: insert or update on table "account" violates foreign key
+           constraint "fk_account_customer"
+   DETAIL: Key (customer_id)=(999999) is not present in table "customer".
+
+4. missing full_name
+   INSERT ... full_name NULL
+   ERROR:  23502: null value in column "full_name" of relation "customer"
+           violates not-null constraint
+
+5. delete a customer that owns an account
+   DELETE FROM customer WHERE public_id = 'CUS-1001'
+   ERROR:  23503: update or delete on table "customer" violates foreign
+           key constraint "fk_account_customer" on table "account"
+   DETAIL: Key (customer_id)=(1) is still referenced from table "account".
+
+6. uppercase email
+   INSERT ... email_normalized 'Mixed@Example.com'
+   ERROR:  23514: new row for relation "customer" violates check
+           constraint "ck_customer_email_lower"
+
+Tests 4, 5 and 6 are beyond the GUIDE's three. 5 is the ON DELETE RESTRICT
+decision from the ER sketch actually being enforced, and 6 proves the
+column called email_normalized really is normalized rather than just named
+that way.
+
+After all of them: 2 customers, 1 account, 1 history row. No net change.
+
+
+FAILURE EXPERIMENTS
+
+1. Token of the money argument, float vs numeric
+
+   SELECT 0.1::float8 + 0.2::float8, 0.1::numeric + 0.2::numeric;
+
+    float_sum           | float = 0.3 | numeric_sum | numeric = 0.3
+    0.30000000000000004 | f           | 0.3         | t
+
+   SELECT sum(0.01::float8), sum(0.01::numeric) FROM generate_series(1,1000);
+
+    float_total       | numeric_total
+    9.999999999999831 | 10.00
+
+   A thousand one-cent additions land 1.69e-13 short in binary floating
+   point. That is the entire case for NUMERIC(19,2) on balance: cents are
+   decimal, and float8 cannot represent 0.01 exactly.
+
+2. Drop the parent before the children
+
+   DROP TABLE customer;
+   ERROR:  2BP01: cannot drop table customer because other objects depend on it
+   DETAIL: constraint fk_account_customer on table account depends on table customer
+           constraint fk_address_customer on table address depends on table customer
+           constraint fk_hist_customer on table customer_status_history depends on table customer
+      Use DROP ... CASCADE to drop the dependent objects too.
+
+   PostgreSQL's 2BP01 dependent_objects_still_exist is the equivalent of
+   the ORA dependency error the GUIDE expects. Schema intact afterwards,
+   still 4 tables and 2 customers. 05_drop.sql avoids this by dropping
+   children first, and adds CASCADE so a rerun is not order-sensitive.
+
+   Note on the transcript: the savepoints around this experiment were
+   rejected with 25P01, SAVEPOINT can only be used in transaction blocks,
+   because that psql session was in autocommit with no BEGIN. The DROP
+   still failed on its own, so nothing was lost, and the schema was
+   re-checked immediately after. The savepoints inside 04_verify.sql work
+   because that script opens a transaction with BEGIN first.

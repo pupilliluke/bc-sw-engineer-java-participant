@@ -1,0 +1,23 @@
+Lab 38 step 7 — ACTIVE list, before/after ix_customer_status_created
+Query: WHERE status='ACTIVE' ORDER BY created_at DESC, customer_id DESC FETCH FIRST 20 ROWS ONLY
+
+--- before ---
+Limit  (cost=2560.85..2560.90 rows=20 width=31) (actual time=10.066..10.070 rows=20 loops=1)
+  Buffers: shared hit=1006
+  ->  Sort  (cost=2560.85..2648.20 rows=34943 width=31)
+        Sort Key: created_at DESC, customer_id DESC
+        Sort Method: top-N heapsort  Memory: 26kB
+        ->  Seq Scan on customer  (rows=35001)
+              Filter: ((status)::text = 'ACTIVE'::text)
+              Rows Removed by Filter: 15001
+Execution Time: 10.086 ms   (three runs: 10.086 / 10.568 / 12.525, median 10.57)
+
+--- after ---
+Limit  (cost=0.41..3.14 rows=20 width=31) (actual time=0.040..0.061 rows=20 loops=1)
+  Buffers: shared hit=20 read=3
+  ->  Index Scan using ix_customer_status_created on customer  (rows=20)
+        Index Cond: ((status)::text = 'ACTIVE'::text)
+Execution Time: 0.074 ms    (three runs: 0.074 / 0.070 / 0.051, median 0.070)
+
+The win is ordering, not filtering: ACTIVE matches 70% of the table, but the
+index delivers rows pre-sorted so the Limit stops at entry 20.

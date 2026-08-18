@@ -1,0 +1,17 @@
+Lab 38 step 12 — challenge ix_customer_status_created (05_cleanup_indexes.sql)
+
+with index, list page:      Index Scan -> Limit          Buffers 23      0.116 ms
+with index, status COUNT(*): Seq Scan (index ignored)    Buffers 1006    8.047 ms
+  -> low-selectivity prediction confirmed: equality on 70% of the table does
+     not use the index even when present; the ordering is what pays.
+DROP INDEX; ANALYZE
+without index, list page:   Seq Scan -> top-N heapsort   Buffers 1006    9.506 ms
+without index, 5k inserts:  Buffers 37692                71.768 ms  (rolled back)
+CREATE INDEX; ANALYZE  -- regression justifies recreation
+restored, list page:        Index Scan -> Limit          Buffers 23      0.135 ms
+with index, 5k inserts:     Buffers 64684                82.492 ms  (rolled back)
+
+Write cost of the composite: ~27,000 extra buffers per 5,000 inserts.
+Final state: ix_account_customer, ix_customer_status_created, pk_account,
+pk_customer, uk_account_number, uk_customer_email, uk_customer_public.
+50,002 customers; CUS-1001 ACTIVE and CUS-1002 PROSPECT preserved.

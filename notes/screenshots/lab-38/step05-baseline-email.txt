@@ -1,0 +1,14 @@
+Lab 38 step 5 — baseline email lookup, EXPLAIN (ANALYZE, BUFFERS)
+bind: user000001@example.test  |  50,002 rows loaded, ANALYZE gathered
+
+Index Scan using uk_customer_email on customer  (cost=0.41..8.43 rows=1 width=46) (actual time=0.017..0.018 rows=1 loops=1)
+  Index Cond: ((email_normalized)::text = 'user000001@example.test'::text)
+  Buffers: shared hit=4
+Planning:
+  Buffers: shared hit=15
+Planning Time: 0.067 ms
+Execution Time: 0.037 ms
+
+Median of five runs: 0.058 ms (0.051-0.080). Execution buffers 4 on every run.
+Baseline is already an Index Scan: uk_customer_email is inherited from the
+Lab 37 UNIQUE constraint, so no TABLE ACCESS FULL exists to start from.

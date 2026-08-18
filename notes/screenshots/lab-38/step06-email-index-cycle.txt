@@ -1,0 +1,21 @@
+Lab 38 step 6 — email index, manufactured before/after (03_indexes.sql)
+The inherited constraint was dropped on purpose, measured, index rebuilt,
+constraint restored by promotion. Same query and bind as step 5.
+
+--- no index on email_normalized ---
+Seq Scan on customer  (cost=0.00..1545.03 rows=1 width=46) (actual time=0.008..3.239 rows=1 loops=1)
+  Filter: ((email_normalized)::text = 'user000001@example.test'::text)
+  Rows Removed by Filter: 50001
+  Buffers: shared hit=920
+Execution Time: 3.251 ms
+
+--- with ux_customer_email_norm (later promoted to uk_customer_email) ---
+Index Scan using ux_customer_email_norm on customer  (cost=0.41..8.43 rows=1 width=46) (actual time=0.097..0.099 rows=1 loops=1)
+  Index Cond: ((email_normalized)::text = 'user000001@example.test'::text)
+  Buffers: shared hit=1 read=3
+Execution Time: 0.114 ms
+
+--- write cost, 5,000 inserts, rolled back ---
+without index: Buffers: shared hit=32609 dirtied=99 written=99   Execution Time: 38.096 ms
+with index:    Buffers: shared hit=35486 dirtied=164 written=155 Execution Time: 56.414 ms
+(~2,877 extra buffers per 5,000 inserts; timings overlap across runs, buffers stable)

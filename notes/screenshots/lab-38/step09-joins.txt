@@ -1,0 +1,24 @@
+Lab 38 step 9 — join strategies, customer -> account
+
+--- selective: public_id = 'CUS-1001' ---
+Nested Loop  (cost=0.58..16.62 rows=1 width=29) (actual time=0.055..0.057 rows=1 loops=1)
+  Buffers: shared hit=6
+  ->  Index Scan using uk_customer_public on customer c  (rows=1)
+        Index Cond: ((public_id)::text = 'CUS-1001'::text)
+  ->  Index Scan using ix_account_customer on account a  (rows=1)
+        Index Cond: (customer_id = c.customer_id)
+Execution Time: 0.072 ms
+
+--- broad: all ACTIVE customers with accounts, aggregated ---
+GroupAggregate  (actual time=50.911..50.914 rows=1 loops=1)
+  Buffers: shared hit=1320
+  ->  Hash Join  (cost=2069.34..2698.98 rows=17532) (actual rows=20001)
+        Hash Cond: (a.customer_id = c.customer_id)
+        ->  Seq Scan on account a  (rows=25001)
+        ->  Hash  (rows=35001)  Buckets: 65536  Batches: 1  Memory Usage: 2153kB
+              ->  Seq Scan on customer c  (rows=35001)
+                    Filter: ((status)::text = 'ACTIVE'::text)
+Execution Time: 51.028 ms
+
+Planner flips on estimated outer rows: 1 -> nested loop, 35,065 -> hash.
+Hashed the larger side to minimize probe count; Batches: 1 = no spill.
