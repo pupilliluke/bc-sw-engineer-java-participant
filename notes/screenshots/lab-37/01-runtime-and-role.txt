@@ -1,0 +1,76 @@
+Lab 37 runtime and least-privilege role, captured 2026-08-17
+examples\lab37-crm, PostgreSQL 17 in Docker, database crm on localhost:5432
+Passwords live in .env only and are redacted here.
+
+
+1. Runtime
+
+  docker compose up -d
+  docker compose ps
+
+  NAME           STATUS                   PORTS
+  crm-postgres   Up 7 seconds (healthy)   0.0.0.0:5432->5432/tcp
+
+  docker volume ls
+  local     lab37-crm_crm_pgdata
+
+The named volume holds /var/lib/postgresql/data, so docker compose down
+keeps the data and only down -v destroys it. The compose file adds a
+pg_isready healthcheck, which is what "healthy" above is reporting.
+
+Docker Desktop had to be repaired before this ran. A zero-byte socket at
+AppData\Local\Docker\run\userAnalyticsOtlpHttp.sock, dated six days
+earlier, was a dangling reparse point that could not be opened, deleted or
+cleared with fsutil, and Docker treats its own failed cleanup as fatal.
+Moving the run directory aside let Docker recreate it and start.
+
+
+2. Two roles, not one
+
+  psql -h localhost -U crm_admin -d crm \
+    -v crm_app_password="$CRM_APP_PASSWORD" -f database/01_create_user.sql
+
+  CREATE ROLE
+  ALTER ROLE
+  GRANT
+  CREATE SCHEMA
+  GRANT
+  REVOKE
+  ALTER ROLE
+
+    rolname  | rolsuper | rolcreatedb | rolcreaterole | rolbypassrls | rolcanlogin
+  -----------+----------+-------------+---------------+--------------+-------------
+   crm_admin | t        | t           | t             | t            | t
+   crm_app   | f        | f           | f             | f            | t
+
+crm_admin is the container bootstrap superuser from POSTGRES_USER.
+crm_app is the application role: it can log in and it owns schema crm_app,
+and every other flag is false. The GUIDE's docker run sets
+POSTGRES_USER=crm_app, which would have made the application role the
+superuser and step 4 impossible to satisfy honestly.
+
+The password is passed as a psql variable and generated into the CREATE
+ROLE statement with \gexec, so it is not written in 01_create_user.sql.
+
+
+3. Least-privilege probes, all as crm_app
+
+  CREATE TABLE public.should_fail (id int);
+  ERROR:  42501: permission denied for schema public
+
+  CREATE DATABASE hijack;
+  ERROR:  42501: permission denied to create database
+
+  CREATE ROLE sneaky LOGIN;
+  ERROR:  42501: permission denied to create role
+  DETAIL:  Only roles with the CREATEROLE attribute may create roles.
+
+  SELECT rolname, rolpassword FROM pg_authid LIMIT 1;
+  ERROR:  42501: permission denied for table pg_authid
+
+  DROP SCHEMA information_schema CASCADE;
+  ERROR:  42501: must be owner of schema information_schema
+
+42501 is insufficient_privilege. The role can do its job inside crm_app
+and nothing outside it, which is the difference between an SQL injection
+that reads one schema and one that owns the instance.

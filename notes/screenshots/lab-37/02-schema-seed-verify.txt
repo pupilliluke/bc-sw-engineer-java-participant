@@ -1,0 +1,105 @@
+Lab 37 schema, seed and verification, captured 2026-08-17
+examples\lab37-crm\database, run as crm_app against database crm
+
+
+1. Apply
+
+  psql -f database/02_schema.sql
+  CREATE TABLE  x4      customer, account, address, customer_status_history
+  CREATE INDEX  x3      ix_account_customer, ix_address_customer,
+                        ix_history_customer_time
+
+  psql -f database/03_seed.sql
+  BEGIN, INSERT 0 1 x5, COMMIT
+
+
+2. Named constraints, all 17
+
+  conname                 contype
+  ck_account_status       c
+  ck_account_type         c
+  ck_address_type         c
+  ck_customer_email_lower c
+  ck_customer_status      c
+  ck_hist_new_status      c
+  ck_hist_transition      c
+  fk_account_customer     f
+  fk_address_customer     f
+  fk_hist_customer        f
+  pk_account              p
+  pk_address              p
+  pk_cust_status_hist     p
+  pk_customer             p
+  uk_account_number       u
+  uk_customer_email       u
+  uk_customer_public      u
+
+Every one is named in the DDL rather than left to PostgreSQL to generate,
+which is why the error messages further down name the rule that failed.
+
+
+3. Seeds
+
+   public_id | full_name  |  status
+  -----------+------------+----------
+   CUS-1001  | Amina Khan | ACTIVE
+   CUS-1002  | Ravi Singh | PROSPECT
+
+   public_id | account_number | balance | currency
+  -----------+----------------+---------+----------
+   CUS-1001  | ACCT-1001-01   | 2500.00 | CAD
+   CUS-1002  |                |         |
+
+Ravi's null columns are the LEFT JOIN showing a customer with zero
+accounts. An inner join drops him entirely, which is the whole reason he
+is a fixture.
+
+   public_id | old_status | new_status | correlation_id
+  -----------+------------+------------+-----------------
+   CUS-1001  | PROSPECT   | ACTIVE     | lab-request-001
+
+
+4. Money is exact
+
+   column_name | data_type | numeric_precision | numeric_scale
+  -------------+-----------+-------------------+---------------
+   balance     | numeric   |                19 |             2
+
+
+5. Indexes are used
+
+  EXPLAIN (COSTS OFF) SELECT * FROM account WHERE customer_id = 1;
+   Index Scan using ix_account_customer on account
+     Index Cond: (customer_id = 1)
+
+  EXPLAIN (COSTS OFF)
+  SELECT * FROM customer_status_history WHERE customer_id = 1 ORDER BY changed_at;
+   Index Scan using ix_history_customer_time on customer_status_history
+     Index Cond: (customer_id = 1)
+
+PostgreSQL indexes a PRIMARY KEY and a UNIQUE automatically but never a
+foreign key, so these three are the ones the DDL has to create. The
+history index is (customer_id, changed_at) so the timeline comes back
+ordered without a sort.
+
+
+6. Drop and recreate
+
+  psql -f database/05_drop.sql
+  DROP TABLE x4, then zero rows in information_schema.tables for crm_app
+
+  psql -f database/02_schema.sql   then   psql -f database/03_seed.sql
+
+   public_id | full_name  |  status
+  -----------+------------+----------
+   CUS-1001  | Amina Khan | ACTIVE
+   CUS-1002  | Ravi Singh | PROSPECT
+
+   public_id | account_number | balance
+  -----------+----------------+---------
+   CUS-1001  | ACCT-1001-01   | 2500.00
+   CUS-1002  |                |
+
+Identical after a full drop. The seed looks the parent up by public_id
+rather than hardcoding customer_id = 1, so it does not care that the
+identity counter starts over on a fresh table.
