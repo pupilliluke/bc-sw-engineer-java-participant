@@ -1,0 +1,14 @@
+Lab 39 -- fixtures present through the API
+
+$ curl -H "Authorization: Bearer <agent1 token>" http://localhost:8080/api/customers
+
+[{"id":"CUS-1001","name":"Amina Khan","email":"amina@example.com","status":"ACTIVE"},
+ {"id":"CUS-1002","name":"Ravi Singh","email":"ravi@example.com","status":"PROSPECT"}]
+
+Seeded by FixtureLoader, a CommandLineRunner that is idempotent by public_id,
+not by a Flyway migration. Fixtures are not schema, and a migration that
+inserted them would carry lab data into every environment that ran it.
+
+The response is CustomerResponse, not CustomerEntity: id is public_id and name
+is full_name, the shape the UI has used since lab 34. The surrogate customer_id
+and the @Version counter never leave the service.

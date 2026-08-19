@@ -287,7 +287,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
-@Query("select c from CustomerEntity c where lower(c.normalizedEmail) = lower(:email)")
+@Query("select c from CustomerEntity.java c where lower(c.normalizedEmail) = lower(:email)")
 Optional<CustomerEntity> findByEmailIgnoreCase(@Param("email") String email);
 ```
 

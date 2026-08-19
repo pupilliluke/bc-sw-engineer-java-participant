@@ -1,0 +1,19 @@
+Lab 39 failure experiment 1 -- PostgreSQL stopped, app started
+
+$ docker stop crm-postgres-lab39
+$ mvn -o spring-boot:run
+
+com.zaxxer.hikari.HikariDataSource : HikariPool-1 - Starting...
+ConfigServletWebServerApplicationContext : Exception encountered during context
+initialization - cancelling refresh attempt:
+org.springframework.beans.factory.BeanCreationException: Error creating bean
+with name 'entityManagerFactory' ... Failed to initialize dependency
+'flywayInitializer' ... Unable to obtain connection from database:
+Connection to localhost:5432 refused. Check that the hostname and port are
+correct and that the postmaster is accepting TCP/IP connections.
+
+The application does not start. The failure is at flywayInitializer, before
+Hibernate and before Tomcat, so there is no half-started app serving requests
+against a dead pool.
+
+Restore: docker start crm-postgres-lab39  -> healthy

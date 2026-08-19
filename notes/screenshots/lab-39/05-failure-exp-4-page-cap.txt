@@ -1,0 +1,17 @@
+Lab 39 failure experiment 4 -- unbounded page size is capped
+
+$ curl -H "Authorization: Bearer <agent1 token>" \
+    "http://localhost:8080/api/customers/page?status=ACTIVE&size=1000"
+
+requested size=1000 -> page.size = 100
+
+int safeSize = Math.min(Math.max(size, 1), 100);
+
+The cap is applied before PageRequest is built, so a client cannot ask for the
+whole table. The floor of 1 matters too: size=0 is not a smaller page, it is a
+different failure.
+
+Sort is fixed in the controller rather than read from the query string, which
+is the sort allow-list in its strictest form -- no client-chosen sort column at
+all. A client that could name the sort column could also name an unindexed one,
+which lab 38 measured as 1,006 buffers against 23.

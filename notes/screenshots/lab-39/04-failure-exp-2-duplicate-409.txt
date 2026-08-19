@@ -1,0 +1,22 @@
+Lab 39 failure experiment 2 -- duplicate email returns 409
+
+$ curl -X POST http://localhost:8080/api/customers \
+    -H "Authorization: Bearer <agent1 token>" \
+    -H "Content-Type: application/json" \
+    -H "X-Correlation-Id: lab-request-001" \
+    -d '{"publicId":"CUS-DUP-1","name":"Copy Cat",
+         "email":"amina@example.com","status":"PROSPECT"}'
+
+HTTP 409
+{"type":"about:blank","title":"Conflict","status":409,
+ "detail":"Email already registered","instance":"/api/customers",
+ "correlationId":"lab-request-001"}
+
+No SQLSTATE, no constraint name, no table name, no stack trace. The body is
+written by ApiExceptionHandler; ex.getMessage() would have carried all of it
+to the client.
+
+The service checks existsByEmail first, so this path is the pre-check firing.
+The UNIQUE constraint remains the only thing that can stop the race where two
+requests insert between check and insert, and DataIntegrityViolationException
+has its own handler for that case.

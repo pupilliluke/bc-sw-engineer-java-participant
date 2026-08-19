@@ -1,0 +1,7 @@
+.env
+*.dump
+*.sql.bak
+pgdata/
+target/
+node_modules/
+dist/

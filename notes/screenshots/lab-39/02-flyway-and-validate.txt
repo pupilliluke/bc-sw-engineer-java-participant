@@ -1,0 +1,22 @@
+Lab 39 steps 3-5 -- Flyway applies V1, Hibernate validates against it
+
+o.f.core.internal.command.DbValidate  : Successfully validated 1 migration (execution time 00:00.076s)
+o.f.core.internal.command.DbMigrate   : Current version of schema "crm_app": 1
+o.f.core.internal.command.DbMigrate   : Schema "crm_app" is up to date. No migration necessary.
+com.northstar.crm.CrmApplication      : Started CrmApplication in 8.718 seconds
+
+crm39=# \dt crm_app.*
+ Schema  |         Name          | Type  |  Owner
+---------+-----------------------+-------+---------
+ crm_app | account               | table | crm_app
+ crm_app | customer              | table | crm_app
+ crm_app | flyway_schema_history | table | crm_app
+
+crm39=# SELECT version, description, success FROM crm_app.flyway_schema_history;
+ version | description | success
+---------+-------------+---------
+ 1       | crm schema  | t
+
+ddl-auto: validate passing is the evidence that the entities and V1 agree
+column for column. It is what caught @Column(name = "BALANCE") against a
+column actually named balance_cents.

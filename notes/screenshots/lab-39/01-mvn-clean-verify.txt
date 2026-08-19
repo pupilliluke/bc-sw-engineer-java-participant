@@ -1,0 +1,22 @@
+Lab 39 step 12 -- mvn -o clean verify against real PostgreSQL (crm39)
+
+[INFO] Running com.northstar.crm.CustomerServiceTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.748 s
+[INFO] Running com.northstar.crm.SecurityRulesTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 26.67 s
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Running com.northstar.crm.repository.CustomerRepositoryIT
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 26.42 s
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+
+22 tests total. The IT only runs because maven-failsafe-plugin was added:
+Surefire skips *IT classes by convention, so verify was reporting green
+without ever running CustomerRepositoryIT.
+
+CustomerRepositoryIT covers: findByPublicId returns Amina with a database
+assigned surrogate id and version 0; TIMESTAMPTZ round-trips as an Instant;
+the unique email constraint raises DataIntegrityViolationException; a stale
+@Version is rejected rather than overwriting; the ACTIVE page is bounded and
+identical across two runs; adjacent pages are disjoint; listing customers
+leaves the accounts collection uninitialised.
