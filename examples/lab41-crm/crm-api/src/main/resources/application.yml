@@ -12,7 +12,7 @@ spring:
   application:
     name: northstar-crm
   datasource:
-    url: ${CRM_DB_URL:jdbc:postgresql://localhost:5432/crm40}
+    url: ${CRM_DB_URL:jdbc:postgresql://localhost:5432/crm41}
     username: ${CRM_DB_USERNAME:crm_app}
     # .env names this for the role that owns it, not for the datasource.
     password: ${CRM_APP_PASSWORD}

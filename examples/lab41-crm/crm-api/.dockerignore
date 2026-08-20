@@ -1,0 +1,19 @@
+# Build context, not COPY. Everything under the context root is packaged and
+# transmitted to the daemon before the first instruction runs, so excluding a
+# file here is stronger than declining to COPY it.
+target/
+.git/
+.idea/
+.vscode/
+.env
+.env.*
+!.env.example
+*.log
+reports/
+**/node_modules/
+notes/
+docs/
+dependency-check-suppressions.xml
+
+# Kept in context deliberately: pom.xml, src/, mvnw, .mvn -- the build stage
+# needs all four.

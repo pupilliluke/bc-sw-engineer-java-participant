@@ -2,6 +2,12 @@
 
 Release gate for `crm-api` before containerisation in Lab 41.
 
+> **Line numbers throughout are as assessed on 2026-08-20.** Lab 41 pre-lab
+> work later added `management.endpoint.health.probes`, `show-details: never`,
+> `server.shutdown: graceful`, and explicit readiness/liveness matchers in
+> `SecurityConfig`, shifting them. Quoted text is what stood at the time.
+
+
 ## Scope and assets
 
 **In scope:** `crm-api` source, its `pom.xml` and every transitive dependency on

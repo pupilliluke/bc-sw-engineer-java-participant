@@ -6,6 +6,11 @@ written in Labs 36 and 39, not a library version.
 
 Finding ids continue the ledger in `docs/security-findings.csv`.
 
+> **Line numbers are as assessed on 2026-08-20.** The Lab 41 pre-lab work
+> later added actuator probe configuration and graceful shutdown, which
+> shifted them. Quoted text is what stood at assessment time.
+
+
 ## Untrusted inputs
 
 Everything a caller controls, and where it enters:
