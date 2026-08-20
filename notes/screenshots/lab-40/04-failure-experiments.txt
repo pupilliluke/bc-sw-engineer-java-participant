@@ -1,0 +1,67 @@
+Lab 40 step 9 - failure experiments and evidence hygiene
+
+EXP 1  Lower failBuildOnCVSS from 7 to 1
+  Observed: the same 11 artifacts fail, but the gate now rejects on 128
+    findings instead of 70 - 58 additional Medium and Low rows that the
+    threshold had been letting through.
+  Reading: a threshold is a policy, not a safety setting. At 1 nothing ships
+    and the gate gets switched off within a week; at 7 the Mediums still land
+    in the ledger with an owner. The number is defensible only because
+    everything below it is still triaged.
+  Restore: threshold returned to 7, confirmed at pom.xml:113.
+
+EXP 2  Add a suppression with no expiry
+  Not committed - the policy in dependency-check-suppressions.xml rejects it
+    by definition: every <suppress> needs a CVE id, an owner and an until=
+    date. A suppression without an expiry is not an accepted risk, it is a
+    finding that stopped being tracked, and nobody can later say whether the
+    rationale was ever true.
+  This lab used zero suppressions. The file ships empty on purpose.
+
+EXP 3  Break the authorization check, run the reproducer
+  This was not a simulation - it is how the lab ran. Before the fix,
+    ForgedTokenSecurityTest failed with "Status expected:<401> but was:<200>"
+    and the response body was {"role":"ADMIN","ok":"true"} from
+    AdminController#ping. After removing the committed default from
+    application.yml:34 the same unmodified test returns 401.
+  Reading: a test that has never failed cannot be shown to detect anything.
+    Writing the reproducer first is what makes the green run evidence.
+
+EXP 4  Log a secret in a test assertion message
+  Not performed. ForgedTokenSecurityTest hardcodes the leaked default
+    "lab-only-change-me" as a literal - deliberately, since it is the string
+    an attacker copies out of the repository and is now retired. The live
+    JWT_SECRET never appears in source, tests, reports or notes.
+  Related real incident, recorded rather than hidden: GitHub Copilot picked up
+    a secret typed into .env as editor context and suggested it elsewhere,
+    meaning the value was transmitted to GitHub for inference. Secret rotated.
+    .gitignore protects against committing a secret; it does nothing about an
+    editor plugin reading the file. Different threat, different control.
+    Repository content-exclusion is a residual risk with an owner and a date.
+
+EXP 5  Run the scan twice
+  Run 1: ~52 minutes, 191/191 batches, 380,994 records - first NVD populate.
+  Run 2: 28 seconds, identical findings.
+  Reading: the data store lives in ~/.m2/repository/org/owasp/
+    dependency-check-data/, outside the project, and survives mvn clean. CI
+    without that directory cached pays the full 52 minutes every build, which
+    is the practical reason security gates get disabled.
+  The two runs agreeing is itself the result: the scan is deterministic
+    against a fixed data set, so a future difference means the data moved,
+    not the code.
+
+EVIDENCE HYGIENE
+
+  git status               clean of .env, reports/ and any jar
+  .env                     gitignored (examples/lab40-crm/.gitignore:1)
+  .env.example             committed, both password values blank
+  reports/                 gitignored - bulky and they embed absolute local
+                           paths carrying the machine username
+  NVD data store           outside the repository entirely, in ~/.m2
+  crm-api/.env             deleted - read by nothing, and a dead secrets file
+                           beside a live one is how the wrong file gets edited
+  NVD_API_KEY              environment only, referenced from pom.xml as
+                           ${env.NVD_API_KEY}, never a literal
+  evidence files           plan text and counts only; no tokens, no PII, no
+                           real customer records - fixtures are CUS-1001 and
+                           CUS-1002 throughout

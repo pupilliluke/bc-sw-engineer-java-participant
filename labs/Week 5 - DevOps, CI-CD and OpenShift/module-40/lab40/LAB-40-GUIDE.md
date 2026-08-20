@@ -287,7 +287,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
-@Query("select c from CustomerEntity.java c where lower(c.normalizedEmail) = lower(:email)")
+@Query("select c from CustomerEntity c where lower(c.normalizedEmail) = lower(:email)")
 Optional<CustomerEntity> findByEmailIgnoreCase(@Param("email") String email);
 ```
 
@@ -379,7 +379,7 @@ Compare before/after for the remediating finding. Confirm the reproducer now pas
 **Do this:** Walk a peer through: (1) threat checklist scope, (2) one CSV row classification, (3) the ownership test, (4) the remediation diff, (5) residual risks table. Ask them to re-run:
 
 ```bash
-./mvnw -B test -Dtest=ObjectOwnershipSecurityTest
+./mvnw -B test -Dtest=ObjectOwnershipSecurityTest.java
 ./mvnw -B -Psecurity-scan dependency-check:check
 ```
 

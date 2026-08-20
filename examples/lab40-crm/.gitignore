@@ -1,0 +1,12 @@
+.env
+*.dump
+*.sql.bak
+pgdata/
+target/
+node_modules/
+dist/
+
+# Dependency-Check HTML/JSON are bulky and carry absolute local paths.
+# Sanitized excerpts go to notes/screenshots/lab-40/ instead.
+reports/
+dependency-check-report.*

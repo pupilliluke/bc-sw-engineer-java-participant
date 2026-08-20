@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> {
   Optional<CustomerEntity> findByPublicId(String publicId);
 
-  // TODO: Page<CustomerEntity.java> findByStatus(String status, Pageable pageable);
+  // TODO: Page<CustomerEntity> findByStatus(String status, Pageable pageable);
   Page<CustomerEntity> findByStatus(String status, Pageable pageable);
 }

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.3.5</version>
+    <relativePath/>
+  </parent>
+
+  <groupId>com.northstar</groupId>
+  <artifactId>lab40-crm</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+
+  <name>lab40-crm</name>
+
+  <properties>
+    <java.version>21</java.version>
+    <!-- Pinned: an unpinned plugin drifts, so the same commit can scan
+         differently week to week and no diff explains it. -->
+    <dependency-check.version>10.0.4</dependency-check.version>
+      
+  </properties>
+
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+      <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-data-jpa</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.postgresql</groupId>
+          <artifactId>postgresql</artifactId>
+          <scope>runtime</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.flywaydb</groupId>
+          <artifactId>flyway-core</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.flywaydb</groupId>
+          <artifactId>flyway-database-postgresql</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.springframework.security</groupId>
+          <artifactId>spring-security-test</artifactId>
+          <scope>test</scope>
+      </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+      <!-- Surefire skips *IT classes by convention, so mvn verify would report
+           green without ever running CustomerRepositoryIT. Failsafe binds them
+           to the verify phase, which is what step 12 asks to be green. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <!-- Off by default so a normal `mvn verify` does not wait on the NVD data
+       set. On for the gate: mvn -B -Psecurity-scan dependency-check:check -->
+  <profiles>
+    <profile>
+      <id>security-scan</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>${dependency-check.version}</version>
+            <configuration>
+              <formats>
+                <format>HTML</format>
+                <format>JSON</format>
+              </formats>
+              <failBuildOnCVSS>7</failBuildOnCVSS>
+              <!-- Reads the environment, so the key itself is never in this
+                   file. Set it once: setx NVD_API_KEY "..." -->
+              <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
+              <suppressionFile>dependency-check-suppressions.xml</suppressionFile>
+              <outputDirectory>${project.basedir}/../reports</outputDirectory>
+            </configuration>
+            <executions>
+              <execution>
+                <goals><goal>check</goal></goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

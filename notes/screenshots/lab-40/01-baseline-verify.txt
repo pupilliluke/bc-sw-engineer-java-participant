@@ -1,0 +1,18 @@
+Lab 40 step 1 - baseline verify before any security work
+examples/lab40-crm/crm-api  |  mvn -B clean verify  |  JDK 21.0.4, Maven 3.9.9
+
+Database crm40 built from empty by Flyway:
+  Migrating schema "crm_app" to version "1 - crm schema"
+  Migrating schema "crm_app" to version "2 - account balance numeric"
+  Successfully applied 2 migrations to schema "crm_app", now at version v2
+
+Tests run: 15, Failures: 0, Errors: 0, Skipped: 0   (unit)
+  CustomerServiceTest      7
+  SecurityRulesTest        8
+Tests run: 7,  Failures: 0, Errors: 0, Skipped: 0   (integration)
+  CustomerRepositoryIT     7
+
+BUILD SUCCESS
+
+Baseline = 22 tests green. Any lower count after remediation is a regression,
+not a security improvement.

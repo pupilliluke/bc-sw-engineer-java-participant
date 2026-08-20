@@ -1,0 +1,45 @@
+Lab 40 step 3 - dependency scan, BEFORE any remediation
+
+Command:  mvn -B -Psecurity-scan dependency-check:check
+Module:   examples/lab40-crm/crm-api  (artifactId lab40-crm)
+Tooling:  JDK 21.0.4, Maven 3.9.9, dependency-check-maven 10.0.4 (pinned via
+          ${dependency-check.version}); NVD API key supplied from the
+          environment as ${env.NVD_API_KEY}, never in pom.xml
+Date:     2026-08-20
+
+NVD update: completed, 191/191 batches, 380,994 records, ~52 min wall clock.
+  First populate only; the data store lives in ~/.m2/repository/org/owasp/
+  dependency-check-data/ and later runs fetch only the delta.
+
+Sonatype OSS Index analyzer: DISABLED - "Invalid credentials". This is a
+  separate optional service from NVD, attempted anonymously and refused. NVD
+  data is complete, so the analysis stands; the red text is not a failed scan.
+
+Result: BUILD FAILURE - this is the gate firing as configured, not a broken
+  setup. failBuildOnCVSS=7 rejects the build when any finding scores >= 7.0.
+
+Dependencies scanned:   48
+Dependencies with CVEs: 11
+Severity spread:        20 Critical, 50 High, 50 Medium, 8 Low
+Findings >= 7.0:        70
+
+Findings >= 7.0 by artifact:
+   34  tomcat-embed-core-10.1.31.jar
+    6  spring-core-6.1.14.jar
+    6  spring-web-6.1.14.jar
+    5  spring-boot-3.3.5.jar
+    5  spring-boot-starter-web-3.3.5.jar
+    4  log4j-api-2.23.1.jar
+    3  spring-security-core-6.3.4.jar
+    3  spring-security-web-6.3.4.jar
+    2  jackson-databind-2.17.2.jar
+    1  angus-activation-2.0.2.jar
+    1  postgresql-42.7.4.jar
+
+All 11 are managed transitives of spring-boot-starter-parent 3.3.5. None is a
+direct dependency of this project, so remediation is a parent version bump
+rather than 70 individual suppressions.
+
+Reports (gitignored, they carry absolute local paths):
+  examples/lab40-crm/reports/dependency-check-report.html
+  examples/lab40-crm/reports/dependency-check-report.json
