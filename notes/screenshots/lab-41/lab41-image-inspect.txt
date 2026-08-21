@@ -1,0 +1,55 @@
+Lab 41 - image build and inspect evidence
+Captured 2026-08-20. Host: Windows 11, Docker Desktop, containerd image store.
+Built from commit a57412fecf2d5b13282c8b568598d69ce38e3787 (clean tree).
+
+$ docker build --pull --build-arg GIT_SHA=a57412fecf2d5b13282c8b568598d69ce38e3787 -t crm-api:lab41 .
+
+$ docker image inspect crm-api:lab41 --format '{{.Id}} {{.Size}} {{json .Config.User}}'
+sha256:4cf59c01fcd5afcb3a61c02b6140f24284185e579a7ef8cb2a4455f37b755fbd 162696555 "10001"
+
+$ docker image inspect crm-api:lab41 --format '{{index .RepoDigests 0}}'
+crm-api@sha256:4cf59c01fcd5afcb3a61c02b6140f24284185e579a7ef8cb2a4455f37b755fbd
+
+Size reported three ways, because the containerd image store builds a
+manifest list with an attestation manifest attached and the commands total
+it differently:
+  docker images                    555MB
+  docker history (sum of layers)   393MB
+  docker image inspect .Size       162696555
+
+$ docker image inspect crm-api:lab41 --format '{{json .Config.Labels}}'
+"org.opencontainers.image.created":"2026-08-17T09:02:45.677319+00:00"
+"org.opencontainers.image.revision":"a57412fecf2d5b13282c8b568598d69ce38e3787"
+"org.opencontainers.image.title":"northstar-crm"
+"org.opencontainers.image.version":"0.0.1-SNAPSHOT"
+
+created and description are inherited from the base image and were not
+overridden. title, version and revision are set by the Dockerfile.
+
+$ docker image inspect crm-api:lab41 --format 'entrypoint / exposed / arch'
+["java","-jar","/app/app.jar"]  {"8080/tcp":{}}  amd64/linux
+
+$ docker image inspect crm-api:lab41 --format '{{json .Config.Env}}'
+["PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin","JAVA_HOME=/opt/java/openjdk","LANG=en_US.UTF-8","LANGUAGE=en_US:en","LC_ALL=en_US.UTF-8","JAVA_VERSION=jdk-21.0.11+10","JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=75"]
+
+No credential appears in Config.Env. JAVA_TOOL_OPTIONS is set by the
+Dockerfile; the remaining entries come from eclipse-temurin:21-jre.
+
+$ docker history crm-api:lab41
+0B	ENTRYPOINT ["java" "-jar" "/app/app.jar"]
+0B	LABEL org.opencontainers.image.title=northst…
+0B	ARG GIT_SHA=a57412fecf2d5b13282c8b568598d69c…
+0B	ARG APP_VERSION=0.0.1-SNAPSHOT
+0B	HEALTHCHECK {Test:[CMD bash -c exec 3<>/dev/…
+0B	ENV JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=75
+0B	EXPOSE [8080/tcp]
+0B	USER 10001
+53.4MB	COPY --chown=spring:spring /workspace/target…
+8.19kB	WORKDIR /app
+61.4kB	RUN /bin/sh -c useradd --system --uid 10001 …
+0B	ENTRYPOINT ["/__cacert_entrypoint.sh"]
+12.3kB	COPY --chmod=755 entrypoint.sh /__cacert_ent…
+12.3kB	RUN /bin/sh -c set -eux;     echo "Verifying…
+
+No Maven layer, no JDK build layer, no .m2 repository and no src tree
+appear. The 797MB build stage is absent from the runtime image.

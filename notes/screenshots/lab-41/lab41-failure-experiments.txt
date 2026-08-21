@@ -1,0 +1,84 @@
+Lab 41 - graceful shutdown and failure experiment evidence
+Captured 2026-08-20.
+
+=== Graceful shutdown, docker stop --time 20 ===
+
+$ docker stop --time 20 crm-lab41
+wall time 844 ms
+exit code 143, OOMKilled false
+
+2026-08-20T21:50:24.329Z  INFO 1 --- [northstar-crm] [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-20T21:50:24.337Z  INFO 1 --- [northstar-crm] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-08-20T21:50:24.347Z  INFO 1 --- [northstar-crm] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-08-20T21:50:24.355Z  INFO 1 --- [northstar-crm] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+
+143 is 128 plus 15. The JVM ran its shutdown hooks and then terminated on
+SIGTERM. A gracefully stopped Boot application exits 143, not 0.
+Kubernetes treats 143 as normal termination.
+
+=== Failure experiment 1: USER commented out ===
+
+Built from a copy of the Dockerfile with USER 10001 commented.
+  Config.User: (empty)
+  docker run --entrypoint id: uid=0(root) gid=0(root) groups=0(root)
+Restored: USER 10001 is present in the committed Dockerfile.
+
+=== Failure experiment 2: invalid CRM_DB_URL ===
+
+$ docker run -d --name crm-lab41-badurl ... -e CRM_DB_URL=jdbc:postgresql://no-such-host:5432/crm41
+exit code 1
+
+2026-08-20T21:51:06.719Z  WARN 1 --- [northstar-crm] [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Failed to initialize dependency 'flywayInitializer' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'flywayInitializer' defined in class path resource [org/springframework/boot/autoconfigure/flyway/FlywayAutoConfiguration$FlywayConfiguration.class]: Unable to obtain connection from database: The connection attempt failed.
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Failed to initialize dependency 'flywayInitializer' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'flywayInitializer' defined in class path resource [org/springframework/boot/autoconfigure/flyway/FlywayAutoConfiguration$FlywayConfiguration.class]: Unable to obtain connection from database: The connection attempt failed.
+
+Tomcat never started and no listener existed on the published port:
+  startup-complete log lines: 0
+  curl /actuator/health/liveness: connection refused
+
+This corrects the pre-lab prediction in lab41-smoke-plan.md, which expected
+the container to start, liveness to pass and readiness to fail. Flyway runs
+during context initialization as a dependency of entityManagerFactory, so a
+database unreachable at boot cancels the context refresh before the web
+server starts. The readiness-fails-liveness-passes split only occurs when
+the application started successfully and then lost the database. In Lab 42
+this state is CrashLoopBackOff, not an unready pod.
+
+=== Failure experiment 2b: JWT_SECRET unset ===
+
+$ docker run -d --name crm-lab41-nojwt ...   (env file with JWT_SECRET removed)
+exit code 1
+
+Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'JWT_SECRET' in value "${JWT_SECRET}"
+
+application.yml declares jwt-secret as ${JWT_SECRET} with no default, so a
+missing value stops startup instead of falling back. This is the Lab 40
+decision behaving as intended inside a container.
+
+=== Failure experiment 3: target/ removed from .dockerignore ===
+
+Measured on disk rather than from build output. BuildKit transfers context
+lazily, sending only what a COPY references, and the build was cached, so
+the reported transfer figures (479B, 3.71kB) were identical with and
+without the ignore and did not show the effect. The legacy pre-BuildKit
+builder tarred the whole directory, which is the behaviour the guide
+describes.
+
+  full crm-api directory:            52M
+  paths .dockerignore keeps:         170 KB
+  largest excluded path (target/):   52M
+
+Restored: target/ is present in .dockerignore.
+
+=== Failure experiment 4: docker stop --time 1 ===
+
+$ docker stop --time 1 crm-lab41
+wall time 535 ms, exit code 143, graceful shutdown markers present
+
+Did not reproduce a forced kill. The application was idle, so shutdown
+completed in well under the one second grace. Under load, with in-flight
+requests and spring.lifecycle.timeout-per-shutdown-phase set to 20s, a one
+second grace would SIGKILL mid-request.
+
+=== Failure experiment 5: tag only latest ===
+
+Not run. Documented in docs/container-runbook.md under Registry flow.

@@ -1,0 +1,61 @@
+Lab 41 - readiness and CRM smoke evidence
+Captured 2026-08-20 against crm-api:lab41 running as container crm-lab41.
+Bearer tokens are redacted. No password appears in this transcript.
+
+Run command:
+  docker run -d --name crm-lab41 --network lab41-crm_default \
+    --memory=512m --read-only --tmpfs /tmp \
+    --env-file .env.local -p 8080:8080 crm-api:lab41
+
+$ docker ps --filter name=crm-lab41 --format '{{.Status}}'
+Up About a minute (healthy)
+
+$ curl -s http://127.0.0.1:8080/actuator/health/readiness
+{"status":"UP"}
+<- HTTP 200
+
+$ curl -s http://127.0.0.1:8080/actuator/health/liveness
+{"status":"UP"}
+<- HTTP 200
+
+$ curl -s http://127.0.0.1:8080/api/customers/CUS-1001    (no credential)
+<- HTTP 401
+
+$ curl -s -X POST /api/auth/login -d '{"username":"agent1",...}'
+{"accessToken":"<redacted>","username":"agent1","role":"AGENT","tokenType":"Bearer"}
+<- HTTP 200
+
+$ curl -s /api/customers/CUS-1001 -H 'Authorization: Bearer <redacted>' \
+       -H 'X-Correlation-Id: lab-request-001'
+{"id":"CUS-1001","name":"Amina Khan","email":"amina@example.com","status":"ACTIVE"}
+<- HTTP 200
+
+$ curl -s '/api/customers/page?status=ACTIVE&size=20' -H 'Authorization: Bearer <redacted>'
+{"content":[{"id":"CUS-1001","name":"Amina Khan","email":"amina@example.com","status":"ACTIVE"}],"pageable":{"pageNumber":0,"pageSize":20,"sort":{"sorted":true,"empty":false,"unsorted":false},"offset":0,"paged":true,"unpaged":false},"last":true,"totalPages":1,"totalElements":1,"first":true,"size":20,"number":0,"sort":{"sorted":true,"empty":false,"unsorted":false},"numberOfElements":1,"empty":false}
+<- HTTP 200
+
+Correlation id propagation. The read paths do not take X-Correlation-Id:
+CustomerController.get takes only @PathVariable id. Only create, update and
+updateStatus accept the header, and the id is emitted on the
+DuplicateCustomerException path as a ProblemDetail property. There is no
+MDC filter, so no happy-path log line carries it.
+
+$ curl -s -X POST /api/customers -H 'X-Correlation-Id: lab-request-003' \
+       -d '{..."email":"amina@example.com"...}'    (duplicate email)
+{"type":"about:blank","title":"Conflict","status":409,"detail":"Email already registered","instance":"/api/customers","correlationId":"lab-request-003"}
+<- HTTP 409
+
+$ curl -s /api/customers -H 'Authorization: Bearer <redacted>'    (no row created)
+"id":"CUS-1001" "id":"CUS-1002" 
+
+$ docker exec crm-lab41 id
+uid=10001(spring) gid=999(spring) groups=999(spring)
+
+$ docker exec crm-lab41 java -XX:+PrintFlagsFinal -version | grep MaxHeap
+   size_t MaxHeapSize                              = 402653184                                 {product} {ergonomic}
+   double MaxRAMPercentage                         = 75.000000                                 {product} {environment}
+   size_t SoftMaxHeapSize                          = 402653184                              {manageable} {ergonomic}
+
+402653184 bytes is 384MB, which is 75 percent of the 512MB cgroup limit.
+The MaxRAMPercentage flag source reads {environment}, so it arrived through
+JAVA_TOOL_OPTIONS rather than being an ergonomic default.

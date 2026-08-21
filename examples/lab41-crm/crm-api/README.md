@@ -1,13 +1,24 @@
-Northstar CRM build (Lab 39)
+Northstar CRM build (Lab 41)
 
-  mvn -B test
+  mvn -B clean verify
   mvn -B spring-boot:run
 
-  curl -s -H "X-Correlation-Id: lab-request-001" \
+spring-boot:run needs PostgreSQL up and CRM_APP_PASSWORD and JWT_SECRET set,
+both from .env. Neither has a default, so a missing one stops startup rather
+than falling back. Every /api/customers route needs a token; TOKEN below is the
+accessToken from the login response.
+
+  curl -s -X POST http://localhost:8080/api/auth/login \
+    -H "Content-Type: application/json" \
+    -d '{"username":"agent1","password":"agent1"}'
+  curl -s -H "Authorization: Bearer $TOKEN" \
+    -H "X-Correlation-Id: lab-request-001" \
     http://localhost:8080/api/customers/CUS-1001
-  curl -s -H "X-Correlation-Id: lab-request-001" \
+  curl -s -H "Authorization: Bearer $TOKEN" \
+    -H "X-Correlation-Id: lab-request-001" \
     http://localhost:8080/api/customers/CUS-1002
   curl -s -X POST http://localhost:8080/api/customers \
+    -H "Authorization: Bearer $TOKEN" \
     -H "Content-Type: application/json" \
     -H "X-Correlation-Id: lab-request-001" \
     -d '{"id":"CUS-1003","name":"Maya Chen","email":"maya@example.com","status":"PROSPECT"}'
@@ -17,18 +28,21 @@ Full path. The timed commands above plus the list route and the status change,
 whose body binds through api/StatusUpdateRequest since the guide names
 updateStatus and PATCH without fixing a payload shape:
 
-  curl -s http://localhost:8080/api/customers
+  curl -s -H "Authorization: Bearer $TOKEN" \
+    http://localhost:8080/api/customers
   curl -s -X PATCH http://localhost:8080/api/customers/CUS-1002/status \
+    -H "Authorization: Bearer $TOKEN" \
     -H "Content-Type: application/json" \
     -H "X-Correlation-Id: lab-request-001" \
     -d '{"status":"ACTIVE"}'
 
-Copied from the lab 39 starter, not carried forward from lab24-crm, so there is
-no SOAP endpoint here. Controller to service to repository: CustomerController
-calls CustomerService only, CustomerService holds the duplicate, not-found and
-transition rules and talks to the CustomerRepository interface,
-InMemoryCustomerRepository seeds CUS-1001 and CUS-1002 in its constructor and
-owns the map.
+Copied from lab40-crm, which came from the lab 39 starter and not from
+lab24-crm, so there is no SOAP endpoint here. Controller to service to
+repository: CustomerController calls CustomerService only, CustomerService
+holds the duplicate, not-found and transition rules and talks to the
+CustomerRepository interface, which extends JpaRepository over CustomerEntity.
+FixtureLoader seeds CUS-1001 and CUS-1002 at startup, idempotent by public_id,
+so a restart does not duplicate them.
 
 The gate checks: 0 repository imports in CustomerController, 0
 springframework.web or springframework.http imports in CustomerService.
@@ -53,35 +67,44 @@ PASS CRITERIA
 
 | Criterion | Result |
 | --------- | ------ |
-| lab39-crm packages and runs | Pass, Started CrmApplication in 2.711 s on 8080 |
+| lab41-crm packages and runs | Pass, mvn -B clean verify BUILD SUCCESS in 1:28 |
 | Seeded GET works for CUS-1001 and CUS-1002 | Pass, 200 and 200 |
 | Controller has no repository imports | Pass, 0 |
 | Service has no HTTP types | Pass, 0 |
-| CustomerServiceTest green | Pass, Tests run: 6 on two consecutive runs |
-| AI review recorded | Pass, docs/lab39-001.md |
+| CustomerServiceTest green | Pass, Tests run: 7 |
+| Anonymous customer GET rejected | Pass, 401 |
 | Full path: GET /api/customers list | Pass, 200 with both seeds |
 | Full path: PATCH activates CUS-1002 | Pass, PROSPECT to ACTIVE 200 |
-| Full path: illegal transition rejected | Pass, 500 and CUS-1001 still ACTIVE |
+| Full path: illegal transition rejected | Pass, 409 and CUS-1002 still ACTIVE |
 
 TESTS
 
-  mvn -B test    Tests run: 6
+  mvn -B clean verify    Tests run: 26
+
+19 unit and 7 integration: CustomerServiceTest 7, SecurityRulesTest 8,
+ProbeEndpointsTest 3, ForgedTokenSecurityTest 1, CustomerRepositoryIT 7.
 
 getSeededCus1001 and duplicateCreateRejected are the guide's pair, unchanged.
-listReturnsSeedsAndCreated is the checkpoint C1 list() evidence, which the timed
-path has no route for. activateRaviFromProspect,
+emailIsNormalizedBeforeTheDuplicateCheck and missingCustomerIsNotFound came in
+with the JPA move. activateRaviFromProspect,
 illegalTransitionRejectedAndStatusUnchanged and closedIsTerminal cover the
-transition table. Each builds its own repository, so a create or a status change
-in one cannot change what the next one sees.
+transition table. Each test gets a fresh Mockito mock of CustomerRepository, so
+a create or a status change in one cannot change what the next one sees.
+CustomerRepositoryIT is the only test needing PostgreSQL, which is why the image
+build runs package and the gate runs outside the image.
 
 SECURITY NOTES
 
-untrusted: the JSON body, the path id, the PATCH status value, and the
-X-Correlation-Id header. The status value is checked against the transition
-table but nothing validates the body shape. Bean Validation is lab 29.
+untrusted: the JSON body, the path id, the PATCH status value, the
+Authorization header and the X-Correlation-Id header. The status value is
+checked against the transition table, and CustomerService.validate checks name,
+email shape and status on create and update. That validation is hand-rolled;
+Bean Validation is lab 29.
 
-authn/authz: none. All four routes are open, including PATCH, which changes
-state. Lab 28 covers that.
+authn/authz: JWT. POST /api/auth/login issues a token, every /api/customers
+route requires ROLE_AGENT or ROLE_ADMIN, and /api/admin requires ROLE_ADMIN.
+httpBasic and formLogin are disabled. Only /actuator/health and the readiness
+and liveness probes answer anonymously.
 
 sensitive: name and email. No customer data is logged in this build. The
 rejection message carries the two statuses and the correlation id, no customer
@@ -92,12 +115,12 @@ CLEANUP
   mvn -q clean
   git status
 
-Ctrl+C spring-boot:run. target/ is ignored. Keep lab39-crm, lab 26 adds
-profiles and config on this layering.
+Ctrl+C spring-boot:run. target/ is ignored. Keep lab41-crm, lab 42 deploys
+this image with Deployment, Service and probes.
 
 NOTES
 
-Evidence and the failure experiments are in notes/screenshots/lab-39/.
-Checkpoints and reflection answers are in notes/Week 3/Module 39/lab39-answers.md.
-The AI review log is docs/lab39-001.md. Full GUIDE at
-labs/Week 3 - Spring Framework and Enterprise Patterns/module-39/lab39/.
+Evidence and the failure experiments are in notes/screenshots/lab-41/.
+Checkpoints and reflection answers are in notes/Week 5/Module 41/lab41-answers.md.
+The container runbook is ../docs/container-runbook.md. Full GUIDE at
+labs/Week 5 - DevOps, CI-CD and OpenShift/module-41/lab41/.
