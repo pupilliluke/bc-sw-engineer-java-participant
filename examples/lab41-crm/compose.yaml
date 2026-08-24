@@ -2,7 +2,7 @@ services:
   postgres:
     image: postgres:17
     container_name: crm-postgres-lab41
-    ports: ["5432:5432"]
+    ports: ["5433:5432"]
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-crm_admin}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}

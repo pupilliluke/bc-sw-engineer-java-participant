@@ -1,0 +1,301 @@
+Lab 42 - rollout drill, rollback and failure experiments
+Captured 2026-08-21. Transcribed from the session terminal.
+
+Four of the guide's six experiments were run: 1, 3, 5 and 6. Experiments 2 and
+4 are document-only by the guide's own framing.
+
+=== Experiment 3: bad image tag, then rollout undo ===
+
+$ kubectl -n crm-training set image deployment/crm-api crm-api=crm-api:does-not-exist
+deployment.apps/crm-api image updated
+
+$ kubectl -n crm-training rollout status deployment/crm-api --timeout=60s
+Waiting for deployment "crm-api" rollout to finish: 1 old replicas are pending termination...
+error: timed out waiting for the condition
+
+rollout status never detected the bad image. It named the old pod, which is the
+healthy one, and then ran out of patience. Without --timeout it waits
+indefinitely. The reason is in describe pod, not here.
+
+$ kubectl -n crm-training get pods
+crm-api-694dbd5685-7mvvj   1/1   Running            0   32m
+crm-api-848c87bfd6-6nbv9   0/1   ImagePullBackOff   0   73s
+
+Two pods, two ReplicaSets, one per pod-template hash. The Deployment created a
+surge pod and refused to evict the incumbent until the candidate went Ready,
+which it never did.
+
+$ kubectl -n crm-training describe pod crm-api-848c87bfd6-6nbv9
+Status:         Pending
+IP:             10.42.0.10
+Container ID:   (empty)
+Image ID:       (empty)
+Restart Count:  0
+Conditions:     PodScheduled True, Initialized True, Ready False
+
+Events:
+  Normal   Scheduled  9m2s                    Successfully assigned to k3d-lab42-server-0
+  Normal   Pulling    7m31s (x4 over 9m3s)    Pulling image "crm-api:does-not-exist"
+  Warning  Failed     7m29s (x4 over 9m2s)    Failed to pull image: failed to resolve
+    reference "docker.io/library/crm-api:does-not-exist": pull access denied,
+    repository does not exist or may require authorization: server message:
+    insufficient_scope: authorization failed
+  Warning  Failed     7m14s (x6 over 9m2s)    Error: ImagePullBackOff
+  Normal   BackOff    3m58s (x20 over 9m2s)   Back-off pulling image
+
+Three things worth keeping.
+
+The bare tag expanded to docker.io/library/crm-api:does-not-exist. A name with
+no registry means Docker Hub, so the kubelet left the machine. That is exactly
+why k3d image import is a required step and why imagePullPolicy: IfNotPresent
+matters: with the tag imported, the same node reports "already present on
+machine" and never dials out.
+
+The error says authorization failed. It is not a credentials problem; the
+repository does not exist. Docker Hub returns auth-shaped errors for missing
+repositories so that error codes cannot be used to probe which private repos
+exist. An ImagePullBackOff mentioning authorization is far more often a typo'd
+tag than a missing imagePullSecret.
+
+The pod had an IP and was scheduled. Nothing was wrong with the cluster, the
+resources or the manifest, only the image reference. No container was ever
+created, which is why Restart Count is 0 rather than climbing.
+
+Service behaviour during the failed rollout:
+
+$ curl.exe -s -o NUL -w '%{http_code}' -H $H "$B/actuator/health/readiness"
+200
+
+$ kubectl -n crm-training get endpoints crm-api
+crm-api   10.42.0.9:8080     AGE 76m
+
+Traffic was never affected. The Service selector app=crm-api matched BOTH pods,
+so the selector is not what excluded the broken one; the Endpoints controller
+admits only Ready pods. The endpoint object did not churn once, AGE unchanged
+at 76m.
+
+$ kubectl -n crm-training rollout history deployment/crm-api
+REVISION  CHANGE-CAUSE
+1         <none>
+2         <none>
+
+$ kubectl -n crm-training rollout undo deployment/crm-api
+deployment.apps/crm-api rolled back
+
+$ kubectl -n crm-training rollout status deployment/crm-api --timeout=180s
+deployment "crm-api" successfully rolled out          (returned immediately)
+
+$ kubectl -n crm-training rollout history deployment/crm-api
+REVISION  CHANGE-CAUSE
+2         <none>
+3         <none>
+
+$ kubectl -n crm-training get pods
+crm-api-694dbd5685-7mvvj   1/1   Running   0   81m
+
+undo did not delete revision 2. The ReplicaSet holding the good template was
+re-annotated as revision 3 and the bad revision stayed in history, so the
+rollback is itself auditable.
+
+The pod is 81 minutes old with 0 restarts and the same hash. Nothing was
+recreated. undo scaled the bad ReplicaSet to 0 and left the good one untouched,
+which is why rollout status returned instantly instead of waiting.
+
+Net result: a bad image was deployed, failed, and was rolled back with zero
+requests affected and zero container restarts.
+
+CHANGE-CAUSE is <none> on both revisions because the annotation was never set.
+kubectl annotate deployment/crm-api kubernetes.io/change-cause="..." would
+populate it. Which revision was the good one is exactly the question asked
+under pressure.
+
+=== Experiment 1: break the Service selector ===
+
+$ kubectl -n crm-training patch svc crm-api --patch-file patch.json
+  ({"spec":{"selector":{"app":"crm-api-WRONG"}}})
+service/crm-api patched
+
+$ kubectl -n crm-training get endpoints crm-api
+crm-api   <none>
+
+$ kubectl -n crm-training get pods
+crm-api-694dbd5685-7mvvj   1/1   Running   0   110m
+
+$ curl.exe -s -o NUL -w '%{http_code}' -H $H "$B/actuator/health/readiness"
+404
+
+The pod is untouched and perfectly healthy. The address book was broken, not
+the application.
+
+404, not 503. With zero endpoints Traefik drops the route entirely, so the host
+stops matching any router and falls through to the default. The guide's
+troubleshooting table maps 404 to "Ingress host / Traefik class", which would
+send a reader to inspect an Ingress that is entirely correct. On a 404 through
+the Ingress, check get endpoints before touching the Ingress.
+
+Restore:
+
+$ kubectl -n crm-training patch svc crm-api --patch-file patch.json
+  ({"spec":{"selector":{"app":"crm-api"}}})
+$ kubectl -n crm-training get endpoints crm-api
+crm-api   10.42.0.9:8080
+$ curl.exe -s -o NUL -w '%{http_code}' -H $H "$B/actuator/health/readiness"
+404
+
+Endpoints recovered immediately but the request still 404'd for a few seconds
+while Traefik rebuilt its router, then returned 200. The control plane
+reporting fixed is not the same as traffic being fixed.
+
+Contrast with experiment 3. There the selector matched and readiness gated
+admission, and traffic kept flowing. Here the selector matched nothing and
+traffic died. Candidacy failing is the one that takes the service down.
+
+=== Experiment 5: scale to 0, then back ===
+
+$ kubectl -n crm-training scale deployment/crm-api --replicas=0
+$ kubectl -n crm-training get pods
+crm-api-694dbd5685-7mvvj   1/1   Terminating   0   112m
+$ kubectl -n crm-training get endpoints crm-api
+crm-api   <none>
+$ curl.exe -s -o NUL -w '%{http_code}' -H $H "$B/actuator/health/readiness"
+404
+
+The pod was still Terminating and still 1/1 while Endpoints was already empty.
+Kubernetes removes a pod from Endpoints the moment it enters Terminating, before
+the container has finished shutting down: new traffic stops first, then the pod
+gets its grace period to drain what is in flight. That is what Lab 41's
+server.shutdown: graceful and timeout-per-shutdown-phase: 20s buy in a cluster.
+
+The 404 is identical to the selector break. From the Ingress side "no endpoints"
+is "no endpoints" regardless of cause; get pods is what distinguishes them.
+
+$ kubectl -n crm-training scale deployment/crm-api --replicas=1
+$ Measure-Command { kubectl -n crm-training rollout status ... --timeout=180s }
+TotalSeconds : 97.34
+
+$ kubectl logs <pod> | Select-String "Started CrmApplication"
+Started CrmApplication in 78.836 seconds (process running for 86.894)
+
+$ kubectl describe pod <pod>
+  Normal   Scheduled  3m41s   Successfully assigned to k3d-lab42-server-0
+  Normal   Pulled     3m41s   Container image "crm-api:lab41" already present on machine
+  Normal   Created    3m41s   Created container crm-api
+  Normal   Started    3m41s   Started container crm-api
+  Warning  Unhealthy  2m15s (x17 over 3m37s)  Startup probe failed: Get
+    "http://10.42.0.11:8080/actuator/health/readiness": dial tcp: connect:
+    connection refused
+  Warning  Unhealthy  2m9s    Startup probe failed: context deadline exceeded
+    (Client.Timeout exceeded while awaiting headers)
+
+Kubernetes did nothing slowly. Scheduling, image and container creation were
+instantaneous, and "already present on machine" is the direct proof that the
+k3d import plus IfNotPresent works. All 97 seconds bar about 10 were the
+application starting.
+
+The same image starts in 9.1 seconds under docker run in Lab 41. It takes 78.8
+here. The controlled difference is CPU: the Lab 41 container had no CPU limit,
+this pod is capped at 500m. JVM startup is CPU-bound, so half a core stretches
+a 9 second boot into 79.
+
+That makes failureThreshold: 30 at period 5s load-bearing rather than generous.
+The 150 second budget was 85 seconds consumed, 17 failed polls of 30. A
+failureThreshold of 12, an ordinary-looking 60 seconds, would kill the container
+before it finished booting and CrashLoop forever.
+
+Two different failure strings in sequence, and the second is the more
+interesting. connection refused means nothing was listening. context deadline
+exceeded means the port was open and the throttled JVM could not answer a
+trivial actuator call inside timeoutSeconds: 1. A healthy application can fail a
+probe purely because it is starved.
+
+=== Experiment 6: kubectl apply -f k8s/ ===
+
+Run 2026-08-24. This is the mistake the runbook's apply order exists to prevent.
+
+$ kubectl -n crm-training describe secret crm-api-secrets      (before)
+CRM_DB_PASSWORD:  11 bytes
+JWT_SECRET:       60 bytes
+
+$ kubectl -n crm-training apply -f k8s/
+configmap/crm-api-config unchanged
+deployment.apps/crm-api unchanged
+ingress.networking.k8s.io/crm-api unchanged
+secret/crm-api-secrets configured
+service/crm-api unchanged
+
+$ kubectl -n crm-training describe secret crm-api-secrets      (after)
+CRM_DB_PASSWORD:  19 bytes
+JWT_SECRET:       19 bytes
+
+19 bytes is REPLACE-OUT-OF-BAND. Both real credentials were destroyed by a
+command whose output says unchanged on four of five lines. Nothing warns you.
+
+The pod stayed 1/1 Running throughout. envFrom is read at container start, so
+the live process still held the good values and kept serving. The damage is
+latent: it detonates on the next restart, which may be days later during a node
+reboot, an eviction or a scale event, and by then the apply that caused it is
+long out of anyone's shell history. That delay is what makes this worse than a
+loud failure.
+
+Restore, out-of-band:
+
+$ kubectl -n crm-training delete secret crm-api-secrets
+$ kubectl -n crm-training create secret generic crm-api-secrets \
+    --from-literal=CRM_DB_PASSWORD='<value>' --from-literal=JWT_SECRET='<value>'
+CRM_DB_PASSWORD:  11 bytes
+JWT_SECRET:       60 bytes
+
+=== Step 10: delete a pod while traffic flows ===
+
+Run at two replicas.
+
+$ kubectl -n crm-training delete pod crm-api-56c6594ccd-8bxzj --wait=false
+pod deleted
+$ (eight readiness requests, immediately)
+200 200 200 200 200 200 200 200
+
+$ kubectl -n crm-training get pods
+crm-api-56c6594ccd-42gsm   1/1   Running             1   3m34s
+crm-api-56c6594ccd-f4q8x   0/1   ContainerCreating   0   1s
+$ kubectl -n crm-training get endpoints crm-api
+crm-api   10.42.0.27:8080
+
+Zero interruption. Endpoints dropped to the surviving pod and the replacement
+was already being created. The same Ready gate that excluded the broken pod in
+experiment 3 keeps the new one out until it can serve.
+
+Then back to the guide's default:
+
+$ kubectl -n crm-training scale deployment/crm-api --replicas=1
+deployment "crm-api" successfully rolled out
+
+=== Two incidental observations ===
+
+Host port moved 5432 to 5433. An unrelated capstone Postgres held 5432, so
+crm-postgres-lab41 was recreated with ports ["5433:5432"] and CRM_DB_PORT in
+the ConfigMap changed to match. The container still listens on 5432 internally;
+only the published port moved. Both databases, both roles and the Flyway
+history survived, because the data lives in the named volume
+lab41-crm_crm_pgdata and not in the container.
+
+After the ConfigMap change the running pods stayed 0/1 indefinitely. envFrom is
+evaluated at container start, so editing a ConfigMap does not reach a running
+pod; kubectl rollout restart is required. That restart also creates a new
+ReplicaSet and a new revision, because it stamps a restartedAt annotation into
+the pod template and the template hash changes.
+
+One pod then showed RESTARTS 1 with Last State Terminated, Reason Error, Exit
+Code 1. Its first attempt started before Postgres finished coming up, which is
+the same exit 1 recorded in Lab 41 when the database is unreachable at boot.
+The kubelet retried and the second attempt succeeded, so a dependency that is
+merely late self-heals while one that is absent CrashLoops.
+
+=== Not run ===
+
+Experiment 2, pointing liveness at the readiness path: document-only. A database
+blip would then restart the container instead of shedding traffic, turning a
+recoverable dependency failure into a restart loop.
+
+Experiment 4, a password in a ConfigMap: document-only. ConfigMap data is
+plaintext, readable by anyone with get configmap in the namespace, and is
+committed to Git by design. It is a Lab 40 class finding.

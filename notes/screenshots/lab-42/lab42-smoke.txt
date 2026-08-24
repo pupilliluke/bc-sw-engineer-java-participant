@@ -1,0 +1,82 @@
+Lab 42 - CRM smoke through the Traefik Ingress
+Captured 2026-08-21. Bearer tokens redacted; no password appears here.
+Transcribed from the session terminal.
+
+The hostname is not in DNS. Requests go to loopback on the k3d load balancer
+port and Traefik routes on the Host header.
+
+  $H = "Host: crm-api.training.example.test"
+  $B = "http://127.0.0.1:8088"
+
+=== Probes, anonymous ===
+
+$ curl.exe -s -w '\n<- HTTP %{http_code}' -H $H "$B/actuator/health/readiness"
+{"status":"UP"}
+<- HTTP 200
+
+$ curl.exe -s -o NUL -w '%{http_code}' -H $H "$B/api/customers"
+401
+
+Readiness answers anonymously; the customer API does not. Only
+/actuator/health, /actuator/health/readiness and /actuator/health/liveness are
+permitted without a token. env and beans are not exposed.
+
+=== Login ===
+
+$ curl.exe -s -X POST "$B/api/auth/login" -H $H \
+    -H "Content-Type: application/json" \
+    -H "X-Correlation-Id: lab-request-001" \
+    -d "@login.json"
+{"role":"AGENT","tokenType":"Bearer","accessToken":"<redacted>","username":"agent1"}
+<- HTTP 200
+
+httpBasic and formLogin are disabled in this build, so every /api/customers
+route needs the token from this call. On Windows PowerShell the JSON body is
+passed from a file because PowerShell 5.1 mangles inline quotes handed to a
+native executable.
+
+=== Authenticated list ===
+
+$ curl.exe -s -w '\n<- HTTP %{http_code}' "$B/api/customers" -H $H \
+    -H "Authorization: Bearer <redacted>" \
+    -H "X-Correlation-Id: lab-request-001"
+[{"id":"CUS-1001","name":"Amina Khan","email":"amina@example.com","status":"ACTIVE"},
+ {"id":"CUS-1002","name":"Ravi Singh","email":"ravi@example.com","status":"PROSPECT"}]
+<- HTTP 200
+
+$ curl.exe -s -w '\n<- HTTP %{http_code}' "$B/api/customers/CUS-1001" -H $H \
+    -H "Authorization: Bearer <redacted>" \
+    -H "X-Correlation-Id: lab-request-001"
+{"id":"CUS-1001","name":"Amina Khan","email":"amina@example.com","status":"ACTIVE"}
+<- HTTP 200
+
+One 200 covers the whole path: Traefik, the Service, the pod, JPA, the crm
+role, host.k3d.internal to the host-published Postgres port, the crm_lab42 database,
+Flyway's schema, and the fixtures FixtureLoader seeded at startup.
+
+=== Re-smoke after the rollback rehearsal ===
+
+$ curl.exe -s -w '\n<- HTTP %{http_code}' "$B/api/customers" -H $H \
+    -H "Authorization: Bearer <redacted>" -H "X-Correlation-Id: lab-request-001"
+[{"id":"CUS-1001",...,"status":"ACTIVE"},{"id":"CUS-1002",...,"status":"PROSPECT"}]
+<- HTTP 200
+
+A green rollout status proves the object converged, not that the application
+serves. This is the proof.
+
+=== Two replicas ===
+
+$ kubectl -n crm-training get pods -l app=crm-api -o wide
+crm-api-694dbd5685-l6xkm   1/1   Running   0   83s     10.42.0.12
+crm-api-694dbd5685-rzm5r   1/1   Running   0   6m56s   10.42.0.11
+
+$ kubectl -n crm-training get endpoints crm-api
+crm-api   10.42.0.11:8080,10.42.0.12:8080
+
+$ 1..6 | ForEach-Object { curl.exe -s -o NUL -w "%{http_code} " -H $H "$B/api/customers" -H "Authorization: Bearer <redacted>" }
+200 200 200 200 200 200
+
+Both pods carry the ReplicaSet hash 694dbd5685, the same one that has served
+since the first deploy. Scaling changes a count on the existing ReplicaSet; it
+does not create a new one and does not add a revision. Compare with set image,
+which changes the pod template and therefore does both.

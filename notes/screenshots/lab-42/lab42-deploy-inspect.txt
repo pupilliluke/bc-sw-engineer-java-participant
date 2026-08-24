@@ -1,0 +1,132 @@
+Lab 42 - cluster, manifests and workload identity
+Captured 2026-08-21. Host: Windows 11, Docker Desktop, k3d v5.9.0.
+Transcribed from the session terminal; the cluster was stopped afterwards.
+
+=== Cluster ===
+
+$ k3d cluster create lab42 --image rancher/k3s:v1.28.15-k3s1 -p "8088:80@loadbalancer"
+Cluster 'lab42' created successfully!            [0283]
+
+283 seconds, almost all of it image pulls:
+  [0002] -> [0045]   43s pulling rancher/k3s:v1.28.15-k3s1
+  [0183] -> [0266]   83s pulling k3d-proxy
+The k3s version is pinned. The k3d default v1.35.5-k3s1 fails on this host
+with kubelet cgroup v1 unsupported.
+
+INFO[0280] Injecting records for hostAliases (incl. host.k3d.internal) and for
+3 network members into CoreDNS configmap...
+
+That injection is what makes host.k3d.internal resolve from inside pods, which
+is the JDBC host the ConfigMap uses.
+
+$ docker ps --filter name=k3d-lab42
+k3d-lab42-serverlb   0.0.0.0:8088->80/tcp, 0.0.0.0:63807->6443/tcp
+k3d-lab42-server-0
+k3d-lab42-tools
+
+$ kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}'
+https://host.docker.internal:63807
+
+$ kubectl cluster-info --request-timeout=10s
+E... Get "https://host.docker.internal:63807/api?timeout=10s": net/http: request
+canceled while waiting for connection (Client.Timeout exceeded)
+
+k3d writes host.docker.internal, which does not resolve from Windows. Rewritten
+with kubectl rather than sed on the file:
+
+$ kubectl config set-cluster k3d-lab42 --server="https://127.0.0.1:63807"
+Cluster "k3d-lab42" set.
+
+$ kubectl cluster-info
+Kubernetes control plane is running at https://127.0.0.1:63807
+
+$ kubectl get nodes
+NAME                 STATUS   ROLES                  AGE    VERSION
+k3d-lab42-server-0   Ready    control-plane,master   118s   v1.28.15+k3s1
+
+=== Image import ===
+
+$ k3d image import crm-api:lab41 -c lab42
+Successfully imported 1 image(s) into 1 cluster(s)      26s
+
+$ docker exec k3d-lab42-server-0 crictl images | grep crm
+docker.io/library/crm-api    lab41    6be309fbd6e26    163MB
+
+The cluster records the config digest. docker image inspect reports the
+manifest-list digest sha256:d3bb2e23660e... Both name the same image; record
+which command produced which number.
+
+=== Namespace and config ===
+
+$ kubectl create namespace crm-training --dry-run=client -o yaml | kubectl apply -f -
+namespace/crm-training created
+
+$ kubectl -n crm-training get configmap crm-api-config -o jsonpath='{.data}'
+CRM_DB_HOST:host.k3d.internal
+CRM_DB_NAME:crm_lab42
+CRM_DB_PORT:5432   (moved to 5433 on 2026-08-24, see failure-experiments)
+CRM_DB_USER:crm
+SERVER_PORT:8080
+SPRING_PROFILES_ACTIVE:docker
+
+$ kubectl -n crm-training describe secret crm-api-secrets
+Type:  Opaque
+Data
+====
+JWT_SECRET:       60 bytes
+CRM_DB_PASSWORD:  11 bytes
+
+Created out-of-band with kubectl create secret --from-literal, values never
+written to a file. secret.example.yaml was not applied; the live value was
+checked and is not the REPLACE-OUT-OF-BAND placeholder.
+
+=== Workload ===
+
+$ kubectl -n crm-training apply -f k8s/deployment.yaml -f k8s/service.yaml -f k8s/ingress.yaml
+deployment.apps/crm-api created
+service/crm-api created
+ingress.networking.k8s.io/crm-api created
+
+$ kubectl -n crm-training rollout status deployment/crm-api --timeout=180s
+deployment "crm-api" successfully rolled out
+
+$ kubectl -n crm-training get pods -o wide
+crm-api-694dbd5685-7mvvj   1/1   Running   0   2m12s   10.42.0.9   k3d-lab42-server-0
+
+$ kubectl -n crm-training get endpoints crm-api
+crm-api   10.42.0.9:8080
+
+$ kubectl -n crm-training get ingress crm-api
+crm-api   traefik   crm-api.training.example.test   172.25.0.3   80
+
+$ kubectl -n crm-training get svc crm-api -o jsonpath='...'
+type=ClusterIP  port=80  targetPort=http  ->  10.42.0.9:8080
+
+targetPort resolves because the container port is named http. The exercise-04
+template omitted that name while still referencing port: http on the probes;
+the real starter names it and is correct.
+
+$ kubectl -n crm-training exec <pod> -- id
+uid=10001(spring) gid=999(spring) groups=999(spring)
+
+The manifest field says what was configured. The exec says what is running.
+
+$ kubectl -n crm-training get pod <pod> -o jsonpath='...probes...'
+startup    /actuator/health/readiness  port=http  failureThreshold=30  period=5s
+readiness  /actuator/health/readiness  port=http  delay=10s  period=10s
+liveness   /actuator/health/liveness   port=http  delay=30s  period=20s
+
+$ kubectl -n crm-training get pod <pod> -o jsonpath='...envFrom...'
+envFrom: crm-api-config crm-api-secrets
+
+QoS Class: Burstable, because requests 100m/256Mi are below limits 500m/512Mi.
+
+=== Flyway, and what it did not touch ===
+
+crm41       v1, v2  installed 2026-08-20 17:16   schema crm_app   (Lab 41)
+crm_lab42   v1, v2  installed 2026-08-21 19:57   schema crm       (this pod)
+
+Only crm_lab42 was migrated. crm41 is unchanged from the previous day and its
+fixtures still read CUS-1001 ACTIVE and CUS-1002 PROSPECT. The two histories
+live in different schemas because the Lab 42 pod connects as the crm role whose
+search_path is crm, while Lab 41 connects as crm_app.
