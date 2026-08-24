@@ -1,7 +1,6 @@
 package com.northstar.crm;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -114,7 +113,8 @@ class CustomerServiceTest {
   void closedIsTerminal() {
     existing("CUS-1003", "Closed Customer", "closed@example.com", "CLOSED");
 
-    assertDoesNotThrow(
+    assertThrows(
+        IllegalStateException.class,
         () -> service.updateStatus("CUS-1003", "ACTIVE", CORRELATION));
   }
 

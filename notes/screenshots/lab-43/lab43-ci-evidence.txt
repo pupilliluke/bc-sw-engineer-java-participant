@@ -1,0 +1,141 @@
+Lab 43 - GitHub Actions CI evidence
+Captured 2026-08-24. Repo pupilliluke/bc-sw-engineer-java-participant.
+Run URLs are .../actions/runs/<id>; ids recorded rather than pasted links.
+
+=== Local verify, before any push ===
+
+$ cd examples/lab43-crm/crm-api
+$ mvn -B -ntp clean verify
+Tests run: 7   CustomerServiceTest
+Tests run: 8   SecurityRulesTest
+Tests run: 3   ProbeEndpointsTest
+Tests run: 1   ForgedTokenSecurityTest
+Tests run: 19, Failures: 0, Errors: 0, Skipped: 0        (surefire)
+Tests run: 7,  Failures: 0, Errors: 0, Skipped: 0        (failsafe, CustomerRepositoryIT)
+BUILD SUCCESS
+Total time: 01:18 min
+
+java 21.0.4 Temurin, Maven 3.9.9. Database crm_lab43 on crm-postgres-lab41,
+host port 5433.
+
+=== What had to change before this passed ===
+
+Two problems, both from the starter assuming a different CRM.
+
+1. Paths. The starter sets working-directory and cache-dependency-path to
+   examples/lab43-crm. This project's pom is at examples/lab43-crm/crm-api,
+   because lab41-crm is a project folder containing the Maven module alongside
+   compose.yaml and ddl/. Four settings corrected.
+
+2. JWT_SECRET. application.yml declares northstar.security.jwt-secret with no
+   default. Locally it arrives via spring.config.import from .env, which is
+   gitignored and therefore absent on a runner. The starter's env block supplies
+   SPRING_DATASOURCE_* and nothing else.
+
+Demonstrated by hiding .env and running the tests as a runner would see them:
+
+  without SPRING_DATASOURCE_*:
+    Tests run: 7  CustomerServiceTest   PASS
+    ... Unable to obtain connection from database:
+        FATAL: password authentication failed for user "crm_app"
+
+  with SPRING_DATASOURCE_* set:
+    Caused by: java.lang.IllegalArgumentException:
+      Could not resolve placeholder 'JWT_SECRET' in value "${JWT_SECRET}"
+
+Three findings from that pair.
+
+Environment variables outrank application.yml. Setting SPRING_DATASOURCE_URL
+pushed the build past the datasource entirely; the ${CRM_DB_URL:...} placeholder
+in the yml was never evaluated.
+
+Bean creation order decides which missing value you see. entityManagerFactory
+depends on flywayInitializer, so the datasource fails first and masks the JWT
+placeholder. Two missing values, one visible at a time.
+
+7 of 26 tests pass without any of this. CustomerServiceTest uses a Mockito mock
+and constructs the service directly, so it loads no Spring context. The other
+19 need one.
+
+Also incidental: with CRM_DB_URL unset the app fell back to its default,
+localhost:5432, which on this machine is an unrelated capstone Postgres. And the
+unresolved password reached the driver as the literal string ${CRM_APP_PASSWORD}
+-- the same pass-through seen in Lab 42 with ${CRM_DB_HOST}.
+
+Resolved by adding JWT_SECRET as a repository secret and referencing it as
+${{ secrets.JWT_SECRET }} in the verify job env. Name in Git, value not.
+
+=== Schema portability fix ===
+
+CustomerRepositoryIT line 110 issued raw SQL against crm_app.customer. That
+schema exists only from the Lab 37 DDL, which also set the role's search_path. A
+fresh CI Postgres has neither.
+
+  - "UPDATE crm_app.customer SET status = 'CLOSED', version = version + 1 "
+  + "UPDATE customer SET status = 'CLOSED', version = version + 1 "
+
+Flyway migrations create tables unqualified, the JPA entity maps unqualified, so
+everything resolves through search_path and nothing has to agree on a schema
+name. examples/lab41-crm is unchanged.
+
+=== Run 1: first push to main - GREEN ===
+
+run id 32755890696, event push, ref main, 4m43s
+
+  verify   success   17:18:44 -> 17:20:42   (1m58s)
+  package  success   17:20:45 -> 17:23:24   (2m39s)
+
+artifacts:
+  crm-jar        47,848,959 bytes
+  test-reports        17,660 bytes
+
+The workflow queued the moment the push landed. No button, no confirmation.
+Actions was already enabled on the repository (enabled: true, allowed_actions:
+all) and the repo is not a fork, so nothing gated the first run.
+
+package ran because the push was to main. On a pull request it would not have.
+
+Warnings, non-fatal: actions/setup-java@v4 is deprecated in favour of v5, and
+the Node 20 actions are being forced onto Node 24. The starter pins v4.
+
+=== Run 2: forced failure - RED ===
+
+CustomerServiceTest.closedIsTerminal inverted: assertThrows replaced with
+assertDoesNotThrow, asserting that CLOSED -> ACTIVE succeeds, which contradicts
+the transition table.
+
+run id 32756661443, event push, ref main, 1m22s
+
+  verify   failure   CustomerServiceTest.closedIsTerminal
+  package  skipped
+
+artifacts:
+  test-reports        18,446 bytes
+
+  [ERROR] Tests run: 7, Failures: 1, Errors: 0, Skipped: 0
+          -- in com.northstar.crm.CustomerServiceTest
+  [ERROR] com.northstar.crm.CustomerServiceTest.closedIsTerminal <<< FAILURE!
+
+package was skipped, not failed. needs: verify means it never started, so there
+is no failure to attribute to it.
+
+The reports uploaded despite the failure, and were larger than the green run's
+because failure detail costs bytes. That is what if: always() buys: a red build
+nobody has to re-run in order to diagnose.
+
+The red run was faster than the green one, 1m22s against 4m43s, because it died
+at the test phase and package never spent its 2m39s.
+
+=== Run 3: restore - GREEN ===
+
+The assertion reverted. The test file is byte-identical to the Lab 41 original
+either side of the change, verified by diff, which is what makes the red run
+evidence rather than an anecdote.
+
+run id: pending push
+
+=== Secrets check ===
+
+$ git status --short
+no .env, .env.local, kubeconfig or token in any tracked path. Secret names
+appear in the workflow and the runbook; no value appears anywhere.
