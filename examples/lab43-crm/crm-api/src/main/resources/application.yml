@@ -1,0 +1,53 @@
+spring:
+  # Both candidate locations are listed because ../ resolves against the JVM
+  # working directory, not the source tree: running from crm-api/ needs ../.env,
+  # running from lab40-crm/ needs ./.env. Whichever exists is loaded.
+  #
+  # optional: means a missing file is not an error, so CI can supply real
+  # environment variables instead. That silence is safe only because the two
+  # secrets below have no defaults -- a missed import crashes the app at
+  # startup rather than quietly running it on fallback values.
+  config:
+    import: optional:file:./.env[.properties],optional:file:../.env[.properties]
+  application:
+    name: northstar-crm
+  datasource:
+    url: ${CRM_DB_URL:jdbc:postgresql://localhost:5432/crm41}
+    username: ${CRM_DB_USERNAME:crm_app}
+    # .env names this for the role that owns it, not for the datasource.
+    password: ${CRM_APP_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+  flyway:
+    enabled: true
+server:
+  port: 8080
+  # SIGTERM stops new connections and lets in-flight requests finish, so a
+  # PATCH carrying lab-request-001 commits instead of being severed. The
+  # docker stop grace period must exceed the timeout below or SIGKILL wins.
+  shutdown: graceful
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      # Without this, /actuator/health/readiness and /liveness are 404 outside
+      # Kubernetes -- a container HEALTHCHECK would look like a broken app.
+      probes:
+        enabled: true
+      # Anonymous probes learn ready or not ready, never the datasource URL
+      # or pool state.
+      show-details: never
+northstar:
+  security:
+    jwt-secret: ${JWT_SECRET}

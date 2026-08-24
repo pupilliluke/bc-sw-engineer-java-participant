@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Suppression policy: every <suppress> element must carry
+    - the CVE id being suppressed, never a bare path glob that would also
+      hide findings nobody has seen yet
+    - an owner, a person rather than "the team"
+    - an expiry via the until= attribute, so the finding reopens if nobody acts
+  A suppression missing any of the three fails the gate. Empty is the correct
+  state until a finding has been triaged and justified in the assessment.
+-->
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+</suppressions>
